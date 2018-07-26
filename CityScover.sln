@@ -5,6 +5,18 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.Entities", "CityScover.Entities\CityScover.Entities.csproj", "{F99FDB67-9134-414A-BFB9-B75136765FA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.Data", "CityScover.Data\CityScover.Data.csproj", "{AE6224D4-863E-4002-8E0D-5626ED9C6411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.Engine", "CityScover.Engine\CityScover.Engine.csproj", "{4C490874-3AE5-4747-AB49-FDBD63BDE756}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.ADT.Graphs", "CityScover.ADT.Graphs\CityScover.ADT.Graphs.csproj", "{F4882229-C786-4ED9-A48A-7C325807F838}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.Services", "CityScover.Services\CityScover.Services.csproj", "{2DA92540-DB3E-433B-841B-3F49F9DCDC71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover", "CityScover\CityScover.csproj", "{632673C9-43E7-4B16-AEDB-11F1CD28A7F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.Tests", "CityScover.Tests\CityScover.Tests.csproj", "{2F577B29-4000-4F06-927B-7EDD072B929E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +27,30 @@ Global
 		{F99FDB67-9134-414A-BFB9-B75136765FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F99FDB67-9134-414A-BFB9-B75136765FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F99FDB67-9134-414A-BFB9-B75136765FA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE6224D4-863E-4002-8E0D-5626ED9C6411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE6224D4-863E-4002-8E0D-5626ED9C6411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE6224D4-863E-4002-8E0D-5626ED9C6411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE6224D4-863E-4002-8E0D-5626ED9C6411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C490874-3AE5-4747-AB49-FDBD63BDE756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C490874-3AE5-4747-AB49-FDBD63BDE756}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C490874-3AE5-4747-AB49-FDBD63BDE756}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C490874-3AE5-4747-AB49-FDBD63BDE756}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4882229-C786-4ED9-A48A-7C325807F838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4882229-C786-4ED9-A48A-7C325807F838}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4882229-C786-4ED9-A48A-7C325807F838}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4882229-C786-4ED9-A48A-7C325807F838}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DA92540-DB3E-433B-841B-3F49F9DCDC71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DA92540-DB3E-433B-841B-3F49F9DCDC71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DA92540-DB3E-433B-841B-3F49F9DCDC71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DA92540-DB3E-433B-841B-3F49F9DCDC71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{632673C9-43E7-4B16-AEDB-11F1CD28A7F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{632673C9-43E7-4B16-AEDB-11F1CD28A7F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{632673C9-43E7-4B16-AEDB-11F1CD28A7F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{632673C9-43E7-4B16-AEDB-11F1CD28A7F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F577B29-4000-4F06-927B-7EDD072B929E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F577B29-4000-4F06-927B-7EDD072B929E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F577B29-4000-4F06-927B-7EDD072B929E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F577B29-4000-4F06-927B-7EDD072B929E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
