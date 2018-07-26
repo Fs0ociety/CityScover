@@ -42,5 +42,19 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CityScover.ADT.Graphs\CityScover.ADT.Graphs.csproj">
+      <Project>{f4882229-c786-4ed9-a48a-7c325807f838}</Project>
+      <Name>CityScover.ADT.Graphs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CityScover.Data\CityScover.Data.csproj">
+      <Project>{ae6224d4-863e-4002-8e0d-5626ed9c6411}</Project>
+      <Name>CityScover.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CityScover.Entities\CityScover.Entities.csproj">
+      <Project>{f99fdb67-9134-414a-bfb9-b75136765fa5}</Project>
+      <Name>CityScover.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

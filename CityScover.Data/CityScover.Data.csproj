@@ -42,5 +42,11 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CityScover.Entities\CityScover.Entities.csproj">
+      <Project>{f99fdb67-9134-414a-bfb9-b75136765fa5}</Project>
+      <Name>CityScover.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
