@@ -1,6 +1,13 @@
-﻿namespace CityScover.Entities
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace CityScover.Entities
 {
-   class Tour
+   public class Tour
    {
+      #region Public properties
+      public IList<InterestPoint> Points { get; set; }
+      public int TotalScore { get; set; } 
+      #endregion
    }
 }

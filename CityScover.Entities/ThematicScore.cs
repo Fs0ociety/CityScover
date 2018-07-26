@@ -1,6 +1,10 @@
 ﻿namespace CityScover.Entities
 {
-   class ThematicScore
+   public class ThematicScore
    {
+      #region Public properties
+      public TourCategory Category { get; set; }
+      public int Value { get; set; }
+      #endregion
    }
 }
