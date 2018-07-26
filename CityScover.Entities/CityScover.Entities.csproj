@@ -40,7 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InterestPoint.cs" />
+    <Compile Include="IntervalTime.cs" />
+    <Compile Include="MeasureUnit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="ThematicScore.cs" />
+    <Compile Include="Tour.cs" />
+    <Compile Include="TourCategory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
