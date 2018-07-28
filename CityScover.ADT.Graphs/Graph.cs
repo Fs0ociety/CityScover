@@ -1,16 +1,18 @@
-﻿using System;
+﻿//
+// CityScover
+// Version 1.0
+//
+// Authors: Riccardo Mariotti
+// File update: 28/07/2018
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CityScover.ADT.Graphs
 {
-   public interface IGraphEdgeWeight
-   {
-      Func<double> Weight { get; }
-   }
-
-
-   public abstract class Graph<TNodeKey, TNodeData, TEdgeWeight>
+   public abstract partial class Graph<TNodeKey, TNodeData, TEdgeWeight>
       where TNodeKey : struct
       where TEdgeWeight : IGraphEdgeWeight
    {
@@ -178,93 +180,6 @@ namespace CityScover.ADT.Graphs
 
          return _nodes[nodeKey].Edges.Select(x => x.DestNode.Key);
       }
-      #endregion
-
-      #region Classes
-
-      #region GraphNode
-      protected class GraphNode
-      {
-         private readonly TNodeKey _key;
-         private readonly TNodeData _data;
-         private readonly List<GraphEdge> _edges;
-
-         #region Constructors
-         private GraphNode()
-         {
-         }
-
-         public GraphNode(TNodeKey key, TNodeData data)
-         {
-            _key = key;
-            _data = data;
-            _edges = new List<GraphEdge>();
-         }
-         #endregion
-
-         #region Public properties
-         public TNodeKey Key => _key;
-
-         public TNodeData Data => _data;
-
-         public IEnumerable<GraphEdge> Edges => _edges;
-         #endregion
-
-         #region Public methods
-         public void AddEdge(GraphNode node)
-         {
-            _edges.Add(new GraphEdge(this, node));
-         }
-
-         public void AddEdge(GraphNode node, TEdgeWeight weight)
-         {
-            _edges.Add(new GraphEdge(this, node, weight));
-         }
-         #endregion
-      }
-      #endregion
-
-      #region GraphEdge
-      protected class GraphEdge
-      {
-         private readonly GraphNode _sourceNode;
-         private readonly GraphNode _destNode;
-         private readonly TEdgeWeight _weight;
-         private readonly bool _isWeighed;
-
-         #region Constructors
-         private GraphEdge()
-         {
-         }
-
-         public GraphEdge(GraphNode sourceNode, GraphNode destNode)
-         {
-            _sourceNode = sourceNode ?? throw new ArgumentNullException("sourceNode");
-            _destNode = destNode ?? throw new ArgumentNullException("destNode");
-         }
-
-         public GraphEdge(GraphNode sourceNode, GraphNode destNode, TEdgeWeight weight)
-            : this(sourceNode, destNode)
-         {
-            //_sourceNode = sourceNode ?? throw new ArgumentNullException("sourceNode");
-            //_destNode = destNode ?? throw new ArgumentNullException("destNode");
-            _weight = weight;
-            _isWeighed = true;
-         }
-         #endregion
-
-         #region Public properties
-         public GraphNode SourceNode => _sourceNode;
-
-         public GraphNode DestNode => _destNode;
-
-         public TEdgeWeight Weight => _weight;
-
-         public bool IsWeighed => _isWeighed;
-         #endregion
-      }
-      #endregion
-
-      #endregion
+      #endregion      
    }
 }
