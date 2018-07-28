@@ -180,6 +180,29 @@ namespace CityScover.ADT.Graphs
 
          return _nodes[nodeKey].Edges.Select(x => x.DestNode.Key);
       }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="nodeKey"></param>
+      /// <returns></returns>
+      public IEnumerable<TNodeKey> GetAdjacentNodes(TNodeKey nodeKey)
+      {
+         // TODO
+         throw new NotImplementedException(nameof(GetAdjacentNodes));
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="sourceNode"></param>
+      /// <param name="destNode"></param>
+      /// <returns></returns>
+      public void GetEdge(TNodeKey sourceNode, TNodeKey destNode)
+      {
+         // TODO
+         throw new NotImplementedException(nameof(GetEdge));
+      }
       #endregion      
    }
 }

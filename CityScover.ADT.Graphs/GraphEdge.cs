@@ -19,7 +19,7 @@ namespace CityScover.ADT.Graphs
          private readonly GraphNode _sourceNode;
          private readonly GraphNode _destNode;
          private readonly TEdgeWeight _weight;
-         private readonly bool _isWeighed;
+         private readonly bool _isWeighted;
 
          #region Constructors
          private GraphEdge()
@@ -35,10 +35,8 @@ namespace CityScover.ADT.Graphs
          public GraphEdge(GraphNode sourceNode, GraphNode destNode, TEdgeWeight weight)
             : this(sourceNode, destNode)
          {
-            //_sourceNode = sourceNode ?? throw new ArgumentNullException("sourceNode");
-            //_destNode = destNode ?? throw new ArgumentNullException("destNode");
             _weight = weight;
-            _isWeighed = true;
+            _isWeighted = true;
          }
          #endregion
 
@@ -49,7 +47,7 @@ namespace CityScover.ADT.Graphs
 
          public TEdgeWeight Weight => _weight;
 
-         public bool IsWeighed => _isWeighed;
+         public bool IsWeighted => _isWeighted;
          #endregion
       }
    }
