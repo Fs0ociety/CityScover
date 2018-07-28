@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover", "CityScover\Ci
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.Tests", "CityScover.Tests\CityScover.Tests.csproj", "{2F577B29-4000-4F06-927B-7EDD072B929E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityScover.Utils", "CityScover.Utils\CityScover.Utils.csproj", "{8483B781-2A00-4249-83F2-C7184A573B31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2F577B29-4000-4F06-927B-7EDD072B929E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F577B29-4000-4F06-927B-7EDD072B929E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F577B29-4000-4F06-927B-7EDD072B929E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8483B781-2A00-4249-83F2-C7184A573B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8483B781-2A00-4249-83F2-C7184A573B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8483B781-2A00-4249-83F2-C7184A573B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8483B781-2A00-4249-83F2-C7184A573B31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

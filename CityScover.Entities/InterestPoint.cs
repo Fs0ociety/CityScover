@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CityScover.Entities
 {
@@ -8,8 +9,7 @@ namespace CityScover.Entities
       public string Name { get; set; }
       public TourCategory Category { get; set; }
       public ThematicScore Score { get; set; }
-      public IntervalTime OpeningTimeAM { get; set; }
-      public IntervalTime OpeningTimePM { get; set; }
+      public IEnumerable<IntervalTime> OpeningTimes { get; set; }
       public TimeSpan VisitTime { get; set; }
       #endregion
    }
