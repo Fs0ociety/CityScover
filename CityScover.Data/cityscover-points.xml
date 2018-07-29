@@ -20,10 +20,10 @@
   <!-- Nr. 2 -->
   <!-- Castello Estense -->
   <PointOfInterest id="2" name="Castello Estense">
-    <Category id="1" />
-    <ThematicScore category="1" value="100" />
+    <Category id="1"/>
+    <ThematicScore category="1" value="100"/>
     <OpeningTimes>
-      <OpeningTime from="09:30" to="17:30" />
+      <OpeningTime from="09:30" to="17:30"/>
     </OpeningTimes>
     <TimeVisit unitOfMeasure="1" duration="1"/>
   </PointOfInterest>
@@ -31,10 +31,10 @@
   <!-- Nr. 3 -->
   <!-- Palazzo dei Diamanti -->
   <PointOfInterest id="3" name="Palazzo dei Diamanti">
-    <Category id="1" />
-    <ThematicScore category="1" value="100" />
+    <Category id="1"/>
+    <ThematicScore category="1" value="100"/>
     <OpeningTimes>
-      <OpeningTime from="09:00" to="19:00" />
+      <OpeningTime from="09:00" to="19:00"/>
     </OpeningTimes>
     <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
@@ -42,296 +42,310 @@
   <!-- Nr. 4 -->
   <!-- Cattedrale di San Giorgio -->
   <PointOfInterest id="4" name="Cattedrale di San Giorgio">
-    <Category id="1" />
-    <ThematicScore category="1" value="100" />
+    <Category id="1"/>
+    <ThematicScore category="1" value="100"/>
     <OpeningTimes>
-      <OpeningTime from="7:30" to="12:30" />
-      <OpeningTime from="15:00" to="19:00" />
+      <OpeningTime from="7:30" to="12:30"/>
+      <OpeningTime from="15:00" to="19:00"/>
     </OpeningTimes>
-    <TimeVisit unitOfMeasure="2" duration="45" />
+    <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
 
   <!-- Nr. 5 -->
   <!-- Palazzo Schifanoia -->
   <PointOfInterest id="5" name="Palazzo Schifanoia">
-    <Category>1</Category>
-    <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:00" to="12:30" />
-    <OpeningTimePM from="12:30" to="19:00" />
-    <TimeVisit></TimeVisit>
+    <Category id="1"/>
+    <ThematicScore category="1" value="100"/>
+    <OpeningTimes>
+      <OpeningTime from="09:00" to="19:00"/>
+    </OpeningTimes>
+    <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
 
   <!-- Nr. 6 -->
   <!-- Palazzo Massari -->
   <PointOfInterest id="6" name="Palazzo Massari">
-    <Category>1</Category>
+    <Category id="1"/>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="10:00" to="13:00" />
-    <OpeningTimePM from="13:00" to="19:00" />
-    <TimeVisit></TimeVisit>
+    <OpeningTimes>
+      <OpeningTime from="10:00" to="19:00" />
+    </OpeningTimes>
+    <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
 
   <!-- Nr. 7 -->
   <!-- Piazza Ariostea -->
   <PointOfInterest id="7" name="Piazza Ariostea">
-    <Category>1</Category>
+    <Category id="1"/>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <TimeVisit></TimeVisit>
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
+    </OpeningTimes>
+    <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
 
   <!-- Nr. 8 -->
   <!-- Parco Massari -->
   <PointOfInterest id="8" name="Parco Massari">
-    <Category>1</Category>
+    <Category id="1"/>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <TimeVisit></TimeVisit>
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
+    </OpeningTimes>
+    <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
 
   <!-- Nr. 9 -->
   <!-- Museo della Cattedrale -->
   <PointOfInterest id="9" name="Museo della Cattedrale">
-    <Category>1</Category>
+    <Category id="1"/>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:30" to="13:00" />
-    <OpeningTimePM from="15:00" to="18:00" />
-    <TimeVisit></TimeVisit>
+    <OpeningTimes>
+      <OpeningTime from="09:30" to="13:00"/>
+      <OpeningTime from="15:00" to="18:00" />
+    </OpeningTimes>
+    <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
 
   <!-- Nr. 10 -->
   <!-- Palazzina di Marfisa d'Este -->
   <PointOfInterest id="10" name="Palazzina di Marfisa d'Este">
-    <Category>1</Category>
+    <Category id="1"/>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:30" to="13:00" />
-    <OpeningTimePM from="15:00" to="18:00" />
-    <TimeVisit></TimeVisit>
+    <OpeningTimes>
+      <OpeningTime from="09:30" to="13:00"/>
+      <OpeningTime from="15:00" to="18:00" />
+    </OpeningTimes>
+    <TimeVisit unitOfMeasure="2" duration="45"/>
   </PointOfInterest>
 
-  <!-- Nr. 11 -->
-  <!-- Museo Civico di Storia Naturale -->
+  <!-- Nr. 11 --><!--
+  --><!-- Museo Civico di Storia Naturale --><!--
   <PointOfInterest id="11" name="Museo Civico di Storia Naturale">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:00" to="" />
-    <OpeningTimePM from="" to="18:00" />
+    <OpeningTimes>
+      <OpeningTime from="09:00" to="18:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 12 -->
-  <!-- Museo Archeologico Nazionale di Ferrara -->
+  --><!-- Nr. 12 --><!--
+  --><!-- Museo Archeologico Nazionale di Ferrara --><!--
   <PointOfInterest id="12" name="Museo Archeologico Nazionale di Ferrara">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:30" to="" />
-    <OpeningTimePM from="" to="17:00" />
+    <OpeningTimes>
+      <OpeningTime from="09:30" to="17:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 13 -->
-  <!-- Museo Nazionale dell'Ebraismo Italiano e della Shoah -->
+  --><!-- Nr. 13 --><!--
+  --><!-- Museo Nazionale dell'Ebraismo Italiano e della Shoah --><!--
   <PointOfInterest id="13" name="Museo Nazionale dell'Ebraismo Italiano e della Shoah">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="10:00" to="" />
-    <OpeningTimePM from="" to="18:00" />
+    <OpeningTimes>
+      <OpeningTime from="10:00" to="18:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 14 -->
-  <!-- Corso Ercole I d'Este -->
+  --><!-- Nr. 14 --><!--
+  --><!-- Corso Ercole I d'Este --><!--
   <PointOfInterest id="14" name="Corso Ercole I d'Este">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  --><!-- Aperto 24 ore su 24 --><!--
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 15 -->
-  <!-- Parco Pareschi -->
+  --><!-- Nr. 15 --><!--
+  --><!-- Parco Pareschi --><!--
   <PointOfInterest id="15" name="Parco Pareschi">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  --><!-- Aperto 24 ore su 24 --><!--
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 16 -->
-  <!-- Museo del Risorgimento e della Resistenza -->
+  --><!-- Nr. 16 --><!--
+  --><!-- Museo del Risorgimento e della Resistenza --><!--
   <PointOfInterest id="16" name="Museo del Risorgimento e della Resistenza">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:30" to="13:00" />
-    <OpeningTimePM from="15:00" to="18:00" />
+    <OpeningTimes>
+      <OpeningTime from="09:30" to="13:00"/>
+      <OpeningTime from="15:00" to="18:00" />
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 17 -->
-  <!-- Chiesa di San Cristoforo alla Certosa -->
+  --><!-- Nr. 17 --><!--
+  --><!-- Chiesa di San Cristoforo alla Certosa --><!--
   <PointOfInterest id="17" name="Chiesa di San Cristoforo alla Certosa">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="07:00" to="" />
-    <OpeningTimePM from="" to="19:00" />
+    <OpeningTimes>
+      <OpeningTime from="07:00" to="19:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 18 -->
-  <!-- Via delle Volte -->
+  --><!-- Nr. 18 --><!--
+  --><!-- Via delle Volte --><!--
   <PointOfInterest id="18" name="Via delle Volte">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  --><!-- Aperto 24 ore su 24 --><!--
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 19 -->
-  <!-- Rotonda Foschini -->
+  --><!-- Nr. 19 --><!--
+  --><!-- Rotonda Foschini --><!--
   <PointOfInterest id="19" name="Rotonda Foschini">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  --><!-- Aperto 24 ore su 24 --><!--
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 20 -->
-  <!-- Palazzo Municipale -->
+  --><!-- Nr. 20 --><!--
+  --><!-- Palazzo Municipale --><!--
   <PointOfInterest id="20" name="Palazzo Municipale">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:00" to="13:00" />
-    <OpeningTimePM from="15:00" to="17:00" />
+    <OpeningTimes>
+      <OpeningTime from="09:00" to="13:00"/>
+      <OpeningTime from="15:00" to="17:00" />
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 21 -->
-  <!-- Piazza Savonarola -->
+  --><!-- Nr. 21 --><!--
+  --><!-- Piazza Savonarola --><!--
   <PointOfInterest id="21" name="Piazza Savonarola">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  --><!-- Aperto 24 ore su 24 --><!--
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 22 -->
-  <!-- Monastero del Corpus Domini -->
+  --><!-- Nr. 22 --><!--
+  --><!-- Monastero del Corpus Domini --><!--
   <PointOfInterest id="22" name="Monastero del Corpus Domini">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTime from="" to=""/>
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="15:30" to="17:30" />
+    <OpeningTimes>
+      <OpeningTime from="15:30" to="17:30" />
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 23 -->
-  <!-- Palazzo Bonacossi -->
+  --><!-- Nr. 23 --><!--
+  --><!-- Palazzo Bonacossi --><!--
   <PointOfInterest id="23" name="Palazzo Bonacossi">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="09:00" to="" />
-    <OpeningTimePM from="" to="18:00" />
+    <OpeningTimes>
+      <OpeningTime from="09:00" to="18:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 24 -->
-  <!-- Chiesa di Santa Maria in Vado -->
+  --><!-- Nr. 24 --><!--
+  --><!-- Chiesa di Santa Maria in Vado --><!--
   <PointOfInterest id="24" name="Chiesa di Santa Maria in Vado">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="08:00" to="12:15" />
-    <OpeningTimePM from="16:00" to="19:00" />
+    <OpeningTimes>
+      <OpeningTime from="08:00" to="12:15"/>
+      <OpeningTime from="16:00" to="19:00" />
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 25 -->
-  <!-- Palazzo dei Bentivoglio -->
+  --><!-- Nr. 25 --><!--
+  --><!-- Palazzo dei Bentivoglio --><!--
   <PointOfInterest id="25" name="Palazzo dei Bentivoglio">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="10:00" to="" />
-    <OpeningTimePM from="" to="16:30" />
+    <OpeningTimes>
+      <OpeningTime from="10:00" to="16:30"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 26 -->
-  <!-- Chiesa di San Francesco -->
+  --><!-- Nr. 26 --><!--
+  --><!-- Chiesa di San Francesco --><!--
   <PointOfInterest id="26" name="Chiesa di San Francesco">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="08:00" to="12:00" />
-    <OpeningTimePM from="15:30" to="18:00" />
+    <OpeningTimes>
+      <OpeningTime from="08:00" to="12:00"/>
+      <OpeningTime from="15:30" to="18:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 27 -->
-  <!-- Parco Urbano -->
+  --><!-- Nr. 27 --><!--
+  --><!-- Parco Urbano --><!--
   <PointOfInterest id="27" name="Parco Urbano">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  --><!-- Aperto 24 ore su 24 --><!--
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 28 -->
-  <!-- Palazzo Turchi di Bagno -->
+  --><!-- Nr. 28 --><!--
+  --><!-- Palazzo Turchi di Bagno --><!--
   <PointOfInterest id="28" name="Palazzo Turchi di Bagno">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="10:00" to="18:00" />
+    <OpeningTimes>
+      <OpeningTime from="10:00" to="18:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 29 -->
-  <!-- Parco Giorgio Bassani -->
+  --><!-- Nr. 29 --><!--
+  --><!-- Parco Giorgio Bassani --><!--
   <PointOfInterest id="29" name="Parco Giorgio Bassani">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
-    <OpeningTimePM from="" to="" />
-    <!-- Aperto 24 ore su 24 -->
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>  --><!-- Aperto 24 ore su 24 --><!--
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 30 -->
-  <!-- Centro Artistico Ferrarese -->
-  <PointOfInterest id="30" name="Centro Artistico Ferrarese">
+  --><!-- Nr. 30 --><!--
+  --><!-- Centro Studi Bassaniani --><!--
+  <PointOfInterest id="30" name="Centro Studi Bassaniani">
     <Category>1</Category>
     <ThematicScore category="1" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="09:00" to="13:00"/>
+      <OpeningTime from="14:00" to="18:00"/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 31 -->
-  <!-- Jazz Club -->
+  --><!-- Nr. 31 --><!--
+  --><!-- Jazz Club --><!--
   <PointOfInterest id="31" name="Jazz Club">
     <Category> 1 </Category>
     <ThematicScore category="1" value="100" />
@@ -342,612 +356,743 @@
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!---->
-  <!-- Punti d'interesse Gastronomici -->
-  <!---->
+  --><!----><!--
+  --><!-- Punti d'interesse Gastronomici --><!--
+  --><!----><!--
 
-  <!-- Nr. 31 -->
-  <!-- La Borsa Bistrot -->
+  --><!-- Nr. 31 --><!--
+  --><!-- La Borsa Bistrot --><!--
   <PointOfInterest id="31" name="La Borsa Bistrot">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 32 -->
-  <!-- Makorè -->
+  --><!-- Nr. 32 --><!--
+  --><!-- Makorè --><!--
   <PointOfInterest id="32" name="Makorè">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 33 -->
-  <!-- Fuori Porta -->
+  --><!-- Nr. 33 --><!--
+  --><!-- Fuori Porta --><!--
   <PointOfInterest id="33" name="Fuori Porta">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 34 -->
-  <!-- XI Comandamento -->
+  --><!-- Nr. 34 --><!--
+  --><!-- XI Comandamento --><!--
   <PointOfInterest id="34" name="XI Comandamento">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 35 -->
-  <!-- Osteria I Quattro Angeli -->
+  --><!-- Nr. 35 --><!--
+  --><!-- Osteria I Quattro Angeli --><!--
   <PointOfInterest id="35" name="Osteria I Quattro Angeli">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 36 -->
-  <!-- Trattoria da Noemi -->
+  --><!-- Nr. 36 --><!--
+  --><!-- Trattoria da Noemi --><!--
   <PointOfInterest id="36" name="Trattoria da Noemi">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 37 -->
-  <!-- Il Don Giovanni -->
+  --><!-- Nr. 37 --><!--
+  --><!-- Il Don Giovanni --><!--
   <PointOfInterest id="37" name="Il Don Giovanni">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 38 -->
-  <!-- L'Antico Giardino -->
+  --><!-- Nr. 38 --><!--
+  --><!-- L'Antico Giardino --><!--
   <PointOfInterest id="38" name="L'Antico Giardino">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 39 -->
-  <!-- Quel fantastico giovedì -->
+  --><!-- Nr. 39 --><!--
+  --><!-- Quel fantastico giovedì --><!--
   <PointOfInterest id="39" name="Quel fantastico giovedì">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 40 -->
-  <!-- Il sorpasso -->
+  --><!-- Nr. 40 --><!--
+  --><!-- Il sorpasso --><!--
   <PointOfInterest id="40" name="Il sorpasso">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 41 -->
-  <!-- Orsucci da Armando -->
+  --><!-- Nr. 41 --><!--
+  --><!-- Orsucci da Armando --><!--
   <PointOfInterest id="41" name="Orsucci da Armando">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 42 -->
-  <!-- The Lab - Food to Feel -->
+  --><!-- Nr. 42 --><!--
+  --><!-- The Lab - Food to Feel --><!--
   <PointOfInterest id="42" name="The Lab - Food to Feel">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 43 -->
-  <!-- Caffè del corso -->
+  --><!-- Nr. 43 --><!--
+  --><!-- Caffè del corso --><!--
   <PointOfInterest id="43" name="Caffè del corso">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 44 -->
-  <!-- Locanda 22 -->
+  --><!-- Nr. 44 --><!--
+  --><!-- Locanda 22 --><!--
   <PointOfInterest id="44" name="Locanda 22">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 45 -->
-  <!-- Ristorante Max -->
+  --><!-- Nr. 45 --><!--
+  --><!-- Ristorante Max --><!--
   <PointOfInterest id="45" name="Ristorante Max">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 46 -->
-  <!-- I Piaceri di Lucrezia -->
+  --><!-- Nr. 46 --><!--
+  --><!-- I Piaceri di Lucrezia --><!--
   <PointOfInterest id="46" name="I Piaceri di Lucrezia">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 47 -->
-  <!-- Osteria Degli Ulivi -->
+  --><!-- Nr. 47 --><!--
+  --><!-- Osteria Degli Ulivi --><!--
   <PointOfInterest id="47" name="Osteria Degli Ulivi">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 48 -->
-  <!-- Osteria degli Angeli -->
+  --><!-- Nr. 48 --><!--
+  --><!-- Osteria degli Angeli --><!--
   <PointOfInterest id="48" name="Osteria degli Angeli">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 49 -->
-  <!-- Rifugio Degli Artisti -->
+  --><!-- Nr. 49 --><!--
+  --><!-- Rifugio Degli Artisti --><!--
   <PointOfInterest id="49" name="Rifugio Degli Artisti">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 50 -->
-  <!-- Trattoria L'Ortica -->
+  --><!-- Nr. 50 --><!--
+  --><!-- Trattoria L'Ortica --><!--
   <PointOfInterest id="50" name="Trattoria L'Ortica">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 51 -->
-  <!-- Antica Osteria Delle Volte -->
+  --><!-- Nr. 51 --><!--
+  --><!-- Antica Osteria Delle Volte --><!--
   <PointOfInterest id="51" name="Antica Osteria Delle Volte">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 52 -->
-  <!-- Apelle -->
+  --><!-- Nr. 52 --><!--
+  --><!-- Apelle --><!--
   <PointOfInterest id="45" name="Apelle">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 53 -->
-  <!-- Cusina e Butega -->
+  --><!-- Nr. 53 --><!--
+  --><!-- Cusina e Butega --><!--
   <PointOfInterest id="53" name="Cusina e Butega">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 54 -->
-  <!-- Trattoria Le Nuvole -->
+  --><!-- Nr. 54 --><!--
+  --><!-- Trattoria Le Nuvole --><!--
   <PointOfInterest id="54" name="Trattoria Le Nuvole">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 55 -->
-  <!-- I Tri Scalin -->
+  --><!-- Nr. 55 --><!--
+  --><!-- I Tri Scalin --><!--
   <PointOfInterest id="55" name="I Tri Scalin">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 56 -->
-  <!-- Regina di Cuori -->
+  --><!-- Nr. 56 --><!--
+  --><!-- Regina di Cuori --><!--
   <PointOfInterest id="56" name="Regina di Cuori">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 57 -->
-  <!-- Sapori di Via Mayr -->
+  --><!-- Nr. 57 --><!--
+  --><!-- Sapori di Via Mayr --><!--
   <PointOfInterest id="57" name="Sapori di Via Mayr">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 58 -->
-  <!-- Quel Fantastico Giovedì -->
+  --><!-- Nr. 58 --><!--
+  --><!-- Quel Fantastico Giovedì --><!--
   <PointOfInterest id="58" name="Quel Fantastico Giovedì">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 59 -->
-  <!-- Pizzeria Ristorante Partenope -->
+  --><!-- Nr. 59 --><!--
+  --><!-- Pizzeria Ristorante Partenope --><!--
   <PointOfInterest id="59" name="Pizzeria Ristorante Partenope">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 60 -->
-  <!-- I Sofisti -->
+  --><!-- Nr. 60 --><!--
+  --><!-- I Sofisti --><!--
   <PointOfInterest id="60" name="I Sofisti">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 61 -->
-  <!-- Clandestino -->
+  --><!-- Nr. 61 --><!--
+  --><!-- Clandestino --><!--
   <PointOfInterest id="61" name="Clandestino">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 62 -->
-  <!-- Sebastian Pub -->
+  --><!-- Nr. 62 --><!--
+  --><!-- Sebastian Pub --><!--
   <PointOfInterest id="62" name="Seabastian Pub">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 63 -->
-  <!-- Da Pippo -->
+  --><!-- Nr. 63 --><!--
+  --><!-- Da Pippo --><!--
   <PointOfInterest id="63" name="Da Pippo">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 64 -->
-  <!-- Este Bar -->
+  --><!-- Nr. 64 --><!--
+  --><!-- Este Bar --><!--
   <PointOfInterest id="65" name="Este Bar">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 65 -->
-  <!-- 100 Montaditos -->
+  --><!-- Nr. 65 --><!--
+  --><!-- 100 Montaditos --><!--
   <PointOfInterest id="65" name="100 Montaditos">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 66 -->
-  <!-- La Creperie di Sara Bartolini -->
+  --><!-- Nr. 66 --><!--
+  --><!-- La Creperie di Sara Bartolini --><!--
   <PointOfInterest id="66" name="La Creperie di Sara Bartolini">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 67 -->
-  <!-- Da Settimo -->
+  --><!-- Nr. 67 --><!--
+  --><!-- Da Settimo --><!--
   <PointOfInterest id="67" name="Da Settimo">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 68 -->
-  <!-- Orsatti -->
+  --><!-- Nr. 68 --><!--
+  --><!-- Orsatti --><!--
   <PointOfInterest id="68" name="Orsatti">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 69 -->
-  <!-- Gatto Bianco -->
+  --><!-- Nr. 69 --><!--
+  --><!-- Gatto Bianco --><!--
   <PointOfInterest id="69" name="Gatto Bianco">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 70 -->
-  <!-- La Cambusa -->
+  --><!-- Nr. 70 --><!--
+  --><!-- La Cambusa --><!--
   <PointOfInterest id="70" name="La Cambusa">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 71 -->
-  <!-- Balebùste -->
+  --><!-- Nr. 71 --><!--
+  --><!-- Balebùste --><!--
   <PointOfInterest id="71" name="Balebùste">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 72 -->
-  <!-- Osteria 2 Gobbi -->
+  --><!-- Nr. 72 --><!--
+  --><!-- Osteria 2 Gobbi --><!--
   <PointOfInterest id="72" name="Osteria 2 Gobbi">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 73 -->
-  <!-- La Racchetta Ferrara Ristorante Pizzeria -->
+  --><!-- Nr. 73 --><!--
+  --><!-- La Racchetta Ferrara Ristorante Pizzeria --><!--
   <PointOfInterest id="73" name="La Racchetta Ferrara Ristorante Pizzeria">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
+    <TimeVisit></TimeVisit>
+  </PointOfInterest>
+  
+    --><!-- Nr. 74 --><!--
+  --><!-- Ristorante Pizzeria Al Frattino --><!--
+  <PointOfInterest id="74" name="Ristorante Pizzeria Al Frattino">
+    <Category>2</Category>
+    <ThematicScore category="2" value="100" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!---->
-  <!-- Punti d'interesse Sportivi -->
-  <!---->
+  --><!----><!--
+  --><!-- Punti d'interesse Sportivi --><!--
+  --><!----><!--
 
-  <!-- Nr. 74 -->
-  <!-- Centro Universitario Sportivo Di Ferrara (CUS) -->
-  <PointOfInterest id="74" name="Centro Universitario Sportivo Di Ferrara (CUS)">
+  --><!-- Nr. 75 --><!--
+  --><!-- Centro Universitario Sportivo Di Ferrara (CUS) --><!--
+  <PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 75 -->
-  <!-- Centro Sportivo Italiano -->
-  <PointOfInterest id="75" name="Centro Sportivo Italiano">
+  --><!-- Nr. 76 --><!--
+  --><!-- Centro Sportivo Italiano --><!--
+  <PointOfInterest id="76" name="Centro Sportivo Italiano">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 76 -->
-  <!-- Centro Sportivo Tennis Club Ferrara -->
-  <PointOfInterest id="76" name="Centro Sportivo Tennis Club Ferrara">
+  --><!-- Nr. 77 --><!--
+  --><!-- Centro Sportivo Tennis Club Ferrara --><!--
+  <PointOfInterest id="77" name="Centro Sportivo Tennis Club Ferrara">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 77 -->
-  <!-- Paintball Ferrara -->
-  <PointOfInterest id="77" name="Paintball Ferrara">
+  --><!-- Nr. 78 --><!--
+  --><!-- Paintball Ferrara --><!--
+  <PointOfInterest id="78" name="Paintball Ferrara">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 78 -->
-  <!-- Cus Ferrara Golf -->
-  <PointOfInterest id="78" name="Cus Ferrara Golf">
+  --><!-- Nr. 79 --><!--
+  --><!-- Cus Ferrara Golf --><!--
+  <PointOfInterest id="79" name="Cus Ferrara Golf">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 79 -->
-  <!-- Cus Ferrara Rugby -->
-  <PointOfInterest id="79" name="Cus Ferrara Rugby">
+  --><!-- Nr. 80 --><!--
+  --><!-- Cus Ferrara Rugby --><!--
+  <PointOfInterest id="80" name="Cus Ferrara Rugby">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 80 -->
-  <!-- Ludovico Associazione Dilettantistica Sportiva -->
-  <PointOfInterest id="80" name="Ludovico Associazione Dilettantistica Sportiva">
+  --><!-- Nr. 81 --><!--
+  --><!-- Ludovico Associazione Dilettantistica Sportiva --><!--
+  <PointOfInterest id="81" name="Ludovico Associazione Dilettantistica Sportiva">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 81 -->
-  <!-- Centro Addestramento SPAL -->
-  <PointOfInterest id="81" name="Centro Addestramento SPAL">
+  --><!-- Nr. 82 --><!--
+  --><!-- Centro Addestramento SPAL --><!--
+  <PointOfInterest id="82" name="Centro Addestramento SPAL">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 82 -->
-  <!-- La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale -->
-  <PointOfInterest id="82" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
+  --><!-- Nr. 83 --><!--
+  --><!-- La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale --><!--
+  <PointOfInterest id="83" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 83 -->
-  <!-- New Millenium -->
-  <PointOfInterest id="83" name="New Millenium">
+  --><!-- Nr. 84 --><!--
+  --><!-- New Millenium --><!--
+  <PointOfInterest id="84" name="New Millenium">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 84 -->
-  <!-- Centro Sportivo Polivalente Parco 1° maggio -->
-  <PointOfInterest id="84" name="Centro Sportivo Polivalente Parco 1° maggio">
+  --><!-- Nr. 85 --><!--
+  --><!-- Centro Sportivo Polivalente Parco 1° maggio --><!--
+  <PointOfInterest id="85" name="Centro Sportivo Polivalente Parco 1° maggio">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 85 -->
-  <!-- Synergy Lab -->
-  <PointOfInterest id="85" name="Synergy Lab">
+  --><!-- Nr. 86 --><!--
+  --><!-- Synergy Lab --><!--
+  <PointOfInterest id="86" name="Synergy Lab">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 86 -->
-  <!-- Palestra Dock Sport Village Ferrara -->
-  <PointOfInterest id="86" name="Palestra Dock Sport Village Ferrara">
+  --><!-- Nr. 87 --><!--
+  --><!-- Palestra Dock Sport Village Ferrara --><!--
+  <PointOfInterest id="87" name="Palestra Dock Sport Village Ferrara">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 87 -->
-  <!-- A.S.D. Beach Volley Ferrara Associazione Sportiva Dilettantistica Beach Planet -->
-  <PointOfInterest id="87" name="A.S.D. Beach Volley Ferrara Associazione Sportiva Dilettantistica Beach Planet">
+  --><!-- Nr. 88 --><!--
+  --><!-- A.S.D. Beach Volley Ferrara Associazione Sportiva Dilettantistica Beach Planet --><!--
+  <PointOfInterest id="88" name="A.S.D. Beach Volley Ferrara Associazione Sportiva Dilettantistica Beach Planet">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 88 -->
-  <!-- Palestra & Piscina Doro -->
-  <PointOfInterest id="88" name="Palestra e Piscina Doro">
+  --><!-- Nr. 89 --><!--
+  --><!-- Palestra & Piscina Doro --><!--
+  <PointOfInterest id="89" name="Palestra e Piscina Doro">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 89 -->
-  <!-- Centro di Medicina dello Sport di Ferrara -->
-  <PointOfInterest id="89" name="Centro di Medicina dello Sport di Ferrara">
+  --><!-- Nr. 90 --><!--
+  --><!-- Centro di Medicina dello Sport di Ferrara --><!--
+  <PointOfInterest id="90" name="Centro di Medicina dello Sport di Ferrara">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
   </PointOfInterest>
 
-  <!-- Nr. 90 -->
-  <!-- Spal Store -->
-  <PointOfInterest id="90" name="Spal Store">
+  --><!-- Nr. 91 --><!--
+  --><!-- Spal Store --><!--
+  <PointOfInterest id="91" name="Spal Store">
     <Category>3</Category>
     <ThematicScore category="3" value="100" />
-    <OpeningTimeAM from="" to="" />
-    <OpeningTimePM from="" to="" />
+    <OpeningTimes>
+      <OpeningTime from="" to=""/>
+      <OpeningTime from="" to=""/>
+    </OpeningTimes>
     <TimeVisit></TimeVisit>
-  </PointOfInterest>
-
+  </PointOfInterest>-->
 </PointOfInterests>

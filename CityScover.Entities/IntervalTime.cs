@@ -5,8 +5,8 @@ namespace CityScover.Entities
    public class IntervalTime
    {
       #region Public properties
-      public DateTime OpeningTime { get; set; }
-      public DateTime ClosingTime { get; set; } 
+      public TimeSpan? OpeningTime { get; set; }
+      public TimeSpan? ClosingTime { get; set; } 
       #endregion
    }
 }

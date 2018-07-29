@@ -1,9 +1,8 @@
-﻿using System;
+﻿using CityScover.Data;
+using CityScover.Entities;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CityScover
 {
@@ -11,6 +10,7 @@ namespace CityScover
    {
       static void Main(string[] args)
       {
+         IEnumerable<InterestPoint> points = CityScoverRepository.Points;
       }
    }
 }

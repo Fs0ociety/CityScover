@@ -1,6 +1,7 @@
 ﻿namespace CityScover.Entities
 {
-   class MeasureUnit
+   public class MeasureUnit
    {
+      // TODO
    }
 }

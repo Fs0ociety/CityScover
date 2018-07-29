@@ -21,12 +21,12 @@ namespace CityScover.Entities
       /// <summary>
       /// Orari di apertura del punto d'interesse.
       /// </summary>
-      public IEnumerable<IntervalTime> OpeningTimes { get; set; }
+      public ICollection<IntervalTime> OpeningTimes { get; set; }
       
       /// <summary>
       /// Tempo necessario per visitare il punto d'interesse.
       /// </summary>
-      public TimeSpan VisitTime { get; set; }
+      public TimeSpan? TimeVisit { get; set; }
       #endregion
    }
 }
