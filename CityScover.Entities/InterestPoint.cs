@@ -7,9 +7,25 @@ namespace CityScover.Entities
    {
       #region Public properties
       public string Name { get; set; }
+
+      /// <summary>
+      /// Categoria di appartenenza del punto d'interesse.
+      /// </summary>
       public TourCategory Category { get; set; }
+      
+      /// <summary>
+      /// Punteggio tematico assegnato al punto d'interesse.
+      /// </summary>
       public ThematicScore Score { get; set; }
+      
+      /// <summary>
+      /// Orari di apertura del punto d'interesse.
+      /// </summary>
       public IEnumerable<IntervalTime> OpeningTimes { get; set; }
+      
+      /// <summary>
+      /// Tempo necessario per visitare il punto d'interesse.
+      /// </summary>
       public TimeSpan VisitTime { get; set; }
       #endregion
    }

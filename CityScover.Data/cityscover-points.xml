@@ -1,22 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<!---->
-<!-- PUNTI D'INTERESSE -->
-<!---->
-<!-- Id: identificativo numerico del punto d'interesse -->
-
-<!-- Name: Nome descrittivo del punto d'interesse -->
-
-<!-- Category: Categoria di appartenenza del punto d'interesse -->
-
-<!-- ThematicScore: Punteggio tematico assegnato al punto d'interesse -->
-
-<!-- OpeningTimeAM: Fascia oraria di apertura mattutina -->
-
-<!-- OpeningTimePM: Fascia oraria di apertura pomeridiana -->
-
-<!-- TimeVisit: Tempo in minuti/ore per visitare il punto d'interesse -->
-
-
 <!-- Point of interests -->
 <PointOfInterests>
 
