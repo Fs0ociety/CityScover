@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 28/07/2018
+// File update: 30/07/2018
 //
 
 using CityScover.Entities;
@@ -16,11 +16,14 @@ namespace CityScover.Data
 {
    public static class CityScoverRepository
    {
+      private static readonly ICollection<MeasureUnit> _measureUnits;
       private static readonly ICollection<InterestPoint> _points;
+      private static readonly ICollection<InterestPoint> _routes;
 
       #region Constructors
       static CityScoverRepository()
       {
+         _measureUnits = new Collection<MeasureUnit>();
          _points = new Collection<InterestPoint>();
          //_routes = new Collection<Route>();
 
@@ -31,9 +34,17 @@ namespace CityScover.Data
       #region Private static methods
       private static void InitializeData()
       {
+         InitializeMeasureUnits();
          InitializePoints();
          //InitializePoints2();
          //InitializeRoutes();
+      }
+
+      public static void InitializeMeasureUnits()
+      {
+         XmlDocument document = new XmlDocument();
+         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"));
+         // TODO
       }
 
       private static void InitializePoints()
@@ -59,75 +70,95 @@ namespace CityScover.Data
                   switch (nestedChild.Name)
                   {
                      case "Category":
-                        string categoryId = nestedChild.Attributes["id"].Value;
+                        SetCategory();
 
-                        point.Category = new TourCategory
+                        void SetCategory()
                         {
-                           Id = (!categoryId.Equals(string.Empty)) ? int.Parse(categoryId) : (int?)null
-                        };
+                           string categoryId = nestedChild.Attributes["id"].Value;
+                           point.Category = new TourCategory
+                           {
+                              Id = (!categoryId.Equals(string.Empty)) ? int.Parse(categoryId) : (int?)null
+                           };
 
-                        switch (point.Category.Id)
-                        {
-                           case 1:
-                              point.Category.Description = "Storico/Culturale";
-                              break;
-                           case 2:
-                              point.Category.Description = "Gastronimico";
-                              break;
-                           case 3:
-                              point.Category.Description = "Sportivo";
-                              break;
-                           default:
-                              break;
+                           switch (point.Category.Id)
+                           {
+                              case 1:
+                                 point.Category.Description = "Storico/Culturale";
+                                 break;
+                              case 2:
+                                 point.Category.Description = "Gastronimico";
+                                 break;
+                              case 3:
+                                 point.Category.Description = "Sportivo";
+                                 break;
+                              default:
+                                 break;
+                           }
                         }
                         break;
 
                      case "ThematicScore":
-                        string scoreValue = nestedChild.Attributes["value"].Value;
+                        SetThematicScore();
 
-                        point.Score = new ThematicScore()
+                        void SetThematicScore()
                         {
-                           Category = point.Category,
-                           Value = (!scoreValue.Equals(string.Empty)) ? int.Parse(scoreValue) : (int?)null
-                        };
+                           string scoreValue = nestedChild.Attributes["value"].Value;
+
+                           point.Score = new ThematicScore()
+                           {
+                              Category = point.Category,
+                              Value = (!scoreValue.Equals(string.Empty)) ? int.Parse(scoreValue) : (int?)null
+                           };
+                        }
                         break;
 
                      case "OpeningTimes":
-                        point.OpeningTimes = new Collection<IntervalTime>();
+                        SetOpeningTimes();
 
-                        foreach (XmlNode doubleNestedChild in nestedChild.ChildNodes)
+                        void SetOpeningTimes()
                         {
-                           if (doubleNestedChild.NodeType != XmlNodeType.Element)
-                           {
-                              continue;
-                           }
+                           point.OpeningTimes = new Collection<IntervalTime>();
 
-                           IntervalTime intervalTime = new IntervalTime();
-                           if (!doubleNestedChild.Attributes["from"].Value.Equals(string.Empty) &&
-                              !doubleNestedChild.Attributes["to"].Value.Equals(string.Empty))
+                           foreach (XmlNode doubleNestedChild in nestedChild.ChildNodes)
                            {
-                              string openingTime = doubleNestedChild.Attributes["from"].Value;
-                              string closingTime = doubleNestedChild.Attributes["to"].Value;
+                              if (doubleNestedChild.NodeType != XmlNodeType.Element)
+                              {
+                                 continue;
+                              }
 
-                              try
+                              IntervalTime intervalTime = new IntervalTime();
+                              if (!doubleNestedChild.Attributes["from"].Value.Equals(string.Empty) &&
+                                 !doubleNestedChild.Attributes["to"].Value.Equals(string.Empty))
                               {
-                                 intervalTime.OpeningTime = TimeSpan.Parse(openingTime);
-                                 intervalTime.ClosingTime = TimeSpan.Parse(closingTime);
+                                 string openingTime = doubleNestedChild.Attributes["from"].Value;
+                                 string closingTime = doubleNestedChild.Attributes["to"].Value;
+
+                                 try
+                                 {
+                                    intervalTime.OpeningTime = TimeSpan.Parse(openingTime);
+                                    intervalTime.ClosingTime = TimeSpan.Parse(closingTime);
+                                 }
+                                 catch (FormatException exception)
+                                 {
+                                    throw new FormatException(exception.Message);
+                                 }
                               }
-                              catch (FormatException exception)
-                              {
-                                 throw new FormatException(exception.Message);
-                              }
+                              point.OpeningTimes.Add(intervalTime);
                            }
-                           point.OpeningTimes.Add(intervalTime);
                         }
                         break;
 
                      case "TimeVisit":
-                        // TODO: Capire come valorizzare l'unita' di misura per il tempo di visita del luogo d'interesse.
-                        string duration = nestedChild.Attributes["duration"].Value;
-                        // TODO: controllare unita' di misura del tempo (ore o minuti) e creare l'attributo TimeVisit in modo opportuno.
-                        point.TimeVisit = (!duration.Equals(string.Empty)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null;
+                        SetTimeVisit();
+
+                        void SetTimeVisit()
+                        {
+                           // TODO: Capire come valorizzare l'unita' di misura per il tempo di visita del luogo d'interesse.
+                           string measureUnit = nestedChild.Attributes["unitOfMeasure"].Value;
+                           string duration = nestedChild.Attributes["duration"].Value;
+                           // TODO: controllare unita' di misura del tempo (ore o minuti) e creare l'attributo TimeVisit in modo opportuno.
+                           point.TimeVisit = (!duration.Equals(string.Empty)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null;
+                        }
                         break;
 
                      default:
@@ -145,7 +176,8 @@ namespace CityScover.Data
          settings.IgnoreComments = true;
          settings.IgnoreComments = true;
 
-         using (XmlReader reader = XmlReader.Create(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"), settings))
+         using (XmlReader reader = XmlReader.Create(
+            typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"), settings))
          {
             while (reader.Read())
             {
@@ -198,7 +230,9 @@ namespace CityScover.Data
       #endregion
 
       #region Public static properties
+      public static IEnumerable<MeasureUnit> MeasureUnits => _measureUnits;
       public static IEnumerable<InterestPoint> Points => _points;
+      //public static IEnumerable<Route> Routes => _routes;
       #endregion
    }
 }

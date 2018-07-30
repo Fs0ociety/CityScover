@@ -1,8 +1,14 @@
-﻿using CityScover.Data;
+﻿//
+// CityScover
+// Version 1.0
+//
+// Authors: Andrea Ritondale, Andrea Mingardo
+// File update: 30/07/2018
+//
+
+using CityScover.Data;
 using CityScover.Entities;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace CityScover
 {
