@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Riccardo Mariotti
-// File update: 28/07/2018
+// File update: 30/07/2018
 //
 
 using System;
@@ -182,7 +182,7 @@ namespace CityScover.ADT.Graphs
       }
 
       /// <summary>
-      /// 
+      /// Ritorna la collezione di nodi adiacenti al nodo specificato come parametro.
       /// </summary>
       /// <param name="nodeKey"></param>
       /// <returns></returns>
@@ -193,15 +193,13 @@ namespace CityScover.ADT.Graphs
       }
 
       /// <summary>
-      /// 
+      /// Ritorna il grado di un nodo corrispondente al numero di archi incidenti su esso.
       /// </summary>
-      /// <param name="sourceNode"></param>
-      /// <param name="destNode"></param>
+      /// <param name="nodeKey"></param>
       /// <returns></returns>
-      public void GetEdge(TNodeKey sourceNode, TNodeKey destNode)
+      public int? GetNodeGrade(TNodeKey nodeKey)
       {
-         // TODO
-         throw new NotImplementedException(nameof(GetEdge));
+         return _nodes[nodeKey]?.Grade;
       }
       #endregion      
    }

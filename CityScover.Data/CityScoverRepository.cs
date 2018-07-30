@@ -44,7 +44,24 @@ namespace CityScover.Data
       {
          XmlDocument document = new XmlDocument();
          document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"));
-         // TODO
+
+         foreach (XmlNode node in document.GetElementsByTagName("measureunits"))
+         {
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+               if (childNode.NodeType != XmlNodeType.Element || !childNode.Name.Equals("measureunit"))
+               {
+                  continue;
+               }
+
+               MeasureUnit measureUnit = new MeasureUnit();
+               string measureUnitCode = childNode.Attributes["code"].Value;
+               string measureUnitSymbol = childNode.Attributes["symbol"].Value;
+               measureUnit.Code = (!measureUnitCode.Equals(string.Empty)) ? measureUnitCode : null;
+               measureUnit.Symbol = (!measureUnitSymbol.Equals(string.Empty)) ? measureUnitSymbol : null;
+               _measureUnits.Add(measureUnit);
+            }
+         }
       }
 
       private static void InitializePoints()
@@ -103,7 +120,6 @@ namespace CityScover.Data
                         void SetThematicScore()
                         {
                            string scoreValue = nestedChild.Attributes["value"].Value;
-
                            point.Score = new ThematicScore()
                            {
                               Category = point.Category,
@@ -127,12 +143,11 @@ namespace CityScover.Data
                               }
 
                               IntervalTime intervalTime = new IntervalTime();
-                              if (!doubleNestedChild.Attributes["from"].Value.Equals(string.Empty) &&
-                                 !doubleNestedChild.Attributes["to"].Value.Equals(string.Empty))
-                              {
-                                 string openingTime = doubleNestedChild.Attributes["from"].Value;
-                                 string closingTime = doubleNestedChild.Attributes["to"].Value;
+                              string openingTime = doubleNestedChild.Attributes["from"].Value;
+                              string closingTime = doubleNestedChild.Attributes["to"].Value;
 
+                              if (!openingTime.Equals(string.Empty) && !closingTime.Equals(string.Empty))
+                              {
                                  try
                                  {
                                     intervalTime.OpeningTime = TimeSpan.Parse(openingTime);
