@@ -18,7 +18,7 @@ namespace CityScover.Data
    {
       private static readonly ICollection<MeasureUnit> _measureUnits;
       private static readonly ICollection<InterestPoint> _points;
-      private static readonly ICollection<InterestPoint> _routes;
+      //private static readonly ICollection<InterestPoint> _routes;
 
       #region Constructors
       static CityScoverRepository()
