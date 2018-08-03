@@ -17,6 +17,7 @@ namespace CityScover
       static void Main(string[] args)
       {
          IEnumerable<InterestPoint> points = CityScoverRepository.Points;
+         RoutesGenerator.GenerateRoutes((ICollection<InterestPoint>)points);
       }
    }
 }

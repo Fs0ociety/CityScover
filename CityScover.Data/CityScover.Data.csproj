@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="CityScoverRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoutesGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CityScover.Entities\CityScover.Entities.csproj">
@@ -51,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="cityscover-points.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="cityscover-routes.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

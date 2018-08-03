@@ -89,8 +89,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -101,8 +100,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -170,8 +168,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -182,8 +179,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -217,8 +213,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -229,8 +224,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -253,8 +247,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -322,8 +315,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
@@ -345,8 +337,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
