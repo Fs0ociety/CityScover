@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Riccardo Mariotti
-// File update: 28/07/2018
+// File update: 30/07/2018
 //
 
 using System.Collections.Generic;
@@ -39,6 +39,8 @@ namespace CityScover.ADT.Graphs
          public TNodeData Data => _data;
 
          public IEnumerable<GraphEdge> Edges => _edges;
+
+         public int Grade => _edges.Count;
          #endregion
 
          #region Public methods

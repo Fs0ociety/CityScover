@@ -3,11 +3,12 @@
 // Version 1.0
 //
 // Authors: Riccardo Mariotti
-// File update: 28/07/2018
+// File update: 30/07/2018
 //
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.ADT.Graphs
@@ -182,26 +183,27 @@ namespace CityScover.ADT.Graphs
       }
 
       /// <summary>
-      /// 
+      /// Ritorna l'insieme dei nodi adiacenti al nodo specificato come parametro.
       /// </summary>
       /// <param name="nodeKey"></param>
       /// <returns></returns>
       public IEnumerable<TNodeKey> GetAdjacentNodes(TNodeKey nodeKey)
       {
-         // TODO
-         throw new NotImplementedException(nameof(GetAdjacentNodes));
+         return GetSuccessorNodes(nodeKey);
       }
 
       /// <summary>
-      /// 
+      /// Ritorna il grado di un nodo, corrispondente al numero di archi incidenti su esso.
       /// </summary>
-      /// <param name="sourceNode"></param>
-      /// <param name="destNode"></param>
+      /// <param name="nodeKey"></param>
       /// <returns></returns>
-      public void GetEdge(TNodeKey sourceNode, TNodeKey destNode)
+      public int GetNodeGrade(TNodeKey nodeKey)
       {
-         // TODO
-         throw new NotImplementedException(nameof(GetEdge));
+         if (!ContainsNode(nodeKey))
+         {
+            throw new InvalidOperationException();
+         }
+         return _nodes[nodeKey].Grade;
       }
       #endregion      
    }
