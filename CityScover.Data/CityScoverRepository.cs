@@ -3,13 +3,14 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 30/07/2018
+// File update: 05/08/2018
 //
 
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml;
 
 namespace CityScover.Data
@@ -18,14 +19,14 @@ namespace CityScover.Data
    {
       private static readonly ICollection<MeasureUnit> _measureUnits;
       private static readonly ICollection<InterestPoint> _points;
-      //private static readonly ICollection<InterestPoint> _routes;
+      private static readonly ICollection<Route> _routes;
 
       #region Constructors
       static CityScoverRepository()
       {
          _measureUnits = new Collection<MeasureUnit>();
          _points = new Collection<InterestPoint>();
-         //_routes = new Collection<Route>();
+         _routes = new Collection<Route>();
 
          InitializeData();
       }
@@ -36,8 +37,7 @@ namespace CityScover.Data
       {
          InitializeMeasureUnits();
          InitializePoints();
-         //InitializePoints2();
-         //InitializeRoutes();
+         InitializeRoutes();
       }
 
       public static void InitializeMeasureUnits()
@@ -78,9 +78,15 @@ namespace CityScover.Data
                   continue;
                }
 
-               // Create a new InterestPoint entity
-               InterestPoint point = new InterestPoint();
-               point.Name = childNode.Attributes["name"].Value;
+               string pointId = childNode.Attributes["id"].Value;
+               string pointName = childNode.Attributes["name"].Value;
+
+               // Create a new entity of InterestPoint
+               InterestPoint point = new InterestPoint()
+               {
+                  Id = int.Parse(pointId),
+                  Name = pointName
+               };
 
                foreach (XmlNode nestedChild in childNode.ChildNodes)
                {
@@ -240,14 +246,82 @@ namespace CityScover.Data
 
       private static void InitializeRoutes()
       {
-         throw new NotImplementedException();
+         XmlDocument document = new XmlDocument();
+         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-routes.xml"));
+
+         foreach (XmlNode node in document.GetElementsByTagName("Routes"))
+         {
+            foreach (XmlNode childNode in node.ChildNodes)
+            {
+               if (childNode.NodeType != XmlNodeType.Element || !childNode.Name.Equals("Route"))
+               {
+                  continue;
+               }
+
+               string pointId;
+               string distance;
+               InterestPoint point;
+               string routeId = childNode.Attributes["id"].Value;
+               int result = ConvertAttributeId(routeId);
+
+               Route route = new Route()
+               {
+                  Id = result
+               };
+
+               foreach (XmlNode nestedChild in childNode.ChildNodes)
+               {
+                  switch (nestedChild.Name)
+                  {
+                     case "PointFrom":
+                        pointId = nestedChild.Attributes["id"].Value;
+                        result = ConvertAttributeId(pointId);
+                        point = (from p in _points where p.Id == result select p).FirstOrDefault();
+                        route.PointFrom = point;
+                        break;
+
+                     case "PointTo":
+                        pointId = nestedChild.Attributes["id"].Value;
+                        result = ConvertAttributeId(pointId);
+                        point = (from p in _points where p.Id == result select p).FirstOrDefault();
+                        route.PointTo = point;
+                        break;
+
+                     case "Distance":
+                        distance = nestedChild.Attributes["value"].Value;
+                        bool success = float.TryParse(distance, out float fDistance);
+                        if (!success)
+                        {
+                           throw new FormatException(nameof(distance));
+                        }
+                        route.Distance = fDistance;
+                        break;
+
+                     default:
+                        break;
+                  }
+               }
+               _routes.Add(route);
+            }
+         }
+
+         int ConvertAttributeId(string id)
+         {
+            bool success = int.TryParse(id, out int result);
+            if (!success)
+            {
+               throw new FormatException(nameof(id));
+            }
+
+            return result;
+         }
       }
       #endregion
 
       #region Public static properties
       public static IEnumerable<MeasureUnit> MeasureUnits => _measureUnits;
       public static IEnumerable<InterestPoint> Points => _points;
-      //public static IEnumerable<Route> Routes => _routes;
+      public static IEnumerable<Route> Routes => _routes;
       #endregion
    }
 }

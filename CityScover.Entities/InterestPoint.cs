@@ -6,6 +6,14 @@ namespace CityScover.Entities
    public class InterestPoint
    {
       #region Public properties
+      /// <summary>
+      /// Identificativo univoco del punto d'interesse.
+      /// </summary>
+      public int Id { get; set; }
+
+      /// <summary>
+      /// Descrizione generica del punto d'interesse.
+      /// </summary>
       public string Name { get; set; }
 
       /// <summary>
