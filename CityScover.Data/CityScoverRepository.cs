@@ -109,7 +109,7 @@ namespace CityScover.Data
                                  point.Category.Description = "Storico/Culturale";
                                  break;
                               case 2:
-                                 point.Category.Description = "Gastronimico";
+                                 point.Category.Description = "Gastronomico";
                                  break;
                               case 3:
                                  point.Category.Description = "Sportivo";
