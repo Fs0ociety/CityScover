@@ -109,5 +109,42 @@ namespace CityScover.Tests
          Assert.ThrowsException<InvalidOperationException>(() => graph.AddUndirectEdge(2, 2));
          Assert.IsTrue(graph.EdgeCount == 12);
       }
+
+      [TestMethod]
+      public void CreateGraph3()
+      {
+         CityMapGraph graph = new CityMapGraph();
+         Assert.IsTrue(graph.NodeCount == 0);
+         Assert.IsTrue(graph.EdgeCount == 0);
+
+         graph.AddNode(1, new InterestPoint("P1"));
+         graph.AddNode(2, new InterestPoint("P2"));
+         graph.AddNode(3, new InterestPoint("P3"));
+         graph.AddNode(4, new InterestPoint("P4"));
+         graph.AddNode(5, new InterestPoint("P5"));
+         Assert.IsTrue(graph.NodeCount == 5);
+
+         graph.AddUndirectEdge(1, 2);
+         graph.AddUndirectEdge(1, 5);
+         graph.AddUndirectEdge(2, 4);
+         graph.AddUndirectEdge(4, 3);
+         graph.AddUndirectEdge(5, 3);
+         Assert.IsTrue(graph.EdgeCount == 10);
+
+         //graph.AddEdge(1, 2);
+         //graph.AddEdge(2, 1);
+         //graph.AddEdge(1, 5);
+         //graph.AddEdge(5, 1);
+         //graph.AddEdge(2, 4);
+         //graph.AddEdge(4, 2);
+         //graph.AddEdge(5, 3);
+         //graph.AddEdge(3, 5);
+         //graph.AddEdge(3, 4);
+         //graph.AddEdge(4, 3);
+         //Assert.IsTrue(graph.EdgeCount == 10);
+                  
+         int P1Grade = graph.GetNodeGrade(1);
+         Assert.IsTrue(P1Grade == 2);
+      }
    }
 }
