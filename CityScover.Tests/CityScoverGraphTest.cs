@@ -1,0 +1,77 @@
+﻿using CityScover.ADT.Graphs;
+using CityScover.Entities;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace CityScover.Tests
+{
+   [TestClass]
+   public class CityScoverGraphTest
+   {
+      #region Classes
+      private class CityMapGraph : Graph<int, InterestPoint, Route>
+      {
+      }
+      #endregion
+
+      [TestMethod]
+      public void CreateGraph1()
+      {
+         CityMapGraph graph = new CityMapGraph();
+         Assert.IsTrue(graph.NodeCount == 0);
+         Assert.IsTrue(graph.EdgeCount == 0);
+
+         InterestPoint p1 = new InterestPoint();
+         InterestPoint p2 = new InterestPoint();
+         InterestPoint p3 = new InterestPoint();
+         InterestPoint p4 = new InterestPoint();
+         InterestPoint p5 = new InterestPoint();
+
+         p1.Name = "P1";
+         p2.Name = "P2";
+         p3.Name = "P3";
+         p4.Name = "P4";
+         p5.Name = "P5";
+
+         p1.Score = new ThematicScore();
+         p2.Score = new ThematicScore();
+         p3.Score = new ThematicScore();
+         p4.Score = new ThematicScore();
+         p5.Score = new ThematicScore();
+
+         p1.Score.Value = 50;
+         p2.Score.Value = 50;
+         p3.Score.Value = 50;
+         p4.Score.Value = 50;
+         p5.Score.Value = 50;
+
+         graph.AddNode(1, p1);
+         graph.AddNode(2, p2);
+         graph.AddNode(3, p3);
+         graph.AddNode(4, p4);
+         graph.AddNode(5, p5);
+         Assert.IsTrue(graph.NodeCount == 5);
+
+         Route r1 = new Route();
+         Route r2 = new Route();
+         Route r3 = new Route();
+         Route r4 = new Route();
+         Route r5 = new Route();
+
+         r1.Distance = 100;
+         r2.Distance = 100;
+         r3.Distance = 100;
+         r4.Distance = 100;
+         r5.Distance = 100;
+
+         graph.AddUndirectEdge(1, 2, r1);
+         graph.AddUndirectEdge(1, 5, r2);
+         graph.AddUndirectEdge(2, 4, r3);
+         graph.AddUndirectEdge(4, 3, r4);
+         graph.AddUndirectEdge(5, 3, r5);
+         Assert.IsTrue(graph.EdgeCount == 10);
+
+         int? p1Score = graph[1].Score.Value;
+         Assert.IsTrue(p1Score == 50);
+      }
+   }
+}

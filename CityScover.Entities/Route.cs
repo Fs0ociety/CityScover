@@ -6,9 +6,12 @@
 // File update: 30/07/2018
 //
 
+using System;
+using CityScover.ADT.Graphs;
+
 namespace CityScover.Entities
 {
-   public class Route
+   public class Route : IGraphEdgeWeight
    {
       #region Public properties
       /// <summary>
@@ -30,6 +33,8 @@ namespace CityScover.Entities
       /// Distanza della tratta. 
       /// </summary>
       public float Distance { get; set; }
+
+      public Func<double> Weight => () => Distance;
       #endregion
-   }
+    }
 }

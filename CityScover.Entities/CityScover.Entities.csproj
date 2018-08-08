@@ -49,5 +49,11 @@
     <Compile Include="Tour.cs" />
     <Compile Include="TourCategory.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CityScover.ADT.Graphs\CityScover.ADT.Graphs.csproj">
+      <Project>{F4882229-C786-4ED9-A48A-7C325807F838}</Project>
+      <Name>CityScover.ADT.Graphs</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
