@@ -148,6 +148,42 @@ namespace CityScover.ADT.Graphs
       public bool ContainsNode(TNodeKey nodeKey) => _nodes.ContainsKey(nodeKey);
 
       /// <summary>
+      /// Restituisce l'insieme dei dati degli archi specificata la chiave del nodo.
+      /// </summary>
+      /// <param name="nodeKey">Chiave del nodo.</param>
+      /// <returns></returns>
+      public IEnumerable<TEdgeWeight> GetEdges(TNodeKey nodeKey)
+      {
+         if (!_nodes.ContainsKey(nodeKey))
+         {
+            throw new InvalidOperationException();
+         }
+
+         // return _nodes.SelectMany(x => x.Value.Edges.Where(y => Equals(y.SourceNode.Key, nodeKey)).Select(k => k.Weight));
+         return _nodes[nodeKey].Edges.Select(x => x.Weight);
+      }
+
+      /// <summary>
+      /// Restituisce il dato dell'arco specificato dalla chiave.
+      /// </summary>
+      /// <param name="startNodeKey">Chiave del primo nodo.</param>
+      /// <param name="endNodeKey">Chiave del secondo nodo.</param>
+      /// <returns></returns>
+      public TEdgeWeight GetEdge(TNodeKey startNodeKey, TNodeKey endNodeKey)
+      {
+         if (!_nodes.ContainsKey(startNodeKey) || !_nodes.ContainsKey(endNodeKey))
+         {
+            throw new InvalidOperationException();
+         }
+
+         return _nodes
+            .SelectMany(x => x.Value.Edges
+            .Where(y => Equals(y.SourceNode.Key, startNodeKey)))
+            .Where(z => Equals(z.DestNode.Key, endNodeKey))
+            .Select(k => k.Weight).FirstOrDefault();
+      }
+
+      /// <summary>
       /// Ritorna le chiavi dei nodi predecessori del nodo specificato.
       /// </summary>
       /// <param name="nodeKey">Chiave del nodo.</param>

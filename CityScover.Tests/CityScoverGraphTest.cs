@@ -1,6 +1,7 @@
 ﻿using CityScover.ADT.Graphs;
 using CityScover.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace CityScover.Tests
 {
@@ -57,7 +58,7 @@ namespace CityScover.Tests
          Route r4 = new Route();
          Route r5 = new Route();
 
-         r1.Distance = 100;
+         r1.Distance = 200;
          r2.Distance = 100;
          r3.Distance = 100;
          r4.Distance = 100;
@@ -72,6 +73,12 @@ namespace CityScover.Tests
 
          int? p1Score = graph[1].Score.Value;
          Assert.IsTrue(p1Score == 50);
+
+         var p1Edges = graph.GetEdges(1);
+         Assert.IsTrue(p1Edges.Count() == 2);
+
+         var p1p2Edge = graph.GetEdge(1, 2);
+         Assert.IsTrue(p1p2Edge.Distance == 200);
       }
    }
 }
