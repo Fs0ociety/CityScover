@@ -65,6 +65,10 @@
       <Project>{2da92540-db3e-433b-841b-3f49f9dcdc71}</Project>
       <Name>CityScover.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CityScover.Utils\CityScover.Utils.csproj">
+      <Project>{8483B781-2A00-4249-83F2-C7184A573B31}</Project>
+      <Name>CityScover.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

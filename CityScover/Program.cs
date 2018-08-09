@@ -7,6 +7,7 @@
 //
 
 using CityScover.Data;
+using CityScover.Engine;
 using CityScover.Entities;
 using System.Collections.Generic;
 
@@ -19,6 +20,8 @@ namespace CityScover
          IEnumerable<InterestPoint> points = CityScoverRepository.Points;
          RoutesGenerator.GenerateRoutes((ICollection<InterestPoint>)points);
          IEnumerable<Route> routes = CityScoverRepository.Routes;
+
+         Solver.Instance.Run();
       }
    }
 }
