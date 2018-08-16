@@ -3,12 +3,14 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/08/2018
+// File update: 16/08/2018
 //
+
+using CityScover.ADT.Graphs;
 
 namespace CityScover.Engine.Workers
 {
-   internal sealed class CityGraphWorker
+   internal sealed class CityGraphWorker : Graph<int, InterestPointWorker, RouteWorker>
    {
    }
 }

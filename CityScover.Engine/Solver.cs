@@ -24,6 +24,8 @@ namespace CityScover.Engine
       #region Constructors
       private Solver()
       {
+         // Il Solver crea il problema e lo trasmette all'ExecutionTracer.
+         //Problem p = new Problem();
       }
       #endregion
 

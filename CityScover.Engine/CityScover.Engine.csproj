@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
+    <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configurations\Configuration.cs" />
     <Compile Include="Constraint.cs" />
