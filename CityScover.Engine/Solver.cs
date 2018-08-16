@@ -94,7 +94,7 @@ namespace CityScover.Engine
 
                   var algorithm = GetAlgorithmTypeById(algorithmId);
                   Configuration conf = new Configuration();
-                  conf.AddStage(stage, AlgorithmType.NearestNeighbor);
+                  //conf.AddStage(stage, AlgorithmType.NearestNeighbor);
                }
             }
          }

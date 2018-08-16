@@ -57,10 +57,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CityScover.Data\CityScover.Data.csproj">
-      <Project>{ae6224d4-863e-4002-8e0d-5626ed9c6411}</Project>
-      <Name>CityScover.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CityScover.Engine\CityScover.Engine.csproj">
       <Project>{4c490874-3ae5-4747-ab49-fdbd63bde756}</Project>
       <Name>CityScover.Engine</Name>
@@ -74,7 +70,7 @@
       <Name>CityScover.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\CityScover.Utils\CityScover.Utils.csproj">
-      <Project>{8483B781-2A00-4249-83F2-C7184A573B31}</Project>
+      <Project>{8483b781-2a00-4249-83f2-c7184a573b31}</Project>
       <Name>CityScover.Utils</Name>
     </ProjectReference>
   </ItemGroup>
