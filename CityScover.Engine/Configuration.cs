@@ -9,18 +9,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace CityScover.Engine.Configurations
+namespace CityScover.Engine
 {
    /// <summary>
    /// TODO
    /// </summary>
-   internal sealed class Configuration
+   public sealed class Configuration
    {
       //private IDictionary<StageType, AlgorithmType> _stages;
       private ICollection<StageType> _stages;
 
       #region Constructors
-      internal Configuration()
+      public Configuration()
       {
          //_stages = new Dictionary<StageType, AlgorithmType>();
          _stages = new Collection<StageType>();

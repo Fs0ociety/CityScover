@@ -6,7 +6,6 @@
 // File update: 09/08/2018
 //
 
-using CityScover.Engine.Configurations;
 using CityScover.Utils;
 using System;
 using System.Collections.Generic;
@@ -102,8 +101,11 @@ namespace CityScover.Engine
       #endregion
 
       #region Public methods
-      public void Run()
+      public void Run(Configuration configuration)
       {
+         if (configuration == null)
+            throw new ArgumentNullException(nameof(Run));
+
          throw new NotImplementedException(nameof(Run));
       }
       #endregion

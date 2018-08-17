@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CityScover.Engine</RootNamespace>
     <AssemblyName>CityScover.Engine</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +51,7 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="AlgorithmType.cs" />
-    <Compile Include="Configurations\Configuration.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Constraint.cs" />
     <Compile Include="ExecutionTracer.cs" />
     <Compile Include="ObjectiveFunction.cs" />
@@ -82,11 +83,6 @@
       <Project>{8483B781-2A00-4249-83F2-C7184A573B31}</Project>
       <Name>CityScover.Utils</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Configurations\solver-config-1.xml" />
-    <EmbeddedResource Include="Configurations\solver-config-2.xml" />
-    <EmbeddedResource Include="Configurations\solver-config-3.xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
