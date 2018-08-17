@@ -9,7 +9,6 @@
 using CityScover.Engine;
 using CityScover.Utils;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace CityScover.Services
@@ -17,26 +16,26 @@ namespace CityScover.Services
    public class SolverService : Singleton<SolverService>, ISolverService
    {
       #region ISolverService implementations
-      public void Run(IEnumerable<string> configurationFiles)
+      public void Run(string configsPath)
       {
-         if (configurationFiles == null)
+         if (configsPath == null)
          {
-            throw new ArgumentNullException(nameof(configurationFiles));
+            throw new ArgumentNullException(nameof(configsPath));
          }
 
-         ICollection<string> configFiles = configurationFiles as ICollection<string>;
-         if (configFiles == null)
+         if (!Directory.Exists(configsPath))
          {
-            throw new InvalidCastException();
+            throw new DirectoryNotFoundException(nameof(configsPath));
          }
 
-         if (configFiles.Count == 0)
+         string[] filenames = Directory.GetFiles(configsPath);         
+         if (filenames.Length == 0)
          {
             throw new FileNotFoundException("The directory does not contain files.");
          }
 
          IConfigurationService configService = ConfigurationService.Instance;
-         foreach (var configFile in configurationFiles)
+         foreach (var configFile in filenames)
          {
             Configuration config = configService.ReadConfigurationFromXml(configFile);
             Solver.Instance.Execute(config);

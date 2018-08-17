@@ -7,7 +7,6 @@
 //
 
 using CityScover.Services;
-using System.Collections.Generic;
 using System.Configuration;
 using static System.Console;
 
@@ -18,8 +17,11 @@ namespace CityScover
       static void Main(string[] args)
       {
          DisplayLogo();
-         var configFiles = InitializeConfigurations();
-         ExecuteConfigurations(configFiles);
+         string configsPath = ConfigurationManager.AppSettings["ConfigPaths"];
+         ISolverService solverService = SolverService.Instance;
+         solverService.Run(configsPath);
+
+         ReadKey();
       }
 
       #region Private static methods
@@ -51,20 +53,6 @@ namespace CityScover
          logo += "                                                                                                                                                                                                  ";
          WriteLine($"{logo}");
       }
-
-      private static IEnumerable<string> InitializeConfigurations()
-      {
-         IConfigurationService configService = ConfigurationService.Instance;
-         var configPaths = ConfigurationManager.AppSettings["ConfigPaths"];
-         var configurationFiles = configService.ReadConfigurationPath(configPaths);
-         return configurationFiles;
-      }
-
-      private static void ExecuteConfigurations(IEnumerable<string> configurationFiles)
-      {
-         ISolverService solverService = SolverService.Instance;
-         solverService.Run(configurationFiles);
-      } 
       #endregion
    }
 }
