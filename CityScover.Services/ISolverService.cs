@@ -6,10 +6,16 @@
 // File update: 17/08/2018
 //
 
+using System.Collections.Generic;
+
 namespace CityScover.Services
 {
    public interface ISolverService
    {
-      void Run();
+      /// <summary>
+      /// Invoke the Solver instance of CityScover.Engine to run the configuration passed as argument.
+      /// </summary>
+      /// <param name="configurationFile"></param>
+      void Run(IEnumerable<string> configurationFiles);
    }
 }

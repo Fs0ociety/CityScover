@@ -3,23 +3,21 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/08/2018
+// File update: 17/08/2018
 //
 
 using CityScover.Utils;
 using System;
-using System.Collections.Generic;
-using System.Xml;
 
 namespace CityScover.Engine
 {
    /// <summary>
-   /// TODO
+   /// This class represent the Facade class of the CityScover.Engine, implemented as a Singleton.
+   /// Contains the Execute method to run the configuration passed as argument.
+   /// The Solver uses ExecutionTracer and SolverHelpers classes to do overall work.
    /// </summary>
    public sealed class Solver : Singleton<Solver>
    {
-      private IEnumerable<Configuration> _configurations;
-
       #region Constructors
       private Solver()
       {
@@ -45,78 +43,13 @@ namespace CityScover.Engine
       }
       #endregion
 
-      #region Private methods
-      private AlgorithmType GetAlgorithmTypeById(int algorithmId)
-      {
-         // CODICE PROVVISORIO: Valutare trasferimento in CityScover.Utils
-         AlgorithmType algorithm = AlgorithmType.None;
-
-         switch (algorithmId)
-         {
-            case (int)AlgorithmType.NearestNeighbor:
-               algorithm = AlgorithmType.NearestNeighbor;
-               break;
-            default:
-               break;
-         }
-
-         return algorithm;
-         //throw new NotImplementedException();
-      }
-
-      private void InitializeConfigurations()
-      {
-         // CODICE PROVVISORIO: Valutare trasferimento in CityScover.Utils
-         const string resourceStream = "CityScover.Engine.Configurations.solver-config-1.xml";
-         XmlDocument document = new XmlDocument();
-         document.Load(typeof(Solver).Assembly.GetManifestResourceStream(resourceStream));
-
-         foreach (XmlNode node in document.GetElementsByTagName("Configuration"))
-         {
-            foreach (XmlNode childNode in node.ChildNodes)
-            {
-               if (childNode.NodeType != XmlNodeType.Element || !childNode.Name.Equals("Stages"))
-               {
-                  continue;
-               }
-
-               foreach (XmlNode nestedChild in childNode.ChildNodes)
-               {
-                  int stageId = int.Parse(nestedChild.Attributes["id"].Value);
-                  var stage = StageType.GetStageById(stageId);
-                  int algorithmId = 0;
-
-                  foreach (XmlNode nestedNode in nestedChild.ChildNodes)
-                  {
-                     algorithmId = int.Parse(nestedNode.Attributes["id"].Value);
-                  }
-
-                  var algorithm = GetAlgorithmTypeById(algorithmId);
-                  Configuration conf = new Configuration();
-                  //conf.AddStage(stage, AlgorithmType.NearestNeighbor);
-               }
-            }
-         }
-      }
-      #endregion
-
       #region Public methods
-      public void Run(Configuration configuration)
+      public void Execute(Configuration configuration)
       {
          if (configuration == null)
-            throw new ArgumentNullException(nameof(Run));
+            throw new ArgumentNullException(nameof(Execute));
 
-         throw new NotImplementedException(nameof(Run));
-      }
-      #endregion
-
-      #region Overrides
-      protected override void InitializeInstance()
-      {
-         // TODO: Leggere i files di configurazione dall'oppurtuna cartella.
-         // Popolamento della collezione delle configurazioni formate dalla coppia stages-algoritmi.
-         // Valutare spostamento dell'inizializzazione delle configurazioni in CityScover.Utils.
-         InitializeConfigurations();
+         throw new NotImplementedException(nameof(Execute));
       }
       #endregion
    }
