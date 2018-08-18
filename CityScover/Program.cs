@@ -17,7 +17,7 @@ namespace CityScover
       static void Main(string[] args)
       {
          DisplayLogo();
-         string configsPath = ConfigurationManager.AppSettings["ConfigPaths"];
+         string configsPath = ConfigurationManager.AppSettings["ConfigsPath"];
          ISolverService solverService = SolverService.Instance;
          solverService.Run(configsPath);
 
