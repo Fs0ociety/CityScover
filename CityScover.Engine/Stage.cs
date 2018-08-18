@@ -1,24 +1,32 @@
-﻿namespace CityScover.Engine
+﻿//
+// CityScover
+// Version 1.0
+//
+// Authors: Andrea Ritondale, Andrea Mingardo
+// File update: 18/08/2018
+//
+
+namespace CityScover.Engine
 {
-   public struct StageType
+   public struct Stage
    {
-      public static readonly StageType InvalidStage =
-         new StageType(0, "Invalid Stage");
+      public static readonly Stage InvalidStage =
+         new Stage(0, "Invalid Stage");
 
-      public static readonly StageType StageOne =
-         new StageType(1, "Greedy Stage");
+      public static readonly Stage StageOne =
+         new Stage(1, "Greedy Stage");
 
-      public static readonly StageType StageTwo =
-         new StageType(2, "Local Search Stage");
+      public static readonly Stage StageTwo =
+         new Stage(2, "Local Search Stage");
 
-      public static readonly StageType StageThree =
-         new StageType(3, "Local Search Improvement Stage");
+      public static readonly Stage StageThree =
+         new Stage(3, "Local Search Improvement Stage");
 
-      public static readonly StageType StageFour =
-         new StageType(4, "Metaheuristic Stage");
+      public static readonly Stage StageFour =
+         new Stage(4, "Metaheuristic Stage");
 
       #region Constructors
-      private StageType(int id, string description)
+      private Stage(byte id, string description)
       {
          Id = id;
          Description = description;
@@ -27,15 +35,15 @@
       #endregion
 
       #region Public properties
-      public int Id { get; private set; }
+      public byte Id { get; private set; }
       public string Description { get; private set; }
       public AlgorithmType CurrentAlgorithm { get; set; } 
       #endregion
 
       #region Public methods
-      public static StageType GetStageById(int id)
+      public static Stage GetStageById(int id)
       {
-         StageType stage = InvalidStage;
+         Stage stage = InvalidStage;
 
          if (id == StageOne.Id)
          {
@@ -53,7 +61,6 @@
          {
             stage = StageFour;
          }
-
          return stage;
       }
 
@@ -101,7 +108,6 @@
             default:
                break;
          }
-
          return algorithm;
       }
       #endregion

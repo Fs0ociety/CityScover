@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/08/2018
+// File update: 18/08/2018
 //
 
 using CityScover.Engine;
 using CityScover.Utils;
 using System;
+using System.Collections.ObjectModel;
 using System.Xml;
 
 namespace CityScover.Services
@@ -21,6 +22,8 @@ namespace CityScover.Services
          XmlDocument document = new XmlDocument();
          document.Load(filename);
          Configuration conf = new Configuration();
+         conf.Stages = new Collection<Stage>();
+         conf.RelaxedConstraintsId = new Collection<byte>();
 
          foreach (XmlNode node in document.GetElementsByTagName("Configuration"))
          {
@@ -38,8 +41,22 @@ namespace CityScover.Services
                      break;
 
                   case "TourCategory":
-                     int tourCategoryId = int.Parse(childNode.Attributes["id"].Value);
-                     conf.TourCategoryId = tourCategoryId;
+                     byte tourCategoryId = byte.Parse(childNode.Attributes["id"].Value);
+
+                     switch (tourCategoryId)
+                     {
+                        case 1:
+                           conf.TourCategory = TourCategoryType.HistoricalAndCultural;
+                           break;
+                        case 2:
+                           conf.TourCategory = TourCategoryType.Culinary;
+                           break;
+                        case 3:
+                           conf.TourCategory = TourCategoryType.Sport;
+                           break;
+                        default:
+                           break;
+                     }
                      break;
 
                   case "ArrivalTime":
@@ -62,14 +79,14 @@ namespace CityScover.Services
                   {
                      int stageId = int.Parse(nestedChild.Attributes["id"].Value);
                      int algorithmId = 0;
-                     StageType stage = StageType.GetStageById(stageId);
+                     Stage stage = Stage.GetStageById(stageId);
 
                      foreach (XmlNode nestedNode in nestedChild.ChildNodes)
                      {
                         algorithmId = int.Parse(nestedNode.Attributes["id"].Value);
                      }
 
-                     AlgorithmType algorithm = StageType.GetAlgorithmTypeById(algorithmId);
+                     AlgorithmType algorithm = Stage.GetAlgorithmTypeById(algorithmId);
                      stage.CurrentAlgorithm = algorithm;
                      conf.Stages.Add(stage);
                   }

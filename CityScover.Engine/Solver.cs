@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/08/2018
+// File update: 18/08/2018
 //
 
 using CityScover.Utils;
@@ -26,28 +26,21 @@ namespace CityScover.Engine
       }
       #endregion
 
-      #region Internal methods (Factory methods)
-      internal static ExecutionTracer CreateExecutionTracer()
-      {
-         throw new NotImplementedException();
-      }
-
-      internal static SolverConstraintHelper CreateSolverConstraintHelper()
-      {
-         throw new NotImplementedException();
-      }
-
-      internal static SolverEvaluationHelper CreateSolverEvaluationHelper()
-      {
-         throw new NotImplementedException();
-      }
+      #region Internal properties
+      internal Configuration WorkingConfiguration { get; private set; }
       #endregion
 
       #region Public methods
       public void Execute(Configuration configuration)
       {
-         if (configuration == null)
-            throw new ArgumentNullException(nameof(Execute));
+         InitializeWorkingConfig();
+
+         void InitializeWorkingConfig()
+         {
+            WorkingConfiguration = configuration;
+            SolverConstraintHelper.Instance.WorkingConfiguration = configuration;
+            SolverEvaluationHelper.Instance.WorkingConfiguration = configuration;
+         }
 
          throw new NotImplementedException(nameof(Execute));
       }

@@ -27,7 +27,6 @@ namespace CityScover.Engine
       internal Algorithm(CityGraphWorker workingGraph, Problem problem)
       {
          _currentGraph = workingGraph ?? throw new ArgumentNullException(nameof(workingGraph));
-         _problem = problem ?? throw new ArgumentNullException(nameof(problem));
          _acceptImprovementsOnly = true;
       }
       #endregion

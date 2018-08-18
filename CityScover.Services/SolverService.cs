@@ -9,12 +9,16 @@
 using CityScover.Engine;
 using CityScover.Utils;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace CityScover.Services
 {
    public class SolverService : Singleton<SolverService>, ISolverService
    {
+      private ICollection<Configuration> _tourConfigurations = new Collection<Configuration>();
+
       #region ISolverService implementations
       public void Run(string configsPath)
       {
@@ -38,7 +42,12 @@ namespace CityScover.Services
          foreach (var configFile in filenames)
          {
             Configuration config = configService.ReadConfigurationFromXml(configFile);
-            Solver.Instance.Execute(config);
+            _tourConfigurations.Add(config);
+         }
+
+         foreach (var tourConfig in _tourConfigurations)
+         {
+            Solver.Instance.Execute(tourConfig);
          }
       }
       #endregion

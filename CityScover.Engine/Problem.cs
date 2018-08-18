@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 16/08/2018
+// File update: 18/08/2018
 //
 
 using System;
@@ -12,19 +12,15 @@ using System.Collections.Generic;
 namespace CityScover.Engine
 {
    /// <summary>
-   /// TODO
+   /// This struct defines the template of a operating research problem.
    /// </summary>
-   internal class Problem
+   internal struct Problem
    {
-      private readonly IEnumerable<Constraint> _constraints;
+      private readonly IEnumerable<IConstraint> _constraints;
       private readonly IEnumerable<ObjectiveFunction> _objectiveFunctions;
 
       #region Constructors
-      internal Problem()
-      {
-      }
-
-      internal Problem(IEnumerable<Constraint> constraints, IEnumerable<ObjectiveFunction> objectiveFunctions)
+      internal Problem(IEnumerable<IConstraint> constraints, IEnumerable<ObjectiveFunction> objectiveFunctions)
       {
          _constraints = constraints ?? throw new ArgumentNullException(nameof(Problem));
          _objectiveFunctions = objectiveFunctions ?? throw new ArgumentNullException(nameof(Problem));
@@ -32,7 +28,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal properties
-      internal IEnumerable<Constraint> Constraints => _constraints;
+      internal IEnumerable<IConstraint> Constraints => _constraints;
       internal IEnumerable<ObjectiveFunction> ObjectiveFunctions => _objectiveFunctions; 
       #endregion
    }

@@ -52,7 +52,7 @@
     <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Constraint.cs" />
+    <Compile Include="IConstraint.cs" />
     <Compile Include="ExecutionTracer.cs" />
     <Compile Include="ObjectiveFunction.cs" />
     <Compile Include="Problem.cs" />
@@ -61,7 +61,8 @@
     <Compile Include="Solver.cs" />
     <Compile Include="SolverConstraintHelper.cs" />
     <Compile Include="SolverEvaluationHelper.cs" />
-    <Compile Include="StageType.cs" />
+    <Compile Include="Stage.cs" />
+    <Compile Include="TourCategoryType.cs" />
     <Compile Include="Workers\CityGraphWorker.cs" />
     <Compile Include="Workers\InterestPointWorker.cs" />
     <Compile Include="Workers\RouteWorker.cs" />
