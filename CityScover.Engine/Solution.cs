@@ -15,17 +15,18 @@ namespace CityScover.Engine
    /// </summary>
    internal class Solution
    {
-      /*
+      /*       
        * NOTA
-       * Valutare se rendere tale classe astratta, quindi ereditare da Solution delle
+       * Valutare in futuro se rendere tale classe astratta, quindi ereditare da Solution delle
        * classi concrete che descrivano la soluzione ad uno specifico problema.
        * 
        * (Ad esempio: vedi soluzione con lista di nodi per gli algoritmi Greedy e LS, 
        * o soluzione con lista di archi per l'algoritmo Lin Kernighan)
        */
       #region Internal properties
+      internal int? Id { get; set; }
       internal IDictionary<byte, bool> ProblemConstraints { get; set; }
-      internal double Cost { get; set; }
+      internal Evaluation Evaluation { get; set; }
       #endregion
    }
 }

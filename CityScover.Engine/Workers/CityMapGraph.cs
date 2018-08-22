@@ -10,7 +10,7 @@ using CityScover.ADT.Graphs;
 
 namespace CityScover.Engine.Workers
 {
-   internal sealed class CityGraphWorker : Graph<int, InterestPointWorker, RouteWorker>
+   internal sealed class CityMapGraph : Graph<int, InterestPointWorker, RouteWorker>
    {
    }
 }

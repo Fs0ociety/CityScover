@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/08/2018
+// File update: 22/08/2018
 //
 
 using CityScover.Engine;
@@ -44,6 +44,8 @@ namespace CityScover.Services
             Configuration config = configService.ReadConfigurationFromXml(configFile);
             _tourConfigurations.Add(config);
          }
+
+         Solver.Instance.Initialize();
 
          foreach (var tourConfig in _tourConfigurations)
          {

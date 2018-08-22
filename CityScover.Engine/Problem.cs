@@ -17,10 +17,10 @@ namespace CityScover.Engine
    internal struct Problem
    {
       private readonly IEnumerable<IConstraint> _constraints;
-      private readonly IEnumerable<ObjectiveFunction> _objectiveFunctions;
+      private readonly IEnumerable<IObjectiveFunction> _objectiveFunctions;
 
       #region Constructors
-      internal Problem(IEnumerable<IConstraint> constraints, IEnumerable<ObjectiveFunction> objectiveFunctions)
+      internal Problem(IEnumerable<IConstraint> constraints, IEnumerable<IObjectiveFunction> objectiveFunctions)
       {
          _constraints = constraints ?? throw new ArgumentNullException(nameof(Problem));
          _objectiveFunctions = objectiveFunctions ?? throw new ArgumentNullException(nameof(Problem));
@@ -29,7 +29,7 @@ namespace CityScover.Engine
 
       #region Internal properties
       internal IEnumerable<IConstraint> Constraints => _constraints;
-      internal IEnumerable<ObjectiveFunction> ObjectiveFunctions => _objectiveFunctions; 
+      internal IEnumerable<IObjectiveFunction> ObjectiveFunctions => _objectiveFunctions; 
       #endregion
    }
 }

@@ -14,6 +14,6 @@ namespace CityScover.Services
       /// Invoke the Solver instance of CityScover.Engine to run the configuration passed as argument.
       /// </summary>
       /// <param name="configurationFile"></param>
-      void Run(string configsPath);
+      void Run(string configsPath);      
    }
 }

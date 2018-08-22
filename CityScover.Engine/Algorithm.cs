@@ -20,11 +20,11 @@ namespace CityScover.Engine
       private AlgorithmStatus _status;
       private bool _acceptImprovementsOnly;
       // Campo che rappresenta il grafo su cui lavora l'algoritmo (Da valutare, non definitivo)
-      private CityGraphWorker _currentGraph;
+      private CityMapGraph _currentGraph;
       private readonly Problem _problem;
 
       #region Constructors
-      internal Algorithm(CityGraphWorker workingGraph, Problem problem)
+      internal Algorithm(CityMapGraph workingGraph, Problem problem)
       {
          _currentGraph = workingGraph ?? throw new ArgumentNullException(nameof(workingGraph));
          _acceptImprovementsOnly = true;
