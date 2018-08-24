@@ -62,6 +62,7 @@
     <Compile Include="Solver.cs" />
     <Compile Include="SolverConstraintHelper.cs" />
     <Compile Include="SolverEvaluationHelper.cs" />
+    <Compile Include="SolverState.cs" />
     <Compile Include="Stage.cs" />
     <Compile Include="TourCategoryType.cs" />
     <Compile Include="Workers\CityMapGraph.cs" />

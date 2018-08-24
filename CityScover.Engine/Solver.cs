@@ -3,12 +3,15 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 22/08/2018
+// File update: 24/08/2018
 //
 
-using CityScover.Engine.Workers;
+using CityScover.Data;
+using CityScover.Entities;
 using CityScover.Utils;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CityScover.Engine
 {
@@ -17,44 +20,31 @@ namespace CityScover.Engine
    /// Contains the Execute method to run the configuration passed as argument.
    /// The Solver uses ExecutionTracer and SolverHelpers classes to do overall work.
    /// </summary>
-   public sealed class Solver : Singleton<Solver>
+   public sealed partial class Solver : Singleton<Solver>
    {
-      #region Constructors
-      private Solver()
-      {
-         // Il Solver crea il problema e lo trasmette all'ExecutionTracer.
-         //Problem p = new Problem();
-      }
-      #endregion
-
-      #region Internal properties
-      internal Configuration WorkingConfiguration { get; private set; }
-      internal CityMapGraph CityMapGraph { get; private set; }
-      #endregion
-
-      #region Private methods
-      /// <summary>
-      /// Initalize the graph of the city using CityScover.Data assembly.
-      /// </summary>
-      /// <returns></returns>
-      private CityMapGraph CreateCityGraph()
-      {
-         throw new NotImplementedException();
-      }
-      #endregion
-
       #region Public methods
       public void Initialize()
       {
-         CityMapGraph = CreateCityGraph();
+         CityScoverRepository.LoadPointsFileByValue(WorkingConfiguration.PointsCount);
+         var points = CityScoverRepository.Points;
+
+         // NOTA
+         // Nell'entita' TourCategory dell'assembly CityScover.Entities modificare la property Id della categoria del tour da int nullable a tipo TourCategoryType.
+         var pointCategory = from point in points where point.Category.Id == (int)WorkingConfiguration.TourCategory select point;
+         var pointCategory2 = points.Where(x => x.Category.Id == (int)WorkingConfiguration.TourCategory);
+
+         RoutesGenerator.GenerateRoutes((ICollection<InterestPoint>)points, WorkingConfiguration.PointsCount);
+         CityScoverRepository.LoadRoutes(WorkingConfiguration.PointsCount);
+         var routes = (ICollection<Route>)CityScoverRepository.Routes;
+
       }
 
       public void Execute(Configuration configuration)
       {
-         InitializeWorkingConfig();
+         SetWorkingConfig();
          Initialize();
 
-         void InitializeWorkingConfig()
+         void SetWorkingConfig()
          {
             WorkingConfiguration = configuration;
             SolverConstraintHelper.Instance.WorkingConfiguration = configuration;

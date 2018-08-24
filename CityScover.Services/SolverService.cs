@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 22/08/2018
+// File update: 24/08/2018
 //
 
 using CityScover.Engine;
@@ -18,6 +18,12 @@ namespace CityScover.Services
    public class SolverService : Singleton<SolverService>, ISolverService
    {
       private ICollection<Configuration> _tourConfigurations = new Collection<Configuration>();
+
+      #region Constructors
+      private SolverService()
+      {
+      }
+      #endregion
 
       #region ISolverService implementations
       public void Run(string configsPath)
@@ -44,8 +50,6 @@ namespace CityScover.Services
             Configuration config = configService.ReadConfigurationFromXml(configFile);
             _tourConfigurations.Add(config);
          }
-
-         Solver.Instance.Initialize();
 
          foreach (var tourConfig in _tourConfigurations)
          {

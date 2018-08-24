@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 18/08/2018
+// File update: 24/08/2018
 //
 
 using CityScover.Utils;
@@ -17,6 +17,12 @@ namespace CityScover.Engine
    internal sealed class SolverEvaluationHelper : Singleton<SolverEvaluationHelper>
    {
       private Configuration _workingConfiguration;
+
+      #region Constructors
+      private SolverEvaluationHelper()
+      {
+      }
+      #endregion
 
       #region Internal properties
       internal Configuration WorkingConfiguration

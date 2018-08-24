@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 18/08/2018
+// File update: 24/08/2018
 //
 
 using System;
@@ -17,6 +17,7 @@ namespace CityScover.Engine
    public struct Configuration
    {
       #region Public properties
+      public ushort PointsCount { get; set; }
       public ICollection<Stage> Stages { get; set; }
       public ICollection<byte> RelaxedConstraintsId { get; set; }
       public TourCategoryType TourCategory { get; set; }

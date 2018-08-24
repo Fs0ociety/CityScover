@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 05/08/2018
+// File update: 24/08/2018
 //
 
 using CityScover.Entities;
@@ -35,10 +35,9 @@ namespace CityScover.Data
       #region Private static methods
       private static void InitializeData()
       {
+         // TODO: sistemare l'inizializzazione delle unita' di misura.
          InitializeMeasureUnits();
-         InitializePoints();
-         InitializeRoutes();
-      }
+      }      
 
       public static void InitializeMeasureUnits()
       {
@@ -64,10 +63,9 @@ namespace CityScover.Data
          }
       }
 
-      private static void InitializePoints()
+      private static void InitializePoints(XmlDocument document, ushort pointsCount)
       {
-         XmlDocument document = new XmlDocument();
-         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"));
+         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points-" + pointsCount + ".xml"));
 
          foreach (XmlNode node in document.GetElementsByTagName("PointOfInterests"))
          {
@@ -244,10 +242,9 @@ namespace CityScover.Data
          }
       }
 
-      private static void InitializeRoutes()
-      {
-         XmlDocument document = new XmlDocument();
-         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-routes.xml"));
+      private static void InitializeRoutes(XmlDocument document, ushort pointsCount)
+      {         
+         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-routes-" + pointsCount + ".xml"));
 
          foreach (XmlNode node in document.GetElementsByTagName("Routes"))
          {
@@ -318,10 +315,25 @@ namespace CityScover.Data
       }
       #endregion
 
+
       #region Public static properties
       public static IEnumerable<MeasureUnit> MeasureUnits => _measureUnits;
       public static IEnumerable<InterestPoint> Points => _points;
       public static IEnumerable<Route> Routes => _routes;
+      #endregion
+
+
+      #region Public methods
+      public static void LoadPointsFileByValue(ushort pointsCount)
+      {
+         XmlDocument document = new XmlDocument();
+         InitializePoints(document, pointsCount);
+      }
+      public static void LoadRoutes(ushort pointsCount)
+      {
+         XmlDocument document = new XmlDocument();
+         InitializeRoutes(document, pointsCount);
+      }
       #endregion
    }
 }

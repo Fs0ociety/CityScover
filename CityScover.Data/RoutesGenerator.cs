@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 03/08/2018
+// File update: 24/08/2018
 //
 
 using CityScover.Entities;
@@ -25,9 +25,9 @@ namespace CityScover.Data
          _rootDirectory = Path.Combine(_rootDirectory, "CityScover.Data");
       }
 
-      public static void GenerateRoutes(ICollection<InterestPoint> points)
+      public static void GenerateRoutes(ICollection<InterestPoint> points, ushort pointsCount)
       {
-         _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes.xml";
+         _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
 
          if (File.Exists(_filename))
          {

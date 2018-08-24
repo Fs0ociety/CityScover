@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 18/08/2018
+// File update: 24/08/2018
 //
 
 using CityScover.Engine;
@@ -16,6 +16,12 @@ namespace CityScover.Services
 {
    public class ConfigurationService : Singleton<ConfigurationService>, IConfigurationService
    {
+      #region Constructors
+      private ConfigurationService()
+      {
+      }
+      #endregion
+
       #region IConfigurationService implementation
       public Configuration ReadConfigurationFromXml(string filename)
       {
@@ -36,26 +42,50 @@ namespace CityScover.Services
 
                switch (childNode.Name)
                {
+                  case "PointsCount":
+                     SetPointCount();
+
+                     void SetPointCount()
+                     {
+                        string pointsCountXml = childNode.Attributes["value"].Value;
+                        if (!ushort.TryParse(pointsCountXml, out ushort pointsCount))
+                        {
+                           throw new FormatException(nameof(pointsCountXml));
+                        }
+
+                        conf.PointsCount = pointsCount;
+                     }
+                     break;
+
                   case "Stages":
                      ReadConfigStages();
                      break;
 
                   case "TourCategory":
-                     byte tourCategoryId = byte.Parse(childNode.Attributes["id"].Value);
+                     SetTourCategoryId();
 
-                     switch (tourCategoryId)
+                     void SetTourCategoryId()
                      {
-                        case 1:
-                           conf.TourCategory = TourCategoryType.HistoricalAndCultural;
-                           break;
-                        case 2:
-                           conf.TourCategory = TourCategoryType.Culinary;
-                           break;
-                        case 3:
-                           conf.TourCategory = TourCategoryType.Sport;
-                           break;
-                        default:
-                           break;
+                        string tourCategoryIdXml = childNode.Attributes["id"].Value;
+                        if (!byte.TryParse(tourCategoryIdXml, out byte tourCategoryId))
+                        {
+                           throw new FormatException(nameof(tourCategoryIdXml));
+                        }
+
+                        switch (tourCategoryId)
+                        {
+                           case 1:
+                              conf.TourCategory = TourCategoryType.HistoricalAndCultural;
+                              break;
+                           case 2:
+                              conf.TourCategory = TourCategoryType.Culinary;
+                              break;
+                           case 3:
+                              conf.TourCategory = TourCategoryType.Sport;
+                              break;
+                           default:
+                              break;
+                        }
                      }
                      break;
 
