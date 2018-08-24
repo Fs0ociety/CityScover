@@ -189,59 +189,6 @@ namespace CityScover.Data
          }
       }
 
-      private static void InitializePoints2()
-      {
-         XmlReaderSettings settings = new XmlReaderSettings();
-         settings.IgnoreComments = true;
-         settings.IgnoreComments = true;
-
-         using (XmlReader reader = XmlReader.Create(
-            typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"), settings))
-         {
-            while (reader.Read())
-            {
-               if (reader.NodeType != XmlNodeType.Element || !reader.Name.Equals("PointOfInterests"))
-               {
-                  continue;
-               }
-
-               while (reader.Read())
-               {
-                  if (reader.NodeType != XmlNodeType.Element || !reader.Name.Equals("PointOfInterest"))
-                  {
-                     continue;
-                  }
-
-                  // Create a new InterestPoint entity
-                  InterestPoint point = new InterestPoint();
-                  point.Name = reader.GetAttribute("name");
-
-                  while (reader.Read())
-                  {
-                     switch (reader.Name)
-                     {
-                        case "Category":
-                           break;
-
-                        case "ThematicScore":
-                           break;
-
-                        case "OpeningTimes":
-                           // TODO
-                           break;
-
-                        case "TimeVisit":
-                           break;
-
-                        default:
-                           break;
-                     }
-                  }
-               }
-            }
-         }
-      }
-
       private static void InitializeRoutes(XmlDocument document, ushort pointsCount)
       {         
          document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-routes-" + pointsCount + ".xml"));

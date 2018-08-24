@@ -36,7 +36,6 @@ namespace CityScover.Engine
          RoutesGenerator.GenerateRoutes((ICollection<InterestPoint>)points, WorkingConfiguration.PointsCount);
          CityScoverRepository.LoadRoutes(WorkingConfiguration.PointsCount);
          var routes = (ICollection<Route>)CityScoverRepository.Routes;
-
       }
 
       public void Execute(Configuration configuration)

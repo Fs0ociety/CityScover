@@ -34,7 +34,7 @@ namespace CityScover.Engine
 
       #region Private methods
       /// <summary>
-      /// Initalize the graph of the city using CityScover.Data assembly.
+      /// Initialize the graph of the city using CityScoverRepository.
       /// </summary>
       /// <returns></returns>
       private CityMapGraph CreateCityGraph()
