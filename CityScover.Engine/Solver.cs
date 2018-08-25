@@ -37,7 +37,7 @@ namespace CityScover.Engine
          CityScoverRepository.LoadRoutes(WorkingConfiguration.PointsCount);
          var routes = (ICollection<Route>)CityScoverRepository.Routes;
 
-         CreateCityGraph(routes);
+         CreateCityGraph();
          var cityGraph = CityMapGraph;
       }
 
