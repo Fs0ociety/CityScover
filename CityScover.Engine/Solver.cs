@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/08/2018
+// File update: 25/08/2018
 //
 
 using CityScover.Data;
@@ -36,6 +36,9 @@ namespace CityScover.Engine
          RoutesGenerator.GenerateRoutes((ICollection<InterestPoint>)points, WorkingConfiguration.PointsCount);
          CityScoverRepository.LoadRoutes(WorkingConfiguration.PointsCount);
          var routes = (ICollection<Route>)CityScoverRepository.Routes;
+
+         CreateCityGraph(routes);
+         var cityGraph = CityMapGraph;
       }
 
       public void Execute(Configuration configuration)

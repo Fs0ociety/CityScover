@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/08/2018
+// File update: 25/08/2018
 //
 
 using CityScover.Engine.Workers;
+using CityScover.Entities;
 using CityScover.Utils;
-using System;
+using System.Collections.Generic;
 
 namespace CityScover.Engine
 {
@@ -37,9 +38,17 @@ namespace CityScover.Engine
       /// Initialize the graph of the city using CityScoverRepository.
       /// </summary>
       /// <returns></returns>
-      private CityMapGraph CreateCityGraph()
+      private void CreateCityGraph(IEnumerable<Route> routes)
       {
-         throw new NotImplementedException();
+         CityMapGraph cityGraph = new CityMapGraph();
+         foreach (var route in routes)
+         {
+            cityGraph.AddNode(route.PointFrom.Id, new InterestPointWorker(route.PointFrom));
+            cityGraph.AddNode(route.PointTo.Id, new InterestPointWorker(route.PointTo));
+
+            CityMapGraph.AddUndirectEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
+         }
+         CityMapGraph = cityGraph;
       }
       #endregion
    }
