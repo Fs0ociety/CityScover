@@ -3,13 +3,14 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/08/2018
+// File update: 25/08/2018
 //
 
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -20,29 +21,27 @@ namespace CityScover.Data
       private static readonly ICollection<MeasureUnit> _measureUnits;
       private static readonly ICollection<InterestPoint> _points;
       private static readonly ICollection<Route> _routes;
+      private static readonly string _rootDirectory;
 
       #region Constructors
       static CityScoverRepository()
       {
+         _rootDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\.."));
+         _rootDirectory = Path.Combine(_rootDirectory, "CityScover.Data");
+
          _measureUnits = new Collection<MeasureUnit>();
          _points = new Collection<InterestPoint>();
          _routes = new Collection<Route>();
 
-         InitializeData();
+         InitializeMeasureUnits();
       }
       #endregion
 
       #region Private static methods
-      private static void InitializeData()
-      {
-         // TODO: sistemare l'inizializzazione delle unita' di misura.
-         InitializeMeasureUnits();
-      }      
-
       private static void InitializeMeasureUnits()
       {
          XmlDocument document = new XmlDocument();
-         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"));
+         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-measures.xml"));
 
          foreach (XmlNode node in document.GetElementsByTagName("measureunits"))
          {
@@ -195,8 +194,9 @@ namespace CityScover.Data
       }
 
       private static void InitializeRoutes(XmlDocument document, ushort pointsCount)
-      {         
-         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-routes-" + pointsCount + ".xml"));
+      {
+         string filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
+         document.Load(filename);
 
          foreach (XmlNode node in document.GetElementsByTagName("Routes"))
          {
@@ -267,13 +267,11 @@ namespace CityScover.Data
       }
       #endregion
 
-
       #region Public static properties
       public static IEnumerable<MeasureUnit> MeasureUnits => _measureUnits;
       public static IEnumerable<InterestPoint> Points => _points;
       public static IEnumerable<Route> Routes => _routes;
       #endregion
-
 
       #region Public methods
       public static void LoadPoints(ushort pointsCount)

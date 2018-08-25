@@ -1,13 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
-  <measureunits>
-    <measureunit code="m" symbol="m" />
-    <measureunit code="h" symbol="h" />
-    <measureunit code="min" symbol="min" />
-    <measureunit code="km/h" symbol="km/h" />
-    <measureunit code="m/s" symbol="m/s" />
-  </measureunits>
-
   <!-- Point of interests -->
   <PointOfInterests>
     

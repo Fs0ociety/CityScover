@@ -11,7 +11,6 @@ using CityScover.Engine.Workers;
 using CityScover.Entities;
 using CityScover.Utils;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace CityScover.Engine
@@ -38,8 +37,8 @@ namespace CityScover.Engine
 
          var routes = CityScoverRepository.Routes;
          foreach (var route in routes)
-         {
-            CityMapGraph.AddUndirectEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
+         {            
+            cityGraph.AddEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
          }
 
          CityMapGraph = cityGraph;
@@ -60,11 +59,10 @@ namespace CityScover.Engine
          CityScoverRepository.LoadPoints(WorkingConfiguration.PointsCount);
          FilterPointsByCategory();
 
-         RoutesGenerator.GenerateRoutes(Points, WorkingConfiguration.PointsCount);
-         CityScoverRepository.LoadRoutes(WorkingConfiguration.PointsCount);
+         RoutesGenerator.GenerateRoutes(Points, (ushort)Points.Count());
+         CityScoverRepository.LoadRoutes((ushort)Points.Count());
 
          CreateCityGraph();
-         var cityGraph = CityMapGraph;
       }
 
       public void Execute(Configuration configuration)

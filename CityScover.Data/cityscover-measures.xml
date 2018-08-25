@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Measure units -->
+<measureunits>
+  <measureunit code="m" symbol="m" />
+  <measureunit code="h" symbol="h" />
+  <measureunit code="min" symbol="min" />
+  <measureunit code="km/h" symbol="km/h" />
+  <measureunit code="m/s" symbol="m/s" />
+</measureunits>
