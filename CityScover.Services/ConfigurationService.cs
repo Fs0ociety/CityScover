@@ -110,7 +110,10 @@ namespace CityScover.Services
                   {
                      int stageId = int.Parse(nestedChild.Attributes["id"].Value);
                      int algorithmId = 0;
-                     Stage stage = Stage.GetStageById(stageId);
+                     Stage stage = new Stage
+                     {
+                        Step = Stage.GetStageById(stageId)
+                     };
 
                      foreach (XmlNode nestedNode in nestedChild.ChildNodes)
                      {

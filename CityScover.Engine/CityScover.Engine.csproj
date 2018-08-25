@@ -64,6 +64,7 @@
     <Compile Include="SolverEvaluationHelper.cs" />
     <Compile Include="SolverState.cs" />
     <Compile Include="Stage.cs" />
+    <Compile Include="StageType.cs" />
     <Compile Include="Workers\CityMapGraph.cs" />
     <Compile Include="Workers\InterestPointWorker.cs" />
     <Compile Include="Workers\RouteWorker.cs" />

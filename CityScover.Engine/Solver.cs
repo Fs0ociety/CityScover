@@ -29,7 +29,7 @@ namespace CityScover.Engine
       /// <returns></returns>
       private void CreateCityGraph()
       {
-         CityMapGraph cityGraph = new CityMapGraph();        
+         CityMapGraph cityGraph = new CityMapGraph();
          foreach (var point in Points)
          {
             cityGraph.AddNode(point.Id, new InterestPointWorker(point));
@@ -37,19 +37,11 @@ namespace CityScover.Engine
 
          var routes = CityScoverRepository.Routes;
          foreach (var route in routes)
-         {            
+         {
             cityGraph.AddEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
          }
 
          CityMapGraph = cityGraph;
-      }
-
-      private void FilterPointsByCategory()
-      {
-         Points = from point in CityScoverRepository.Points
-                  where point.Category.Id == WorkingConfiguration.TourCategory ||
-                        point.Category.Id == TourCategoryType.None
-                  select point;
       }
       #endregion
 
@@ -58,6 +50,14 @@ namespace CityScover.Engine
       {
          CityScoverRepository.LoadPoints(WorkingConfiguration.PointsCount);
          FilterPointsByCategory();
+
+         void FilterPointsByCategory()
+         {
+            Points = from point in CityScoverRepository.Points
+                     where point.Category.Id == WorkingConfiguration.TourCategory ||
+                           point.Category.Id == TourCategoryType.None
+                     select point;
+         }
 
          RoutesGenerator.GenerateRoutes(Points, (ushort)Points.Count());
          CityScoverRepository.LoadRoutes((ushort)Points.Count());
