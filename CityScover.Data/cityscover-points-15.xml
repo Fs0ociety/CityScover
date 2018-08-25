@@ -11,8 +11,6 @@
   <!-- Point of interests -->
   <PointOfInterests>
 
-
-    <!-- Nr. 1 -->
     <!-- Hotel Carlton -->
     <PointOfInterest id="1" name="Hotel Carlton">
       <Category id=""/>
@@ -92,8 +90,8 @@
 
     <!-- Nr. 6 -->
     <!-- La Borsa Bistrot -->
-    <!--<PointOfInterest id="31" name="La Borsa Bistrot">
-      <Category>2</Category>
+    <PointOfInterest id="31" name="La Borsa Bistrot">
+      <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -102,10 +100,10 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 7 --><!--
-    --><!-- Makorè --><!--
+    <!-- Nr. 7 -->
+    <!-- Makorè -->
     <PointOfInterest id="32" name="Makorè">
-      <Category>2</Category>
+      <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -114,10 +112,10 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 8 --><!--
-    --><!-- Fuori Porta --><!--
+    <!-- Nr. 8 -->
+    <!-- Fuori Porta -->
     <PointOfInterest id="33" name="Fuori Porta">
-      <Category>2</Category>
+      <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -126,10 +124,10 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 9 --><!--
-    --><!-- XI Comandamento --><!--
+    <!-- Nr. 9 -->
+    <!-- XI Comandamento -->
     <PointOfInterest id="34" name="XI Comandamento">
-      <Category>2</Category>
+      <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -138,10 +136,10 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 10 --><!--
-    --><!-- Osteria I Quattro Angeli --><!--    
+    <!-- Nr. 10 -->
+    <!-- Osteria I Quattro Angeli -->
     <PointOfInterest id="35" name="Osteria I Quattro Angeli">
-      <Category>2</Category>
+      <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -157,8 +155,8 @@
 
     <!-- Nr. 11 -->
     <!-- Centro Universitario Sportivo Di Ferrara (CUS) -->
-    <!--<PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
-      <Category>3</Category>
+    <PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
+      <Category id="3"/>
       <ThematicScore category="3" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -167,10 +165,10 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 12 --><!--
-    --><!-- Centro Sportivo Italiano --><!--
+    <!-- Nr. 12 -->
+    <!-- Centro Sportivo Italiano -->
     <PointOfInterest id="76" name="Centro Sportivo Italiano">
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -179,10 +177,10 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 13 --><!--
-    --><!-- Centro Sportivo Tennis Club Ferrara --><!--
+    <!-- Nr. 13 -->
+    <!-- Centro Sportivo Tennis Club Ferrara -->
     <PointOfInterest id="77" name="Centro Sportivo Tennis Club Ferrara">
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -191,10 +189,10 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 14 --><!--
-    --><!-- Paintball Ferrara --><!--
+    <!-- Nr. 14 -->
+    <!-- Paintball Ferrara -->
     <PointOfInterest id="78" name="Paintball Ferrara">
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
@@ -203,17 +201,17 @@
       <TimeVisit></TimeVisit>
     </PointOfInterest>
 
-    --><!-- Nr. 15 --><!--    
-    --><!-- Cus Ferrara Golf --><!--
+    <!-- Nr. 15 -->
+    <!-- Cus Ferrara Golf -->
     <PointOfInterest id="79" name="Cus Ferrara Golf">
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="100" />
       <OpeningTimes>
         <OpeningTime from="" to=""/>
         <OpeningTime from="" to=""/>
       </OpeningTimes>
       <TimeVisit></TimeVisit>
-    </PointOfInterest>-->
+    </PointOfInterest>
 
   </PointOfInterests>
 </root>

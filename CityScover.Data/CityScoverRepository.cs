@@ -39,7 +39,7 @@ namespace CityScover.Data
          InitializeMeasureUnits();
       }      
 
-      public static void InitializeMeasureUnits()
+      private static void InitializeMeasureUnits()
       {
          XmlDocument document = new XmlDocument();
          document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points.xml"));
