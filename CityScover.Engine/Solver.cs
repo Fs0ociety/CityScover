@@ -7,6 +7,7 @@
 //
 
 using CityScover.Data;
+using CityScover.Engine.Workers;
 using CityScover.Entities;
 using CityScover.Utils;
 using System;
@@ -22,20 +23,45 @@ namespace CityScover.Engine
    /// </summary>
    public sealed partial class Solver : Singleton<Solver>
    {
+      #region Private methods
+      /// <summary>
+      /// Initialize the graph of the city using CityScoverRepository.
+      /// </summary>
+      /// <returns></returns>
+      private void CreateCityGraph()
+      {
+         CityMapGraph cityGraph = new CityMapGraph();        
+         foreach (var point in Points)
+         {
+            cityGraph.AddNode(point.Id, new InterestPointWorker(point));
+         }
+
+         var routes = CityScoverRepository.Routes;
+         foreach (var route in routes)
+         {
+            CityMapGraph.AddUndirectEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
+         }
+
+         CityMapGraph = cityGraph;
+      }
+
+      private void FilterPointsByCategory()
+      {
+         Points = from point in CityScoverRepository.Points
+                  where point.Category.Id == WorkingConfiguration.TourCategory ||
+                        point.Category.Id == TourCategoryType.None
+                  select point;
+      }
+      #endregion
+
       #region Public methods
       public void Initialize()
       {
-         CityScoverRepository.LoadPointsFileByValue(WorkingConfiguration.PointsCount);
-         var points = CityScoverRepository.Points;
+         CityScoverRepository.LoadPoints(WorkingConfiguration.PointsCount);
+         FilterPointsByCategory();
 
-         // NOTA
-         // Nell'entita' TourCategory dell'assembly CityScover.Entities modificare la property Id della categoria del tour da int nullable a tipo TourCategoryType.
-         var pointCategory = from point in points where point.Category.Id == (int)WorkingConfiguration.TourCategory select point;
-         var pointCategory2 = points.Where(x => x.Category.Id == (int)WorkingConfiguration.TourCategory);
-
-         RoutesGenerator.GenerateRoutes((ICollection<InterestPoint>)points, WorkingConfiguration.PointsCount);
+         RoutesGenerator.GenerateRoutes(Points, WorkingConfiguration.PointsCount);
          CityScoverRepository.LoadRoutes(WorkingConfiguration.PointsCount);
-         var routes = (ICollection<Route>)CityScoverRepository.Routes;
 
          CreateCityGraph();
          var cityGraph = CityMapGraph;

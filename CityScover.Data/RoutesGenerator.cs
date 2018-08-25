@@ -3,13 +3,14 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 24/08/2018
+// File update: 25/08/2018
 //
 
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace CityScover.Data
@@ -25,7 +26,7 @@ namespace CityScover.Data
          _rootDirectory = Path.Combine(_rootDirectory, "CityScover.Data");
       }
 
-      public static void GenerateRoutes(ICollection<InterestPoint> points, ushort pointsCount)
+      public static void GenerateRoutes(IEnumerable<InterestPoint> points, ushort pointsCount)
       {
          _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
 
@@ -35,6 +36,7 @@ namespace CityScover.Data
          }
 
          int routeId = 0;
+         int ptsCount = points.Count();
          XmlWriterSettings settings = new XmlWriterSettings
          {
             Indent = true
@@ -44,9 +46,9 @@ namespace CityScover.Data
          {
             writer.WriteStartElement("Routes");
 
-            for (int i = 1; i <= points.Count; i++)
+            for (int i = 1; i <= ptsCount; i++)
             {
-               for (int j = i + 1; j <= points.Count + i; j++)
+               for (int j = i + 1; j <= ptsCount + i; j++)
                {
                   if ((j - i) == i)
                   {

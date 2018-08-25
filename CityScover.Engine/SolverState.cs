@@ -6,9 +6,10 @@
 // File update: 25/08/2018
 //
 
-using CityScover.Data;
 using CityScover.Engine.Workers;
+using CityScover.Entities;
 using CityScover.Utils;
+using System.Collections.Generic;
 
 namespace CityScover.Engine
 {
@@ -29,30 +30,10 @@ namespace CityScover.Engine
 
       #region Internal properties
       internal Configuration WorkingConfiguration { get; private set; }
+
+      internal IEnumerable<InterestPoint> Points { get; private set; }
+   
       internal CityMapGraph CityMapGraph { get; private set; }
-      #endregion
-
-      #region Private methods
-      /// <summary>
-      /// Initialize the graph of the city using CityScoverRepository.
-      /// </summary>
-      /// <returns></returns>
-      private void CreateCityGraph()
-      {
-         CityMapGraph cityGraph = new CityMapGraph();
-         var points = CityScoverRepository.Points;
-         foreach (var point in points)
-         {
-            cityGraph.AddNode(point.Id, new InterestPointWorker(point));
-         }
-
-         var routes = CityScoverRepository.Routes;
-         foreach (var route in routes)
-         {
-            CityMapGraph.AddUndirectEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
-         }
-         CityMapGraph = cityGraph;
-      }
       #endregion
    }
 }

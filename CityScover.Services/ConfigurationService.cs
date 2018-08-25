@@ -7,6 +7,7 @@
 //
 
 using CityScover.Engine;
+using CityScover.Entities;
 using CityScover.Utils;
 using System;
 using System.Collections.ObjectModel;

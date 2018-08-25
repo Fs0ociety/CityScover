@@ -6,6 +6,7 @@
 // File update: 24/08/2018
 //
 
+using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 

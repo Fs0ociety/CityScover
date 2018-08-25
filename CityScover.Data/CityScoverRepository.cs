@@ -96,23 +96,28 @@ namespace CityScover.Data
                         void SetCategory()
                         {
                            string categoryId = nestedChild.Attributes["id"].Value;
-                           point.Category = new TourCategory
-                           {
-                              Id = (!categoryId.Equals(string.Empty)) ? int.Parse(categoryId) : (int?)null
-                           };
+                           point.Category = new TourCategory();
 
-                           switch (point.Category.Id)
+                           switch (categoryId)
                            {
-                              case 1:
+                              case "1":
+                                 point.Category.Id = TourCategoryType.HistoricalAndCultural;
                                  point.Category.Description = "Storico/Culturale";
                                  break;
-                              case 2:
+
+                              case "2":
+                                 point.Category.Id = TourCategoryType.Culinary;
                                  point.Category.Description = "Gastronomico";
                                  break;
-                              case 3:
+
+                              case "3":
+                                 point.Category.Id = TourCategoryType.Sport;
                                  point.Category.Description = "Sportivo";
                                  break;
+
                               default:
+                                 point.Category.Id = TourCategoryType.None;
+                                 point.Category.Description = "None";
                                  break;
                            }
                         }
@@ -271,7 +276,7 @@ namespace CityScover.Data
 
 
       #region Public methods
-      public static void LoadPointsFileByValue(ushort pointsCount)
+      public static void LoadPoints(ushort pointsCount)
       {
          XmlDocument document = new XmlDocument();
          InitializePoints(document, pointsCount);

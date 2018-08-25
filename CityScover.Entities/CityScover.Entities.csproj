@@ -56,6 +56,7 @@
     <Compile Include="ThematicScore.cs" />
     <Compile Include="Tour.cs" />
     <Compile Include="TourCategory.cs" />
+    <Compile Include="TourCategoryType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CityScover.ADT.Graphs\CityScover.ADT.Graphs.csproj">
