@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 25/08/2018
+// File update: 02/09/2018
 //
 
 namespace CityScover.Engine
@@ -11,15 +11,15 @@ namespace CityScover.Engine
    public struct Stage
    {
       #region Constructors
-      public Stage(StageType step)
+      public Stage(StageType stageId)
       {
-         Step = step;
+         StageId = stageId;
          CurrentAlgorithm = AlgorithmType.None;
       }
       #endregion
 
       #region Public properties
-      public StageType Step { get; set; }
+      public StageType StageId { get; set; }
       public AlgorithmType CurrentAlgorithm { get; set; }
       #endregion
 

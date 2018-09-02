@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/08/2018
+// File update: 02/09/2018
 //
 
 using CityScover.Engine;
@@ -28,9 +28,11 @@ namespace CityScover.Services
       {
          XmlDocument document = new XmlDocument();
          document.Load(filename);
-         Configuration conf = new Configuration();
-         conf.Stages = new Collection<Stage>();
-         conf.RelaxedConstraintsId = new Collection<byte>();
+         Configuration conf = new Configuration
+         {
+            Stages = new Collection<Stage>(),
+            RelaxedConstraintsId = new Collection<byte>()
+         };
 
          foreach (XmlNode node in document.GetElementsByTagName("Configuration"))
          {
@@ -60,6 +62,28 @@ namespace CityScover.Services
 
                   case "Stages":
                      ReadConfigStages();
+
+                     void ReadConfigStages()
+                     {
+                        foreach (XmlNode nestedChild in childNode.ChildNodes)
+                        {
+                           int stageId = int.Parse(nestedChild.Attributes["id"].Value);
+                           int algorithmId = default;
+                           Stage stage = new Stage
+                           {
+                              StageId = Stage.GetStageById(stageId)
+                           };
+
+                           foreach (XmlNode nestedNode in nestedChild.ChildNodes)
+                           {
+                              algorithmId = int.Parse(nestedNode.Attributes["id"].Value);
+                           }
+
+                           AlgorithmType algorithm = Stage.GetAlgorithmTypeById(algorithmId);
+                           stage.CurrentAlgorithm = algorithm;
+                           conf.Stages.Add(stage);
+                        }
+                     }
                      break;
 
                   case "TourCategory":
@@ -102,28 +126,6 @@ namespace CityScover.Services
 
                   default:
                      throw new Exception(nameof(childNode.Name));
-               }
-
-               void ReadConfigStages()
-               {
-                  foreach (XmlNode nestedChild in childNode.ChildNodes)
-                  {
-                     int stageId = int.Parse(nestedChild.Attributes["id"].Value);
-                     int algorithmId = 0;
-                     Stage stage = new Stage
-                     {
-                        Step = Stage.GetStageById(stageId)
-                     };
-
-                     foreach (XmlNode nestedNode in nestedChild.ChildNodes)
-                     {
-                        algorithmId = int.Parse(nestedNode.Attributes["id"].Value);
-                     }
-
-                     AlgorithmType algorithm = Stage.GetAlgorithmTypeById(algorithmId);
-                     stage.CurrentAlgorithm = algorithm;
-                     conf.Stages.Add(stage);
-                  }
                }
             }
          }

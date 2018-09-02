@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 25/08/2018
+// File update: 02/09/2018
 //
 
 using CityScover.Entities;
@@ -23,7 +23,7 @@ namespace CityScover.Data
       private static readonly ICollection<Route> _routes;
       private static readonly string _rootDirectory;
 
-      #region Constructors
+      #region Static Constructors
       static CityScoverRepository()
       {
          _rootDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\.."));
@@ -273,7 +273,7 @@ namespace CityScover.Data
       public static IEnumerable<Route> Routes => _routes;
       #endregion
 
-      #region Public methods
+      #region Public static methods
       public static void LoadPoints(ushort pointsCount)
       {
          XmlDocument document = new XmlDocument();

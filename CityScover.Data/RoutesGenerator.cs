@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 25/08/2018
+// File update: 02/09/2018
 //
 
 using CityScover.Entities;
@@ -20,12 +20,15 @@ namespace CityScover.Data
       private static string _rootDirectory;
       private static string _filename;
 
+      #region Static Constructors
       static RoutesGenerator()
       {
          _rootDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\.."));
          _rootDirectory = Path.Combine(_rootDirectory, "CityScover.Data");
       }
+      #endregion
 
+      #region Public static methods
       public static void GenerateRoutes(IEnumerable<InterestPoint> points, ushort pointsCount)
       {
          _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
@@ -35,7 +38,7 @@ namespace CityScover.Data
             return;
          }
 
-         int routeId = 0;
+         int routeId = default;
          int ptsCount = points.Count();
          XmlWriterSettings settings = new XmlWriterSettings
          {
@@ -63,7 +66,7 @@ namespace CityScover.Data
                   writer.WriteEndElement();
 
                   writer.WriteStartElement("PointTo");
-                  writer.WriteAttributeString("id", (j-i).ToString());
+                  writer.WriteAttributeString("id", (j - i).ToString());
                   writer.WriteEndElement();
 
                   writer.WriteStartElement("Distance");
@@ -76,5 +79,6 @@ namespace CityScover.Data
             writer.WriteEndElement();
          }
       }
+      #endregion
    }
 }
