@@ -50,21 +50,23 @@
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmStatus.cs" />
+    <Compile Include="AlgorithmTracker.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Evaluation.cs" />
     <Compile Include="IConstraint.cs" />
-    <Compile Include="ExecutionTracer.cs" />
+    <Compile Include="ExecutionReporter.cs" />
     <Compile Include="IObjectiveFunction.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solution.cs" />
     <Compile Include="Solver.cs" />
-    <Compile Include="SolverConstraintHelper.cs" />
-    <Compile Include="SolverEvaluationHelper.cs" />
+    <Compile Include="SolverValidator.cs" />
+    <Compile Include="SolverEvaluator.cs" />
     <Compile Include="SolverState.cs" />
     <Compile Include="Stage.cs" />
     <Compile Include="StageType.cs" />
+    <Compile Include="Unsubscriber.cs" />
     <Compile Include="Workers\CityMapGraph.cs" />
     <Compile Include="Workers\InterestPointWorker.cs" />
     <Compile Include="Workers\RouteWorker.cs" />

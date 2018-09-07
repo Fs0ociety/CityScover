@@ -16,12 +16,9 @@ namespace CityScover.Engine
    /// </summary>
    internal abstract class Algorithm
    {
-      private readonly Problem _problem;
       private int _currentStep;
       private AlgorithmStatus _status;
       private bool _acceptImprovementsOnly;
-      private Solution _currentSolution;
-      private Solution _bestSolution;
 
       #region Constructors
       internal Algorithm(CityMapGraph workingGraph, Problem problem)
@@ -64,13 +61,6 @@ namespace CityScover.Engine
                _acceptImprovementsOnly = value;
             }
          }
-      }
-      #endregion
-
-      #region Internal methods
-      internal bool Execute(int stepsCount)
-      {
-         throw new NotImplementedException();
       }
       #endregion
 

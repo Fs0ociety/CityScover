@@ -73,8 +73,8 @@ namespace CityScover.Engine
          void SetWorkingConfig()
          {
             WorkingConfiguration = configuration;
-            SolverConstraintHelper.Instance.WorkingConfiguration = configuration;
-            SolverEvaluationHelper.Instance.WorkingConfiguration = configuration;
+            SolverValidator.Instance.WorkingConfiguration = configuration;
+            SolverEvaluator.Instance.WorkingConfiguration = configuration;
          }
 
          throw new NotImplementedException(nameof(Execute));

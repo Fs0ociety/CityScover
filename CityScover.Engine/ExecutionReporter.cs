@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 25/08/2018
+// File update: 07/09/2018
 //
 
 using CityScover.Utils;
@@ -17,10 +17,10 @@ namespace CityScover.Engine
    /// and start execution of all stages of the Algorithm.
    /// In addition, it monitors the execution of the Algorithm.
    /// </summary>
-   internal class ExecutionTracer : Singleton<ExecutionTracer>
+   internal class ExecutionReporter : Singleton<ExecutionReporter>, IObserver<Solution>
    {
       #region Constructors
-      private ExecutionTracer()
+      private ExecutionReporter()
       {
       }
       #endregion
@@ -34,6 +34,23 @@ namespace CityScover.Engine
 
       #region Public methods
       public void Run(IEnumerable<Stage> stages)
+      {
+         throw new NotImplementedException();
+      }
+      #endregion
+
+      #region Interfaces implementation
+      public void OnNext(Solution value)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void OnError(Exception error)
+      {
+         throw new NotImplementedException();
+      }
+
+      public void OnCompleted()
       {
          throw new NotImplementedException();
       }

@@ -14,12 +14,12 @@ namespace CityScover.Engine
    /// <summary>
    /// TODO
    /// </summary>
-   internal sealed class SolverEvaluationHelper : Singleton<SolverEvaluationHelper>
+   internal sealed class SolverValidator : Singleton<SolverValidator>
    {
       private Configuration _workingConfiguration;
 
       #region Constructors
-      private SolverEvaluationHelper()
+      private SolverValidator()
       {
       }
       #endregion
@@ -31,12 +31,12 @@ namespace CityScover.Engine
          set => _workingConfiguration = value;
       }
       #endregion
-
+      
       #region Internal methods
-      internal double Evaluate(Solution solution, Problem problem)
+      internal bool Validate(Solution solution, Problem problem)
       {
          throw new NotImplementedException();
-      } 
+      }
       #endregion
    }
 }
