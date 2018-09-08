@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 25/08/2018
+// File update: 08/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -19,11 +19,13 @@ namespace CityScover.Engine
       private int _currentStep;
       private AlgorithmStatus _status;
       private bool _acceptImprovementsOnly;
+      private AlgorithmTracker _provider;
 
       #region Constructors
-      internal Algorithm(CityMapGraph workingGraph, Problem problem)
+      internal Algorithm(AlgorithmTracker provider)
       {
          _acceptImprovementsOnly = true;
+         _provider = provider;
       }
       #endregion
 

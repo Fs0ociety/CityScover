@@ -3,14 +3,17 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 25/08/2018
+// File update: 08/09/2018
 //
 
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using CityScover.Utils;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace CityScover.Engine
 {
@@ -23,17 +26,53 @@ namespace CityScover.Engine
    {
       private ICollection<Solution> _solutions;
       private Solution _bestSolution;
+      private BlockingCollection<Solution> _solutionsQueue;
+      private BlockingCollection<Solution> _validatingQueue;
+      private BlockingCollection<Solution> _evaluatedQueue;
+      private ICollection<Task> _solverTasks;
 
       #region Constructors
       private Solver()
       {
+         _solutionsQueue = new BlockingCollection<Solution>();
+         _validatingQueue = new BlockingCollection<Solution>();
+         _evaluatedQueue = new BlockingCollection<Solution>();
+         _solverTasks = new Collection<Task>();
+
+         InitializeWorkers();
+
          // Il Solver crea il problema e lo trasmette all'ExecutionTracer.
          // Problem p = new Problem();
       }
       #endregion
 
-      #region Internal properties
+      #region Private methods
+      private void InitializeWorkers()
+      {
+         _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
+         _solverTasks.Add(Task.Run(() => TakeEvaluatedSolutions()));
+         _solverTasks.Add(Task.Run(() => SolverValidator.Instance.Run()));
+         _solverTasks.Add(Task.Run(() => SolverEvaluator.Instance.Run()));
+      }
 
+      /// <summary>
+      /// Gets a new Solution from the _solutionsQueue and processes it.
+      /// </summary>
+      private async Task TakeNewSolutions()
+      {
+         throw new NotImplementedException();
+      }
+
+      /// <summary>
+      /// Gets a validated and evaluated Solution from _evaluatedQueue and processes it.
+      /// </summary>
+      private void TakeEvaluatedSolutions()
+      {
+         throw new NotImplementedException();
+      }
+      #endregion
+
+      #region Internal properties
       /// <summary>
       /// Configuration to execute received from the SolverService.
       /// </summary>
@@ -61,6 +100,10 @@ namespace CityScover.Engine
       internal IEnumerable<Solution> Solutions { get; private set; }
 
       internal Solution BestSolution { get; private set; }
+
+      internal BlockingCollection<Solution> SolutionsQueue => _solutionsQueue;
+      internal BlockingCollection<Solution> ValidatingQueue => _validatingQueue;
+      internal BlockingCollection<Solution> EvaluatedQueue => _evaluatedQueue;
       #endregion
 
       #region Overrides

@@ -3,15 +3,18 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 25/08/2018
+// File update: 08/09/2018
 //
 
 using CityScover.Data;
+using CityScover.Engine.Algorithms.Greedy;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using CityScover.Utils;
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CityScover.Engine
 {
@@ -43,10 +46,8 @@ namespace CityScover.Engine
 
          CityMapGraph = cityGraph;
       }
-      #endregion
 
-      #region Public methods
-      public void Initialize()
+      private void Initialize()
       {
          CityScoverRepository.LoadPoints(WorkingConfiguration.PointsCount);
          FilterPointsByCategory();
@@ -65,18 +66,104 @@ namespace CityScover.Engine
          CreateCityGraph();
       }
 
-      public void Execute(Configuration configuration)
+      private (Algorithm algorithm, AlgorithmTracker provider) CreateAlgorithm(AlgorithmType currentAlgorithm)
       {
-         SetWorkingConfig();
-         Initialize();
+         Algorithm algorithm = default;
+         AlgorithmTracker provider = new AlgorithmTracker();
 
-         void SetWorkingConfig()
+         switch (currentAlgorithm)
          {
-            WorkingConfiguration = configuration;
-            SolverValidator.Instance.WorkingConfiguration = configuration;
-            SolverEvaluator.Instance.WorkingConfiguration = configuration;
+            case AlgorithmType.NearestNeighbor:
+               algorithm = new NearestNeighborAlgorithm(provider);
+               break;
+
+            case AlgorithmType.NearestInsertion:
+               break;
+
+            case AlgorithmType.CheapestInsertion:
+               break;
+
+            case AlgorithmType.TwoOpt:
+               break;
+
+            case AlgorithmType.CitySwap:
+               break;
+
+            case AlgorithmType.LinKernighan:
+               break;
+
+            case AlgorithmType.IteratedLocalSearch:
+               break;
+
+            case AlgorithmType.TabuSearch:
+               break;
+
+            case AlgorithmType.VariableNeighborhoodSearch:
+               break;
+
+            default:
+               provider = null;
+               break;
          }
 
+         return (algorithm, provider);
+      }
+      #endregion
+
+      #region Public methods
+      /// <summary>
+      /// TODO
+      /// </summary>
+      /// <param name="configuration"></param>
+      public async Task Execute(Configuration configuration)
+      {
+         WorkingConfiguration = configuration;
+         Initialize();
+
+         bool exceptionOccurred = false;
+
+         // Run all Stages.
+         foreach (Stage stage in configuration.Stages)
+         {
+            (Algorithm algorithm, AlgorithmTracker provider) = CreateAlgorithm(stage.CurrentAlgorithm);
+
+            if (algorithm == null)
+            {
+               throw new NullReferenceException(nameof(algorithm));
+            }
+
+            if (provider == null)
+            {
+               throw new NullReferenceException(nameof(provider));
+            }
+
+            ExecutionReporter reporter = new ExecutionReporter();
+            reporter.Subscribe(provider);
+
+            try
+            {
+               Task executionTask = Task.Run(() => reporter.Run(algorithm));
+               await executionTask;
+            }
+            catch (Exception ex)
+            {
+               exceptionOccurred = true;
+               Debug.WriteLine(GetType().Name);
+               Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+               reporter.Unsubscribe();
+            }
+
+            if (!exceptionOccurred)
+            {
+               // TODO
+            }
+         }
+
+         _solutionsQueue.CompleteAdding();
+         await Task.WhenAll(_solverTasks.ToArray());
          throw new NotImplementedException(nameof(Execute));
       }
       #endregion

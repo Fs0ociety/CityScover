@@ -3,11 +3,12 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/08/2018
+// File update: 08/09/2018
 //
 
 using CityScover.Utils;
 using System;
+using System.Threading.Tasks;
 
 namespace CityScover.Engine
 {
@@ -16,8 +17,6 @@ namespace CityScover.Engine
    /// </summary>
    internal sealed class SolverValidator : Singleton<SolverValidator>
    {
-      private Configuration _workingConfiguration;
-
       #region Constructors
       private SolverValidator()
       {
@@ -27,13 +26,19 @@ namespace CityScover.Engine
       #region Internal properties
       internal Configuration WorkingConfiguration
       {
-         get => _workingConfiguration;
-         set => _workingConfiguration = value;
+         get => Solver.Instance.WorkingConfiguration;
       }
       #endregion
-      
+
+      #region Private methods
+      private bool Validate(Solution solution, Problem problem)
+      {
+         throw new NotImplementedException();
+      }
+      #endregion
+
       #region Internal methods
-      internal bool Validate(Solution solution, Problem problem)
+      internal async Task Run()
       {
          throw new NotImplementedException();
       }

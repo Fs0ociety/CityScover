@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmStatus.cs" />
+    <Compile Include="Algorithms\Greedy\NearestNeighborAlgorithm.cs" />
     <Compile Include="AlgorithmTracker.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />
@@ -92,5 +93,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
