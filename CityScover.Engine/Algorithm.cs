@@ -20,9 +20,8 @@ namespace CityScover.Engine
 
       #region Constructors
       public Algorithm()
-      {
-         _acceptImprovementsOnly = true;
-      }
+         : this(null)
+      {}
 
       internal Algorithm(AlgorithmTracker provider)
       {

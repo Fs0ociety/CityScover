@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Configuration>
+  <Problem value="TOProblem">
+    <RelaxedConstraints>
+      <Constraint id="2" />
+    </RelaxedConstraints>
+  </Problem>
   <PointsCount value="15"/>
   <Stages>
     <Stage id="1" description="Greedy">

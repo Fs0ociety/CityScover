@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace CityScover.Services
 {
@@ -26,7 +27,7 @@ namespace CityScover.Services
       #endregion
 
       #region ISolverService implementations
-      public void Run(string configsPath)
+      public async Task Run(string configsPath)
       {
          if (configsPath == null)
          {
@@ -51,9 +52,10 @@ namespace CityScover.Services
             _tourConfigurations.Add(config);
          }
 
+         var solver = Solver.Instance;
          foreach (var tourConfig in _tourConfigurations)
          {
-            Solver.Instance.Execute(tourConfig);
+            await solver.Execute(tourConfig);
          }
       }
       #endregion

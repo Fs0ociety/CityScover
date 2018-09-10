@@ -31,7 +31,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Private methods
-      private bool Validate(Solution solution, Problem problem)
+      private bool Validate(Solution solution, IProblem problem)
       {
          throw new NotImplementedException();
       }

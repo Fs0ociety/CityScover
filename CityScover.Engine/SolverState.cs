@@ -48,7 +48,7 @@ namespace CityScover.Engine
       /// <summary>
       /// TODO
       /// </summary>
-      internal Problem Problem { get; private set; }
+      internal IProblem Problem { get; private set; }
 
       /// <summary>
       /// Points of interest filtered from the graph of the city.
@@ -81,6 +81,8 @@ namespace CityScover.Engine
          _validatingQueue = new BlockingCollection<Solution>();
          _evaluatedQueue = new BlockingCollection<Solution>();
          _solverTasks = new Collection<Task>();
+
+         //TODO: gestire creazione del problema in base a parametro di configurazione.
       }
       #endregion
    }

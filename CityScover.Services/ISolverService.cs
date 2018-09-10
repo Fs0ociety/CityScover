@@ -6,6 +6,8 @@
 // File update: 17/08/2018
 //
 
+using System.Threading.Tasks;
+
 namespace CityScover.Services
 {
    public interface ISolverService
@@ -14,6 +16,6 @@ namespace CityScover.Services
       /// Invoke the Solver instance of CityScover.Engine to run the configuration passed as argument.
       /// </summary>
       /// <param name="configurationFile"></param>
-      void Run(string configsPath);      
+      Task Run(string configsPath);      
    }
 }

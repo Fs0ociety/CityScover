@@ -94,7 +94,7 @@ namespace CityScover.Engine
       /// Executes configuration passed as parameter while loop around stages.
       /// </summary>
       /// <param name="configuration"></param>
-      public async Task Execute(Configuration configuration)
+      public async Task Execute(Configuration configuration, bool enableMonitoring = true)
       {
          WorkingConfiguration = configuration;
          InitializeTour();
@@ -111,6 +111,8 @@ namespace CityScover.Engine
             {
                throw new NullReferenceException(nameof(algorithm));
             }
+
+            // TODO: Check enableMonitoring parameter
 
             algorithm.Provider = new AlgorithmTracker() ?? throw new NullReferenceException();
             ExecutionReporter reporter = new ExecutionReporter();

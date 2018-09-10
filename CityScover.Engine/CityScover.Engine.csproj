@@ -59,7 +59,7 @@
     <Compile Include="IConstraint.cs" />
     <Compile Include="ExecutionReporter.cs" />
     <Compile Include="IObjectiveFunction.cs" />
-    <Compile Include="Problem.cs" />
+    <Compile Include="IProblem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solution.cs" />
     <Compile Include="Solver.cs" />
@@ -68,6 +68,7 @@
     <Compile Include="SolverState.cs" />
     <Compile Include="Stage.cs" />
     <Compile Include="StageType.cs" />
+    <Compile Include="TOProblem.cs" />
     <Compile Include="Unsubscriber.cs" />
     <Compile Include="Workers\CityMapGraph.cs" />
     <Compile Include="Workers\InterestPointWorker.cs" />
