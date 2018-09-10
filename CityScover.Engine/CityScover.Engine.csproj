@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
+    <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="Algorithms\Greedy\NearestNeighborAlgorithm.cs" />
     <Compile Include="AlgorithmTracker.cs" />

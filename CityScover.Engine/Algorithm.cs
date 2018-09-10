@@ -3,11 +3,8 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 08/09/2018
+// File update: 10/09/2018
 //
-
-using CityScover.Engine.Workers;
-using System;
 
 namespace CityScover.Engine
 {
@@ -16,12 +13,17 @@ namespace CityScover.Engine
    /// </summary>
    internal abstract class Algorithm
    {
-      private int _currentStep;
+      private ushort _currentStep;
       private AlgorithmStatus _status;
       private bool _acceptImprovementsOnly;
       private AlgorithmTracker _provider;
 
       #region Constructors
+      public Algorithm()
+      {
+         _acceptImprovementsOnly = true;
+      }
+
       internal Algorithm(AlgorithmTracker provider)
       {
          _acceptImprovementsOnly = true;
@@ -30,10 +32,10 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal properties
-      internal int CurrentStep
+      protected ushort CurrentStep
       {
          get => _currentStep;
-         private set
+         set
          {
             if (_currentStep != value)
             {
@@ -56,11 +58,23 @@ namespace CityScover.Engine
       internal bool AcceptImprovementsOnly
       {
          get => _acceptImprovementsOnly;
-         private set
+         set
          {
             if (_acceptImprovementsOnly != value)
             {
                _acceptImprovementsOnly = value;
+            }
+         }
+      }
+
+      internal AlgorithmTracker Provider
+      {
+         get => _provider;
+         set
+         {
+            if (_provider != value)
+            {
+               _provider = value;
             }
          }
       }

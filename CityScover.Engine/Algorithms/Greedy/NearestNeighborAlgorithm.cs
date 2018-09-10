@@ -13,10 +13,17 @@ namespace CityScover.Engine.Algorithms.Greedy
    /// </summary>
    internal class NearestNeighborAlgorithm : Algorithm
    {
-      public NearestNeighborAlgorithm(AlgorithmTracker provider) 
+      #region Constructors
+      public NearestNeighborAlgorithm()
+         : base()
+      {
+      }
+
+      public NearestNeighborAlgorithm(AlgorithmTracker provider)
          : base(provider)
       {
       }
+      #endregion
 
       internal override void OnError()
       {

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 08/09/2018
+// File update: 10/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -34,41 +34,8 @@ namespace CityScover.Engine
       #region Constructors
       private Solver()
       {
-         _solutionsQueue = new BlockingCollection<Solution>();
-         _validatingQueue = new BlockingCollection<Solution>();
-         _evaluatedQueue = new BlockingCollection<Solution>();
-         _solverTasks = new Collection<Task>();
-
-         InitializeWorkers();
-
          // Il Solver crea il problema e lo trasmette all'ExecutionTracer.
          // Problem p = new Problem();
-      }
-      #endregion
-
-      #region Private methods
-      private void InitializeWorkers()
-      {
-         _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
-         _solverTasks.Add(Task.Run(() => TakeEvaluatedSolutions()));
-         _solverTasks.Add(Task.Run(() => SolverValidator.Instance.Run()));
-         _solverTasks.Add(Task.Run(() => SolverEvaluator.Instance.Run()));
-      }
-
-      /// <summary>
-      /// Gets a new Solution from the _solutionsQueue and processes it.
-      /// </summary>
-      private async Task TakeNewSolutions()
-      {
-         throw new NotImplementedException();
-      }
-
-      /// <summary>
-      /// Gets a validated and evaluated Solution from _evaluatedQueue and processes it.
-      /// </summary>
-      private void TakeEvaluatedSolutions()
-      {
-         throw new NotImplementedException();
       }
       #endregion
 
@@ -110,6 +77,10 @@ namespace CityScover.Engine
       protected override void InitializeInstance()
       {
          _solutions = new Collection<Solution>();
+         _solutionsQueue = new BlockingCollection<Solution>();
+         _validatingQueue = new BlockingCollection<Solution>();
+         _evaluatedQueue = new BlockingCollection<Solution>();
+         _solverTasks = new Collection<Task>();
       }
       #endregion
    }

@@ -71,7 +71,7 @@ namespace CityScover.Services
                            int algorithmId = default;
                            Stage stage = new Stage
                            {
-                              StageId = Stage.GetStageById(stageId)
+                              StageNo = Stage.GetStageById(stageId)
                            };
 
                            foreach (XmlNode nestedNode in nestedChild.ChildNodes)
