@@ -33,12 +33,12 @@ namespace CityScover
          catch (DirectoryNotFoundException ex)
          {
             Error.WriteLine($"Exception occured in {ex.Source}." +
-               $"Cannot find configuration files path.\n");
+               $" Cannot find configuration files path.\n");
          }
          catch (FileNotFoundException ex)
          {
             Error.WriteLine($"Exception occured in {ex.Source}." +
-               $"Cannot find configuration file.\n");
+               $" Cannot find configuration file.\n");
          }
 
          WriteLine("Press any key to continue...");

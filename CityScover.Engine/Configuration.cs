@@ -18,6 +18,7 @@ namespace CityScover.Engine
    public struct Configuration
    {
       #region Public properties
+      public ProblemType CurrentProblem { get; set; }
       public ushort PointsCount { get; set; }
       public ICollection<Stage> Stages { get; set; }
       public ICollection<byte> RelaxedConstraintsId { get; set; }

@@ -7,22 +7,15 @@
 //
 
 using CityScover.Engine.Algorithms.Greedy;
+using System;
 
 namespace CityScover.Engine
 {
    /// <summary>
-   /// Factory class for the Algorithm abstract intercface.
+   /// Factory class for the Algorithm abstract interface.
    /// </summary>
    internal class AlgorithmFactory
    {
-      #region Private methods
-      private static Algorithm Create<TAlgorithm>()
-         where TAlgorithm : Algorithm, new()
-      {
-         return new TAlgorithm();
-      }
-      #endregion
-
       #region Internal methods
       /// <summary>
       /// Creates the concrete instance of the Algorithm type.
@@ -35,8 +28,11 @@ namespace CityScover.Engine
 
          switch (currentAlgorithm)
          {
+            case AlgorithmType.None:
+               throw new ArgumentException("Invalid algorithm", nameof(currentAlgorithm));
+
             case AlgorithmType.NearestNeighbor:
-               algorithm = Create<NearestNeighborAlgorithm>();
+               algorithm = new NearestNeighborAlgorithm();
                break;
 
             case AlgorithmType.NearestInsertion:
@@ -68,50 +64,6 @@ namespace CityScover.Engine
          }
          return algorithm;
       }
-
-      //internal static (Algorithm algorithm, AlgorithmTracker provider) CreateAlgorithm(AlgorithmType currentAlgorithm)
-      //{
-      //   Algorithm algorithm = default;
-      //   AlgorithmTracker provider = new AlgorithmTracker();
-
-      //   switch (currentAlgorithm)
-      //   {
-      //      case AlgorithmType.NearestNeighbor:
-      //         algorithm = Create<NearestNeighborAlgorithm>();
-      //         algorithm.Provider = provider;
-      //         break;
-
-      //      case AlgorithmType.NearestInsertion:
-      //         break;
-
-      //      case AlgorithmType.CheapestInsertion:
-      //         break;
-
-      //      case AlgorithmType.TwoOpt:
-      //         break;
-
-      //      case AlgorithmType.CitySwap:
-      //         break;
-
-      //      case AlgorithmType.LinKernighan:
-      //         break;
-
-      //      case AlgorithmType.IteratedLocalSearch:
-      //         break;
-
-      //      case AlgorithmType.TabuSearch:
-      //         break;
-
-      //      case AlgorithmType.VariableNeighborhoodSearch:
-      //         break;
-
-      //      default:
-      //         provider = null;
-      //         break;
-      //   }
-
-      //   return (algorithm, provider);
-      //}
       #endregion
    }
 }

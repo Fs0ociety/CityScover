@@ -43,7 +43,7 @@ namespace CityScover.Engine
       /// <summary>
       /// TODO
       /// </summary>
-      internal IProblem Problem { get; private set; }
+      internal Problem Problem { get; private set; }
 
       /// <summary>
       /// Points of interest filtered from the graph of the city.
@@ -56,16 +56,16 @@ namespace CityScover.Engine
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
 
+      internal BlockingCollection<Solution> SolutionsQueue => _solutionsQueue;
+      internal BlockingCollection<Solution> ValidatingQueue => _validatingQueue;
+      internal BlockingCollection<Solution> EvaluatedQueue => _evaluatedQueue;
+
       /// <summary>
       /// All solutions derived from the execution of an Algorithm.
       /// </summary>
       internal IEnumerable<Solution> Solutions { get; private set; }
 
       internal Solution BestSolution { get; private set; }
-
-      internal BlockingCollection<Solution> SolutionsQueue => _solutionsQueue;
-      internal BlockingCollection<Solution> ValidatingQueue => _validatingQueue;
-      internal BlockingCollection<Solution> EvaluatedQueue => _evaluatedQueue;
       #endregion
 
       #region Overrides
@@ -78,6 +78,7 @@ namespace CityScover.Engine
          _solverTasks = new Collection<Task>();
 
          //TODO: gestire creazione del problema in base a parametro di configurazione.
+         Problem = ProblemFactory.CreateProblem(ProblemType.TeamOrienteering);
       }
       #endregion
    }
