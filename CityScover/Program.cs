@@ -3,37 +3,45 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/08/2018
+// File update: 10/09/2018
 //
 
 using CityScover.Services;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Threading.Tasks;
 using static System.Console;
 
 namespace CityScover
 {
    class Program
    {
-      static void Main(string[] args)
+      static async Task Main(string[] args)
       {
          DisplayLogo();
          string configsPath = ConfigurationManager.AppSettings["ConfigsPath"];
          ISolverService solverService = SolverService.Instance;
          try
          {
-            solverService.Run(configsPath);
+            await solverService.Run(configsPath);
          }
          catch (ArgumentNullException ex)
          {
-            Error.WriteLine(ex.Message);
+            Error.WriteLine(ex.Message + '\n');
          }
          catch (DirectoryNotFoundException ex)
          {
-            Error.WriteLine(ex.Message);
+            Error.WriteLine($"Exception occured in {ex.Source}." +
+               $"Cannot find configuration files path.\n");
+         }
+         catch (FileNotFoundException ex)
+         {
+            Error.WriteLine($"Exception occured in {ex.Source}." +
+               $"Cannot find configuration file.\n");
          }
 
+         WriteLine("Press any key to continue...");
          ReadKey();
          }
 

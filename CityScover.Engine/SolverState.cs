@@ -9,7 +9,6 @@
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using CityScover.Utils;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,11 +31,7 @@ namespace CityScover.Engine
       private ICollection<Task> _solverTasks;
 
       #region Constructors
-      private Solver()
-      {
-         // Il Solver crea il problema e lo trasmette all'ExecutionTracer.
-         // Problem p = new Problem();
-      }
+      private Solver() { }
       #endregion
 
       #region Internal properties

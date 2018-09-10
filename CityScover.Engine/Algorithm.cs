@@ -19,7 +19,7 @@ namespace CityScover.Engine
       private AlgorithmTracker _provider;
 
       #region Constructors
-      public Algorithm()
+      internal Algorithm()
          : this(null)
       {}
 

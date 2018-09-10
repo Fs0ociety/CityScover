@@ -77,6 +77,8 @@ namespace CityScover.Engine
          }
       }
 
+      ICollection<Constraint> IProblem.Constraints { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
       #endregion
    }
 }

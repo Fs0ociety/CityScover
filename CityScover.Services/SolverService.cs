@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/08/2018
+// File update: 10/09/2018
 //
 
 using CityScover.Engine;
@@ -55,7 +55,7 @@ namespace CityScover.Services
          var solver = Solver.Instance;
          foreach (var tourConfig in _tourConfigurations)
          {
-            await solver.Execute(tourConfig);
+            await solver.Execute(tourConfig, enableMonitoring: true);
          }
       }
       #endregion
