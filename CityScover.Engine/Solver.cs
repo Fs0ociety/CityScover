@@ -67,9 +67,13 @@ namespace CityScover.Engine
       /// <summary>
       /// Gets a new Solution from the _solutionsQueue and processes it.
       /// </summary>
-      private async Task TakeNewSolutions()
+      private void TakeNewSolutions()
       {
-         throw new NotImplementedException();
+         foreach (var solution in _solutionsQueue.GetConsumingEnumerable())
+         {
+            _validatingQueue.Add(solution);
+         }
+         _validatingQueue.CompleteAdding();
       }
 
       /// <summary>
@@ -77,7 +81,10 @@ namespace CityScover.Engine
       /// </summary>
       private void TakeEvaluatedSolutions()
       {
-         throw new NotImplementedException();
+         foreach (var solution in _evaluatedQueue.GetConsumingEnumerable())
+         {
+            _solutions.Add(solution);
+         }
       }
 
       /// <summary>
@@ -85,12 +92,12 @@ namespace CityScover.Engine
       /// </summary>
       /// <param name="configuration"></param>
       /// <returns></returns>
-      private async Task ExecuteWithoutMonitoring(Configuration configuration)
+      private async Task ExecuteWithoutMonitoring()
       {
          bool exceptionOccurred = false;
 
          // Run all Stages.
-         foreach (Stage stage in configuration.Stages)
+         foreach (Stage stage in WorkingConfiguration.Stages)
          {
             Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.CurrentAlgorithm);
 
@@ -122,12 +129,12 @@ namespace CityScover.Engine
       /// </summary>
       /// <param name="configuration"></param>
       /// <returns></returns>
-      private async Task ExecuteWithMonitoring(Configuration configuration)
+      private async Task ExecuteWithMonitoring()
       {
          bool exceptionOccurred = false;
 
          // Run all Stages.
-         foreach (Stage stage in configuration.Stages)
+         foreach (Stage stage in WorkingConfiguration.Stages)
          {
             Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.CurrentAlgorithm);
 
@@ -161,6 +168,12 @@ namespace CityScover.Engine
             }
          }
       }
+
+      private Solution GetBestSolution()
+      {
+         // TODO: Uses LINQ query.
+         throw new NotImplementedException();
+      }
       #endregion
 
       #region Public methods
@@ -171,6 +184,7 @@ namespace CityScover.Engine
       public async Task Execute(Configuration configuration, bool enableMonitoring = false)
       {
          WorkingConfiguration = configuration;
+         Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
          InitializeTour();
          RunWorkers();
 
@@ -184,17 +198,19 @@ namespace CityScover.Engine
 
          if (enableMonitoring)
          {
-            await ExecuteWithMonitoring(configuration);
+            await ExecuteWithMonitoring();
          }
          else
          {
-            await ExecuteWithoutMonitoring(configuration);
+            await ExecuteWithoutMonitoring();
          }
 
          _solutionsQueue.CompleteAdding();
          await Task.WhenAll(_solverTasks.ToArray());
 
-         // TODO
+         // TODO: Loop in solutions collection to select best solution.
+         BestSolution = GetBestSolution();
+
          throw new NotImplementedException(nameof(Execute));
       }
       #endregion

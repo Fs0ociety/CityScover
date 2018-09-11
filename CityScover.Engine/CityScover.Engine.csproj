@@ -55,8 +55,6 @@
     <Compile Include="AlgorithmTracker.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Evaluation.cs" />
-    <Compile Include="IConstraint.cs" />
     <Compile Include="ExecutionReporter.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="ProblemFactory.cs" />

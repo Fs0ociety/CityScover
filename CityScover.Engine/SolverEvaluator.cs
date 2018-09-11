@@ -31,7 +31,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Private methods
-      private double Evaluate(Solution solution, Problem problem)
+      private double Evaluate(Solution solution)
       {
          throw new NotImplementedException();
       }

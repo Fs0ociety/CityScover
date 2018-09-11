@@ -3,31 +3,43 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 11/09/2018
 //
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CityScover.Engine
 {
    internal class TOProblem : Problem
    {
+      private Func<Solution, int> _objectiveFunc;
+
       #region Constructors
       internal TOProblem()
          : base()
       {
          ObjectiveFunc = CalculateCost;
 
-         Constraints.Add(new Constraint()
+         Constraints.Add(
+            new KeyValuePair<byte, Func<Solution, bool>>(1, IsTMaxConstraintSatisfied));
+         Constraints.Add(
+            new KeyValuePair<byte, Func<Solution, bool>>(2, IsTimeWindowsConstraintSatisfied));         
+      }
+      #endregion
+
+      #region Overrides
+      internal override Func<Solution, int> ObjectiveFunc
+      {
+         get => _objectiveFunc;
+         set
          {
-            Id = 1,
-            Logic = IsTMaxConstraintSatisfied
-         });
-         Constraints.Add(new Constraint()
-         {
-            Id = 2,
-            Logic = IsTimeWindowsConstraintSatisfied
-         });
+            if (value != _objectiveFunc)
+            {
+               _objectiveFunc = value;
+            }
+         }
       }
       #endregion
 
@@ -41,9 +53,10 @@ namespace CityScover.Engine
       /// <returns>
       /// An Evaluation Object.
       /// </returns>
-      private Evaluation CalculateCost(Solution solution)
+      private int CalculateCost(Solution solution)
       {
-         throw new NotImplementedException();
+         var solutionNodes = solution.SolutionGraph.Nodes;
+         return solutionNodes.Sum(node => node.Entity.Score.Value);
       }
       #endregion
 

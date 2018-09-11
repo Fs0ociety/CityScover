@@ -131,7 +131,7 @@ namespace CityScover.Data
                            point.Score = new ThematicScore()
                            {
                               Category = point.Category,
-                              Value = (!scoreValue.Equals(string.Empty)) ? int.Parse(scoreValue) : (int?)null
+                              Value = (!scoreValue.Equals(string.Empty)) ? int.Parse(scoreValue) : 0
                            };
                         }
                         break;

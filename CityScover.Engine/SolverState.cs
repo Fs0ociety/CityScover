@@ -76,9 +76,6 @@ namespace CityScover.Engine
          _validatingQueue = new BlockingCollection<Solution>();
          _evaluatedQueue = new BlockingCollection<Solution>();
          _solverTasks = new Collection<Task>();
-
-         //TODO: gestire creazione del problema in base a parametro di configurazione.
-         Problem = ProblemFactory.CreateProblem(ProblemType.TeamOrienteering);
       }
       #endregion
    }

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 07/09/2018
+// File update: 11/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -19,11 +19,7 @@ namespace CityScover.Engine
    {
       #region Constructors
       internal Solution()
-      {
-         ProblemConstraints = new Dictionary<byte, bool>();
-         SolutionGraph = new CityMapGraph();
-         Evaluation = new Evaluation();
-      }
+      { }
       #endregion
 
       #region Internal properties
@@ -36,18 +32,22 @@ namespace CityScover.Engine
       /// Property used from SolverValidator for analysis of problem's constraints.
       /// Contains the results of validation of constraints.
       /// </summary>
-      internal IDictionary<byte, bool> ProblemConstraints { get; set; }
+      internal IDictionary<byte, bool> ProblemConstraints { get; set; } = new Dictionary<byte, bool>();
 
       /// <summary>
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
-      internal CityMapGraph SolutionGraph { get; set; }
+      internal CityMapGraph SolutionGraph { get; set; } = new CityMapGraph();
 
       /// <summary>
       /// Property used from SolverEvaluator to set a Cost for the Solution.
-      /// The Cost can be assigned a Penalty.
       /// </summary>
-      internal Evaluation Evaluation { get; set; }
+      internal double Cost { get; set; }
+
+      /// <summary>
+      /// Property used from SolverEvaluator to set a Penalty for the Solution.
+      /// </summary>
+      internal double Penalty { get; set; }
       #endregion
    }
 }
