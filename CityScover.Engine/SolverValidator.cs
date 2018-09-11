@@ -3,11 +3,10 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 11/09/2018
+// File update: 12/09/2018
 //
 
 using CityScover.Utils;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,17 +39,17 @@ namespace CityScover.Engine
       #endregion
 
       #region Private methods
-      private async ValueTask<Solution> Validate(Solution solution)
+      private Solution Validate(Solution solution)
       {
          var problemConstraints = Solver.Problem.Constraints;
          var relaxedConstraintsId = WorkingConfiguration.RelaxedConstraintsId;
 
-         // Get the constraints delegate to be invoked.
-         var checkingConstraints = problemConstraints.Zip(relaxedConstraintsId,
-            (problemConstraint, relaxedConstraintId) => (relaxedConstraintId != problemConstraint.Key) 
-            ? problemConstraint : new KeyValuePair<byte, Func<Solution, bool>>())
-            .Where(x => x.Value != null)
-            .Select(x => x);
+         // Get the constraints delegates to be invoked.
+         var checkingConstraints = from problemConstraint in problemConstraints
+                                   where !(from relaxedConstraintId in relaxedConstraintsId
+                                           where relaxedConstraintsId.Equals(problemConstraint.Key)
+                                           select relaxedConstraintId).Any() && problemConstraint.Value != null
+                                   select problemConstraint;
 
          foreach (var constraint in checkingConstraints)
          {
@@ -58,38 +57,32 @@ namespace CityScover.Engine
             solution.ProblemConstraints.Add(constraint.Key, isValid);
          }
 
-         //solution.IsValid = GetRandomBoolean();
-         bool GetRandomBoolean()
-         {
-            return new Random().Next(100) % 2 == 0;
-         }
          return solution;
+      }
+   
+      private async Task TakeSolutionsToValidate()
+      {
+         var validatingQueue = Solver.ValidatingQueue;
+         foreach (var validatingSolution in validatingQueue.GetConsumingEnumerable())
+         {
+            Task validatingTask = Task.Run(delegate
+            {
+               Solution validatedSolution = Validate(validatingSolution);
+               _evaluatingQueue.Add(validatedSolution);
+            });
+
+            _processingTasks.Add(validatingTask);
+         }
+
+         await Task.WhenAll(_processingTasks.ToArray());
+         _evaluatingQueue.CompleteAdding();
       }
       #endregion
 
       #region Internal methods
       internal async Task Run()
       {
-         await TakeSolutionsToValidate().ConfigureAwait(false);
-      }
-
-      private async Task TakeSolutionsToValidate()
-      {
-         var validatingQueue = Solver.ValidatingQueue;
-         foreach (var validatingSolution in validatingQueue.GetConsumingEnumerable())
-         {
-            // Attacca una continuazione di un Task sulla CPU.
-            Task validationTask = Task.Run(async delegate
-            {
-               Solution validatedSolution = await Validate(validatingSolution);
-               _evaluatingQueue.Add(validatedSolution);
-            });
-
-            _processingTasks.Add(validationTask);
-         }
-
-         await Task.WhenAll(_processingTasks.ToArray());
-         _evaluatingQueue.CompleteAdding();
+         await TakeSolutionsToValidate().ConfigureAwait(continueOnCapturedContext: false);
       }
       #endregion
 
