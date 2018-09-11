@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 11/09/2018
 //
 
 using System;
@@ -36,12 +36,37 @@ namespace CityScover.Engine
 
       #region Constructors
       internal Problem()
-      { }
+      {
+      }
       #endregion
 
       #region Internal properties
       internal Func<Solution, Evaluation> ObjectiveFunc { get; set; } = default;
       internal ICollection<Constraint> Constraints { get; } = new Collection<Constraint>();
+
+      /*
+       * ALTERNATIVA
+       * 
+       * Al posto di definire una struct Constraint definita da noi è possibile usare la struct predefinita di .NET 
+       * KeyValuePair<TKey, TValue>, dove:
+       * 
+       * TKey: rappresenta l'ID del Constraint
+       * TValue: rappresenta il delegato che implementa la logica di validazione del vincolo con ID corrispondente.
+       * 
+       * In tal modo si crea una corrispondenza tra ID del vincolo e sua logica di validazione.
+       * 
+       * Ad esempio:
+       * La Collection Constraints2 che segue è una Collection formata da un insieme di coppie ID-Delegate come segue:
+       * 
+       * Constraints2:
+       *    KeyValuePair<1, IsTMaxConstraintSatisfied>
+       *    KeyValuePair<2, IsTimeWindowsConstraintSatisfied>
+       *    KeyValuePair<3, ...>
+       *    KeyValuePair<..., ...>
+       *    KeyValuePair<n, Is...>
+       *    ...
+       */
+      internal ICollection<KeyValuePair<byte, Func<Solution, bool>>> Constraints2 { get; } = new Collection<KeyValuePair<byte, Func<Solution, bool>>>();
       #endregion
    }
 }
