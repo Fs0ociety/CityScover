@@ -69,11 +69,11 @@ namespace CityScover.Engine
       /// </summary>
       private void TakeNewSolutions()
       {
-         foreach (var solution in _solutionsQueue.GetConsumingEnumerable())
+         foreach (var solution in SolutionsQueue.GetConsumingEnumerable())
          {
-            _validatingQueue.Add(solution);
+            ValidatingQueue.Add(solution);
          }
-         _validatingQueue.CompleteAdding();
+         ValidatingQueue.CompleteAdding();
       }
 
       /// <summary>
@@ -81,7 +81,7 @@ namespace CityScover.Engine
       /// </summary>
       private void TakeEvaluatedSolutions()
       {
-         foreach (var solution in _evaluatedQueue.GetConsumingEnumerable())
+         foreach (var solution in EvaluatedQueue.GetConsumingEnumerable())
          {
             _solutions.Add(solution);
          }
@@ -205,7 +205,7 @@ namespace CityScover.Engine
             await ExecuteWithoutMonitoring();
          }
 
-         _solutionsQueue.CompleteAdding();
+         SolutionsQueue.CompleteAdding();
          await Task.WhenAll(_solverTasks.ToArray());
 
          // TODO: Loop in solutions collection to select best solution.

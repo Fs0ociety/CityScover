@@ -9,6 +9,7 @@
 using CityScover.Commons;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,14 +25,16 @@ namespace CityScover.Engine
    public sealed partial class Solver : Singleton<Solver>
    {
       private ICollection<BaseSolution> _solutions;
-      private BaseSolution _bestSolution;
-      private BlockingCollection<BaseSolution> _solutionsQueue;
-      private BlockingCollection<BaseSolution> _validatingQueue;
-      private BlockingCollection<BaseSolution> _evaluatedQueue;
+      private Lazy<BaseSolution> _bestSolution;
+      private Lazy<BlockingCollection<BaseSolution>> _solutionsQueue;
+      private Lazy<BlockingCollection<BaseSolution>> _validatingQueue;
+      private Lazy<BlockingCollection<BaseSolution>> _evaluatedQueue;
       private ICollection<Task> _solverTasks;
 
       #region Constructors
-      private Solver() { }
+      private Solver()
+      {
+      }
       #endregion
 
       #region Internal properties
@@ -56,9 +59,9 @@ namespace CityScover.Engine
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
 
-      internal BlockingCollection<BaseSolution> SolutionsQueue => _solutionsQueue;
-      internal BlockingCollection<BaseSolution> ValidatingQueue => _validatingQueue;
-      internal BlockingCollection<BaseSolution> EvaluatedQueue => _evaluatedQueue;
+      internal BlockingCollection<BaseSolution> SolutionsQueue => _solutionsQueue.Value;
+      internal BlockingCollection<BaseSolution> ValidatingQueue => _validatingQueue.Value;
+      internal BlockingCollection<BaseSolution> EvaluatedQueue => _evaluatedQueue.Value;
 
       /// <summary>
       /// All solutions derived from the execution of an Algorithm.
@@ -71,10 +74,11 @@ namespace CityScover.Engine
       #region Overrides
       protected override void InitializeInstance()
       {
+         // Lazy initialization: The creation of these objects are deferred until they are first used.
          _solutions = new Collection<BaseSolution>();
-         _solutionsQueue = new BlockingCollection<BaseSolution>();
-         _validatingQueue = new BlockingCollection<BaseSolution>();
-         _evaluatedQueue = new BlockingCollection<BaseSolution>();
+         _solutionsQueue = new Lazy<BlockingCollection<BaseSolution>>();
+         _validatingQueue = new Lazy<BlockingCollection<BaseSolution>>();
+         _evaluatedQueue = new Lazy<BlockingCollection<BaseSolution>>();
          _solverTasks = new Collection<Task>();
       }
       #endregion
