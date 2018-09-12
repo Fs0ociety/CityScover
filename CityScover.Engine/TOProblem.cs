@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 11/09/2018
+// File update: 12/09/2018
 //
 
 using System;
@@ -14,7 +14,7 @@ namespace CityScover.Engine
 {
    internal class TOProblem : Problem
    {
-      private Func<Solution, int> _objectiveFunc;
+      private Func<BaseSolution, int> _objectiveFunc;
 
       #region Constructors
       internal TOProblem()
@@ -23,14 +23,14 @@ namespace CityScover.Engine
          ObjectiveFunc = CalculateCost;
 
          Constraints.Add(
-            new KeyValuePair<byte, Func<Solution, bool>>(1, IsTMaxConstraintSatisfied));
+            new KeyValuePair<byte, Func<BaseSolution, bool>>(1, IsTMaxConstraintSatisfied));
          Constraints.Add(
-            new KeyValuePair<byte, Func<Solution, bool>>(2, IsTimeWindowsConstraintSatisfied));         
+            new KeyValuePair<byte, Func<BaseSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));         
       }
       #endregion
 
       #region Overrides
-      internal override Func<Solution, int> ObjectiveFunc
+      internal override Func<BaseSolution, int> ObjectiveFunc
       {
          get => _objectiveFunc;
          set
@@ -53,20 +53,21 @@ namespace CityScover.Engine
       /// <returns>
       /// An Evaluation Object.
       /// </returns>
-      private int CalculateCost(Solution solution)
+      private int CalculateCost(BaseSolution solution)
       {
-         var solutionNodes = solution.SolutionGraph.Nodes;
-         return solutionNodes.Sum(node => node.Entity.Score.Value);
+         //var solutionNodes = solution.SolutionGraph.Nodes;
+         //return solutionNodes.Sum(node => node.Entity.Score.Value);
+         throw new NotImplementedException();
       }
       #endregion
 
       #region Constraints delegates
-      private bool IsTimeWindowsConstraintSatisfied(Solution solution)
+      private bool IsTimeWindowsConstraintSatisfied(BaseSolution solution)
       {
          throw new NotImplementedException();
       }
 
-      private bool IsTMaxConstraintSatisfied(Solution solution)
+      private bool IsTMaxConstraintSatisfied(BaseSolution solution)
       {
          throw new NotImplementedException();
       }

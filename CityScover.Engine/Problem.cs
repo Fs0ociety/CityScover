@@ -20,7 +20,7 @@ namespace CityScover.Engine
       #region Constructors
       internal Problem()
       {
-         Constraints = new Collection<KeyValuePair<byte, Func<Solution, bool>>>();
+         Constraints = new Collection<KeyValuePair<byte, Func<BaseSolution, bool>>>();
       }
       #endregion
 
@@ -28,11 +28,11 @@ namespace CityScover.Engine
       /// <summary>
       /// Abstract automatic properties doesn't create a private backing field.
       /// </summary>
-      internal abstract Func<Solution, int> ObjectiveFunc { get; set; }
+      internal abstract Func<BaseSolution, int> ObjectiveFunc { get; set; }
       #endregion
 
       #region Internal properties
-      internal ICollection<KeyValuePair<byte, Func<Solution, bool>>> Constraints { get; }
+      internal ICollection<KeyValuePair<byte, Func<BaseSolution, bool>>> Constraints { get; }
       #endregion
    }
 }

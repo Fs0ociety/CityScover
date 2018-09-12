@@ -3,10 +3,10 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 12/09/2018
 //
 
-using CityScover.Utils;
+using CityScover.Commons;
 using System;
 using System.Threading.Tasks;
 
@@ -31,7 +31,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Private methods
-      private double Evaluate(Solution solution)
+      private double Evaluate(BaseSolution solution)
       {
          throw new NotImplementedException();
       }

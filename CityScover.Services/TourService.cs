@@ -3,11 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/08/2018
+// File update: 12/09/2018
 //
 
+using CityScover.Commons;
 using CityScover.Entities;
-using CityScover.Utils;
 
 namespace CityScover.Services
 {

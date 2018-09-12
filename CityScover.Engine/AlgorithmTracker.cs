@@ -15,19 +15,19 @@ namespace CityScover.Engine
    /// <summary>
    /// TODO
    /// </summary>
-   internal class AlgorithmTracker : IObservable<Solution>
+   internal class AlgorithmTracker : IObservable<BaseSolution>
    {
-      private ICollection<IObserver<Solution>> _observers;
+      private ICollection<IObserver<BaseSolution>> _observers;
 
       #region Constructors
       public AlgorithmTracker()
       {
-         _observers = new Collection<IObserver<Solution>>();
+         _observers = new Collection<IObserver<BaseSolution>>();
       }
       #endregion
 
       #region Public methods
-      public virtual void NotifyObservers(Solution solution)
+      public virtual void NotifyObservers(BaseSolution solution)
       {
          foreach (var observer in _observers)
          {
@@ -53,14 +53,14 @@ namespace CityScover.Engine
       #endregion
 
       #region Interfaces implementation
-      public IDisposable Subscribe(IObserver<Solution> observer)
+      public IDisposable Subscribe(IObserver<BaseSolution> observer)
       {
          // Check whether observer is already registered. If not, add it.
          if (!_observers.Contains(observer))
          {
             _observers.Add(observer);
          }
-         return new Unsubscriber<Solution>(_observers, observer);
+         return new Unsubscriber<BaseSolution>(_observers, observer);
       }
       #endregion
    }

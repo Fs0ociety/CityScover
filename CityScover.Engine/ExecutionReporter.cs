@@ -16,7 +16,7 @@ namespace CityScover.Engine
    /// and start execution of all stages of the Algorithm.
    /// In addition, it monitors the execution of the Algorithm.
    /// </summary>
-   internal class ExecutionReporter : IObserver<Solution>
+   internal class ExecutionReporter : IObserver<BaseSolution>
    {
       private IDisposable _unsubscriber;
 
@@ -62,7 +62,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Interfaces implementation
-      public void OnNext(Solution value)
+      public void OnNext(BaseSolution value)
       {
          throw new NotImplementedException();
       }

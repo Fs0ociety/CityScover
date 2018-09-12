@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2DA92540-DB3E-433B-841B-3F49F9DCDC71}</ProjectGuid>
+    <ProjectGuid>{35C7FCEE-32A7-4AFA-BF7E-DA3469741BE9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CityScover.Services</RootNamespace>
-    <AssemblyName>CityScover.Services</AssemblyName>
+    <RootNamespace>CityScover.Commons</RootNamespace>
+    <AssemblyName>CityScover.Commons</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +21,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,31 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigurationService.cs" />
-    <Compile Include="IConfigurationService.cs" />
-    <Compile Include="ISolverService.cs" />
-    <Compile Include="ITourService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SolverService.cs" />
-    <Compile Include="TourService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CityScover.Commons\CityScover.Commons.csproj">
-      <Project>{35c7fcee-32a7-4afa-bf7e-da3469741be9}</Project>
-      <Name>CityScover.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CityScover.Data\CityScover.Data.csproj">
-      <Project>{ae6224d4-863e-4002-8e0d-5626ed9c6411}</Project>
-      <Name>CityScover.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CityScover.Engine\CityScover.Engine.csproj">
-      <Project>{4c490874-3ae5-4747-ab49-fdbd63bde756}</Project>
-      <Name>CityScover.Engine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CityScover.Entities\CityScover.Entities.csproj">
-      <Project>{f99fdb67-9134-414a-bfb9-b75136765fa5}</Project>
-      <Name>CityScover.Entities</Name>
-    </ProjectReference>
+    <Compile Include="Singleton.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

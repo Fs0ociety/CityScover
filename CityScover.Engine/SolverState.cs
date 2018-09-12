@@ -3,12 +3,12 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 12/09/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
-using CityScover.Utils;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,11 +23,11 @@ namespace CityScover.Engine
    /// </summary>
    public sealed partial class Solver : Singleton<Solver>
    {
-      private ICollection<Solution> _solutions;
-      private Solution _bestSolution;
-      private BlockingCollection<Solution> _solutionsQueue;
-      private BlockingCollection<Solution> _validatingQueue;
-      private BlockingCollection<Solution> _evaluatedQueue;
+      private ICollection<BaseSolution> _solutions;
+      private BaseSolution _bestSolution;
+      private BlockingCollection<BaseSolution> _solutionsQueue;
+      private BlockingCollection<BaseSolution> _validatingQueue;
+      private BlockingCollection<BaseSolution> _evaluatedQueue;
       private ICollection<Task> _solverTasks;
 
       #region Constructors
@@ -56,25 +56,25 @@ namespace CityScover.Engine
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
 
-      internal BlockingCollection<Solution> SolutionsQueue => _solutionsQueue;
-      internal BlockingCollection<Solution> ValidatingQueue => _validatingQueue;
-      internal BlockingCollection<Solution> EvaluatedQueue => _evaluatedQueue;
+      internal BlockingCollection<BaseSolution> SolutionsQueue => _solutionsQueue;
+      internal BlockingCollection<BaseSolution> ValidatingQueue => _validatingQueue;
+      internal BlockingCollection<BaseSolution> EvaluatedQueue => _evaluatedQueue;
 
       /// <summary>
       /// All solutions derived from the execution of an Algorithm.
       /// </summary>
-      internal IEnumerable<Solution> Solutions { get; private set; }
+      internal IEnumerable<BaseSolution> Solutions { get; private set; }
 
-      internal Solution BestSolution { get; private set; }
+      internal BaseSolution BestSolution { get; private set; }
       #endregion
 
       #region Overrides
       protected override void InitializeInstance()
       {
-         _solutions = new Collection<Solution>();
-         _solutionsQueue = new BlockingCollection<Solution>();
-         _validatingQueue = new BlockingCollection<Solution>();
-         _evaluatedQueue = new BlockingCollection<Solution>();
+         _solutions = new Collection<BaseSolution>();
+         _solutionsQueue = new BlockingCollection<BaseSolution>();
+         _validatingQueue = new BlockingCollection<BaseSolution>();
+         _evaluatedQueue = new BlockingCollection<BaseSolution>();
          _solverTasks = new Collection<Task>();
       }
       #endregion

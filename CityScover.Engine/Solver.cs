@@ -3,13 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 12/09/2018
 //
 
+using CityScover.Commons;
 using CityScover.Data;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
-using CityScover.Utils;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -169,7 +169,7 @@ namespace CityScover.Engine
          }
       }
 
-      private Solution GetBestSolution()
+      private BaseSolution GetBestSolution()
       {
          // TODO: Uses LINQ query.
          throw new NotImplementedException();

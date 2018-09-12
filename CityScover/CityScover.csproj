@@ -52,13 +52,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CityScover.Commons\CityScover.Commons.csproj">
+      <Project>{35c7fcee-32a7-4afa-bf7e-da3469741be9}</Project>
+      <Name>CityScover.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CityScover.Services\CityScover.Services.csproj">
       <Project>{2da92540-db3e-433b-841b-3f49f9dcdc71}</Project>
       <Name>CityScover.Services</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CityScover.Utils\CityScover.Utils.csproj">
-      <Project>{8483b781-2a00-4249-83f2-c7184a573b31}</Project>
-      <Name>CityScover.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
