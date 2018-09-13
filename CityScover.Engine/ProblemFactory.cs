@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 13/09/2018
 //
 
 using System;
@@ -16,6 +16,15 @@ namespace CityScover.Engine
    internal class ProblemFactory
    {
       #region Internal methods
+      /// <summary>
+      /// Creates the concrete instance of the Problem type.
+      /// </summary>
+      /// <param name="currentProblem">
+      /// Problem type to create.
+      /// </param>
+      /// <returns>
+      /// The Problem's instance.
+      /// </returns>
       internal static Problem CreateProblem(ProblemType currentProblem)
       {
          Problem problem = default;
@@ -23,7 +32,7 @@ namespace CityScover.Engine
          switch (currentProblem)
          {
             case ProblemType.None:
-               throw new ArgumentException("Invalid problem", nameof(currentProblem));
+               break;
 
             case ProblemType.TeamOrienteering:
                problem = new TOProblem();

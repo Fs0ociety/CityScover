@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/09/2018
+// File update: 13/09/2018
 //
 
 using CityScover.Commons;
@@ -24,12 +24,12 @@ namespace CityScover.Engine
    /// </summary>
    public sealed partial class Solver : Singleton<Solver>
    {
-      private ICollection<BaseSolution> _solutions;
-      private Lazy<BaseSolution> _bestSolution;
-      private Lazy<BlockingCollection<BaseSolution>> _solutionsQueue;
-      private Lazy<BlockingCollection<BaseSolution>> _validatingQueue;
-      private Lazy<BlockingCollection<BaseSolution>> _evaluatedQueue;
+      private BlockingCollection<BaseSolution> _solutionsQueue;
+      private BlockingCollection<BaseSolution> _validatingQueue;
+      private BlockingCollection<BaseSolution> _evaluatedQueue;
       private ICollection<Task> _solverTasks;
+      private ICollection<BaseSolution> _solutions;
+      private BaseSolution _bestSolution;
 
       #region Constructors
       private Solver()
@@ -74,12 +74,11 @@ namespace CityScover.Engine
       #region Overrides
       protected override void InitializeInstance()
       {
-         // Lazy initialization: The creation of these objects are deferred until they are first used.
-         _solutions = new Collection<BaseSolution>();
-         _solutionsQueue = new Lazy<BlockingCollection<BaseSolution>>();
-         _validatingQueue = new Lazy<BlockingCollection<BaseSolution>>();
-         _evaluatedQueue = new Lazy<BlockingCollection<BaseSolution>>();
+         _solutionsQueue = new BlockingCollection<BaseSolution>();
+         _validatingQueue = new BlockingCollection<BaseSolution>();
+         _evaluatedQueue = new BlockingCollection<BaseSolution>();
          _solverTasks = new Collection<Task>();
+         _solutions = new Collection<BaseSolution>();
       }
       #endregion
    }

@@ -185,6 +185,12 @@ namespace CityScover.Engine
       {
          WorkingConfiguration = configuration;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
+
+         if (Problem == null)
+         {
+            throw new NullReferenceException(nameof(Problem));
+         }
+
          InitializeTour();
          RunWorkers();
 

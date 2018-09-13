@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 13/09/2018
 //
 
 using CityScover.Engine.Algorithms.Greedy;
@@ -20,8 +20,12 @@ namespace CityScover.Engine
       /// <summary>
       /// Creates the concrete instance of the Algorithm type.
       /// </summary>
-      /// <param name="currentAlgorithm"></param>
-      /// <returns></returns>
+      /// <param name="currentAlgorithm">
+      /// Algorithm type to create.
+      /// </param>
+      /// <returns>
+      /// The Algorithm's instance to run.
+      /// </returns>
       internal static Algorithm CreateAlgorithm(AlgorithmType currentAlgorithm)
       {
          Algorithm algorithm = default;
@@ -29,7 +33,7 @@ namespace CityScover.Engine
          switch (currentAlgorithm)
          {
             case AlgorithmType.None:
-               throw new ArgumentException("Invalid algorithm", nameof(currentAlgorithm));
+               break;
 
             case AlgorithmType.NearestNeighbor:
                algorithm = new NearestNeighborAlgorithm();
