@@ -3,18 +3,17 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/09/2018
+// File update: 14/09/2018
 //
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CityScover.Engine
 {
    internal class TOProblem : Problem
    {
-      private Func<BaseSolution, int> _objectiveFunc;
+      private Func<TOSolution, int> _objectiveFunc;
 
       #region Constructors
       internal TOProblem()
@@ -23,14 +22,14 @@ namespace CityScover.Engine
          ObjectiveFunc = CalculateCost;
 
          Constraints.Add(
-            new KeyValuePair<byte, Func<BaseSolution, bool>>(1, IsTMaxConstraintSatisfied));
+            new KeyValuePair<byte, Func<TOSolution, bool>>(1, IsTMaxConstraintSatisfied));
          Constraints.Add(
-            new KeyValuePair<byte, Func<BaseSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));         
+            new KeyValuePair<byte, Func<TOSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));         
       }
       #endregion
 
       #region Overrides
-      internal override Func<BaseSolution, int> ObjectiveFunc
+      internal override Func<TOSolution, int> ObjectiveFunc
       {
          get => _objectiveFunc;
          set
@@ -53,7 +52,7 @@ namespace CityScover.Engine
       /// <returns>
       /// An Evaluation Object.
       /// </returns>
-      private int CalculateCost(BaseSolution solution)
+      private int CalculateCost(TOSolution solution)
       {
          //var solutionNodes = solution.SolutionGraph.Nodes;
          //return solutionNodes.Sum(node => node.Entity.Score.Value);
@@ -62,12 +61,12 @@ namespace CityScover.Engine
       #endregion
 
       #region Constraints delegates
-      private bool IsTimeWindowsConstraintSatisfied(BaseSolution solution)
+      private bool IsTimeWindowsConstraintSatisfied(TOSolution solution)
       {
          throw new NotImplementedException();
       }
 
-      private bool IsTMaxConstraintSatisfied(BaseSolution solution)
+      private bool IsTMaxConstraintSatisfied(TOSolution solution)
       {
          throw new NotImplementedException();
       }

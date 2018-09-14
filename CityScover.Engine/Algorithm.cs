@@ -3,8 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 14/09/2018
 //
+
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CityScover.Engine
 {
@@ -17,16 +22,19 @@ namespace CityScover.Engine
       private AlgorithmStatus _status;
       private bool _acceptImprovementsOnly;
       private AlgorithmTracker _provider;
+      private ICollection<AlgorithmType> _innerAlgorithmTypes;
+      private ICollection<Algorithm> _innerAlgorithms;
 
       #region Constructors
       internal Algorithm()
          : this(null)
-      {}
+      { }
 
       internal Algorithm(AlgorithmTracker provider)
       {
          _acceptImprovementsOnly = true;
          _provider = provider;
+         _innerAlgorithms = new Collection<Algorithm>();
       }
       #endregion
 
@@ -117,6 +125,15 @@ namespace CityScover.Engine
          _status = AlgorithmStatus.Terminated;
          OnTerminated();
          // TODO: Pubblicazione dell'evento di avvenuta terminazione ai subscribers.
+      }
+      #endregion
+
+      #region Protected methods
+      protected AlgorithmType GetInnerAlgorithmType(AlgorithmType algorithmType)
+      {
+         return (from type in _innerAlgorithmTypes
+                where algorithmType == type
+                select type).FirstOrDefault();
       }
       #endregion
    }

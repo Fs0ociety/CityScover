@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 08/09/2018
+// File update: 14/09/2018
 //
 
 using System;
@@ -16,7 +16,7 @@ namespace CityScover.Engine
    /// and start execution of all stages of the Algorithm.
    /// In addition, it monitors the execution of the Algorithm.
    /// </summary>
-   internal class ExecutionReporter : IObserver<BaseSolution>
+   internal class ExecutionReporter : IObserver<TOSolution>
    {
       private IDisposable _unsubscriber;
 
@@ -62,7 +62,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Interfaces implementation
-      public void OnNext(BaseSolution value)
+      public void OnNext(TOSolution value)
       {
          throw new NotImplementedException();
       }

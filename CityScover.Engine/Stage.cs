@@ -3,8 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 14/09/2018
 //
+
+
+using System.Collections.Generic;
 
 namespace CityScover.Engine
 {
@@ -15,12 +18,14 @@ namespace CityScover.Engine
       {
          StageNo = stageType;
          CurrentAlgorithm = AlgorithmType.None;
+         InnerAlgorithms = null;
       }
       #endregion
 
       #region Public properties
       public StageType StageNo { get; set; }
       public AlgorithmType CurrentAlgorithm { get; set; }
+      public KeyValuePair<AlgorithmType, byte>[] InnerAlgorithms { get; set; }
       #endregion
 
       #region Public methods
@@ -99,4 +104,46 @@ namespace CityScover.Engine
       }
       #endregion
    }
+
+   //public struct Stage
+   //{
+   //   #region Constructors
+   //   public Stage(StageType stageType)
+   //   {
+   //      StageNo = stageType;
+   //   }
+   //   #endregion
+
+   //   #region Public properties
+   //   public StageType StageNo { get; set; }
+   //   public StageFlow Flow { get; set; }      
+   //   #endregion
+
+   //   #region Public methods
+   //   public static StageType GetStageById(int id)
+   //   {
+   //      StageType stage;
+
+   //      switch (id)
+   //      {
+   //         case 1:
+   //            stage = StageType.StageOne;
+   //            break;
+   //         case 2:
+   //            stage = StageType.StageTwo;
+   //            break;
+   //         case 3:
+   //            stage = StageType.StageThree;
+   //            break;
+   //         case 4:
+   //            stage = StageType.StageFourth;
+   //            break;
+   //         default:
+   //            stage = StageType.InvalidStage;
+   //            break;
+   //      }
+   //      return stage;
+   //   }
+   //   #endregion
+   //}
 }

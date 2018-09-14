@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 13/09/2018
+// File update: 14/09/2018
 //
 
 using CityScover.Engine.Algorithms.Greedy;
@@ -45,7 +45,7 @@ namespace CityScover.Engine
             case AlgorithmType.CheapestInsertion:
                break;
 
-            case AlgorithmType.TwoOpt:
+            case AlgorithmType.TwoOpt: 
                break;
 
             case AlgorithmType.CitySwap:

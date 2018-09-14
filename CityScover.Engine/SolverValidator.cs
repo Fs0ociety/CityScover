@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/09/2018
+// File update: 14/09/2018
 //
 
 using CityScover.Commons;
@@ -20,7 +20,7 @@ namespace CityScover.Engine
    /// </summary>
    internal sealed class SolverValidator : Singleton<SolverValidator>
    {
-      private BlockingCollection<BaseSolution> _evaluatingQueue;
+      private BlockingCollection<TOSolution> _evaluatingQueue;
       private ICollection<Task> _processingTasks;
 
       #region Constructors
@@ -39,7 +39,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Private methods
-      private BaseSolution Validate(BaseSolution solution)
+      private TOSolution Validate(TOSolution solution)
       {
          var problemConstraints = Solver.Problem.Constraints;
          var relaxedConstraintsId = WorkingConfiguration.RelaxedConstraintsId;
@@ -54,7 +54,7 @@ namespace CityScover.Engine
          foreach (var constraint in checkingConstraints)
          {
             bool isValid = constraint.Value.Invoke(solution);
-            //solution.ProblemConstraints.Add(constraint.Key, isValid);
+            solution.ProblemConstraints.Add(constraint.Key, isValid);
          }
 
          return solution;
@@ -67,7 +67,7 @@ namespace CityScover.Engine
          {
             Task validatingTask = Task.Run(delegate
             {
-               BaseSolution validatedSolution = Validate(validatingSolution);
+               TOSolution validatedSolution = Validate(validatingSolution);
                _evaluatingQueue.Add(validatedSolution);
             });
 
@@ -89,7 +89,7 @@ namespace CityScover.Engine
       #region Overrides
       protected override void InitializeInstance()
       {
-         _evaluatingQueue = new BlockingCollection<BaseSolution>();
+         _evaluatingQueue = new BlockingCollection<TOSolution>();
          _processingTasks = new Collection<Task>();
       }
       #endregion

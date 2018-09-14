@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgorithmTest.cs" />
     <Compile Include="CreateGraphTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CityScoverGraphTest.cs" />
@@ -60,6 +61,10 @@
     <ProjectReference Include="..\CityScover.ADT.Graphs\CityScover.ADT.Graphs.csproj">
       <Project>{f4882229-c786-4ed9-a48a-7c325807f838}</Project>
       <Name>CityScover.ADT.Graphs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CityScover.Engine\CityScover.Engine.csproj">
+      <Project>{4c490874-3ae5-4747-ab49-fdbd63bde756}</Project>
+      <Name>CityScover.Engine</Name>
     </ProjectReference>
     <ProjectReference Include="..\CityScover.Entities\CityScover.Entities.csproj">
       <Project>{F99FDB67-9134-414A-BFB9-B75136765FA5}</Project>

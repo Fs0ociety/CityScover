@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/09/2018
+// File update: 14/09/2018
 //
 
 using CityScover.Commons;
@@ -44,7 +44,7 @@ namespace CityScover.Services
          {
             throw new FileNotFoundException("The directory does not contain files.");
          }
-
+         
          IConfigurationService configService = ConfigurationService.Instance;
          foreach (var configFile in filenames)
          {

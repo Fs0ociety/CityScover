@@ -3,11 +3,12 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/09/2018
+// File update: 14/09/2018
 //
 
 using CityScover.Commons;
 using CityScover.Data;
+using CityScover.Engine.Configs;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
@@ -169,11 +170,16 @@ namespace CityScover.Engine
          }
       }
 
-      private BaseSolution GetBestSolution()
+      private TOSolution GetBestSolution()
       {
          // TODO: Uses LINQ query.
          throw new NotImplementedException();
       }
+      #endregion
+
+      #region Internal methods
+      internal Algorithm GetAlgorithm(AlgorithmType algorithmType) => 
+         AlgorithmFactory.CreateAlgorithm(algorithmType);
       #endregion
 
       #region Public methods
@@ -183,6 +189,8 @@ namespace CityScover.Engine
       /// <param name="configuration"></param>
       public async Task Execute(Configuration configuration, bool enableMonitoring = false)
       {
+         var configs = Configurations.Configs;
+
          WorkingConfiguration = configuration;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 

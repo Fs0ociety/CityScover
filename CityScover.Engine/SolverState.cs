@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 13/09/2018
+// File update: 14/09/2018
 //
 
 using CityScover.Commons;
@@ -24,12 +24,12 @@ namespace CityScover.Engine
    /// </summary>
    public sealed partial class Solver : Singleton<Solver>
    {
-      private BlockingCollection<BaseSolution> _solutionsQueue;
-      private BlockingCollection<BaseSolution> _validatingQueue;
-      private BlockingCollection<BaseSolution> _evaluatedQueue;
+      private BlockingCollection<TOSolution> _solutionsQueue;
+      private BlockingCollection<TOSolution> _validatingQueue;
+      private BlockingCollection<TOSolution> _evaluatedQueue;
       private ICollection<Task> _solverTasks;
-      private ICollection<BaseSolution> _solutions;
-      private BaseSolution _bestSolution;
+      private ICollection<TOSolution> _solutions;
+      private TOSolution _bestSolution;
 
       #region Constructors
       private Solver()
@@ -59,26 +59,26 @@ namespace CityScover.Engine
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
 
-      internal BlockingCollection<BaseSolution> SolutionsQueue => _solutionsQueue;
-      internal BlockingCollection<BaseSolution> ValidatingQueue => _validatingQueue;
-      internal BlockingCollection<BaseSolution> EvaluatedQueue => _evaluatedQueue;
+      internal BlockingCollection<TOSolution> SolutionsQueue => _solutionsQueue;
+      internal BlockingCollection<TOSolution> ValidatingQueue => _validatingQueue;
+      internal BlockingCollection<TOSolution> EvaluatedQueue => _evaluatedQueue;
 
       /// <summary>
       /// All solutions derived from the execution of an Algorithm.
       /// </summary>
-      internal IEnumerable<BaseSolution> Solutions { get; private set; }
+      internal IEnumerable<TOSolution> Solutions { get; private set; }
 
-      internal BaseSolution BestSolution { get; private set; }
+      internal TOSolution BestSolution { get; private set; }
       #endregion
 
       #region Overrides
       protected override void InitializeInstance()
       {
-         _solutionsQueue = new BlockingCollection<BaseSolution>();
-         _validatingQueue = new BlockingCollection<BaseSolution>();
-         _evaluatedQueue = new BlockingCollection<BaseSolution>();
+         _solutionsQueue = new BlockingCollection<TOSolution>();
+         _validatingQueue = new BlockingCollection<TOSolution>();
+         _evaluatedQueue = new BlockingCollection<TOSolution>();
          _solverTasks = new Collection<Task>();
-         _solutions = new Collection<BaseSolution>();
+         _solutions = new Collection<TOSolution>();
       }
       #endregion
    }

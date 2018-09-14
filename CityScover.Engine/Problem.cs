@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 11/09/2018
+// File update: 14/09/2018
 //
 
 using System;
@@ -20,7 +20,7 @@ namespace CityScover.Engine
       #region Constructors
       internal Problem()
       {
-         Constraints = new Collection<KeyValuePair<byte, Func<BaseSolution, bool>>>();
+         Constraints = new Collection<KeyValuePair<byte, Func<TOSolution, bool>>>();
       }
       #endregion
 
@@ -28,11 +28,11 @@ namespace CityScover.Engine
       /// <summary>
       /// Abstract automatic properties doesn't create a private backing field.
       /// </summary>
-      internal abstract Func<BaseSolution, int> ObjectiveFunc { get; set; }
+      internal abstract Func<TOSolution, int> ObjectiveFunc { get; set; }
       #endregion
 
       #region Internal properties
-      internal ICollection<KeyValuePair<byte, Func<BaseSolution, bool>>> Constraints { get; }
+      internal ICollection<KeyValuePair<byte, Func<TOSolution, bool>>> Constraints { get; }
       #endregion
    }
 }
