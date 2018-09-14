@@ -59,9 +59,9 @@ namespace CityScover.Engine
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
 
-      internal BlockingCollection<BaseSolution> SolutionsQueue => _solutionsQueue.Value;
-      internal BlockingCollection<BaseSolution> ValidatingQueue => _validatingQueue.Value;
-      internal BlockingCollection<BaseSolution> EvaluatedQueue => _evaluatedQueue.Value;
+      internal BlockingCollection<BaseSolution> SolutionsQueue => _solutionsQueue;
+      internal BlockingCollection<BaseSolution> ValidatingQueue => _validatingQueue;
+      internal BlockingCollection<BaseSolution> EvaluatedQueue => _evaluatedQueue;
 
       /// <summary>
       /// All solutions derived from the execution of an Algorithm.
