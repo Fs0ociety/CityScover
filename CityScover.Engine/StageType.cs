@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 25/08/2018
+// File update: 15/09/2018
 //
 
 namespace CityScover.Engine
@@ -26,13 +26,13 @@ namespace CityScover.Engine
       StageTwo,
 
       /// <summary>
-      /// Stage for improvements algorithms.
+      /// Stage for Metaheuristic algorithms.
       /// </summary>
       StageThree,
 
       /// <summary>
-      /// Stage for Metaheuristic algorithms.
+      /// Stage for Improvement algorithms.
       /// </summary>
-      StageFourth
+      Improvement
    }
 }

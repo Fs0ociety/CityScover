@@ -57,7 +57,7 @@
     <Compile Include="AlgorithmTracker.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Configs\Configurations.cs" />
+    <Compile Include="Configurations\RunningConfigs.cs" />
     <Compile Include="ExecutionReporter.cs" />
     <Compile Include="Problem.cs" />
     <Compile Include="ProblemFactory.cs" />

@@ -189,7 +189,7 @@ namespace CityScover.Engine
       /// <param name="configuration"></param>
       public async Task Execute(Configuration configuration, bool enableMonitoring = false)
       {
-         var configs = Configurations.Configs;
+         var configs = RunningConfigs.Configs;
 
          WorkingConfiguration = configuration;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
