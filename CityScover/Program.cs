@@ -3,13 +3,10 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 15/09/2018
 //
 
 using CityScover.Services;
-using System;
-using System.Configuration;
-using System.IO;
 using System.Threading.Tasks;
 using static System.Console;
 
