@@ -100,7 +100,7 @@ namespace CityScover.Engine
          // Run all Stages.
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
-            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.CurrentAlgorithm);
+            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.Type);
 
             if (algorithm == null)
             {
@@ -137,7 +137,7 @@ namespace CityScover.Engine
          // Run all Stages.
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
-            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.CurrentAlgorithm);
+            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.Type);
 
             if (algorithm == null)
             {
@@ -190,7 +190,6 @@ namespace CityScover.Engine
       public async Task Execute(Configuration configuration, bool enableMonitoring = false)
       {
          var configs = RunningConfigs.Configs;
-
          WorkingConfiguration = configuration;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 

@@ -15,24 +15,23 @@ namespace CityScover.Engine
    /// TODO: Tree structure for a stage execution flow.
    /// Built with a Composite Pattern (without children of different types, only the same type, like recursion).
    /// </summary>
-   public struct StageFlow
+   public class StageFlow
    {
-      private ICollection<StageFlow> _childrenFlows;
-
-      private AlgorithmType _type;
-
-      private byte _runningTimes;
-
-      internal StageFlow(byte runningTimes)
-         :this(AlgorithmType.None, runningTimes)
+      internal StageFlow()
+         :this(AlgorithmType.None, 1)
       {
       }
 
       internal StageFlow(AlgorithmType type, byte runningTimes)
       {
-         _childrenFlows = new Collection<StageFlow>();
-         _type = type;
-         _runningTimes = runningTimes;
-      }      
+         ChildrenFlows = new Collection<StageFlow>();
+         Type = type;
+         RunningTimes = runningTimes;
+      }
+
+      public ICollection<StageFlow> ChildrenFlows { get; set; }
+
+      public AlgorithmType Type { get ; set; }
+      public byte RunningTimes { get; set; }      
    }
 }
