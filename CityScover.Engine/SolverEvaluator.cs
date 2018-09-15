@@ -10,6 +10,7 @@ using CityScover.Commons;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -41,18 +42,26 @@ namespace CityScover.Engine
       #region Private methods
       private TOSolution Evaluate(TOSolution solution)
       {
-         //TODO TO be implemented.
-         //if (solution.Cost > 90 || !solution.IsValid)
-         if (solution.Cost > 90)
+         var objectiveFunc = Solver.Problem.ObjectiveFunc;
+         var solutionCost = objectiveFunc(solution);
+         solution.Cost = solutionCost;
+
+         var violatedConstraints = (from constraint in solution.ProblemConstraints.Values
+                                    where constraint == false
+                                    select constraint);
+
+         var penaltyFunc = Solver.Problem.PenaltyFunc;
+         foreach (var constraint in violatedConstraints)
          {
-            solution.Cost = Penalize(solution.Cost);
+            solution.Cost = penaltyFunc(solution);
+            //solution.Cost = Penalize(solution.Cost);
          }
 
-         double Penalize(double solutionValue)
-         {
-            return solutionValue + new Random().Next(10);
-         }
-
+         //double Penalize(double solutionValue)
+         //{
+         //   return solutionValue + new Random().Next(10);
+         //}
+         
          return solution;
       }
 

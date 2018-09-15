@@ -3,12 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 16/09/2018
 //
 
 using CityScover.Commons;
 using CityScover.Data;
-using CityScover.Engine.Configs;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
@@ -174,8 +173,15 @@ namespace CityScover.Engine
 
       private TOSolution GetBestSolution()
       {
-         // TODO: Uses LINQ query.
-         throw new NotImplementedException();
+         var isMinimizingProblem = Problem.IsMinimizing;
+         var costs = from sol in _solutions
+                     select sol.Cost;
+
+         var targetCost = isMinimizingProblem ? costs.Min() : costs.Max();
+
+         return (from solution in _solutions
+                 where solution.Cost == targetCost
+                 select solution).FirstOrDefault();         
       }
       #endregion
 
