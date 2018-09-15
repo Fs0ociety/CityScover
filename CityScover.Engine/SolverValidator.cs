@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 15/09/2018
 //
 
 using CityScover.Commons;
@@ -31,6 +31,8 @@ namespace CityScover.Engine
 
       #region Internal properties
       internal Solver Solver => Solver.Instance;
+
+      internal BlockingCollection<TOSolution> EvaluatingQueue => _evaluatingQueue;
 
       internal Configuration WorkingConfiguration
       {
