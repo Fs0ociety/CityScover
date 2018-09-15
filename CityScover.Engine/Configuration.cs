@@ -22,17 +22,18 @@ namespace CityScover.Engine
       public Configuration()
       {
          Stages = new Collection<Stage>();
+         RelaxedConstraintsId = new Collection<byte>();
       }
       #endregion
 
       #region Public properties
       public ProblemType CurrentProblem { get; set; }
-      public ushort PointsCount { get; set; }
-      public ICollection<Stage> Stages { get; set; }
       public ICollection<byte> RelaxedConstraintsId { get; set; }
       public TourCategoryType TourCategory { get; set; }
+      public ushort PointsCount { get; set; }
       public TimeSpan? ArrivalTime { get; set; }
       public TimeSpan? TourDuration { get; set; }
+      public ICollection<Stage> Stages { get; set; }
       #endregion
    }
 }

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 15/09/2018
 //
 
 using System;
@@ -14,7 +14,7 @@ using System.Linq;
 namespace CityScover.Engine
 {
    /// <summary>
-   /// TODO
+   /// This abstract class represents a generic interface Algorithm to execute.
    /// </summary>
    internal abstract class Algorithm
    {

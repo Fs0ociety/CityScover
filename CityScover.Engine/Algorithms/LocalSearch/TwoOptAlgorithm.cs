@@ -37,7 +37,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
          //To test inner algorithm creation.
          foreach (var child in childrenFlows)
          {
-            Algorithm algorithm = Solver.Instance.GetAlgorithm(child.Type);
+            Algorithm algorithm = Solver.Instance.GetAlgorithm(child.CurrentAlgorithm);
             for (int i = 0; i < child.RunningTimes; i++)
             {
                algorithm.Start();

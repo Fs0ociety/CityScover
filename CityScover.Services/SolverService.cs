@@ -28,7 +28,7 @@ namespace CityScover.Services
       #region ISolverService implementations
       public async Task Run()
       {
-         _tourConfigurations = RunningConfigs.Configs;
+         _tourConfigurations = RunningConfigs.Configurations;
 
          var solver = Solver.Instance;
          foreach (var tourConfig in _tourConfigurations)

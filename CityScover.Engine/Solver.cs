@@ -101,7 +101,7 @@ namespace CityScover.Engine
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
             CurrentStage = stage;
-            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.Type);
+            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
 
             if (algorithm == null)
             {
@@ -139,7 +139,7 @@ namespace CityScover.Engine
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
             CurrentStage = stage;
-            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.Type);
+            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
 
             if (algorithm == null)
             {
