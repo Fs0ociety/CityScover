@@ -32,9 +32,17 @@ namespace CityScover.Engine.Algorithms.LocalSearch
 
       internal override void PerformStep()
       {
-         //To test inner algorithm creation.         
-         Algorithm algorithm = Solver.Instance.GetAlgorithm(AlgorithmType.LinKernighan);
-         algorithm.Start();
+         var solver = Solver.Instance;
+         var childrenFlows = solver.CurrentStage.Flow.ChildrenFlows;
+         //To test inner algorithm creation.
+         foreach (var child in childrenFlows)
+         {
+            Algorithm algorithm = Solver.Instance.GetAlgorithm(child.Type);
+            for (int i = 0; i < child.RunningTimes; i++)
+            {
+               algorithm.Start();
+            }            
+         }
       }
 
       internal override bool StopConditions()

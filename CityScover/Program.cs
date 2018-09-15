@@ -20,27 +20,8 @@ namespace CityScover
       static async Task Main(string[] args)
       {
          DisplayLogo();
-         string configsPath = ConfigurationManager.AppSettings["ConfigsPath"];
          ISolverService solverService = SolverService.Instance;
-         try
-         {
-            await solverService.Run(configsPath);
-         }
-         catch (ArgumentNullException ex)
-         {
-            Error.WriteLine(ex.Message + '\n');
-         }
-         catch (DirectoryNotFoundException ex)
-         {
-            Error.WriteLine($"Exception occured in {ex.Source}." +
-               $" Cannot find configuration files path.\n");
-         }
-         catch (FileNotFoundException ex)
-         {
-            Error.WriteLine($"Exception occured in {ex.Source}." +
-               $" Cannot find configuration file.\n");
-         }
-
+         await solverService.Run();
          WriteLine("Press any key to continue...");
          ReadKey();
       }

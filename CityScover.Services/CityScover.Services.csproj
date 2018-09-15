@@ -42,8 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigurationService.cs" />
-    <Compile Include="IConfigurationService.cs" />
     <Compile Include="ISolverService.cs" />
     <Compile Include="ITourService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,13 +3,12 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 15/09/2018
 //
 
 using CityScover.Commons;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -42,6 +41,11 @@ namespace CityScover.Engine
       /// Configuration to execute received from the SolverService.
       /// </summary>
       internal Configuration WorkingConfiguration { get; private set; }
+
+      /// <summary>
+      /// Current stage in execution.
+      /// </summary>
+      internal Stage CurrentStage { get; private set; }
 
       /// <summary>
       /// TODO
