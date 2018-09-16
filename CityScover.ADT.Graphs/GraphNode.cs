@@ -53,6 +53,11 @@ namespace CityScover.ADT.Graphs
          {
             _edges.Add(new GraphEdge(this, node, weight));
          }
+
+         public void RemoveEdge(GraphEdge edge)
+         {
+            _edges.Remove(edge);
+         }
          #endregion
       }
    }

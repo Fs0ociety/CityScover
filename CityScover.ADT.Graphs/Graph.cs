@@ -3,12 +3,11 @@
 // Version 1.0
 //
 // Authors: Riccardo Mariotti
-// File update: 30/07/2018
+// File update: 16/09/2018
 //
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.ADT.Graphs
@@ -111,7 +110,7 @@ namespace CityScover.ADT.Graphs
       /// <param name="nodeKey1">Chiave del primo nodo.</param>
       /// <param name="nodeKey2">Chiave del secondo nodo.</param>
       /// <exception cref="InvalidOperationException"/>
-      public void AddUndirectEdge(TNodeKey nodeKey1, TNodeKey nodeKey2)
+      public void AddUndirectedEdge(TNodeKey nodeKey1, TNodeKey nodeKey2)
       {
          if (Equals(nodeKey1, nodeKey2))
          {
@@ -128,7 +127,7 @@ namespace CityScover.ADT.Graphs
       /// <param name="nodeKey2">Chiave del secondo nodo.</param>
       /// <param name="edgeWeight">Peso attribuito.</param>
       /// <exception cref="InvalidOperationException"/>
-      public void AddUndirectEdge(TNodeKey nodeKey1, TNodeKey nodeKey2, TEdgeWeight edgeWeight)
+      public void AddUndirectedEdge(TNodeKey nodeKey1, TNodeKey nodeKey2, TEdgeWeight edgeWeight)
       {
          if (Equals(nodeKey1, nodeKey2))
          {
@@ -136,6 +135,62 @@ namespace CityScover.ADT.Graphs
          }
          AddEdge(nodeKey1, nodeKey2, edgeWeight);
          AddEdge(nodeKey2, nodeKey1, edgeWeight);
+      }
+
+      /// <summary>
+      /// Rimuove nel grafo il nodo identificato dalla chiave passata come parametro.
+      /// Rimuovendo il nodo automaticamente si rimuovono tutti gli archi incidenti su tale nodo.
+      /// </summary>
+      /// <param name="key">Chiave del nodo.</param>
+      /// <exception cref="InvalidOperationException"/>
+      public void RemoveNode(TNodeKey key)
+      {
+         // Non è possibile eliminare un nodo che non esiste nel grafo.
+         if (!(_nodes.Remove(key)))
+         {
+            throw new InvalidOperationException();
+         }
+      }
+
+      /// <summary>
+      /// Rimuove nel grafo l'arco orientato identificato dalle chiavi passate come parametri.
+      /// </summary>
+      /// <param name="startNodeKey">Chiave del nodo sorgente.</param>
+      /// <param name="endNodeKey">Chiave del nodo destinazione.</param>
+      /// <exception cref="InvalidOperationException"/>
+      public void RemoveEdge(TNodeKey startNodeKey, TNodeKey endNodeKey)
+      {
+         var edge = _nodes.SelectMany(x => x.Value.Edges
+                          .Where(y => Equals(y.SourceNode.Key, startNodeKey))
+                          .Where(z => Equals(z.DestNode.Key, endNodeKey))).FirstOrDefault();
+
+         // Se l'arco non è stato trovato non posso rimuovere nulla.
+         if (edge == null)
+         {
+            throw new InvalidOperationException();
+         }
+
+         _nodes[startNodeKey].RemoveEdge(edge);
+      }
+
+      /// <summary>
+      /// Rimuove nel grafo l'arco non orientato identificato dalle chiavi passate come parametri.
+      /// In pratica rimuove la coppia di archi orientati (nodeKey1, nodeKey2) e (nodeKey2, nodeKey1).
+      /// </summary>
+      /// <param name="nodeKey1">Chiave del nodo sorgente.</param>
+      /// <param name="nodeKey2">Chiave del nodo destinazione.</param>
+      /// <exception cref="InvalidOperationException"/>
+      public void RemoveUndirectedEdge(TNodeKey nodeKey1, TNodeKey nodeKey2)
+      {
+         // Non posso rimuovere un'arco degenere (entrambi i nodi sono uguali)
+         // perchè non consentito.
+         if (Equals(nodeKey1, nodeKey2))
+         {
+            throw new InvalidOperationException();
+         }
+
+         RemoveEdge(nodeKey1, nodeKey2);
+         RemoveEdge(nodeKey2, nodeKey1);
       }
 
       /// <summary>
@@ -158,8 +213,8 @@ namespace CityScover.ADT.Graphs
          {
             throw new InvalidOperationException();
          }
-
-         // return _nodes.SelectMany(x => x.Value.Edges.Where(y => Equals(y.SourceNode.Key, nodeKey)).Select(k => k.Weight));
+         
+         //return _nodes.SelectMany(x => x.Value.Edges.Select(k => k.Weight));
          return _nodes[nodeKey].Edges.Select(x => x.Weight);
       }
 

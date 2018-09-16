@@ -97,16 +97,16 @@ namespace CityScover.Tests
          graph.AddNode(5, new InterestPoint("P5"));
          Assert.IsTrue(graph.NodeCount == 5);
 
-         graph.AddUndirectEdge(1, 2, new Route(100.0));
-         graph.AddUndirectEdge(1, 5, new Route(200.0));
-         graph.AddUndirectEdge(2, 5, new Route(300.0));
-         graph.AddUndirectEdge(2, 4, new Route(400.0));
-         graph.AddUndirectEdge(2, 3, new Route(500.0));
-         graph.AddUndirectEdge(3, 4, new Route(600.0));
+         graph.AddUndirectedEdge(1, 2, new Route(100.0));
+         graph.AddUndirectedEdge(1, 5, new Route(200.0));
+         graph.AddUndirectedEdge(2, 5, new Route(300.0));
+         graph.AddUndirectedEdge(2, 4, new Route(400.0));
+         graph.AddUndirectedEdge(2, 3, new Route(500.0));
+         graph.AddUndirectedEdge(3, 4, new Route(600.0));
          Assert.ThrowsException<InvalidOperationException>(() => graph.AddEdge(17, 2, new Route(250.0)));
          Assert.ThrowsException<InvalidOperationException>(() => graph.AddEdge(1, 17, new Route(250.0)));
          Assert.ThrowsException<InvalidOperationException>(() => graph.AddEdge(1, 2, new Route(250.0)));
-         Assert.ThrowsException<InvalidOperationException>(() => graph.AddUndirectEdge(2, 2));
+         Assert.ThrowsException<InvalidOperationException>(() => graph.AddUndirectedEdge(2, 2));
          Assert.IsTrue(graph.EdgeCount == 12);
       }
 
@@ -124,11 +124,11 @@ namespace CityScover.Tests
          graph.AddNode(5, new InterestPoint("P5"));
          Assert.IsTrue(graph.NodeCount == 5);
 
-         graph.AddUndirectEdge(1, 2);
-         graph.AddUndirectEdge(1, 5);
-         graph.AddUndirectEdge(2, 4);
-         graph.AddUndirectEdge(4, 3);
-         graph.AddUndirectEdge(5, 3);
+         graph.AddUndirectedEdge(1, 2);
+         graph.AddUndirectedEdge(1, 5);
+         graph.AddUndirectedEdge(2, 4);
+         graph.AddUndirectedEdge(4, 3);
+         graph.AddUndirectedEdge(5, 3);
          Assert.IsTrue(graph.EdgeCount == 10);
 
          //graph.AddEdge(1, 2);

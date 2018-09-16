@@ -64,11 +64,11 @@ namespace CityScover.Tests
          r4.Distance = 100;
          r5.Distance = 100;
 
-         graph.AddUndirectEdge(1, 2, r1);
-         graph.AddUndirectEdge(1, 5, r2);
-         graph.AddUndirectEdge(2, 4, r3);
-         graph.AddUndirectEdge(4, 3, r4);
-         graph.AddUndirectEdge(5, 3, r5);
+         graph.AddUndirectedEdge(1, 2, r1);
+         graph.AddUndirectedEdge(1, 5, r2);
+         graph.AddUndirectedEdge(2, 4, r3);
+         graph.AddUndirectedEdge(4, 3, r4);
+         graph.AddUndirectedEdge(5, 3, r5);
          Assert.IsTrue(graph.EdgeCount == 10);
 
          int? p1Score = graph[1].Score.Value;
