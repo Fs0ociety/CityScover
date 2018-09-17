@@ -18,14 +18,15 @@ namespace CityScover.Engine
 
       #region Constructors
       internal TOSolution()
-      { }
+      {
+      }
       #endregion
 
       #region Internal properties
       /// <summary>
       /// Each Solution has an own ID.
       /// </summary>
-      internal int? Id { get; set; }
+      internal int Id { get; set; }
 
       /// <summary>
       /// Property used from SolverEvaluator to set a Cost for the Solution.

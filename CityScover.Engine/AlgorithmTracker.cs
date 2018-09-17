@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 17/09/2018
 //
 
 using System;
@@ -13,7 +13,8 @@ using System.Collections.ObjectModel;
 namespace CityScover.Engine
 {
    /// <summary>
-   /// TODO
+   /// This class acts as a mediator between the Algorithm in execution and observer objects.
+   /// His role is to notify all observer that a new solution has been produced.
    /// </summary>
    internal class AlgorithmTracker : IObservable<TOSolution>
    {

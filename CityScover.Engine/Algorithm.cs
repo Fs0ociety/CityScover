@@ -3,12 +3,8 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 17/09/2018
 //
-
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace CityScover.Engine
 {
@@ -92,6 +88,9 @@ namespace CityScover.Engine
       internal abstract void OnTerminated();
       internal abstract void OnError();
       internal abstract bool StopConditions();
+      #endregion
+
+      #region Internal methods
       internal void Start()
       {
          _status = AlgorithmStatus.Initializing;

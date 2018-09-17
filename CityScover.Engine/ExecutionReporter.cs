@@ -3,10 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 17/09/2018
 //
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -28,7 +29,9 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal properties
-      // TODO
+      internal Solver Solver => Solver.Instance;
+
+      public Stopwatch RunningTime { get; set; }
       #endregion
 
       #region Internal methods
@@ -56,20 +59,24 @@ namespace CityScover.Engine
             throw new ArgumentNullException(nameof(algorithm));
          }
 
-         // TODO: Algorithm's invocation logic.
-         throw new NotImplementedException();
+         Stopwatch timer = Stopwatch.StartNew();
+         await Task.Run(() => algorithm.Start());
+         timer.Stop();
+         RunningTime = timer;
       }
       #endregion
 
       #region Interfaces implementation
-      public void OnNext(TOSolution value)
+      public void OnNext(TOSolution solution)
       {
-         throw new NotImplementedException();
+         Debug.WriteLine("Solution received");
+         Solver.SolutionsQueue.Add(solution);
       }
 
       public void OnError(Exception error)
       {
-         throw new NotImplementedException();
+         Debug.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred!\n");
+         throw error;
       }
 
       public void OnCompleted()

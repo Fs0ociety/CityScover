@@ -84,7 +84,8 @@ namespace CityScover.Engine
       #region Internal methods
       internal async Task Run()
       {
-         await TakeSolutionsToValidate().ConfigureAwait(continueOnCapturedContext: false);
+         await TakeSolutionsToValidate().
+            ConfigureAwait(continueOnCapturedContext: false);
       }
       #endregion
 
