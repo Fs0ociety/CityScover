@@ -198,6 +198,7 @@ namespace CityScover.Engine
       public async Task Execute(Configuration configuration, bool enableMonitoring = false)
       {
          WorkingConfiguration = configuration;
+         IsMonitoringEnabled = enableMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 
          if (Problem == null)

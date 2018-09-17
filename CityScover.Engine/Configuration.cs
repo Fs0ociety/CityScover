@@ -19,7 +19,7 @@ namespace CityScover.Engine
    public class Configuration
    {
       #region Constructors
-      public Configuration()
+      internal Configuration()
       {
          Stages = new Collection<Stage>();
          RelaxedConstraintsId = new Collection<byte>();
@@ -27,13 +27,14 @@ namespace CityScover.Engine
       #endregion
 
       #region Public properties
-      public ProblemType CurrentProblem { get; set; }
-      public ICollection<byte> RelaxedConstraintsId { get; set; }
-      public TourCategoryType TourCategory { get; set; }
-      public ushort PointsCount { get; set; }
-      public TimeSpan? ArrivalTime { get; set; }
-      public TimeSpan? TourDuration { get; set; }
-      public ICollection<Stage> Stages { get; set; }
+      internal ProblemType CurrentProblem { get; set; }
+      internal ICollection<byte> RelaxedConstraintsId { get; set; }
+      internal TourCategoryType TourCategory { get; set; }
+      internal int StartPOIId { get; set; }
+      internal ushort PointsCount { get; set; }
+      internal TimeSpan? ArrivalTime { get; set; }
+      internal TimeSpan? TourDuration { get; set; }
+      internal ICollection<Stage> Stages { get; set; }
       #endregion
    }
 }

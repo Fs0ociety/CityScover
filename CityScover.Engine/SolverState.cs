@@ -43,6 +43,11 @@ namespace CityScover.Engine
       internal Configuration WorkingConfiguration { get; private set; }
 
       /// <summary>
+      /// This flag says if algorithm's monitoring is active or not.
+      /// </summary>
+      internal bool IsMonitoringEnabled { get; private set; }
+
+      /// <summary>
       /// Current stage in execution.
       /// </summary>
       internal Stage CurrentStage { get; private set; }

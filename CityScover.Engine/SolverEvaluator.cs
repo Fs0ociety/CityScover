@@ -43,9 +43,9 @@ namespace CityScover.Engine
       private TOSolution Evaluate(TOSolution solution)
       {
          var objectiveFunc = Solver.Problem.ObjectiveFunc;
-         var solutionCost = objectiveFunc(solution);
-         solution.Cost = solutionCost;
+         solution.Cost = objectiveFunc.Invoke(solution); ;
 
+         // Get the violated constraints to invoke the PenaltyFunc delegate.
          var violatedConstraints = (from constraint in solution.ProblemConstraints.Values
                                     where constraint == false
                                     select constraint);
@@ -53,14 +53,8 @@ namespace CityScover.Engine
          var penaltyFunc = Solver.Problem.PenaltyFunc;
          foreach (var constraint in violatedConstraints)
          {
-            solution.Cost = penaltyFunc(solution);
-            //solution.Cost = Penalize(solution.Cost);
+            solution.Cost = penaltyFunc.Invoke(solution);
          }
-
-         //double Penalize(double solutionValue)
-         //{
-         //   return solutionValue + new Random().Next(10);
-         //}
          
          return solution;
       }

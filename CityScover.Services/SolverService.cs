@@ -33,7 +33,7 @@ namespace CityScover.Services
          var solver = Solver.Instance;
          foreach (var tourConfig in _tourConfigurations)
          {
-            await solver.Execute(tourConfig, enableMonitoring: true);
+            await solver.Execute(tourConfig, enableMonitoring: false);
          }
       }
       #endregion

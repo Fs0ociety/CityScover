@@ -4,23 +4,23 @@
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
 // 
-// File update: 15/09/2018
+// File update: 17/09/2018
 //
 
 namespace CityScover.Engine
 {
-   public class Stage
+   internal class Stage
    {
       #region Constructors
-      public Stage()
+      internal Stage()
       {
          Flow = new StageFlow();
       } 
       #endregion
 
       #region Public properties
-      public StageType Description { get; set; }
-      public StageFlow Flow { get; set; }
+      internal StageType Description { get; set; }
+      internal StageFlow Flow { get; set; }
       #endregion
    }
 }
