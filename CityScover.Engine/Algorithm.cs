@@ -86,8 +86,7 @@ namespace CityScover.Engine
 
       #region Internal methods
       internal void Start()
-      {
-         _status = AlgorithmStatus.Initializing;
+      {         
          OnInitializing();
          // TODO: Pubblicazione dell'evento di inizializazione ai subscribers.
 
@@ -102,18 +101,15 @@ namespace CityScover.Engine
                _currentStep++;
             }
             catch
-            {
-               _status = AlgorithmStatus.Error;
+            {               
                OnError();
                // TODO: Pubblicazione dell'evento di errore ai subscribers.
             }
          }
-
-         _status = AlgorithmStatus.Terminating;
+                  
          OnTerminating();
          // TODO: Pubblicazione dell'evento di inizio terminazione ai subscribers.
-
-         _status = AlgorithmStatus.Terminated;
+         
          OnTerminated();
          // TODO: Pubblicazione dell'evento di avvenuta terminazione ai subscribers.
       }

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 02/09/2018
+// File update: 19/09/2018
 //
 
 using CityScover.Entities;
@@ -52,12 +52,11 @@ namespace CityScover.Data
                   continue;
                }
 
-               MeasureUnit measureUnit = new MeasureUnit();
                string measureUnitCode = childNode.Attributes["code"].Value;
                string measureUnitSymbol = childNode.Attributes["symbol"].Value;
-               measureUnit.Code = (!measureUnitCode.Equals(string.Empty)) ? measureUnitCode : null;
-               measureUnit.Symbol = (!measureUnitSymbol.Equals(string.Empty)) ? measureUnitSymbol : null;
-               _measureUnits.Add(measureUnit);
+               measureUnitCode = (!string.Empty.Equals(measureUnitCode)) ? measureUnitCode : null;
+               measureUnitSymbol = (!string.Empty.Equals(measureUnitSymbol)) ? measureUnitSymbol : null;
+               _measureUnits.Add(new MeasureUnit(measureUnitCode, measureUnitSymbol));
             }
          }
       }
@@ -77,13 +76,10 @@ namespace CityScover.Data
 
                string pointId = childNode.Attributes["id"].Value;
                string pointName = childNode.Attributes["name"].Value;
-
+               int intPointId = int.Parse(pointId);
+               
                // Create a new entity of InterestPoint
-               InterestPoint point = new InterestPoint()
-               {
-                  Id = int.Parse(pointId),
-                  Name = pointName
-               };
+               var pointBuilder = InterestPointBuilder.newBuilder(intPointId, pointName);
 
                foreach (XmlNode nestedChild in childNode.ChildNodes)
                {
@@ -95,34 +91,26 @@ namespace CityScover.Data
                         void SetCategory()
                         {
                            string categoryId = nestedChild.Attributes["id"].Value;
-                           //point.Category = new TourCategory();
-
+                           TourCategory category = default;
                            switch (categoryId)
                            {
                               case "1":
-                                 point.Category = new TourCategory(TourCategoryType.HistoricalAndCultural, "Storico/Culturale");
-                                 //point.Category.Id = TourCategoryType.HistoricalAndCultural;
-                                 //point.Category.Description = "Storico/Culturale";
+                                 category = new TourCategory(TourCategoryType.HistoricalAndCultural, "Storico/Culturale");                                 
                                  break;
 
                               case "2":
-                                 point.Category = new TourCategory(TourCategoryType.Culinary, "Gastronomico");
-                                 //point.Category.Id = TourCategoryType.Culinary;
-                                 //point.Category.Description = "Gastronomico";
+                                 category = new TourCategory(TourCategoryType.Culinary, "Gastronomico");                                 
                                  break;
 
                               case "3":
-                                 point.Category = new TourCategory(TourCategoryType.Sport, "Sportivo");
-                                 //point.Category.Id = TourCategoryType.Sport;
-                                 //point.Category.Description = "Sportivo";
+                                 category = new TourCategory(TourCategoryType.Sport, "Sportivo");                                 
                                  break;
 
                               default:
-                                 point.Category = new TourCategory(TourCategoryType.None, "None");
-                                 //point.Category.Id = TourCategoryType.None;
-                                 //point.Category.Description = "None";
+                                 category = new TourCategory(TourCategoryType.None, "None");                                 
                                  break;
                            }
+                           pointBuilder.SetCategory(category);
                         }
                         break;
 
@@ -132,11 +120,7 @@ namespace CityScover.Data
                         void SetThematicScore()
                         {
                            string scoreValue = nestedChild.Attributes["value"].Value;
-                           point.Score = new ThematicScore()
-                           {
-                              Category = point.Category,
-                              Value = (!scoreValue.Equals(string.Empty)) ? int.Parse(scoreValue) : 0
-                           };
+                           pointBuilder.SetThematicScore(new ThematicScore(pointBuilder.Category, (!scoreValue.Equals(string.Empty)) ? int.Parse(scoreValue) : 0));                           
                         }
                         break;
 
@@ -145,32 +129,27 @@ namespace CityScover.Data
 
                         void SetOpeningTimes()
                         {
-                           point.OpeningTimes = new Collection<IntervalTime>();
-
                            foreach (XmlNode doubleNestedChild in nestedChild.ChildNodes)
                            {
                               if (doubleNestedChild.NodeType != XmlNodeType.Element)
                               {
                                  continue;
                               }
-
-                              IntervalTime intervalTime = new IntervalTime();
+                              
                               string openingTime = doubleNestedChild.Attributes["from"].Value;
                               string closingTime = doubleNestedChild.Attributes["to"].Value;
 
-                              if (!openingTime.Equals(string.Empty) && !closingTime.Equals(string.Empty))
+                              if (!string.Empty.Equals(openingTime) && !string.Empty.Equals(closingTime))
                               {
                                  try
-                                 {
-                                    intervalTime.OpeningTime = TimeSpan.Parse(openingTime);
-                                    intervalTime.ClosingTime = TimeSpan.Parse(closingTime);
+                                 {                                    
+                                    pointBuilder.AddOpeningTime(new IntervalTime(TimeSpan.Parse(openingTime), TimeSpan.Parse(closingTime)));
                                  }
                                  catch (FormatException exception)
                                  {
                                     throw new FormatException(exception.Message);
                                  }
                               }
-                              point.OpeningTimes.Add(intervalTime);
                            }
                         }
                         break;
@@ -184,7 +163,7 @@ namespace CityScover.Data
                            string measureUnit = nestedChild.Attributes["unitOfMeasure"].Value;
                            string duration = nestedChild.Attributes["duration"].Value;
                            // TODO: controllare unita' di misura del tempo (ore o minuti) e creare l'attributo TimeVisit in modo opportuno.
-                           point.TimeVisit = (!duration.Equals(string.Empty)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null;
+                           pointBuilder.SetTimeVisit((!string.Empty.Equals(duration)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null);
                         }
                         break;
 
@@ -192,7 +171,7 @@ namespace CityScover.Data
                         break;
                   }
                }
-               _points.Add(point);
+               _points.Add(pointBuilder.Build());
             }
          }
       }
@@ -211,16 +190,12 @@ namespace CityScover.Data
                   continue;
                }
 
-               string pointId;
-               string distance;
-               InterestPoint point;
+               string pointId = default;
+               double distance = default;
+               InterestPoint pointFrom = default;
+               InterestPoint pointTo = default;
                string routeId = childNode.Attributes["id"].Value;
-               int result = ConvertAttributeId(routeId);
-
-               Route route = new Route()
-               {
-                  Id = result
-               };
+               int intRouteId = ConvertAttributeId(routeId);
 
                foreach (XmlNode nestedChild in childNode.ChildNodes)
                {
@@ -228,33 +203,31 @@ namespace CityScover.Data
                   {
                      case "PointFrom":
                         pointId = nestedChild.Attributes["id"].Value;
-                        result = ConvertAttributeId(pointId);
-                        point = (from p in _points where p.Id == result select p).FirstOrDefault();
-                        route.PointFrom = point;
+                        intRouteId = ConvertAttributeId(pointId);
+                        pointFrom = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();                        
                         break;
 
                      case "PointTo":
                         pointId = nestedChild.Attributes["id"].Value;
-                        result = ConvertAttributeId(pointId);
-                        point = (from p in _points where p.Id == result select p).FirstOrDefault();
-                        route.PointTo = point;
+                        intRouteId = ConvertAttributeId(pointId);
+                        pointTo = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();
                         break;
 
                      case "Distance":
-                        distance = nestedChild.Attributes["value"].Value;
-                        bool success = float.TryParse(distance, out float fDistance);
+                        var strDistance = nestedChild.Attributes["value"].Value;
+                        bool success = double.TryParse(strDistance, out double fDistance);
                         if (!success)
                         {
                            throw new FormatException(nameof(distance));
                         }
-                        route.Distance = fDistance;
+                        distance = fDistance;
                         break;
 
                      default:
                         break;
                   }
                }
-               _routes.Add(route);
+               _routes.Add(new Route(intRouteId, pointFrom, pointTo, distance));
             }
          }
 

@@ -21,8 +21,8 @@ namespace CityScover.Entities
       #endregion
 
       #region Public properties
-      public TimeSpan? OpeningTime { get; set; }
-      public TimeSpan? ClosingTime { get; set; }
+      public TimeSpan? OpeningTime { get; }
+      public TimeSpan? ClosingTime { get; }
       #endregion
 
       public IntervalTime DeepCopy() => (IntervalTime)MemberwiseClone();

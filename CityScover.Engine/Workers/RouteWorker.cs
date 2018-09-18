@@ -14,31 +14,17 @@ namespace CityScover.Engine.Workers
 {
    internal sealed class RouteWorker : IGraphEdgeWeight
    {
-      private Route _entity;
       private bool _isVisited;
 
+      #region Constructors
       internal RouteWorker(Route route)
       {
-         _entity = route ?? throw new ArgumentNullException(nameof(route));
-      }
+         Entity = route;
+      } 
+      #endregion
 
       #region Internal properties
-      internal Route Entity
-      {
-         get => _entity;
-         set
-         {
-            if (value == null)
-            {
-               throw new ArgumentNullException(nameof(value));
-            }
-
-            if (_entity != value)
-            {
-               _entity = value;
-            }
-         }
-      }
+      internal Route Entity { get; private set; }      
 
       internal bool IsVisited
       {
@@ -61,7 +47,7 @@ namespace CityScover.Engine.Workers
          return copy;
       }
 
-      public Func<double> Weight => () => _entity.Distance;
+      public Func<double> Weight => () => Entity.Distance;
       #endregion
    }
 }

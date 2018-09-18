@@ -19,8 +19,8 @@ namespace CityScover.Entities
       #endregion
 
       #region Public properties
-      public TourCategory Category { get; set; }
-      public int Value { get; set; }
+      public TourCategory Category { get; }
+      public int Value { get; }
       #endregion
 
       #region Public methods

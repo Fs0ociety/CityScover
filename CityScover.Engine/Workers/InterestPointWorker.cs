@@ -18,25 +18,14 @@ namespace CityScover.Engine.Workers
 
       internal InterestPointWorker(InterestPoint interestPoint)
       {
-         _entity = interestPoint ?? throw new ArgumentNullException(nameof(interestPoint));
+         _entity = interestPoint;
       }
 
       #region Internal properties
       internal InterestPoint Entity
       {
          get => _entity;
-         set
-         {
-            if (value == null)
-            {
-               throw new ArgumentNullException(nameof(value));
-            }
-
-            if (_entity != value)
-            {
-               _entity = value;
-            }
-         }
+         set => _entity = value;         
       }
 
       internal bool IsVisited

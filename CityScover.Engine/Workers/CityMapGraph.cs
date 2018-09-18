@@ -7,36 +7,30 @@
 //
 
 using CityScover.ADT.Graphs;
-using CityScover.Entities;
-using System;
 
 namespace CityScover.Engine.Workers
 {
-   [Serializable]
    internal sealed class CityMapGraph : Graph<int, InterestPointWorker, RouteWorker>
    {
       /// <summary>
-      /// A shallow copy of the current CityMapGraph object.
-      /// </summary>
-      /// <returns></returns>
-      internal CityMapGraph ShallowCopy() => (CityMapGraph) MemberwiseClone();
-
-      /// <summary>
       /// A deep copy of the current CityMapGraph object.
       /// </summary>
-      /// <returns></returns>
+      /// <returns>A CityMapGraph object</returns>
       internal CityMapGraph DeepCopy()
       {
-         CityMapGraph copy = ShallowCopy();
+         CityMapGraph copy = new CityMapGraph();
          foreach (var node in Nodes)
          {
             InterestPointWorker copyInterestPointWorker = node.DeepCopy();
             copy.AddNode(node.Entity.Id, copyInterestPointWorker);
+         }
 
+         foreach (var node in Nodes)
+         {
             foreach (var edge in GetEdges(node.Entity.Id))
             {
                RouteWorker copyRouteWorker = edge.DeepCopy();
-               copy.AddUndirectedEdge(edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id, copyRouteWorker);
+               copy.AddEdge(edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id, copyRouteWorker);
             }
          }         
          return copy;
