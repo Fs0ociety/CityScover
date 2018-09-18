@@ -95,28 +95,32 @@ namespace CityScover.Data
                         void SetCategory()
                         {
                            string categoryId = nestedChild.Attributes["id"].Value;
-                           point.Category = new TourCategory();
+                           //point.Category = new TourCategory();
 
                            switch (categoryId)
                            {
                               case "1":
-                                 point.Category.Id = TourCategoryType.HistoricalAndCultural;
-                                 point.Category.Description = "Storico/Culturale";
+                                 point.Category = new TourCategory(TourCategoryType.HistoricalAndCultural, "Storico/Culturale");
+                                 //point.Category.Id = TourCategoryType.HistoricalAndCultural;
+                                 //point.Category.Description = "Storico/Culturale";
                                  break;
 
                               case "2":
-                                 point.Category.Id = TourCategoryType.Culinary;
-                                 point.Category.Description = "Gastronomico";
+                                 point.Category = new TourCategory(TourCategoryType.Culinary, "Gastronomico");
+                                 //point.Category.Id = TourCategoryType.Culinary;
+                                 //point.Category.Description = "Gastronomico";
                                  break;
 
                               case "3":
-                                 point.Category.Id = TourCategoryType.Sport;
-                                 point.Category.Description = "Sportivo";
+                                 point.Category = new TourCategory(TourCategoryType.Sport, "Sportivo");
+                                 //point.Category.Id = TourCategoryType.Sport;
+                                 //point.Category.Description = "Sportivo";
                                  break;
 
                               default:
-                                 point.Category.Id = TourCategoryType.None;
-                                 point.Category.Description = "None";
+                                 point.Category = new TourCategory(TourCategoryType.None, "None");
+                                 //point.Category.Id = TourCategoryType.None;
+                                 //point.Category.Description = "None";
                                  break;
                            }
                         }

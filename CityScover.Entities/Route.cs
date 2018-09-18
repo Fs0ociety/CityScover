@@ -3,15 +3,12 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 30/07/2018
+// File update: 18/09/2018
 //
-
-using System;
-using CityScover.ADT.Graphs;
 
 namespace CityScover.Entities
 {
-   public class Route : IGraphEdgeWeight
+   public class Route
    {
       #region Public properties
       /// <summary>
@@ -32,9 +29,17 @@ namespace CityScover.Entities
       /// <summary>
       /// Distanza della tratta. 
       /// </summary>
-      public float Distance { get; set; }
-
-      public Func<double> Weight => () => Distance;
+      public double Distance { get; set; }
       #endregion
-    }
+
+      #region Public methods
+      public Route DeepCopy()
+      {
+         Route copy = (Route)MemberwiseClone();
+         copy.PointFrom = PointFrom.DeepCopy();
+         copy.PointTo = PointTo.DeepCopy();
+         return copy;
+      } 
+      #endregion
+   }
 }

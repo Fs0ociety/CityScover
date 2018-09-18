@@ -120,12 +120,29 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal abstract methods
-      internal abstract void OnInitializing();
       internal abstract void PerformStep();
-      internal abstract void OnTerminating();
-      internal abstract void OnTerminated();
-      internal abstract void OnError();
       internal abstract bool StopConditions();
+      #endregion
+
+      #region Virtual methods
+      internal virtual void OnInitializing()
+      {
+         _status = AlgorithmStatus.Initializing;
+      }
+      internal virtual void OnTerminating()
+      {
+         _status = AlgorithmStatus.Terminating;
+      }
+
+      internal virtual void OnTerminated()
+      {
+         _status = AlgorithmStatus.Terminated;
+      }
+
+      internal virtual void OnError()
+      {
+         _status = AlgorithmStatus.Error;
+      }
       #endregion
    }
 }

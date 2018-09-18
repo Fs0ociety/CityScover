@@ -8,11 +8,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace CityScover.Entities
 {
    public class InterestPoint
    {
+      //TODO : InterestPoint constructor
+      #region Constructors
+      public InterestPoint()
+      {
+
+      } 
+      #endregion
+
       #region Public properties
       /// <summary>
       /// Identificativo univoco del punto d'interesse.
@@ -44,5 +53,19 @@ namespace CityScover.Entities
       /// </summary>
       public TimeSpan? TimeVisit { get; set; }
       #endregion
+
+      public InterestPoint ShallowCopy() => (InterestPoint)MemberwiseClone();
+
+      public InterestPoint DeepCopy()
+      {
+         InterestPoint copy = ShallowCopy();
+         copy.Name = string.Copy(Name);
+         copy.OpeningTimes = new Collection<IntervalTime>();
+         foreach (var openingTime in OpeningTimes)
+         {
+            copy.OpeningTimes.Add(openingTime.DeepCopy());
+         }
+         return copy;
+      }
    }
 }

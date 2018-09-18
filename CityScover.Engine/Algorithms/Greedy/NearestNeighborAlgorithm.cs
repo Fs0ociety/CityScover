@@ -62,25 +62,6 @@ namespace CityScover.Engine.Algorithms.Greedy
             }
          }
 
-         #region Old-style code
-         //foreach (var adjPOIId in adjPOIIds)
-         //{
-         //   var adjPOI = Solver.CityMapGraph[adjPOIId];
-
-         //   if (!adjPOI.IsVisited)
-         //   {
-         //      var deltaScore = Math.Abs(adjPOI.Entity.Score.Value -
-         //         interestPoint.Entity.Score.Value);
-
-         //      if (deltaScore > bestScore)
-         //      {
-         //         bestScore = deltaScore;
-         //         candidateNode = adjPOI;
-         //      }
-         //   }
-         //}
-         #endregion
-
          return candidateNode;
       }
 
@@ -96,13 +77,18 @@ namespace CityScover.Engine.Algorithms.Greedy
       #region Overrides
       internal override void OnError()
       {
+         base.OnError();
          ResetCityMapGraph();
          _currentStep = default;
          // TODO: Other activities?
       }
 
-      internal override void OnInitializing()
+      internal override void OnInitializing()         
       {
+         base.OnInitializing();
+
+         _currentSolution = Solver.CityMapGraph.DeepCopy();
+
          _currentSolution = new CityMapGraph();
          _startPOI = GetStartPOI();
          _startPOI.IsVisited = true;
@@ -120,6 +106,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          var neighborPOIId = neighborPOI.Entity.Id;
          _currentSolution.AddNode(neighborPOIId, neighborPOI);
 
+         // TODO: Usare la deepCopy del CityMapGraph così da lasciare intatto il grafo originale.
          var edge = Solver.CityMapGraph.GetEdge(firstPOIId, neighborPOIId);
          _currentSolution.AddUndirectedEdge(firstPOIId, neighborPOIId, edge);
          _newStartPOI = _startPOI;
@@ -136,12 +123,14 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override void OnTerminated()
       {
+         base.OnTerminated();
          _currentStep = default;
          //throw new NotImplementedException();
       }
 
       internal override void OnTerminating()
       {
+         base.OnTerminating();
          ResetCityMapGraph();
          // TODO: Other activities?
       }
@@ -173,6 +162,9 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
          else
          {
+            // TODO: Gestire diversamente la continuazione dell'algoritmo.
+            // Ad esempio:
+            // selezione casuale di un nuovo nodo candidato nel caso in cui i punteggi coincidano.
             _status = AlgorithmStatus.Terminating;
          }
       }

@@ -3,18 +3,28 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 16/08/2018
+// File update: 18/09/2018
 //
 
 using System;
 
 namespace CityScover.Entities
 {
-   public class IntervalTime
+   public struct IntervalTime
    {
+      #region Constructors
+      public IntervalTime(TimeSpan openingTime, TimeSpan closingTime)
+      {
+         OpeningTime = openingTime;
+         ClosingTime = closingTime;
+      } 
+      #endregion
+
       #region Public properties
       public TimeSpan? OpeningTime { get; set; }
-      public TimeSpan? ClosingTime { get; set; } 
+      public TimeSpan? ClosingTime { get; set; }
       #endregion
+
+      public IntervalTime DeepCopy() => (IntervalTime)MemberwiseClone();
    }
 }

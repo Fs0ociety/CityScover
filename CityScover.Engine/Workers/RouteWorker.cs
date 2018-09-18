@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 16/08/2018
+// File update: 18/09/2018
 //
 
 using System;
@@ -51,10 +51,17 @@ namespace CityScover.Engine.Workers
             }
          }
       }
+      #endregion 
 
-      //TODO: valutare se rimuovere l'implementazione dell'interfaccia IGraphEdgeWeight da Route.
-      //TODO: chiedere a Riccardo come gestire visibilita' 
-      public Func<double> Weight => _entity.Weight;
-      #endregion      
+      #region Public methods
+      public RouteWorker DeepCopy()
+      {
+         RouteWorker copy = (RouteWorker)MemberwiseClone();
+         copy.Entity = Entity.DeepCopy();
+         return copy;
+      }
+
+      public Func<double> Weight => () => _entity.Distance;
+      #endregion
    }
 }

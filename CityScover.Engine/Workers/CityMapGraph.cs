@@ -7,6 +7,7 @@
 //
 
 using CityScover.ADT.Graphs;
+using CityScover.Entities;
 using System;
 
 namespace CityScover.Engine.Workers
@@ -26,7 +27,19 @@ namespace CityScover.Engine.Workers
       /// <returns></returns>
       internal CityMapGraph DeepCopy()
       {
-         throw new NotImplementedException();
+         CityMapGraph copy = ShallowCopy();
+         foreach (var node in Nodes)
+         {
+            InterestPointWorker copyInterestPointWorker = node.DeepCopy();
+            copy.AddNode(node.Entity.Id, copyInterestPointWorker);
+
+            foreach (var edge in GetEdges(node.Entity.Id))
+            {
+               RouteWorker copyRouteWorker = edge.DeepCopy();
+               copy.AddUndirectedEdge(edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id, copyRouteWorker);
+            }
+         }         
+         return copy;
       }
    }
 }
