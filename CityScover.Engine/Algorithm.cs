@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/09/2018
+// File update: 18/09/2018
 //
 
 namespace CityScover.Engine
@@ -13,26 +13,29 @@ namespace CityScover.Engine
    /// </summary>
    internal abstract class Algorithm
    {
-      private ushort _currentStep;
-      private AlgorithmStatus _status;
-      private bool _acceptImprovementsOnly;
+      private bool _acceptImprovements;
       private AlgorithmTracker _provider;
+
+      #region Protected members
+      protected AlgorithmStatus _status;
+      protected ushort _currentStep = default;
+      protected Solver Solver => Solver.Instance;
+      #endregion
 
       #region Constructors
       internal Algorithm()
          : this(null)
-      { }
-
-      internal Algorithm(AlgorithmTracker provider)
       {
-         _acceptImprovementsOnly = true;
+      }
+
+      internal Algorithm(AlgorithmTracker provider, bool acceptImprovements = true)
+      {
+         _acceptImprovements = acceptImprovements;
          _provider = provider;
       }
       #endregion
 
       #region Internal properties
-      internal Solver Solver => Solver.Instance;
-
       protected ushort CurrentStep
       {
          get => _currentStep;
@@ -58,12 +61,12 @@ namespace CityScover.Engine
 
       internal bool AcceptImprovementsOnly
       {
-         get => _acceptImprovementsOnly;
+         get => _acceptImprovements;
          set
          {
-            if (_acceptImprovementsOnly != value)
+            if (_acceptImprovements != value)
             {
-               _acceptImprovementsOnly = value;
+               _acceptImprovements = value;
             }
          }
       }
@@ -79,15 +82,6 @@ namespace CityScover.Engine
             }
          }
       }
-      #endregion
-
-      #region Internal abstract methods
-      internal abstract void OnInitializing();
-      internal abstract void PerformStep();
-      internal abstract void OnTerminating();
-      internal abstract void OnTerminated();
-      internal abstract void OnError();
-      internal abstract bool StopConditions();
       #endregion
 
       #region Internal methods
@@ -123,6 +117,15 @@ namespace CityScover.Engine
          OnTerminated();
          // TODO: Pubblicazione dell'evento di avvenuta terminazione ai subscribers.
       }
+      #endregion
+
+      #region Internal abstract methods
+      internal abstract void OnInitializing();
+      internal abstract void PerformStep();
+      internal abstract void OnTerminating();
+      internal abstract void OnTerminated();
+      internal abstract void OnError();
+      internal abstract bool StopConditions();
       #endregion
    }
 }

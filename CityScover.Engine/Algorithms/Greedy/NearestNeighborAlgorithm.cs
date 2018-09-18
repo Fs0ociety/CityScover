@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/09/2018
+// File update: 18/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -18,11 +18,8 @@ namespace CityScover.Engine.Algorithms.Greedy
    internal class NearestNeighborAlgorithm : Algorithm
    {
       private CityMapGraph _currentSolution;
-      private int _currentSolutionId = default;  // TODO: gestire l'ID nella TOSolution
       private InterestPointWorker _startPOI;
       private InterestPointWorker _newStartPOI;
-      private ushort _failedAttempts = default;
-      private const ushort _maxAttempts = 3;
 
       #region Constructors
       internal NearestNeighborAlgorithm()
@@ -46,49 +43,73 @@ namespace CityScover.Engine.Algorithms.Greedy
          var adjPOIIds = Solver.CityMapGraph.GetAdjacentNodes(interestPoint.Entity.Id);
          var cityMapGraphNodes = Solver.CityMapGraph.Nodes;
 
-         foreach (var adjPOIId in adjPOIIds)
-         {
-            var adjPOI = Solver.CityMapGraph[adjPOIId];
+         adjPOIIds.ToList().ForEach(adjPOIId => SetBestCandidate(adjPOIId));
 
-            if (!adjPOI.IsVisited)
+         void SetBestCandidate(int nodeKey)
+         {
+            var node = Solver.CityMapGraph[nodeKey];
+
+            if (!node.IsVisited)
             {
-               var deltaScore = Math.Abs(adjPOI.Entity.Score.Value -
+               var deltaScore = Math.Abs(node.Entity.Score.Value -
                   interestPoint.Entity.Score.Value);
 
                if (deltaScore > bestScore)
                {
                   bestScore = deltaScore;
-                  candidateNode = adjPOI;
+                  candidateNode = node;
                }
             }
          }
+
+         #region Old-style code
+         //foreach (var adjPOIId in adjPOIIds)
+         //{
+         //   var adjPOI = Solver.CityMapGraph[adjPOIId];
+
+         //   if (!adjPOI.IsVisited)
+         //   {
+         //      var deltaScore = Math.Abs(adjPOI.Entity.Score.Value -
+         //         interestPoint.Entity.Score.Value);
+
+         //      if (deltaScore > bestScore)
+         //      {
+         //         bestScore = deltaScore;
+         //         candidateNode = adjPOI;
+         //      }
+         //   }
+         //}
+         #endregion
+
          return candidateNode;
+      }
+
+      private void ResetCityMapGraph()
+      {
+         Solver.CityMapGraph.Nodes
+            .Where(node => node.IsVisited == true)
+            .ToList()
+            .ForEach(node => node.IsVisited = false);
       }
       #endregion
 
       #region Overrides
       internal override void OnError()
       {
-         throw new NotImplementedException();
+         ResetCityMapGraph();
+         _currentStep = default;
+         // TODO: Other activities?
       }
 
       internal override void OnInitializing()
       {
          _currentSolution = new CityMapGraph();
-
          _startPOI = GetStartPOI();
          _startPOI.IsVisited = true;
-
-         InterestPointWorker GetStartPOI()
-         {
-            var cityMapGraphNodes = Solver.CityMapGraph.Nodes;
-            var startPOIId = Solver.WorkingConfiguration.StartPOIId;
-            return cityMapGraphNodes.Where(x => x.Entity.Id == startPOIId).FirstOrDefault();
-         }
          
          if (_startPOI == null)
          {
-            // TODO: Gestire l'eccezione.
+            throw new OperationCanceledException(nameof(_startPOI));
          }
 
          _currentSolution.AddNode(_startPOI.Entity.Id, _startPOI);
@@ -102,22 +123,27 @@ namespace CityScover.Engine.Algorithms.Greedy
          var edge = Solver.CityMapGraph.GetEdge(firstPOIId, neighborPOIId);
          _currentSolution.AddUndirectedEdge(firstPOIId, neighborPOIId, edge);
          _newStartPOI = _startPOI;
+
+         InterestPointWorker GetStartPOI()
+         {
+            var startPOIId = Solver.WorkingConfiguration.StartPOIId;
+
+            return Solver.CityMapGraph.Nodes
+               .Where(x => x.Entity.Id == startPOIId)
+               .FirstOrDefault();
+         }
       }
 
       internal override void OnTerminated()
       {
-         throw new NotImplementedException();
+         _currentStep = default;
+         //throw new NotImplementedException();
       }
 
       internal override void OnTerminating()
       {
-         var cityMapGraphNodes = Solver.CityMapGraph.Nodes;
-         var visitedPoints = cityMapGraphNodes.Where(node => node.IsVisited == true);
-
-         foreach (var point in visitedPoints)
-         {
-            point.IsVisited = false;
-         }
+         ResetCityMapGraph();
+         // TODO: Other activities?
       }
 
       internal override void PerformStep()
@@ -131,9 +157,8 @@ namespace CityScover.Engine.Algorithms.Greedy
             _currentSolution.AddUndirectedEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
             _newStartPOI = candidatePOI;
 
-            TOSolution newSolution = new TOSolution()
+            TOSolution newSolution = new TOSolution
             {
-               Id = ++_currentSolutionId,
                SolutionGraph = _currentSolution
             };
 
@@ -148,14 +173,14 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
          else
          {
-            _failedAttempts++;
+            _status = AlgorithmStatus.Terminating;
          }
       }
 
       internal override bool StopConditions()
       {
-         return _currentSolution.NodeCount >= Solver.CityMapGraph.NodeCount || 
-            _failedAttempts == _maxAttempts;
+         return _currentSolution.NodeCount == Solver.CityMapGraph.NodeCount ||
+            _status == AlgorithmStatus.Terminating;
       }
       #endregion
    }

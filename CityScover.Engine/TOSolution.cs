@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 17/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -15,10 +15,12 @@ namespace CityScover.Engine
    {
       private double _cost = default;
       private double _penalty = default;
+      //internal static int _id;
 
       #region Constructors
       internal TOSolution()
       {
+         Id++;
       }
       #endregion
 
@@ -26,7 +28,7 @@ namespace CityScover.Engine
       /// <summary>
       /// Each Solution has an own ID.
       /// </summary>
-      internal int Id { get; set; }
+      internal int Id { get; private set; }
 
       /// <summary>
       /// Property used from SolverEvaluator to set a Cost for the Solution.
@@ -68,6 +70,6 @@ namespace CityScover.Engine
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
       internal CityMapGraph SolutionGraph { get; set; } = new CityMapGraph();
-      #endregion      
+      #endregion
    }
 }

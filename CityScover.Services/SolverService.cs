@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 18/09/2018
 //
 
 using CityScover.Commons;
@@ -17,11 +17,18 @@ namespace CityScover.Services
 {
    public class SolverService : Singleton<SolverService>, ISolverService
    {
-      private ICollection<Configuration> _tourConfigurations = new Collection<Configuration>();
+      private ICollection<Configuration> _tourConfigurations;
 
       #region Constructors
       private SolverService()
       {
+      }
+      #endregion
+
+      #region Overrides
+      protected override void InitializeInstance()
+      {
+         _tourConfigurations = new Collection<Configuration>();
       }
       #endregion
 
@@ -33,7 +40,7 @@ namespace CityScover.Services
          var solver = Solver.Instance;
          foreach (var tourConfig in _tourConfigurations)
          {
-            await solver.Execute(tourConfig, enableMonitoring: false);
+            await solver.Execute(tourConfig, tourConfig.AlgorithmMonitoring);
          }
       }
       #endregion

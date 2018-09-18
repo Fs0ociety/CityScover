@@ -2,7 +2,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 18/09/2018
 //
 
 using CityScover.Entities;
@@ -31,12 +31,13 @@ namespace CityScover.Engine.Configs
          _configurations.Add(new Configuration()
          {
             CurrentProblem = ProblemType.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsCount = 15,
             StartPOIId = 1,
-            TourCategory = TourCategoryType.HistoricalAndCultural,
             RelaxedConstraintsId = { 1, 3, 4 },
             ArrivalTime = new TimeSpan(9, 0, 0),
             TourDuration = new TimeSpan(6, 0, 0),
+            AlgorithmMonitoring = true,
             Stages =
             {
                new Stage()
@@ -71,7 +72,7 @@ namespace CityScover.Engine.Configs
          });
          #endregion
 
-         //#region Configuration 2
+         #region Configuration 2
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -81,6 +82,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -113,9 +115,9 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
 
-         //#region Configuration 3
+         #region Configuration 3
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -125,6 +127,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -157,9 +160,9 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
 
-         //#region Configuration 4
+         #region Configuration 4
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -169,6 +172,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -205,9 +209,9 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
 
-         //#region Configuration 5
+         #region Configuration 5
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -217,6 +221,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -253,9 +258,9 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
 
-         //#region Configuration 6
+         #region Configuration 6
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -265,6 +270,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -301,9 +307,9 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
 
-         //#region Configuration 7
+         #region Configuration 7
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -313,6 +319,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -349,9 +356,9 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
 
-         //#region Configuration 8
+         #region Configuration 8
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -361,6 +368,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -397,9 +405,9 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
 
-         //#region Configuration 9
+         #region Configuration 9
          //_configurations.Add(new Configuration()
          //{
          //   CurrentProblem = ProblemType.TeamOrienteering,
@@ -409,6 +417,7 @@ namespace CityScover.Engine.Configs
          //   RelaxedConstraintsId = { 1, 3, 4 },
          //   ArrivalTime = new TimeSpan(9, 0, 0),
          //   TourDuration = new TimeSpan(6, 0, 0),
+         //   AlgorithmMonitoring = true,
          //   Stages =
          //   {
          //      new Stage()
@@ -445,7 +454,7 @@ namespace CityScover.Engine.Configs
          //      }
          //   }
          //});
-         //#endregion
+         #endregion
       }
       #endregion
 
