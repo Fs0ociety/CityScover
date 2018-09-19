@@ -162,7 +162,7 @@ namespace CityScover.Data
                            // TODO: Capire come valorizzare l'unita' di misura per il tempo di visita del luogo d'interesse.
                            string measureUnit = nestedChild.Attributes["unitOfMeasure"].Value;
                            string duration = nestedChild.Attributes["duration"].Value;
-                           // TODO: controllare unita' di misura del tempo (ore o minuti) e creare l'attributo TimeVisit in modo opportuno.
+                           // TODO: controllare unita' di misura del tempo (ore o minuti) e creare l'attributo TimeVisit in modo opportuno.                           
                            pointBuilder.SetTimeVisit((!string.Empty.Equals(duration)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null);
                         }
                         break;

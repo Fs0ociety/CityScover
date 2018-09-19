@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/09/2018
+// File update: 19/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -13,14 +13,15 @@ namespace CityScover.Engine
 {
    internal class TOSolution
    {
+      private static int _sequenceId = default;
+
       private double _cost = default;
       private double _penalty = default;
-      //internal static int _id;
 
       #region Constructors
       internal TOSolution()
       {
-         Id++;
+         Id = ++_sequenceId;
       }
       #endregion
 
@@ -28,7 +29,7 @@ namespace CityScover.Engine
       /// <summary>
       /// Each Solution has an own ID.
       /// </summary>
-      internal int Id { get; private set; }
+      internal int Id { get; }
 
       /// <summary>
       /// Property used from SolverEvaluator to set a Cost for the Solution.

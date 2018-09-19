@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InterestPoint.cs" />
+    <Compile Include="InterestPointBuilder.cs" />
     <Compile Include="IntervalTime.cs" />
     <Compile Include="MeasureUnit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
