@@ -7,6 +7,7 @@
 //
 
 using CityScover.Engine.Workers;
+using System;
 using System.Collections.Generic;
 
 namespace CityScover.Engine
@@ -15,14 +16,12 @@ namespace CityScover.Engine
    {
       private static int _sequenceId = default;
 
-      private double _cost = default;
-      private double _penalty = default;
-
       #region Constructors
       internal TOSolution()
       {
          Id = ++_sequenceId;
       }
+
       #endregion
 
       #region Internal properties
@@ -34,32 +33,17 @@ namespace CityScover.Engine
       /// <summary>
       /// Property used from SolverEvaluator to set a Cost for the Solution.
       /// </summary>
-      internal double Cost
-      {
-         get => _cost;
-         set
-         {
-            if (value != _cost)
-            {
-               _cost = value;
-            }
-         }
-      }
+      internal double Cost { get; set; }      
 
       /// <summary>
       /// Property used from SolverEvaluator to set a Penalty for the Solution.
       /// </summary>
-      internal double Penalty
-      {
-         get => _penalty;
-         set
-         {
-            if (value != _penalty)
-            {
-               _penalty = value;
-            }
-         }
-      }
+      internal double Penalty { get; set; }
+      
+      /// <summary>
+      /// Property used from SolverValidator to check the TMax constraint.
+      /// </summary>
+      internal DateTime TimeSpent { get; set; }
 
       /// <summary>
       /// Property used from SolverValidator for analysis of problem's constraints.

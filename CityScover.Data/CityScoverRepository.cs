@@ -23,6 +23,8 @@ namespace CityScover.Data
       private static readonly ICollection<Route> _routes;
       private static readonly string _rootDirectory;
 
+      //TODO : An averageSpeedWalk variable must be added.
+
       #region Static Constructors
       static CityScoverRepository()
       {
@@ -120,7 +122,7 @@ namespace CityScover.Data
                         void SetThematicScore()
                         {
                            string scoreValue = nestedChild.Attributes["value"].Value;
-                           pointBuilder.SetThematicScore(new ThematicScore(pointBuilder.Category, (!scoreValue.Equals(string.Empty)) ? int.Parse(scoreValue) : 0));                           
+                           pointBuilder.SetThematicScore(new ThematicScore(pointBuilder.Category, (!string.Empty.Equals(scoreValue)) ? int.Parse(scoreValue) : 0));                           
                         }
                         break;
 

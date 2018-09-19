@@ -14,6 +14,7 @@ namespace CityScover.Engine
 {
    internal class TOProblem : Problem
    {
+      private readonly DateTime _tMax;
       private Func<TOSolution, double> _objectiveFunc;
       private Func<TOSolution, double> _penaltyFunc;
 
@@ -21,6 +22,8 @@ namespace CityScover.Engine
       internal TOProblem()
          : base()
       {
+         var solverConfig = Solver.Instance.WorkingConfiguration;
+         _tMax = solverConfig.ArrivalTime.Add(solverConfig.TourDuration);
          ObjectiveFunc = CalculateCost;
          IsMinimizing = false;
 
@@ -91,7 +94,7 @@ namespace CityScover.Engine
 
       private bool IsTMaxConstraintSatisfied(TOSolution solution)
       {
-         throw new NotImplementedException();
+         return solution.TimeSpent <= _tMax;
       }
       #endregion
    }

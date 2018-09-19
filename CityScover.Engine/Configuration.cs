@@ -30,8 +30,8 @@ namespace CityScover.Engine
       internal TourCategoryType TourCategory { get; set; }
       internal int StartPOIId { get; set; }
       internal ushort PointsCount { get; set; }
-      internal TimeSpan? ArrivalTime { get; set; }
-      internal TimeSpan? TourDuration { get; set; }
+      internal DateTime ArrivalTime { get; set; }
+      internal TimeSpan TourDuration { get; set; }
       internal ProblemType CurrentProblem { get; set; }
       public bool AlgorithmMonitoring { get; set; }
       internal ICollection<byte> RelaxedConstraintsId { get; set; }

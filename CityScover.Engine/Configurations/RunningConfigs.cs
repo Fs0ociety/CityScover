@@ -35,7 +35,7 @@ namespace CityScover.Engine.Configs
             PointsCount = 15,
             StartPOIId = 1,
             RelaxedConstraintsId = { 1, 3, 4 },
-            ArrivalTime = new TimeSpan(9, 0, 0),
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),
             AlgorithmMonitoring = true,
             Stages =

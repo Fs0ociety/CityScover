@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 18/09/2018
+// File update: 19/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -17,9 +17,16 @@ namespace CityScover.Engine.Algorithms.Greedy
    /// </summary>
    internal class NearestNeighborAlgorithm : Algorithm
    {
+      // A temporary variable for average speed walk (it must be added to repository!!!)
+      // Its measure unit is km/h.
+      private const double _averageSpeedWalk = 3.0;
+
       private CityMapGraph _currentSolution;
+      private CityMapGraph _cityMapClone;
+
       private InterestPointWorker _startPOI;
       private InterestPointWorker _newStartPOI;
+      private DateTime _timeSpent;
 
       #region Constructors
       internal NearestNeighborAlgorithm()
@@ -40,14 +47,14 @@ namespace CityScover.Engine.Algorithms.Greedy
          int bestScore = default;
          InterestPointWorker candidateNode = default;
 
-         var adjPOIIds = Solver.CityMapGraph.GetAdjacentNodes(interestPoint.Entity.Id);
-         var cityMapGraphNodes = Solver.CityMapGraph.Nodes;
+         var adjPOIIds = _cityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
+         var cityMapGraphNodes = _cityMapClone.Nodes;
 
          adjPOIIds.ToList().ForEach(adjPOIId => SetBestCandidate(adjPOIId));
 
          void SetBestCandidate(int nodeKey)
          {
-            var node = Solver.CityMapGraph[nodeKey];
+            var node = _cityMapClone[nodeKey];
 
             if (!node.IsVisited)
             {
@@ -59,18 +66,15 @@ namespace CityScover.Engine.Algorithms.Greedy
                   bestScore = deltaScore;
                   candidateNode = node;
                }
+               else if (deltaScore == bestScore)
+               {
+                  var randomId = new Random().Next(interestPoint.Entity.Id, node.Entity.Id);
+                  candidateNode = _cityMapClone[randomId];
+               }
             }
          }
 
          return candidateNode;
-      }
-
-      private void ResetCityMapGraph()
-      {
-         Solver.CityMapGraph.Nodes
-            .Where(node => node.IsVisited == true)
-            .ToList()
-            .ForEach(node => node.IsVisited = false);
       }
       #endregion
 
@@ -78,7 +82,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnError()
       {
          base.OnError();
-         ResetCityMapGraph();
          _currentStep = default;
          // TODO: Other activities?
       }
@@ -87,9 +90,9 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnInitializing();
 
-         _currentSolution = Solver.CityMapGraph.DeepCopy();
-
          _currentSolution = new CityMapGraph();
+         _cityMapClone = Solver.CityMapGraph.DeepCopy();
+         _timeSpent = DateTime.Now;
          _startPOI = GetStartPOI();
          _startPOI.IsVisited = true;
          
@@ -105,9 +108,8 @@ namespace CityScover.Engine.Algorithms.Greedy
          neighborPOI.IsVisited = true;
          var neighborPOIId = neighborPOI.Entity.Id;
          _currentSolution.AddNode(neighborPOIId, neighborPOI);
-
-         // TODO: Usare la deepCopy del CityMapGraph così da lasciare intatto il grafo originale.
-         var edge = Solver.CityMapGraph.GetEdge(firstPOIId, neighborPOIId);
+         
+         var edge = _cityMapClone.GetEdge(firstPOIId, neighborPOIId);
          _currentSolution.AddUndirectedEdge(firstPOIId, neighborPOIId, edge);
          _newStartPOI = _startPOI;
 
@@ -115,7 +117,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          {
             var startPOIId = Solver.WorkingConfiguration.StartPOIId;
 
-            return Solver.CityMapGraph.Nodes
+            return _cityMapClone.Nodes
                .Where(x => x.Entity.Id == startPOIId)
                .FirstOrDefault();
          }
@@ -125,13 +127,11 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnTerminated();
          _currentStep = default;
-         //throw new NotImplementedException();
       }
 
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         ResetCityMapGraph();
          // TODO: Other activities?
       }
 
@@ -144,11 +144,32 @@ namespace CityScover.Engine.Algorithms.Greedy
             candidatePOI.IsVisited = true;
             _currentSolution.AddNode(candidatePOI.Entity.Id, candidatePOI);
             _currentSolution.AddUndirectedEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
+            var (tVisit, tWalk, tReturn) = CalculateTimes();
             _newStartPOI = candidatePOI;
+
+            (TimeSpan tVisit, TimeSpan tWalk, TimeSpan tReturn) CalculateTimes()
+            {
+               TimeSpan timeVisit = default;
+               if (candidatePOI.Entity.TimeVisit.HasValue)
+               {
+                  timeVisit = candidatePOI.Entity.TimeVisit.Value;
+               }
+
+               RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
+               TimeSpan timeWalk = TimeSpan.FromHours(edge.Weight() / _averageSpeedWalk);
+
+               RouteWorker returnEdge = _cityMapClone.GetEdge(candidatePOI.Entity.Id, _startPOI.Entity.Id);
+               TimeSpan timeReturn = TimeSpan.FromHours(returnEdge.Weight() / _averageSpeedWalk);
+
+               return (timeVisit, timeWalk, timeReturn);
+            }
 
             TOSolution newSolution = new TOSolution
             {
-               SolutionGraph = _currentSolution
+               SolutionGraph = _currentSolution,
+               TimeSpent = _timeSpent.Add(tWalk)
+                                     .Add(tVisit)
+                                     .Add(tReturn)
             };
 
             if (Solver.IsMonitoringEnabled)
