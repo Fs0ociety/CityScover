@@ -81,7 +81,7 @@ namespace CityScover.Data
                int intPointId = int.Parse(pointId);
                
                // Create a new entity of InterestPoint
-               var pointBuilder = InterestPointBuilder.newBuilder(intPointId, pointName);
+               var pointBuilder = InterestPointBuilder.NewBuilder(intPointId, pointName);
 
                foreach (XmlNode nestedChild in childNode.ChildNodes)
                {

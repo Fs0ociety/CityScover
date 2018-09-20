@@ -69,7 +69,7 @@ namespace CityScover.Entities
             copy.OpeningTimes.Add(openingTime.DeepCopy());
          }
          return copy;
-      } 
+      }
       #endregion
    }
 }

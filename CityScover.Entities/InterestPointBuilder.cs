@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 19/08/2018
+// File update: 20/08/2018
 //
 
 using System;
@@ -29,7 +29,7 @@ namespace CityScover.Entities
          _openingTimes = new Collection<IntervalTime>();
       }
 
-      public static InterestPointBuilder newBuilder(int id, string name)
+      public static InterestPointBuilder NewBuilder(int id, string name)
       {
          return new InterestPointBuilder(id, name);
       }

@@ -3,14 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 02/09/2018
+// File update: 20/09/2018
 //
 
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 
 namespace CityScover.Data
@@ -39,7 +38,6 @@ namespace CityScover.Data
          }
 
          int routeId = default;
-         int ptsCount = points.Count();
          XmlWriterSettings settings = new XmlWriterSettings
          {
             Indent = true
@@ -49,14 +47,20 @@ namespace CityScover.Data
          {
             writer.WriteStartElement("Routes");
 
-            for (int i = 1; i <= ptsCount; i++)
+            for (int i = 1; i <= pointsCount; i++)
             {
-               for (int j = i + 1; j <= ptsCount + i; j++)
+               // TODO: Calculate coordinates of Point with ID = i
+               // (double latitudeFrom, double longitudeFrom) = GetPointCoordinates(i);
+
+               for (int j = i + 1; j <= pointsCount + i; j++)
                {
                   if ((j - i) == i)
                   {
                      continue;
                   }
+
+                  // TODO: Calculate coordinates of Point with ID = j
+                  // (double latitudeTO, double longitudeTo) = GetPointCoordinates(j);
 
                   writer.WriteStartElement("Route");
                   writer.WriteAttributeString("id", (++routeId).ToString());
@@ -71,12 +75,24 @@ namespace CityScover.Data
 
                   writer.WriteStartElement("Distance");
                   writer.WriteAttributeString("unitOfMeasure", 4.ToString());
+
+                  // TODO: Calculate distance between two points with the already computed coordinates.
+                  //ComputeDistance(i, (j - i), out string distance);
+
                   writer.WriteAttributeString("value", 200.ToString());
                   writer.WriteEndElement();
                   writer.WriteEndElement();
                }
             }
             writer.WriteEndElement();
+         }
+
+         void ComputeDistance(int indexPointFrom, int indexPointTo, out string distance)
+         {
+            //var pointFrom = points.Where(point => point.Id == indexPointFrom).FirstOrDefault();
+            //var pointTo = points.Where(point => point.Id == indexPointTo).FirstOrDefault();
+
+            throw new NotImplementedException();
          }
       }
       #endregion

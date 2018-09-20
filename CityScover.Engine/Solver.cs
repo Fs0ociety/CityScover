@@ -208,7 +208,7 @@ namespace CityScover.Engine
 
          InitializeTour();
          //RunWorkers();
-
+      
          void RunWorkers()
          {
             _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
