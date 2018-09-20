@@ -15,15 +15,18 @@ namespace CityScover.Entities
    public struct InterestPoint
    {
       #region Constructors
-      internal InterestPoint(int id, string name, TourCategory category, ThematicScore score, TimeSpan? timeVisit)
+      internal InterestPoint(int id, string name, double latitude, double longitude, 
+         TourCategory category, ThematicScore score, TimeSpan? timeVisit)
       {
          Id = id;
          Name = name;
+         Latitude = latitude;
+         Longitude = longitude;
          Category = category;
          Score = score;
          TimeVisit = timeVisit;
          OpeningTimes = new Collection<IntervalTime>();
-      } 
+      }
       #endregion
 
       #region Public properties
@@ -31,6 +34,16 @@ namespace CityScover.Entities
       /// Identificativo univoco del punto d'interesse.
       /// </summary>
       public int Id { get; }
+
+      /// <summary>
+      /// Latitudine del punto d'interesse.
+      /// </summary>
+      public double Latitude { get; }
+
+      /// <summary>
+      /// Longitudine del punto d'interesse.
+      /// </summary>
+      public double Longitude { get; }
 
       /// <summary>
       /// Descrizione generica del punto d'interesse.
@@ -41,17 +54,17 @@ namespace CityScover.Entities
       /// Categoria di appartenenza del punto d'interesse.
       /// </summary>
       public TourCategory Category { get; }
-      
+
       /// <summary>
       /// Punteggio tematico assegnato al punto d'interesse.
       /// </summary>
       public ThematicScore Score { get; }
-      
+
       /// <summary>
       /// Orari di apertura del punto d'interesse.
       /// </summary>
       public ICollection<IntervalTime> OpeningTimes { get; private set; }
-      
+
       /// <summary>
       /// Tempo necessario per visitare il punto d'interesse.
       /// </summary>

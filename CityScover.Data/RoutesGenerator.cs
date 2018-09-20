@@ -7,9 +7,11 @@
 //
 
 using CityScover.Entities;
+using Geocoding;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 
 namespace CityScover.Data
@@ -49,18 +51,12 @@ namespace CityScover.Data
 
             for (int i = 1; i <= pointsCount; i++)
             {
-               // TODO: Calculate coordinates of Point with ID = i
-               // (double latitudeFrom, double longitudeFrom) = GetPointCoordinates(i);
-
                for (int j = i + 1; j <= pointsCount + i; j++)
                {
                   if ((j - i) == i)
                   {
                      continue;
                   }
-
-                  // TODO: Calculate coordinates of Point with ID = j
-                  // (double latitudeTO, double longitudeTo) = GetPointCoordinates(j);
 
                   writer.WriteStartElement("Route");
                   writer.WriteAttributeString("id", (++routeId).ToString());
@@ -76,10 +72,11 @@ namespace CityScover.Data
                   writer.WriteStartElement("Distance");
                   writer.WriteAttributeString("unitOfMeasure", 4.ToString());
 
-                  // TODO: Calculate distance between two points with the already computed coordinates.
-                  //ComputeDistance(i, (j - i), out string distance);
+                  ComputeDistance(i, (j - i), out string distance);
 
-                  writer.WriteAttributeString("value", 200.ToString());
+                  // TODO: Set the appropriate measure unit code depending on value of distance.
+
+                  writer.WriteAttributeString("value", distance);
                   writer.WriteEndElement();
                   writer.WriteEndElement();
                }
@@ -89,10 +86,17 @@ namespace CityScover.Data
 
          void ComputeDistance(int indexPointFrom, int indexPointTo, out string distance)
          {
-            //var pointFrom = points.Where(point => point.Id == indexPointFrom).FirstOrDefault();
-            //var pointTo = points.Where(point => point.Id == indexPointTo).FirstOrDefault();
+            var pointFrom = points.Where(point => point.Id == indexPointFrom).FirstOrDefault();
+            var pointTo = points.Where(point => point.Id == indexPointTo).FirstOrDefault();
 
-            throw new NotImplementedException();
+            Location locationFrom = new Location(pointFrom.Latitude, pointFrom.Longitude);
+            Location locationTo = new Location(pointTo.Latitude, pointTo.Longitude);
+
+            Distance pointsDistance = locationFrom.DistanceBetween(locationTo, DistanceUnits.Kilometers);
+
+            distance = (pointsDistance.Value * 1000 > 1000) 
+               ? pointsDistance.Value.ToString() 
+               : (pointsDistance.Value * 1000).ToString();
          }
       }
       #endregion

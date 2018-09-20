@@ -79,7 +79,7 @@ namespace CityScover.Data
                string pointId = childNode.Attributes["id"].Value;
                string pointName = childNode.Attributes["name"].Value;
                int intPointId = int.Parse(pointId);
-               
+
                // Create a new entity of InterestPoint
                var pointBuilder = InterestPointBuilder.NewBuilder(intPointId, pointName);
 
@@ -87,6 +87,24 @@ namespace CityScover.Data
                {
                   switch (nestedChild.Name)
                   {
+                     case "Coordinates":
+                        SetCoordinates();
+
+                        void SetCoordinates()
+                        {
+                           string strLatitude = nestedChild.Attributes["latitude"].Value;
+                           string strLongitude = nestedChild.Attributes["longitude"].Value;
+
+                           bool success = double.TryParse(strLatitude, out double latitude);
+                           success &= double.TryParse(strLongitude, out double longitude);
+
+                           if (!success)
+                           {
+                              throw new FormatException(nameof(SetCoordinates));
+                           }
+                           pointBuilder.SetCoordinates(latitude, longitude);
+                        }
+                        break;
                      case "Category":
                         SetCategory();
 
@@ -97,19 +115,19 @@ namespace CityScover.Data
                            switch (categoryId)
                            {
                               case "1":
-                                 category = new TourCategory(TourCategoryType.HistoricalAndCultural, "Storico/Culturale");                                 
+                                 category = new TourCategory(TourCategoryType.HistoricalAndCultural, "Storico/Culturale");
                                  break;
 
                               case "2":
-                                 category = new TourCategory(TourCategoryType.Culinary, "Gastronomico");                                 
+                                 category = new TourCategory(TourCategoryType.Culinary, "Gastronomico");
                                  break;
 
                               case "3":
-                                 category = new TourCategory(TourCategoryType.Sport, "Sportivo");                                 
+                                 category = new TourCategory(TourCategoryType.Sport, "Sportivo");
                                  break;
 
                               default:
-                                 category = new TourCategory(TourCategoryType.None, "None");                                 
+                                 category = new TourCategory(TourCategoryType.None, "None");
                                  break;
                            }
                            pointBuilder.SetCategory(category);
@@ -122,7 +140,7 @@ namespace CityScover.Data
                         void SetThematicScore()
                         {
                            string scoreValue = nestedChild.Attributes["value"].Value;
-                           pointBuilder.SetThematicScore(new ThematicScore(pointBuilder.Category, (!string.Empty.Equals(scoreValue)) ? int.Parse(scoreValue) : 0));                           
+                           pointBuilder.SetThematicScore(new ThematicScore(pointBuilder.Category, (!string.Empty.Equals(scoreValue)) ? int.Parse(scoreValue) : 0));
                         }
                         break;
 
@@ -137,14 +155,14 @@ namespace CityScover.Data
                               {
                                  continue;
                               }
-                              
+
                               string openingTime = doubleNestedChild.Attributes["from"].Value;
                               string closingTime = doubleNestedChild.Attributes["to"].Value;
 
                               if (!string.Empty.Equals(openingTime) && !string.Empty.Equals(closingTime))
                               {
                                  try
-                                 {                                    
+                                 {
                                     pointBuilder.AddOpeningTime(new IntervalTime(TimeSpan.Parse(openingTime), TimeSpan.Parse(closingTime)));
                                  }
                                  catch (FormatException exception)
@@ -206,7 +224,7 @@ namespace CityScover.Data
                      case "PointFrom":
                         pointId = nestedChild.Attributes["id"].Value;
                         intRouteId = ConvertAttributeId(pointId);
-                        pointFrom = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();                        
+                        pointFrom = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();
                         break;
 
                      case "PointTo":

@@ -7,6 +7,7 @@
     <!-- Nr. 1 -->
     <!-- Hotel Carlton -->
     <PointOfInterest id="1" name="Hotel Carlton">
+      <Coordinates latitude="44,837767" longitude="11,615792"/>
       <Category id=""/>
       <ThematicScore category="" value=""/>
       <OpeningTimes>
@@ -22,6 +23,7 @@
     <!-- Nr. 2 -->
     <!-- Castello Estense -->
     <PointOfInterest id="2" name="Castello Estense">
+      <Coordinates latitude="44,837811" longitude="11,619572"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
@@ -33,6 +35,7 @@
     <!-- Nr. 3 -->
     <!-- Palazzo dei Diamanti -->
     <PointOfInterest id="3" name="Palazzo dei Diamanti">
+      <Coordinates latitude="44,842160" longitude="11,621223"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
@@ -44,6 +47,7 @@
     <!-- Nr. 4 -->
     <!-- Cattedrale di San Giorgio -->
     <PointOfInterest id="4" name="Cattedrale di San Giorgio">
+      <Coordinates latitude="44,835639" longitude="11,620273"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
@@ -55,7 +59,8 @@
 
     <!-- Nr. 5 -->
     <!-- Palazzo Schifanoia -->
-    <PointOfInterest id="5" name="Palazzo Schifanoia">
+    <PointOfInterest id="5" name="Museo Schifanoia">
+      <Coordinates latitude="44,830580" longitude="11,629071"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
@@ -67,6 +72,7 @@
     <!-- Nr. 6 -->
     <!-- Palazzo Massari -->
     <PointOfInterest id="6" name="Palazzo Massari">
+      <Coordinates latitude="44,842053" longitude="11,624683"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
@@ -78,7 +84,8 @@
     <!---->
     <!-- Punti d'interesse Gastronomici -->
     <!---->
-    <PointOfInterest id="31" name="La Borsa Bistrot">
+    <PointOfInterest id="31" name="Il Don Giovanni">
+      <Coordinates latitude="44,838670" longitude="11,619772"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
@@ -89,6 +96,7 @@
     </PointOfInterest>
 
     <PointOfInterest id="32" name="Makorè">
+      <Coordinates latitude="44,837429" longitude="11,622981"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
@@ -99,6 +107,7 @@
     </PointOfInterest>
 
     <PointOfInterest id="34" name="XI Comandamento">
+      <Coordinates latitude="44,832788" longitude="11,618828"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
@@ -109,6 +118,7 @@
     </PointOfInterest>
 
     <PointOfInterest id="35" name="Osteria I Quattro Angeli">
+      <Coordinates latitude="44,837011" longitude="11,618615"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>
@@ -118,7 +128,8 @@
       <TimeVisit unitOfMeasure="2" duration="45"/>
     </PointOfInterest>
 
-    <PointOfInterest id="37" name="Il Don Giovanni">
+    <PointOfInterest id="37" name="I Piaceri di Lucrezia">
+      <Coordinates latitude="44,828753" longitude="11,624123"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100" />
       <OpeningTimes>

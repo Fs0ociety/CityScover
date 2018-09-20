@@ -15,6 +15,8 @@ namespace CityScover.Entities
    public class InterestPointBuilder
    {
       private int _id;
+      private double _latitude;
+      private double _longitude;
       private string _name;
       private TourCategory _category;
       private ThematicScore _score;
@@ -46,6 +48,13 @@ namespace CityScover.Entities
          return this;
       }
 
+      public InterestPointBuilder SetCoordinates(double latitude, double longitude)
+      {
+         _latitude = latitude;
+         _longitude = longitude;
+         return this;
+      }
+
       public InterestPointBuilder SetCategory(TourCategory category)
       {
          _category = category;
@@ -71,7 +80,8 @@ namespace CityScover.Entities
 
       public InterestPoint Build()
       {
-         var newPoint = new InterestPoint(_id, _name, _category, _score, _timeVisit);
+         var newPoint = new InterestPoint(_id, _name, _latitude, _longitude, _category, _score, _timeVisit);
+
          foreach (var openingTime in _openingTimes)
          {
             newPoint.OpeningTimes.Add(openingTime);
