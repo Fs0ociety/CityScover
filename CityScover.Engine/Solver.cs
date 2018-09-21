@@ -42,7 +42,8 @@ namespace CityScover.Engine
          }
 
          RoutesGenerator.GenerateRoutes(Points, (ushort)Points.Count());
-         CityScoverRepository.LoadRoutes((ushort)Points.Count());
+         //CityScoverRepository.LoadRoutes((ushort)Points.Count());
+         CityScoverRepository.LoadRoutes(Points);
 
          CreateCityGraph();
 

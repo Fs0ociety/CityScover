@@ -31,7 +31,7 @@ namespace CityScover.Engine.Configs
          _configurations.Add(new Configuration()
          {
             CurrentProblem = ProblemType.TeamOrienteering,
-            TourCategory = TourCategoryType.HistoricalAndCultural,
+            TourCategory = TourCategoryType.Culinary,
             PointsCount = 15,
             StartPOIId = 1,
             RelaxedConstraintsId = { 1, 3, 4 },

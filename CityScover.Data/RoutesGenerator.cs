@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 20/09/2018
+// File update: 21/09/2018
 //
 
 using CityScover.Entities;
@@ -72,7 +72,7 @@ namespace CityScover.Data
                   writer.WriteStartElement("Distance");
                   writer.WriteAttributeString("unitOfMeasure", 4.ToString());
 
-                  ComputeDistance(i, (j - i), out string distance);
+                  ComputeDistance(i - 1, (j - i - 1), out string distance);
 
                   // TODO: Set the appropriate measure unit code depending on value of distance.
 
@@ -86,8 +86,11 @@ namespace CityScover.Data
 
          void ComputeDistance(int indexPointFrom, int indexPointTo, out string distance)
          {
-            var pointFrom = points.Where(point => point.Id == indexPointFrom).FirstOrDefault();
-            var pointTo = points.Where(point => point.Id == indexPointTo).FirstOrDefault();
+            var pointFromId = points.ElementAt(indexPointFrom).Id;
+            var pointToId = points.ElementAt(indexPointTo).Id;
+
+            var pointFrom = points.Where(point => point.Id == pointFromId).FirstOrDefault();
+            var pointTo = points.Where(point => point.Id == pointToId).FirstOrDefault();
 
             Location locationFrom = new Location(pointFrom.Latitude, pointFrom.Longitude);
             Location locationTo = new Location(pointTo.Latitude, pointTo.Longitude);

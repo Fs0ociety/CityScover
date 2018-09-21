@@ -196,9 +196,77 @@ namespace CityScover.Data
          }
       }
 
-      private static void InitializeRoutes(XmlDocument document, ushort pointsCount)
+      //private static void InitializeRoutes(XmlDocument document, ushort pointsCount)
+      //{
+      //   string filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
+      //   document.Load(filename);
+
+      //   foreach (XmlNode node in document.GetElementsByTagName("Routes"))
+      //   {
+      //      foreach (XmlNode childNode in node.ChildNodes)
+      //      {
+      //         if (childNode.NodeType != XmlNodeType.Element || !childNode.Name.Equals("Route"))
+      //         {
+      //            continue;
+      //         }
+
+      //         string pointId = default;
+      //         double distance = default;
+      //         InterestPoint pointFrom = default;
+      //         InterestPoint pointTo = default;
+      //         string routeId = childNode.Attributes["id"].Value;
+      //         int intRouteId = ConvertAttributeId(routeId);
+
+      //         foreach (XmlNode nestedChild in childNode.ChildNodes)
+      //         {
+      //            switch (nestedChild.Name)
+      //            {
+      //               case "PointFrom":
+      //                  pointId = nestedChild.Attributes["id"].Value;
+      //                  intRouteId = ConvertAttributeId(pointId);
+      //                  pointFrom = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();
+      //                  break;
+
+      //               case "PointTo":
+      //                  pointId = nestedChild.Attributes["id"].Value;
+      //                  intRouteId = ConvertAttributeId(pointId);
+      //                  pointTo = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();
+      //                  break;
+
+      //               case "Distance":
+      //                  var strDistance = nestedChild.Attributes["value"].Value;
+      //                  bool success = double.TryParse(strDistance, out double fDistance);
+      //                  if (!success)
+      //                  {
+      //                     throw new FormatException(nameof(distance));
+      //                  }
+      //                  distance = fDistance;
+      //                  break;
+
+      //               default:
+      //                  break;
+      //            }
+      //         }
+      //         _routes.Add(new Route(intRouteId, pointFrom, pointTo, distance));
+      //      }
+      //   }
+
+      //   int ConvertAttributeId(string id)
+      //   {
+      //      bool success = int.TryParse(id, out int result);
+      //      if (!success)
+      //      {
+      //         throw new FormatException(nameof(id));
+      //      }
+
+      //      return result;
+      //   }
+      //}
+
+      private static void InitializeRoutes(XmlDocument document, IEnumerable<InterestPoint> points)
       {
-         string filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
+         string filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + 
+            "cityscover-routes-" + points.Count() + ".xml";
          document.Load(filename);
 
          foreach (XmlNode node in document.GetElementsByTagName("Routes"))
@@ -224,13 +292,13 @@ namespace CityScover.Data
                      case "PointFrom":
                         pointId = nestedChild.Attributes["id"].Value;
                         intRouteId = ConvertAttributeId(pointId);
-                        pointFrom = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();
+                        pointFrom = (from p in points where p.Id == intRouteId select p).FirstOrDefault();
                         break;
 
                      case "PointTo":
                         pointId = nestedChild.Attributes["id"].Value;
                         intRouteId = ConvertAttributeId(pointId);
-                        pointTo = (from p in _points where p.Id == intRouteId select p).FirstOrDefault();
+                        pointTo = (from p in points where p.Id == intRouteId select p).FirstOrDefault();
                         break;
 
                      case "Distance":
@@ -276,10 +344,17 @@ namespace CityScover.Data
          XmlDocument document = new XmlDocument();
          InitializePoints(document, pointsCount);
       }
-      public static void LoadRoutes(ushort pointsCount)
+
+      //public static void LoadRoutes(ushort pointsCount)
+      //{
+      //   XmlDocument document = new XmlDocument();
+      //   InitializeRoutes(document, pointsCount);
+      //}
+
+      public static void LoadRoutes(IEnumerable<InterestPoint> points)
       {
          XmlDocument document = new XmlDocument();
-         InitializeRoutes(document, pointsCount);
+         InitializeRoutes(document, points);
       }
       #endregion
    }

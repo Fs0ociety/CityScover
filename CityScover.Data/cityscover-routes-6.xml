@@ -3,151 +3,151 @@
   <Route id="1">
     <PointFrom id="1" />
     <PointTo id="2" />
-    <Distance unitOfMeasure="4" value="298,42311" />
+    <Distance unitOfMeasure="4" value="329,85771" />
   </Route>
   <Route id="2">
     <PointFrom id="1" />
     <PointTo id="3" />
-    <Distance unitOfMeasure="4" value="650,32589" />
+    <Distance unitOfMeasure="4" value="568,72796" />
   </Route>
   <Route id="3">
     <PointFrom id="1" />
     <PointTo id="4" />
-    <Distance unitOfMeasure="4" value="425,7193" />
+    <Distance unitOfMeasure="4" value="603,85637" />
   </Route>
   <Route id="4">
     <PointFrom id="1" />
     <PointTo id="5" />
-    <Distance unitOfMeasure="4" value="1,31869738" />
+    <Distance unitOfMeasure="4" value="238,2033" />
   </Route>
   <Route id="5">
     <PointFrom id="1" />
     <PointTo id="6" />
-    <Distance unitOfMeasure="4" value="848,62822" />
+    <Distance unitOfMeasure="4" value="1,19975809" />
   </Route>
   <Route id="6">
     <PointFrom id="2" />
     <PointTo id="1" />
-    <Distance unitOfMeasure="4" value="298,42311" />
+    <Distance unitOfMeasure="4" value="329,85771" />
   </Route>
   <Route id="7">
     <PointFrom id="2" />
     <PointTo id="3" />
-    <Distance unitOfMeasure="4" value="501,3618" />
+    <Distance unitOfMeasure="4" value="288,53068" />
   </Route>
   <Route id="8">
     <PointFrom id="2" />
     <PointTo id="4" />
-    <Distance unitOfMeasure="4" value="248,03726" />
+    <Distance unitOfMeasure="4" value="659,00786" />
   </Route>
   <Route id="9">
     <PointFrom id="2" />
     <PointTo id="5" />
-    <Distance unitOfMeasure="4" value="1,10011546" />
+    <Distance unitOfMeasure="4" value="206,02805" />
   </Route>
   <Route id="10">
     <PointFrom id="2" />
     <PointTo id="6" />
-    <Distance unitOfMeasure="4" value="621,08578" />
+    <Distance unitOfMeasure="4" value="1,15615549" />
   </Route>
   <Route id="11">
     <PointFrom id="3" />
     <PointTo id="1" />
-    <Distance unitOfMeasure="4" value="650,32589" />
+    <Distance unitOfMeasure="4" value="568,72796" />
   </Route>
   <Route id="12">
     <PointFrom id="3" />
     <PointTo id="2" />
-    <Distance unitOfMeasure="4" value="501,3618" />
+    <Distance unitOfMeasure="4" value="288,53068" />
   </Route>
   <Route id="13">
     <PointFrom id="3" />
     <PointTo id="4" />
-    <Distance unitOfMeasure="4" value="729,77718" />
+    <Distance unitOfMeasure="4" value="611,87457" />
   </Route>
   <Route id="14">
     <PointFrom id="3" />
     <PointTo id="5" />
-    <Distance unitOfMeasure="4" value="1,43021826" />
+    <Distance unitOfMeasure="4" value="347,77056" />
   </Route>
   <Route id="15">
     <PointFrom id="3" />
     <PointTo id="6" />
-    <Distance unitOfMeasure="4" value="273,36214" />
+    <Distance unitOfMeasure="4" value="970,00619" />
   </Route>
   <Route id="16">
     <PointFrom id="4" />
     <PointTo id="1" />
-    <Distance unitOfMeasure="4" value="425,7193" />
+    <Distance unitOfMeasure="4" value="603,85637" />
   </Route>
   <Route id="17">
     <PointFrom id="4" />
     <PointTo id="2" />
-    <Distance unitOfMeasure="4" value="248,03726" />
+    <Distance unitOfMeasure="4" value="659,00786" />
   </Route>
   <Route id="18">
     <PointFrom id="4" />
     <PointTo id="3" />
-    <Distance unitOfMeasure="4" value="729,77718" />
+    <Distance unitOfMeasure="4" value="611,87457" />
   </Route>
   <Route id="19">
     <PointFrom id="4" />
     <PointTo id="5" />
-    <Distance unitOfMeasure="4" value="894,17553" />
+    <Distance unitOfMeasure="4" value="470,40267" />
   </Route>
   <Route id="20">
     <PointFrom id="4" />
     <PointTo id="6" />
-    <Distance unitOfMeasure="4" value="794,34171" />
+    <Distance unitOfMeasure="4" value="613,59692" />
   </Route>
   <Route id="21">
     <PointFrom id="5" />
     <PointTo id="1" />
-    <Distance unitOfMeasure="4" value="1,31869738" />
+    <Distance unitOfMeasure="4" value="238,2033" />
   </Route>
   <Route id="22">
     <PointFrom id="5" />
     <PointTo id="2" />
-    <Distance unitOfMeasure="4" value="1,10011546" />
+    <Distance unitOfMeasure="4" value="206,02805" />
   </Route>
   <Route id="23">
     <PointFrom id="5" />
     <PointTo id="3" />
-    <Distance unitOfMeasure="4" value="1,43021826" />
+    <Distance unitOfMeasure="4" value="347,77056" />
   </Route>
   <Route id="24">
     <PointFrom id="5" />
     <PointTo id="4" />
-    <Distance unitOfMeasure="4" value="894,17553" />
+    <Distance unitOfMeasure="4" value="470,40267" />
   </Route>
   <Route id="25">
     <PointFrom id="5" />
     <PointTo id="6" />
-    <Distance unitOfMeasure="4" value="1,32330699" />
+    <Distance unitOfMeasure="4" value="1,01692674" />
   </Route>
   <Route id="26">
     <PointFrom id="6" />
     <PointTo id="1" />
-    <Distance unitOfMeasure="4" value="848,62822" />
+    <Distance unitOfMeasure="4" value="1,19975809" />
   </Route>
   <Route id="27">
     <PointFrom id="6" />
     <PointTo id="2" />
-    <Distance unitOfMeasure="4" value="621,08578" />
+    <Distance unitOfMeasure="4" value="1,15615549" />
   </Route>
   <Route id="28">
     <PointFrom id="6" />
     <PointTo id="3" />
-    <Distance unitOfMeasure="4" value="273,36214" />
+    <Distance unitOfMeasure="4" value="970,00619" />
   </Route>
   <Route id="29">
     <PointFrom id="6" />
     <PointTo id="4" />
-    <Distance unitOfMeasure="4" value="794,34171" />
+    <Distance unitOfMeasure="4" value="613,59692" />
   </Route>
   <Route id="30">
     <PointFrom id="6" />
     <PointTo id="5" />
-    <Distance unitOfMeasure="4" value="1,32330699" />
+    <Distance unitOfMeasure="4" value="1,01692674" />
   </Route>
 </Routes>
