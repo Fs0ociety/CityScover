@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/09/2018
+// File update: 22/09/2018
 //
 
 using CityScover.Commons;
@@ -37,12 +37,11 @@ namespace CityScover.Engine
          {
             Points = from point in CityScoverRepository.Points
                      where point.Category.Id == WorkingConfiguration.TourCategory ||
-                           point.Category.Id == TourCategoryType.None
+                           point.Category.Id == TourCategoryType.None   // Hotel
                      select point;
          }
 
-         RoutesGenerator.GenerateRoutes(Points, (ushort)Points.Count());
-         //CityScoverRepository.LoadRoutes((ushort)Points.Count());
+         RoutesGenerator.GenerateRoutes(Points, Points.Count());
          CityScoverRepository.LoadRoutes(Points);
 
          CreateCityGraph();

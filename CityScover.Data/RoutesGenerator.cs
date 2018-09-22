@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 21/09/2018
+// File update: 22/09/2018
 //
 
 using CityScover.Entities;
@@ -30,7 +30,7 @@ namespace CityScover.Data
       #endregion
 
       #region Public static methods
-      public static void GenerateRoutes(IEnumerable<InterestPoint> points, ushort pointsCount)
+      public static void GenerateRoutes(IEnumerable<InterestPoint> points, int pointsCount)
       {
          _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
 
@@ -51,6 +51,8 @@ namespace CityScover.Data
 
             for (int i = 1; i <= pointsCount; i++)
             {
+               var pointFromId = points.ElementAt(i - 1).Id;
+
                for (int j = i + 1; j <= pointsCount + i; j++)
                {
                   if ((j - i) == i)
@@ -62,33 +64,30 @@ namespace CityScover.Data
                   writer.WriteAttributeString("id", (++routeId).ToString());
 
                   writer.WriteStartElement("PointFrom");
-                  writer.WriteAttributeString("id", i.ToString());
+                  writer.WriteAttributeString("id", pointFromId.ToString());
                   writer.WriteEndElement();
 
                   writer.WriteStartElement("PointTo");
-                  writer.WriteAttributeString("id", (j - i).ToString());
+                  var pointToId = points.ElementAt(j - i - 1).Id;
+                  writer.WriteAttributeString("id", pointToId.ToString());
                   writer.WriteEndElement();
 
                   writer.WriteStartElement("Distance");
-                  writer.WriteAttributeString("unitOfMeasure", 4.ToString());
-
-                  ComputeDistance(i - 1, (j - i - 1), out string distance);
-
+                  ComputeDistance(pointFromId, pointToId, out string distance);
                   // TODO: Set the appropriate measure unit code depending on value of distance.
-
+                  writer.WriteAttributeString("unitOfMeasure", 4.ToString());
                   writer.WriteAttributeString("value", distance);
                   writer.WriteEndElement();
+
+                  // Close "Route" tag
                   writer.WriteEndElement();
                }
             }
             writer.WriteEndElement();
          }
 
-         void ComputeDistance(int indexPointFrom, int indexPointTo, out string distance)
+         void ComputeDistance(int pointFromId, int pointToId, out string distance)
          {
-            var pointFromId = points.ElementAt(indexPointFrom).Id;
-            var pointToId = points.ElementAt(indexPointTo).Id;
-
             var pointFrom = points.Where(point => point.Id == pointFromId).FirstOrDefault();
             var pointTo = points.Where(point => point.Id == pointToId).FirstOrDefault();
 

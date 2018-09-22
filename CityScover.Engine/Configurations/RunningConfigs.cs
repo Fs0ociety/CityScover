@@ -2,7 +2,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 19/09/2018
+// File update: 22/09/2018
 //
 
 using CityScover.Entities;
@@ -31,13 +31,13 @@ namespace CityScover.Engine.Configs
          _configurations.Add(new Configuration()
          {
             CurrentProblem = ProblemType.TeamOrienteering,
-            TourCategory = TourCategoryType.Culinary,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsCount = 15,
             StartPOIId = 1,
             RelaxedConstraintsId = { 1, 3, 4 },
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),
-            AlgorithmMonitoring = true,
+            AlgorithmMonitoring = false,
             Stages =
             {
                new Stage()
