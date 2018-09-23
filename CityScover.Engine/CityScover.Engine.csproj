@@ -52,8 +52,11 @@
     <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="Algorithms\Greedy\NearestNeighborAlgorithm.cs" />
+    <Compile Include="Algorithms\LocalSearch\TwoOptTONeighborhood.cs" />
+    <Compile Include="Algorithms\TOLocalSearchAlgorithm.cs" />
     <Compile Include="Algorithms\LocalSearch\LinKernighanAlgorithm.cs" />
     <Compile Include="Algorithms\LocalSearch\TwoOptAlgorithm.cs" />
+    <Compile Include="Algorithms\TONeighborhood.cs" />
     <Compile Include="AlgorithmTracker.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />

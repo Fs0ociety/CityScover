@@ -30,7 +30,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       #region Constructors
       internal NearestNeighborAlgorithm()
-         : base()
+         : this(null)
       {
       }
 
