@@ -6,19 +6,15 @@
 // File update: 23/09/2018
 //
 
-using CityScover.Engine.Workers;
-using System;
-using System.Collections.Generic;
-
 namespace CityScover.Engine.Algorithms
 {
    internal class TOLocalSearchAlgorithm : Algorithm
    {
       private double _previousSolutionCost;
       private double _currentSolutionCost;
-      private CityMapGraph _currentSolution;
+      private TOSolution _bestSolution;
 
-      private TONeighborhood _neighborhood;
+      private TONeighborhood _neighborhoodWorker;
 
       #region Constructors
       internal TOLocalSearchAlgorithm(TONeighborhood neighborhood)
@@ -29,6 +25,7 @@ namespace CityScover.Engine.Algorithms
       public TOLocalSearchAlgorithm(TONeighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
+         _neighborhoodWorker = neighborhood;
       }
       #endregion
 
@@ -37,11 +34,27 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnInitializing();
 
+         //TODO: prendere sempre la soluzione dal Solver (la best solution) , che è quella
+         // generata allo step precedente, oppure passarla come parametro ? 
+         _bestSolution = Solver.BestSolution;
       }
 
       internal override void PerformStep()
       {
-         throw new System.NotImplementedException();
+         var currentNeighborhood = _neighborhoodWorker.GetAllMoves(_bestSolution);
+
+         //TODO: come gestire eventuali best differenti ? (es. Best Improvement se maxImprovementsCount è null,
+         // altrimenti First Improvement se maxImprovementsCount = 1, K Improvment se maxImprovementsCount = k.
+         // Per come è fatta adesso, sarà sempre Best Improvement.
+         var solution = _neighborhoodWorker.GetBest(currentNeighborhood, _bestSolution, null);
+
+         // TODO più importante: qua solution.Cost è ancora a 0! Come gestire questa cosa con il nostro giro
+         // SolverValidator - SolverEvaluator ?
+         _previousSolutionCost = _bestSolution.Cost;
+         if (solution.Cost < _bestSolution.Cost)
+         {
+            _bestSolution = solution;
+         }
       }
 
       internal override bool StopConditions()
