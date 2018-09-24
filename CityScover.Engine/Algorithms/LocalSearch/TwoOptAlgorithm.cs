@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 24/09/2018
 //
 
 namespace CityScover.Engine.Algorithms.LocalSearch
@@ -40,8 +40,9 @@ namespace CityScover.Engine.Algorithms.LocalSearch
             Algorithm algorithm = Solver.Instance.GetAlgorithm(child.CurrentAlgorithm);
             for (int i = 0; i < child.RunningTimes; i++)
             {
-               algorithm.Start();
-            }            
+               // Code reuse of ExecuteWithMonitoring of Solver.
+               //solver.ExecuteWithMonitoringInternal(algorithm);
+            }
          }
       }
 

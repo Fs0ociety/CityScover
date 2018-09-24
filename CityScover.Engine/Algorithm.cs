@@ -3,8 +3,10 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 18/09/2018
+// File update: 24/09/2018
 //
+
+using System;
 
 namespace CityScover.Engine
 {
@@ -19,6 +21,7 @@ namespace CityScover.Engine
       #region Protected members
       protected AlgorithmStatus _status;
       protected ushort _currentStep = default;
+      protected Action<TOSolution> notifyingFunc = default;
       protected Solver Solver => Solver.Instance;
       #endregion
 
@@ -88,10 +91,8 @@ namespace CityScover.Engine
       internal void Start()
       {         
          OnInitializing();
-         // TODO: Pubblicazione dell'evento di inizializazione ai subscribers.
 
          _status = AlgorithmStatus.Running;
-         // TODO: Pubblicazione dell'evento di esecuzione ai subscribers.
 
          while (!StopConditions())
          {
@@ -103,15 +104,12 @@ namespace CityScover.Engine
             catch
             {               
                OnError();
-               // TODO: Pubblicazione dell'evento di errore ai subscribers.
             }
          }
                   
          OnTerminating();
-         // TODO: Pubblicazione dell'evento di inizio terminazione ai subscribers.
          
          OnTerminated();
-         // TODO: Pubblicazione dell'evento di avvenuta terminazione ai subscribers.
       }
       #endregion
 
@@ -123,6 +121,14 @@ namespace CityScover.Engine
       #region Virtual methods
       internal virtual void OnInitializing()
       {
+         if (Solver.IsMonitoringEnabled)
+         {
+            notifyingFunc = _provider.NotifyObservers;
+         }
+         else
+         {
+            notifyingFunc = Solver.ValidatingQueue.Add;
+         }
          _status = AlgorithmStatus.Initializing;
       }
       internal virtual void OnTerminating()
@@ -132,11 +138,19 @@ namespace CityScover.Engine
 
       internal virtual void OnTerminated()
       {
+         if (Solver.IsMonitoringEnabled)
+         {
+            _provider.NotifyCompletion();
+         }
          _status = AlgorithmStatus.Terminated;
       }
 
       internal virtual void OnError()
       {
+         if (Solver.IsMonitoringEnabled)
+         {
+            _provider.NotifyError();
+         }
          _status = AlgorithmStatus.Error;
       }
       #endregion

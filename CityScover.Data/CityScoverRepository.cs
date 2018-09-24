@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 22/09/2018
+// File update: 24/09/2018
 //
 
 using CityScover.Entities;
@@ -22,8 +22,6 @@ namespace CityScover.Data
       private static readonly ICollection<InterestPoint> _points;
       private static readonly ICollection<Route> _routes;
       private static readonly string _rootDirectory;
-
-      //TODO : An averageSpeedWalk variable must be added.
 
       #region Static Constructors
       static CityScoverRepository()
@@ -63,7 +61,7 @@ namespace CityScover.Data
          }
       }
 
-      private static void InitializePoints(XmlDocument document, ushort pointsCount)
+      private static void InitializePoints(XmlDocument document, int pointsCount)
       {
          document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points-" + pointsCount + ".xml"));
 
@@ -180,7 +178,7 @@ namespace CityScover.Data
                         void SetTimeVisit()
                         {
                            // TODO: Capire come valorizzare l'unita' di misura per il tempo di visita del luogo d'interesse.
-                           string measureUnit = nestedChild.Attributes["unitOfMeasure"].Value;
+                           string measureUnit = nestedChild.Attributes["unit"].Value;
                            string duration = nestedChild.Attributes["duration"].Value;
                            // TODO: controllare unita' di misura del tempo (ore o minuti) e creare l'attributo TimeVisit in modo opportuno.                           
                            pointBuilder.SetTimeVisit((!string.Empty.Equals(duration)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null);
@@ -271,7 +269,7 @@ namespace CityScover.Data
       #endregion
 
       #region Public static methods
-      public static void LoadPoints(ushort pointsCount)
+      public static void LoadPoints(int pointsCount)
       {
          XmlDocument document = new XmlDocument();
          InitializePoints(document, pointsCount);

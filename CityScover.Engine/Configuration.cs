@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 19/09/2018
+// File update: 24/09/2018
 //
 
 using CityScover.Entities;
@@ -29,13 +29,14 @@ namespace CityScover.Engine
       #region Properties
       internal TourCategoryType TourCategory { get; set; }
       internal int StartPOIId { get; set; }
-      internal ushort PointsCount { get; set; }
+      internal int PointsCount { get; set; }
+      internal float WalkingSpeed { get; set; }
       internal DateTime ArrivalTime { get; set; }
       internal TimeSpan TourDuration { get; set; }
       internal ProblemType CurrentProblem { get; set; }
       public bool AlgorithmMonitoring { get; set; }
       internal ICollection<byte> RelaxedConstraintsId { get; set; }
-      internal ICollection<Stage> Stages { get; set; }
+      internal ICollection<Stage> Stages { get; set; }      
       #endregion
    }
 }

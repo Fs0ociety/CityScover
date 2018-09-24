@@ -72,7 +72,7 @@ namespace CityScover.Engine
          Debug.WriteLine("Solution received");
          Solver.SolutionsQueue.Add(solution);
       }
-
+   
       public void OnError(Exception error)
       {
          Debug.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred!\n");

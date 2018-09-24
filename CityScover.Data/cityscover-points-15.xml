@@ -31,7 +31,7 @@
       <OpeningTimes>
         <OpeningTime from="09:30" to="17:30"/>
       </OpeningTimes>
-      <TimeVisit unit="h" duration="1"/>
+      <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
     <!-- Nr. 3 -->
@@ -56,7 +56,7 @@
         <OpeningTime from="7:30" to="12:30"/>
         <OpeningTime from="15:00" to="19:00"/>
       </OpeningTimes>
-      <TimeVisit unit="h" duration="1"/>
+      <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
     <!-- Nr. 5 -->

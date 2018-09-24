@@ -84,6 +84,13 @@ namespace CityScover.Engine
       {
          await TakeSolutionsToEvaluate().ConfigureAwait(continueOnCapturedContext: false);
       }
+
+      internal double GetSolutionCost(TOSolution solution)
+      {
+         // Logic
+         double costSolution = 66.0;
+         return costSolution;
+      }
       #endregion
 
       #region Overrides

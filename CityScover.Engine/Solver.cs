@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 22/09/2018
+// File update: 24/09/2018
 //
 
 using CityScover.Commons;
@@ -90,84 +90,32 @@ namespace CityScover.Engine
       /// <summary>
       /// Run the algorithm directly without monitoring process.
       /// </summary>
-      /// <param name="configuration"></param>
+      /// <param name="configuration">Configuration to launch.</param>
       /// <returns></returns>
-      private async Task ExecuteWithoutMonitoring()
+      private async Task ExecuteWithoutMonitoringInternal()
       {
-         bool exceptionOccurred = false;
-
          // Run all Stages.
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
             CurrentStage = stage;
             Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
-
-            if (algorithm == null)
-            {
-               throw new NullReferenceException(nameof(algorithm));
-            }
-
-            try
-            {
-               await Task.Run(() => algorithm.Start());
-            }
-            catch (Exception ex)
-            {
-               exceptionOccurred = true;
-               Debug.WriteLine(GetType().Name);
-               Debug.WriteLine(ex.Message);
-            }
-
-            if (!exceptionOccurred)
-            {
-               // TODO
-            }
+            await ExecuteWithoutMonitoring(algorithm);
          }
       }
 
       /// <summary>
       /// Run the algorithm indirectly from the ExecutionReporter with monitoring of the first.
       /// </summary>
-      /// <param name="configuration"></param>
+      /// <param name="configuration">Configuration to launch.</param>
       /// <returns></returns>
-      private async Task ExecuteWithMonitoring()
+      private async Task ExecuteWithMonitoringInternal()
       {
-         bool exceptionOccurred = false;
-
          // Run all Stages.
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
             CurrentStage = stage;
             Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
-
-            if (algorithm == null)
-            {
-               throw new NullReferenceException(nameof(algorithm));
-            }
-
-            algorithm.Provider = new AlgorithmTracker() ?? throw new NullReferenceException();
-            ExecutionReporter reporter = new ExecutionReporter();
-            reporter.Subscribe(algorithm.Provider);
-
-            try
-            {
-               await reporter.Run(algorithm);
-            }
-            catch (Exception ex)
-            {
-               exceptionOccurred = true;
-               Debug.WriteLine(GetType().Name);
-               Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
-               reporter.Unsubscribe();
-            }
-
-            if (!exceptionOccurred)
-            {
-               // TODO
-            }
+            await ExecuteWithMonitoring(algorithm);
          }
       }
 
@@ -188,6 +136,76 @@ namespace CityScover.Engine
       #region Internal methods
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) => 
          AlgorithmFactory.CreateAlgorithm(algorithmType);
+
+      /// <summary>
+      /// Used from an Algorithm that must execute an internal algorithm with monitoring disabled.
+      /// </summary>
+      /// <param name="algorithm">Algorithm to execute.</param>
+      /// <returns></returns>
+      internal async Task ExecuteWithoutMonitoring(Algorithm algorithm)
+      {
+         bool exceptionOccurred = false;
+
+         if (algorithm == null)
+         {
+            throw new NullReferenceException(nameof(algorithm));
+         }
+
+         try
+         {
+            await Task.Run(() => algorithm.Start());
+         }
+         catch (Exception ex)
+         {
+            exceptionOccurred = true;
+            Debug.WriteLine(GetType().Name);
+            Debug.WriteLine(ex.Message);
+         }
+
+         if (!exceptionOccurred)
+         {
+            // TODO
+         }
+      }
+
+      /// <summary>
+      /// Used from an Algorithm that must execute an internal algorithm with monitoring enabled.
+      /// </summary>
+      /// <param name="algorithm">Algorithm to execute.</param>
+      /// <returns></returns>
+      internal async Task ExecuteWithMonitoring(Algorithm algorithm)
+      {
+         bool exceptionOccurred = false;
+
+         if (algorithm == null)
+         {
+            throw new NullReferenceException(nameof(algorithm));
+         }
+
+         algorithm.Provider = new AlgorithmTracker() ?? throw new NullReferenceException();
+         ExecutionReporter reporter = new ExecutionReporter();
+         reporter.Subscribe(algorithm.Provider);
+
+         try
+         {
+            await reporter.Run(algorithm);
+         }
+         catch (Exception ex)
+         {
+            exceptionOccurred = true;
+            Debug.WriteLine(GetType().Name);
+            Debug.WriteLine(ex.Message);
+         }
+         finally
+         {
+            reporter.Unsubscribe();
+         }
+
+         if (!exceptionOccurred)
+         {
+            // TODO
+         }
+      }
       #endregion
 
       #region Public methods
@@ -219,11 +237,11 @@ namespace CityScover.Engine
 
          if (enableMonitoring)
          {
-            await ExecuteWithMonitoring();
+            await ExecuteWithMonitoringInternal();
          }
          else
          {
-            await ExecuteWithoutMonitoring();
+            await ExecuteWithoutMonitoringInternal();
          }
 
          SolutionsQueue.CompleteAdding();

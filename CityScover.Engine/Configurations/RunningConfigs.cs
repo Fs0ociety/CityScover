@@ -34,6 +34,7 @@ namespace CityScover.Engine.Configs
             TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsCount = 15,
             StartPOIId = 1,
+            WalkingSpeed = 3.0f,  //In kilometers/hour.
             RelaxedConstraintsId = { 1, 3, 4 },
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),

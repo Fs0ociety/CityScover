@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 24/09/2018
 //
 
 using CityScover.Commons;
@@ -28,8 +28,7 @@ namespace CityScover.Engine
       private BlockingCollection<TOSolution> _evaluatedQueue;
       private ICollection<Task> _solverTasks;
       private ICollection<TOSolution> _solutions;
-      private TOSolution _bestSolution;
-
+      
       #region Constructors
       private Solver()
       {
@@ -78,6 +77,11 @@ namespace CityScover.Engine
       internal IEnumerable<TOSolution> Solutions { get; private set; }
 
       internal TOSolution BestSolution { get; private set; }
+
+      internal IEnumerable<Result> InvalidResults { get; set; }
+
+      internal IEnumerable<Result> ValidResults { get; set; }
+
       #endregion
 
       #region Overrides
@@ -88,6 +92,8 @@ namespace CityScover.Engine
          _evaluatedQueue = new BlockingCollection<TOSolution>();
          _solverTasks = new Collection<Task>();
          _solutions = new Collection<TOSolution>();
+         InvalidResults = new Collection<Result>();
+         ValidResults = new Collection<Result>();
       }
       #endregion
    }

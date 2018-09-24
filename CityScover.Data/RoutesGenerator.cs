@@ -40,6 +40,7 @@ namespace CityScover.Data
          }
 
          int routeId = default;
+         var measureUnits = CityScoverRepository.MeasureUnits;
          XmlWriterSettings settings = new XmlWriterSettings
          {
             Indent = true
@@ -60,6 +61,8 @@ namespace CityScover.Data
                      continue;
                   }
 
+                  var pointToId = points.ElementAt(j - i - 1).Id;
+
                   writer.WriteStartElement("Route");
                   writer.WriteAttributeString("id", (++routeId).ToString());
 
@@ -68,14 +71,12 @@ namespace CityScover.Data
                   writer.WriteEndElement();
 
                   writer.WriteStartElement("PointTo");
-                  var pointToId = points.ElementAt(j - i - 1).Id;
                   writer.WriteAttributeString("id", pointToId.ToString());
                   writer.WriteEndElement();
 
                   writer.WriteStartElement("Distance");
-                  ComputeDistance(pointFromId, pointToId, out string distance);
-                  // TODO: Set the appropriate measure unit code depending on value of distance.
-                  writer.WriteAttributeString("unitOfMeasure", 4.ToString());
+                  ComputeDistance(pointFromId, pointToId, out string distance, out MeasureUnit measureUnit);
+                  writer.WriteAttributeString("unit", measureUnit.Code);
                   writer.WriteAttributeString("value", distance);
                   writer.WriteEndElement();
 
@@ -86,7 +87,7 @@ namespace CityScover.Data
             writer.WriteEndElement();
          }
 
-         void ComputeDistance(int pointFromId, int pointToId, out string distance)
+         void ComputeDistance(int pointFromId, int pointToId, out string distance, out MeasureUnit measureUnit)
          {
             var pointFrom = points.Where(point => point.Id == pointFromId).FirstOrDefault();
             var pointTo = points.Where(point => point.Id == pointToId).FirstOrDefault();
@@ -96,9 +97,12 @@ namespace CityScover.Data
 
             Distance pointsDistance = locationFrom.DistanceBetween(locationTo, DistanceUnits.Kilometers);
 
-            distance = (pointsDistance.Value * 1000 > 1000) 
-               ? pointsDistance.Value.ToString() 
-               : (pointsDistance.Value * 1000).ToString();
+            distance = (pointsDistance.Value * 1000).ToString();
+            measureUnit = measureUnits.Where(code => code.Code.Equals("m")).FirstOrDefault();
+
+            //distance = (pointsDistance.Value * 1000 > 1000)
+            //   ? pointsDistance.Value.ToString()
+            //   : (pointsDistance.Value * 1000).ToString();
          }
       }
       #endregion
