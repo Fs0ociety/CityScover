@@ -63,7 +63,8 @@ namespace CityScover.Data
 
       private static void InitializePoints(XmlDocument document, int pointsCount)
       {
-         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-points-" + pointsCount + ".xml"));
+         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream(
+            "CityScover.Data.cityscover-points-" + pointsCount + ".xml"));
 
          foreach (XmlNode node in document.GetElementsByTagName("PointOfInterests"))
          {
@@ -103,6 +104,7 @@ namespace CityScover.Data
                            pointBuilder.SetCoordinates(latitude, longitude);
                         }
                         break;
+                     
                      case "Category":
                         SetCategory();
 
@@ -138,7 +140,8 @@ namespace CityScover.Data
                         void SetThematicScore()
                         {
                            string scoreValue = nestedChild.Attributes["value"].Value;
-                           pointBuilder.SetThematicScore(new ThematicScore(pointBuilder.Category, (!string.Empty.Equals(scoreValue)) ? int.Parse(scoreValue) : 0));
+                           pointBuilder.SetThematicScore(new ThematicScore(
+                              pointBuilder.Category, (!string.Empty.Equals(scoreValue)) ? int.Parse(scoreValue) : 0));
                         }
                         break;
 
@@ -177,10 +180,8 @@ namespace CityScover.Data
 
                         void SetTimeVisit()
                         {
-                           // TODO: Capire come valorizzare l'unita' di misura per il tempo di visita del luogo d'interesse.
                            string measureUnit = nestedChild.Attributes["unit"].Value;
                            string duration = nestedChild.Attributes["duration"].Value;
-                           // TODO: controllare unita' di misura del tempo (ore o minuti) e creare l'attributo TimeVisit in modo opportuno.                           
                            pointBuilder.SetTimeVisit((!string.Empty.Equals(duration)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null);
                         }
                         break;

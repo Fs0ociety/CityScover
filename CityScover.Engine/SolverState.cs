@@ -9,6 +9,7 @@
 using CityScover.Commons;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -45,6 +46,11 @@ namespace CityScover.Engine
       /// This flag says if algorithm's monitoring is active or not.
       /// </summary>
       internal bool IsMonitoringEnabled { get; private set; }
+
+      /// <summary>
+      /// This delegate contains execution method to invoke by the current Algorithm.
+      /// </summary>
+      internal Func<Algorithm, Task> ExecutionInternalFunc { get; private set; }
 
       /// <summary>
       /// Current stage in execution.

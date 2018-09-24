@@ -26,6 +26,22 @@ namespace CityScover.Engine
    {
       #region Private methods
       /// <summary>
+      /// Initialize the working configuration and it creates the Problem.
+      /// </summary>
+      /// <param name="configuration"></param>
+      private void InitSolver(Configuration configuration)
+      {
+         WorkingConfiguration = configuration;
+         IsMonitoringEnabled = configuration.AlgorithmMonitoring;
+         Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
+
+         if (Problem == null)
+         {
+            throw new NullReferenceException(nameof(Problem));
+         }
+      }
+
+      /// <summary>
       /// Initialize the graph of the city using CityScoverRepository.
       /// </summary>
       private void InitializeTour()
@@ -88,37 +104,9 @@ namespace CityScover.Engine
       }
 
       /// <summary>
-      /// Run the algorithm directly without monitoring process.
+      /// Returns the best solution produced from an Algorithm.
       /// </summary>
-      /// <param name="configuration">Configuration to launch.</param>
       /// <returns></returns>
-      private async Task ExecuteWithoutMonitoringInternal()
-      {
-         // Run all Stages.
-         foreach (Stage stage in WorkingConfiguration.Stages)
-         {
-            CurrentStage = stage;
-            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
-            await ExecuteWithoutMonitoring(algorithm);
-         }
-      }
-
-      /// <summary>
-      /// Run the algorithm indirectly from the ExecutionReporter with monitoring of the first.
-      /// </summary>
-      /// <param name="configuration">Configuration to launch.</param>
-      /// <returns></returns>
-      private async Task ExecuteWithMonitoringInternal()
-      {
-         // Run all Stages.
-         foreach (Stage stage in WorkingConfiguration.Stages)
-         {
-            CurrentStage = stage;
-            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
-            await ExecuteWithMonitoring(algorithm);
-         }
-      }
-
       private TOSolution GetBestSolution()
       {
          var isMinimizingProblem = Problem.IsMinimizing;
@@ -129,20 +117,15 @@ namespace CityScover.Engine
 
          return (from solution in _solutions
                  where solution.Cost == targetCost
-                 select solution).FirstOrDefault();         
+                 select solution).FirstOrDefault();
       }
-      #endregion
-
-      #region Internal methods
-      internal Algorithm GetAlgorithm(AlgorithmType algorithmType) => 
-         AlgorithmFactory.CreateAlgorithm(algorithmType);
 
       /// <summary>
       /// Used from an Algorithm that must execute an internal algorithm with monitoring disabled.
       /// </summary>
       /// <param name="algorithm">Algorithm to execute.</param>
       /// <returns></returns>
-      internal async Task ExecuteWithoutMonitoring(Algorithm algorithm)
+      private async Task ExecuteWithoutMonitoring(Algorithm algorithm)
       {
          bool exceptionOccurred = false;
 
@@ -173,7 +156,7 @@ namespace CityScover.Engine
       /// </summary>
       /// <param name="algorithm">Algorithm to execute.</param>
       /// <returns></returns>
-      internal async Task ExecuteWithMonitoring(Algorithm algorithm)
+      private async Task ExecuteWithMonitoring(Algorithm algorithm)
       {
          bool exceptionOccurred = false;
 
@@ -206,27 +189,40 @@ namespace CityScover.Engine
             // TODO
          }
       }
+
+      /// <summary>
+      /// Launch a Configuration, running all its stages.
+      /// </summary>
+      /// <param name="executionFunc">Method to invoke.</param>
+      /// <returns></returns>
+      private async Task ExecuteConfiguration(Func<Algorithm, Task> executionFunc)
+      {
+         // Run all Stages.
+         foreach (Stage stage in WorkingConfiguration.Stages)
+         {
+            CurrentStage = stage;
+            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
+            await executionFunc.Invoke(algorithm);
+         }
+      }
+      #endregion
+
+      #region Internal methods
+      internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
+         AlgorithmFactory.CreateAlgorithm(algorithmType);
       #endregion
 
       #region Public methods
       /// <summary>
       /// Executes configuration passed as parameter while loop around stages.
       /// </summary>
-      /// <param name="configuration"></param>
-      public async Task Execute(Configuration configuration, bool enableMonitoring = false)
+      /// <param name="configuration">Configuration to launch.</param>
+      public async Task Execute(Configuration configuration)
       {
-         WorkingConfiguration = configuration;
-         IsMonitoringEnabled = enableMonitoring;
-         Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
-
-         if (Problem == null)
-         {
-            throw new NullReferenceException(nameof(Problem));
-         }
-
+         InitSolver(configuration);
          InitializeTour();
          //RunWorkers();
-      
+
          void RunWorkers()
          {
             _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
@@ -234,20 +230,20 @@ namespace CityScover.Engine
             _solverTasks.Add(Task.Run(() => SolverValidator.Instance.Run()));
             _solverTasks.Add(Task.Run(() => SolverEvaluator.Instance.Run()));
          }
-
-         if (enableMonitoring)
+      
+         if (IsMonitoringEnabled)
          {
-            await ExecuteWithMonitoringInternal();
+            ExecutionInternalFunc = ExecuteWithMonitoring;
+            await ExecuteConfiguration(ExecuteWithMonitoring);
          }
          else
          {
-            await ExecuteWithoutMonitoringInternal();
+            ExecutionInternalFunc = ExecuteWithoutMonitoring;
+            await ExecuteConfiguration(ExecuteWithoutMonitoring);
          }
 
          SolutionsQueue.CompleteAdding();
          await Task.WhenAll(_solverTasks.ToArray());
-
-         // TODO: Loop in solutions collection to select best solution.
          BestSolution = GetBestSolution();
 
          throw new NotImplementedException(nameof(Execute));

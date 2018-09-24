@@ -6,6 +6,8 @@
 // File update: 24/09/2018
 //
 
+using System.Threading.Tasks;
+
 namespace CityScover.Engine.Algorithms.LocalSearch
 {
    internal class TwoOptAlgorithm : Algorithm
@@ -34,14 +36,15 @@ namespace CityScover.Engine.Algorithms.LocalSearch
       {
          var solver = Solver.Instance;
          var childrenFlows = solver.CurrentStage.Flow.ChildrenFlows;
-         //To test inner algorithm creation.
+         
+         // Inner algorithm creation test.
          foreach (var child in childrenFlows)
          {
-            Algorithm algorithm = Solver.Instance.GetAlgorithm(child.CurrentAlgorithm);
+            Algorithm algorithm = solver.GetAlgorithm(child.CurrentAlgorithm);
             for (int i = 0; i < child.RunningTimes; i++)
             {
-               // Code reuse of ExecuteWithMonitoring of Solver.
-               //solver.ExecuteWithMonitoringInternal(algorithm);
+               // Code reuse of ExecuteWithMonitoring from Solver.
+               solver.ExecutionInternalFunc.Invoke(algorithm);
             }
          }
       }

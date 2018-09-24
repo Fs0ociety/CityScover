@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 22/09/2018
+// File update: 24/09/2018
 //
 
 using CityScover.Entities;
@@ -75,9 +75,9 @@ namespace CityScover.Data
                   writer.WriteEndElement();
 
                   writer.WriteStartElement("Distance");
-                  ComputeDistance(pointFromId, pointToId, out string distance, out MeasureUnit measureUnit);
+                  ComputeDistance(pointFromId, pointToId, out double distance, out MeasureUnit measureUnit);
                   writer.WriteAttributeString("unit", measureUnit.Code);
-                  writer.WriteAttributeString("value", distance);
+                  writer.WriteAttributeString("value", distance.ToString());
                   writer.WriteEndElement();
 
                   // Close "Route" tag
@@ -87,7 +87,7 @@ namespace CityScover.Data
             writer.WriteEndElement();
          }
 
-         void ComputeDistance(int pointFromId, int pointToId, out string distance, out MeasureUnit measureUnit)
+         void ComputeDistance(int pointFromId, int pointToId, out double distance, out MeasureUnit measureUnit)
          {
             var pointFrom = points.Where(point => point.Id == pointFromId).FirstOrDefault();
             var pointTo = points.Where(point => point.Id == pointToId).FirstOrDefault();
@@ -97,12 +97,8 @@ namespace CityScover.Data
 
             Distance pointsDistance = locationFrom.DistanceBetween(locationTo, DistanceUnits.Kilometers);
 
-            distance = (pointsDistance.Value * 1000).ToString();
+            distance = pointsDistance.Value * 1000.0;
             measureUnit = measureUnits.Where(code => code.Code.Equals("m")).FirstOrDefault();
-
-            //distance = (pointsDistance.Value * 1000 > 1000)
-            //   ? pointsDistance.Value.ToString()
-            //   : (pointsDistance.Value * 1000).ToString();
          }
       }
       #endregion

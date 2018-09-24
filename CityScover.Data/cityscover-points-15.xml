@@ -118,7 +118,7 @@
     <!-- Fuori Porta -->    
     <PointOfInterest id="33" name="Fuori Porta">
       <Coordinates latitude="44,832623" longitude="11,636595"/>
-      <Category>2</Category>
+      <Category id="2"/>
       <ThematicScore category="2" value="75"/>
       <OpeningTimes>
         <OpeningTime from="07:30" to="00:00"/>
@@ -172,7 +172,7 @@
     <!-- Centro Universitario Sportivo Di Ferrara (CUS) -->
     <PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
       <Coordinates latitude="44,853446" longitude="11,631099"/>
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="100"/>
       <OpeningTimes>
         <OpeningTime from="09:00" to="23:00"/>
@@ -184,7 +184,7 @@
     <!-- Centro Sportivo Italiano -->
     <PointOfInterest id="76" name="Centro Sportivo Italiano">
       <Coordinates latitude="44,833600" longitude="11,625474"/>
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="55"/>
       <OpeningTimes>
         <OpeningTime from="10:00" to="13:00"/>
@@ -197,7 +197,7 @@
     <!-- Centro Sportivo Tennis Club Ferrara -->
     <PointOfInterest id="77" name="Centro Sportivo Tennis Club Ferrara">
       <Coordinates latitude="44,849885" longitude="11,613846"/>
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="75"/>
       <OpeningTimes>
         <OpeningTime from="09:00" to="00:00"/>
@@ -209,7 +209,7 @@
     <!-- La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale -->
     <PointOfInterest id="83" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
       <Coordinates latitude="44,835498" longitude="11,611455"/>
-      <Category>3</Category>
+      <Category id="3"/>
       <ThematicScore category="3" value="60"/>
       <OpeningTimes>
         <OpeningTime from="07:30" to="11:30"/>
