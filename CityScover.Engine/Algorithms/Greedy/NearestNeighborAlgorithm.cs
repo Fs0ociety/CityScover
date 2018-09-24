@@ -147,23 +147,6 @@ namespace CityScover.Engine.Algorithms.Greedy
             var (tVisit, tWalk, tReturn) = CalculateTimes();
             _newStartPOI = candidatePOI;
 
-            (TimeSpan tVisit, TimeSpan tWalk, TimeSpan tReturn) CalculateTimes()
-            {
-               TimeSpan timeVisit = default;
-               if (candidatePOI.Entity.TimeVisit.HasValue)
-               {
-                  timeVisit = candidatePOI.Entity.TimeVisit.Value;
-               }
-
-               RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
-               TimeSpan timeWalk = TimeSpan.FromHours(edge.Weight() / _averageSpeedWalk);
-
-               RouteWorker returnEdge = _cityMapClone.GetEdge(candidatePOI.Entity.Id, _startPOI.Entity.Id);
-               TimeSpan timeReturn = TimeSpan.FromHours(returnEdge.Weight() / _averageSpeedWalk);
-
-               return (timeVisit, timeWalk, timeReturn);
-            }
-
             TOSolution newSolution = new TOSolution
             {
                SolutionGraph = _currentSolution,
@@ -172,6 +155,7 @@ namespace CityScover.Engine.Algorithms.Greedy
                                      .Add(tReturn)
             };
 
+            // TODO: Use an Action delegate to notify that a new solution has been produced.
             if (Solver.IsMonitoringEnabled)
             {
                Provider.NotifyObservers(newSolution);
@@ -187,6 +171,24 @@ namespace CityScover.Engine.Algorithms.Greedy
             // Ad esempio:
             // selezione casuale di un nuovo nodo candidato nel caso in cui i punteggi coincidano.
             _status = AlgorithmStatus.Terminating;
+         }
+
+         // Local function: CalculateTimes
+         (TimeSpan tVisit, TimeSpan tWalk, TimeSpan tReturn) CalculateTimes()
+         {
+            TimeSpan timeVisit = default;
+            if (candidatePOI.Entity.TimeVisit.HasValue)
+            {
+               timeVisit = candidatePOI.Entity.TimeVisit.Value;
+            }
+
+            RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
+            TimeSpan timeWalk = TimeSpan.FromHours(edge.Weight() / _averageSpeedWalk);
+
+            RouteWorker returnEdge = _cityMapClone.GetEdge(candidatePOI.Entity.Id, _startPOI.Entity.Id);
+            TimeSpan timeReturn = TimeSpan.FromHours(returnEdge.Weight() / _averageSpeedWalk);
+
+            return (timeVisit, timeWalk, timeReturn);
          }
       }
 

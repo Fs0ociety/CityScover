@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 18/09/2018
+// File update: 24/09/2018
 //
 
 using CityScover.Entities;
@@ -41,8 +41,8 @@ namespace CityScover.Engine.Workers
       }
       #endregion
 
-      #region Public methods
-      public InterestPointWorker DeepCopy()
+      #region Internal methods
+      internal InterestPointWorker DeepCopy()
       {
          InterestPointWorker copy = (InterestPointWorker)MemberwiseClone();
          copy.Entity = Entity.DeepCopy();
