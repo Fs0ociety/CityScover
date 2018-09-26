@@ -6,7 +6,9 @@
 // File update: 14/09/2018
 //
 
+using CityScover.Engine.Algorithms;
 using CityScover.Engine.Algorithms.Greedy;
+using CityScover.Engine.Algorithms.LocalSearch;
 using System;
 
 namespace CityScover.Engine
@@ -45,7 +47,8 @@ namespace CityScover.Engine
             case AlgorithmType.CheapestInsertion:
                break;
 
-            case AlgorithmType.TwoOpt: 
+            case AlgorithmType.TwoOpt:
+               algorithm = new LocalSearchAlgorithm(new TwoOptNeighborhood());
                break;
 
             case AlgorithmType.CitySwap:

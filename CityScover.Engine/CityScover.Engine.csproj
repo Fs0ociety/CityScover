@@ -56,7 +56,7 @@
     <Compile Include="Algorithms\LocalSearch\TwoOptNeighborhood.cs" />
     <Compile Include="Algorithms\LocalSearchAlgorithm.cs" />
     <Compile Include="Algorithms\LocalSearch\LinKernighanAlgorithm.cs" />
-    <Compile Include="Algorithms\INeighborhood.cs" />
+    <Compile Include="Algorithms\Neighborhood.cs" />
     <Compile Include="AlgorithmTracker.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />

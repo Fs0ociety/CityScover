@@ -17,15 +17,15 @@ namespace CityScover.Engine.Algorithms
       private double _previousSolutionCost;
       private double _currentSolutionCost;
       private TOSolution _bestSolution;
-      private INeighborhood _neighborhood;
+      private Neighborhood _neighborhood;
 
       #region Constructors
-      internal LocalSearchAlgorithm(INeighborhood neighborhood)
+      internal LocalSearchAlgorithm(Neighborhood neighborhood)
          : this(neighborhood, null)
       {
       }
 
-      public LocalSearchAlgorithm(INeighborhood neighborhood, AlgorithmTracker provider)
+      public LocalSearchAlgorithm(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
          _neighborhood = neighborhood;
@@ -37,7 +37,7 @@ namespace CityScover.Engine.Algorithms
       {
          if (neighborhood == null || currentSolution == null)
          {
-            throw new ArgumentNullException(nameof(INeighborhood));
+            throw new ArgumentNullException(nameof(Neighborhood));
          }
 
          if (maxImprovementsCount.HasValue && maxImprovementsCount == 0)
@@ -80,14 +80,18 @@ namespace CityScover.Engine.Algorithms
          var currentNeighborhood = _neighborhood.GetAllMoves(_bestSolution);
          foreach (var neighborhoodSolution in currentNeighborhood)
          {
-            Solver.EnqueueSolution(neighborhoodSolution);
+            // Notifica gli observers.
+            notifyingFunc.Invoke(neighborhoodSolution);
          }
 
+         // Resta in attesa che arrivino elementi dalla coda base del Solver.
          var processedSolutions = Solver.GetProcessedSolutions();
          foreach (var processedSolution in processedSolutions)
          {
             processedNeighborhood.Add(processedSolution);
          }
+
+         // Ora sono sicuro di avere tutte le soluzioni dell'intorno valorizzate.
 
          //TODO: come gestire eventuali best differenti ? (es. Best Improvement se maxImprovementsCount è null,
          // altrimenti First Improvement se maxImprovementsCount = 1, K Improvment se maxImprovementsCount = k.

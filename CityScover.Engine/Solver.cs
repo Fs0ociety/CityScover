@@ -101,23 +101,6 @@ namespace CityScover.Engine
       }
 
       /// <summary>
-      /// Returns the best solution produced from an Algorithm.
-      /// </summary>
-      /// <returns></returns>
-      private TOSolution GetBestSolution()
-      {
-         var isMinimizingProblem = Problem.IsMinimizing;
-         var costs = from sol in _processedSolutions
-                     select sol.Cost;
-
-         var targetCost = isMinimizingProblem ? costs.Min() : costs.Max();
-
-         return (from solution in _processedSolutions
-                 where solution.Cost == targetCost
-                 select solution).FirstOrDefault();
-      }
-
-      /// <summary>
       /// Used from an Algorithm that must execute an internal algorithm with monitoring disabled.
       /// </summary>
       /// <param name="algorithm">Algorithm to execute.</param>
@@ -205,11 +188,31 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
+      /// <summary>
+      /// Returns the best solution produced from an Algorithm.
+      /// </summary>
+      /// <returns></returns>
+      internal TOSolution GetBestSolution()
+      {
+         var isMinimizingProblem = Problem.IsMinimizing;
+         var costs = from sol in _processedSolutions
+                     select sol.Cost;
+
+         var targetCost = isMinimizingProblem ? costs.Min() : costs.Max();
+
+         return (from solution in _processedSolutions
+                 where solution.Cost == targetCost
+                 select solution).FirstOrDefault();
+      }
+
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType);
 
       internal IEnumerable<TOSolution> GetProcessedSolutions() => 
          _processedSolutions.GetConsumingEnumerable();
+
+      internal void StopAddingSolutions() => 
+         _processedSolutions.CompleteAdding();
 
       internal void EnqueueSolution(TOSolution solution) => 
          _solutionsQueue.Add(solution);      
@@ -240,8 +243,6 @@ namespace CityScover.Engine
          _solutionsQueue.CompleteAdding();
          await Task.WhenAll(_solverTasks.ToArray());
          _processedSolutions.CompleteAdding();
-
-         BestSolution = GetBestSolution();
 
          throw new NotImplementedException(nameof(Execute));
       }

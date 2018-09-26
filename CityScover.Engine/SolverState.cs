@@ -76,7 +76,7 @@ namespace CityScover.Engine
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
       
-      internal TOSolution BestSolution { get; private set; }
+      internal TOSolution BestSolution { get; set; }
 
       internal IEnumerable<Result> InvalidResults { get; set; }
 

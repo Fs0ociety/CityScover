@@ -121,6 +121,8 @@ namespace CityScover.Engine
       #region Virtual methods
       internal virtual void OnInitializing()
       {
+         _status = AlgorithmStatus.Initializing;
+
          if (Solver.IsMonitoringEnabled)
          {
             notifyingFunc = _provider.NotifyObservers;
@@ -129,29 +131,35 @@ namespace CityScover.Engine
          {
             notifyingFunc = Solver.EnqueueSolution;
          }
-         _status = AlgorithmStatus.Initializing;
       }
       internal virtual void OnTerminating()
       {
          _status = AlgorithmStatus.Terminating;
+         Solver.StopAddingSolutions();
+         Solver.BestSolution = Solver.GetBestSolution();
       }
 
       internal virtual void OnTerminated()
       {
+         _status = AlgorithmStatus.Terminated;
          if (Solver.IsMonitoringEnabled)
          {
             _provider.NotifyCompletion();
          }
-         _status = AlgorithmStatus.Terminated;
+
+         //Svuota la coda per un nuovo utilizzo.
+         foreach (var solution in Solver.GetProcessedSolutions())
+         {
+         }
       }
 
       internal virtual void OnError()
       {
+         _status = AlgorithmStatus.Error;
          if (Solver.IsMonitoringEnabled)
          {
             _provider.NotifyError();
          }
-         _status = AlgorithmStatus.Error;
       }
       #endregion
    }

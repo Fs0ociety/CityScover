@@ -10,9 +10,9 @@ using System.Collections.Generic;
 
 namespace CityScover.Engine.Algorithms.LocalSearch
 {
-   internal class TwoOptNeighborhood : INeighborhood
+   internal class TwoOptNeighborhood : Neighborhood
    {
-      IEnumerable<TOSolution> INeighborhood.GetAllMoves(TOSolution currentSolution)
+      internal override IEnumerable<TOSolution> GetAllMoves(TOSolution currentSolution)
       {
          throw new System.NotImplementedException();
       }

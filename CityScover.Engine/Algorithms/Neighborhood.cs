@@ -10,8 +10,8 @@ using System.Collections.Generic;
 
 namespace CityScover.Engine.Algorithms
 {
-   internal interface INeighborhood
+   internal abstract class Neighborhood
    {
-      IEnumerable<TOSolution> GetAllMoves(TOSolution currentSolution);   
+      internal abstract IEnumerable<TOSolution> GetAllMoves(TOSolution currentSolution);   
    }   
 }
