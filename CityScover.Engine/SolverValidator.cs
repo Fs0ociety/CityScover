@@ -3,15 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 26/09/2018
 //
 
 using CityScover.Commons;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CityScover.Engine
 {
@@ -20,9 +16,6 @@ namespace CityScover.Engine
    /// </summary>
    internal sealed class SolverValidator : Singleton<SolverValidator>
    {
-      private BlockingCollection<TOSolution> _evaluatingQueue;
-      private ICollection<Task> _processingTasks;
-
       #region Constructors
       private SolverValidator()
       {
@@ -32,16 +25,14 @@ namespace CityScover.Engine
       #region Internal properties
       internal Solver Solver => Solver.Instance;
 
-      internal BlockingCollection<TOSolution> EvaluatingQueue => _evaluatingQueue;
-
       internal Configuration WorkingConfiguration
       {
          get => Solver.Instance.WorkingConfiguration;
       }
       #endregion
 
-      #region Private methods
-      private TOSolution Validate(TOSolution solution)
+      #region Internal methods
+      internal TOSolution Validate(TOSolution solution)
       {
          var problemConstraints = Solver.Problem.Constraints;
          var relaxedConstraintsId = WorkingConfiguration.RelaxedConstraintsId;
@@ -60,40 +51,6 @@ namespace CityScover.Engine
          }
 
          return solution;
-      }
-   
-      private async Task TakeSolutionsToValidate()
-      {
-         var validatingQueue = Solver.ValidatingQueue;
-         foreach (var validatingSolution in validatingQueue.GetConsumingEnumerable())
-         {
-            Task validatingTask = Task.Run(delegate
-            {
-               TOSolution validatedSolution = Validate(validatingSolution);
-               _evaluatingQueue.Add(validatedSolution);
-            });
-
-            _processingTasks.Add(validatingTask);
-         }
-
-         await Task.WhenAll(_processingTasks.ToArray());
-         _evaluatingQueue.CompleteAdding();
-      }
-      #endregion
-
-      #region Internal methods
-      internal async Task Run()
-      {
-         await TakeSolutionsToValidate().
-            ConfigureAwait(continueOnCapturedContext: false);
-      }
-      #endregion
-
-      #region Overrides
-      protected override void InitializeInstance()
-      {
-         _evaluatingQueue = new BlockingCollection<TOSolution>();
-         _processingTasks = new Collection<Task>();
       }
       #endregion
    }

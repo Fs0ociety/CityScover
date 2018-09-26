@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/09/2018
+// File update: 26/09/2018
 //
 
 using System;
@@ -70,7 +70,7 @@ namespace CityScover.Engine
       public void OnNext(TOSolution solution)
       {
          Debug.WriteLine("Solution received");
-         Solver.SolutionsQueue.Add(solution);
+         Solver.EnqueueSolution(solution);
       }
    
       public void OnError(Exception error)

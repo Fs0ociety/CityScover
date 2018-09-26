@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// File update: 26/09/2018
 //
 
 using System;
@@ -127,7 +127,7 @@ namespace CityScover.Engine
          }
          else
          {
-            notifyingFunc = Solver.ValidatingQueue.Add;
+            notifyingFunc = Solver.EnqueueSolution;
          }
          _status = AlgorithmStatus.Initializing;
       }

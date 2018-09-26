@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// File update: 26/09/2018
 //
 
 using CityScover.Commons;
@@ -11,6 +11,7 @@ using CityScover.Data;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -85,21 +86,17 @@ namespace CityScover.Engine
       /// </summary>
       private void TakeNewSolutions()
       {
-         foreach (var solution in SolutionsQueue.GetConsumingEnumerable())
+         foreach (var solution in _solutionsQueue.GetConsumingEnumerable())
          {
-            ValidatingQueue.Add(solution);
+            Task processingSolutionTask = Task.Run(() => ProcessSolution(solution));
+            _solverTasks.Add(processingSolutionTask);
          }
-         ValidatingQueue.CompleteAdding();
-      }
 
-      /// <summary>
-      /// Gets a validated and evaluated Solution from _evaluatedQueue and processes it.
-      /// </summary>
-      private void TakeEvaluatedSolutions()
-      {
-         foreach (var solution in EvaluatedQueue.GetConsumingEnumerable())
+         void ProcessSolution(TOSolution solution)
          {
-            _solutions.Add(solution);
+            var validatedSolution = SolverValidator.Validate(solution);
+            var evaluatedSolution = SolverEvaluator.Evaluate(validatedSolution);
+            _processedSolutions.Add(evaluatedSolution);
          }
       }
 
@@ -110,12 +107,12 @@ namespace CityScover.Engine
       private TOSolution GetBestSolution()
       {
          var isMinimizingProblem = Problem.IsMinimizing;
-         var costs = from sol in _solutions
+         var costs = from sol in _processedSolutions
                      select sol.Cost;
 
          var targetCost = isMinimizingProblem ? costs.Min() : costs.Max();
 
-         return (from solution in _solutions
+         return (from solution in _processedSolutions
                  where solution.Cost == targetCost
                  select solution).FirstOrDefault();
       }
@@ -210,6 +207,12 @@ namespace CityScover.Engine
       #region Internal methods
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType);
+
+      internal IEnumerable<TOSolution> GetProcessedSolutions() => 
+         _processedSolutions.GetConsumingEnumerable();
+
+      internal void EnqueueSolution(TOSolution solution) => 
+         _solutionsQueue.Add(solution);      
       #endregion
 
       #region Public methods
@@ -221,16 +224,8 @@ namespace CityScover.Engine
       {
          InitSolver(configuration);
          InitializeTour();
-         //RunWorkers();
-
-         void RunWorkers()
-         {
-            _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
-            _solverTasks.Add(Task.Run(() => TakeEvaluatedSolutions()));
-            _solverTasks.Add(Task.Run(() => SolverValidator.Instance.Run()));
-            _solverTasks.Add(Task.Run(() => SolverEvaluator.Instance.Run()));
-         }
-      
+         _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
+               
          if (IsMonitoringEnabled)
          {
             ExecutionInternalFunc = ExecuteWithMonitoring;
@@ -242,8 +237,10 @@ namespace CityScover.Engine
             await ExecuteConfiguration(ExecuteWithoutMonitoring);
          }
 
-         SolutionsQueue.CompleteAdding();
+         _solutionsQueue.CompleteAdding();
          await Task.WhenAll(_solverTasks.ToArray());
+         _processedSolutions.CompleteAdding();
+
          BestSolution = GetBestSolution();
 
          throw new NotImplementedException(nameof(Execute));

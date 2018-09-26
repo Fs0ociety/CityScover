@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// File update: 26/09/2018
 //
 
 using CityScover.Commons;
@@ -25,15 +25,18 @@ namespace CityScover.Engine
    public sealed partial class Solver : Singleton<Solver>
    {
       private BlockingCollection<TOSolution> _solutionsQueue;
-      private BlockingCollection<TOSolution> _validatingQueue;
-      private BlockingCollection<TOSolution> _evaluatedQueue;
+      private BlockingCollection<TOSolution> _processedSolutions;
       private ICollection<Task> _solverTasks;
-      private ICollection<TOSolution> _solutions;
       
       #region Constructors
       private Solver()
       {
       }
+      #endregion
+
+      #region Private properties
+      private SolverValidator SolverValidator => SolverValidator.Instance;
+      private SolverEvaluator SolverEvaluator => SolverEvaluator.Instance; 
       #endregion
 
       #region Internal properties
@@ -72,32 +75,20 @@ namespace CityScover.Engine
       /// This object is created by Solver.
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
-
-      internal BlockingCollection<TOSolution> SolutionsQueue => _solutionsQueue;
-      internal BlockingCollection<TOSolution> ValidatingQueue => _validatingQueue;
-      internal BlockingCollection<TOSolution> EvaluatedQueue => _evaluatedQueue;
-
-      /// <summary>
-      /// All solutions derived from the execution of an Algorithm.
-      /// </summary>
-      internal IEnumerable<TOSolution> Solutions { get; private set; }
-
+      
       internal TOSolution BestSolution { get; private set; }
 
       internal IEnumerable<Result> InvalidResults { get; set; }
 
-      internal IEnumerable<Result> ValidResults { get; set; }
-
+      internal IEnumerable<Result> ValidResults { get; set; }      
       #endregion
 
       #region Overrides
       protected override void InitializeInstance()
       {
-         _solutionsQueue = new BlockingCollection<TOSolution>();
-         _validatingQueue = new BlockingCollection<TOSolution>();
-         _evaluatedQueue = new BlockingCollection<TOSolution>();
+         _solutionsQueue = new BlockingCollection<TOSolution>();         
          _solverTasks = new Collection<Task>();
-         _solutions = new Collection<TOSolution>();
+         _processedSolutions = new BlockingCollection<TOSolution>();
          InvalidResults = new Collection<Result>();
          ValidResults = new Collection<Result>();
       }
