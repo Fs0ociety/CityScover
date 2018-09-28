@@ -71,8 +71,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="cityscover-points-30.xml" />
-    <Content Include="cityscover-points-45.xml" />
+    <EmbeddedResource Include="cityscover-points-30.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
