@@ -683,9 +683,9 @@
     <!-- Nr. 50 -->
     <!--
   -->
-    <!-- Trattoria L'Ortica -->
+    <!-- Hostaria Savonarola -->
     <!--
-  <PointOfInterest id="50" name="Trattoria L'Ortica">
+  <PointOfInterest id="50" name="Hostaria Savonarola">
     <Category>2</Category>
     <ThematicScore category="2" value="100" />
     <OpeningTimes>
