@@ -107,8 +107,7 @@ namespace CityScover.Engine
             }
          }
                   
-         OnTerminating();
-         
+         OnTerminating();         
          OnTerminated();
       }
       #endregion
@@ -135,8 +134,6 @@ namespace CityScover.Engine
       internal virtual void OnTerminating()
       {
          _status = AlgorithmStatus.Terminating;
-         Solver.StopAddingSolutions();
-         Solver.BestSolution = Solver.GetBestSolution();
       }
 
       internal virtual void OnTerminated()
@@ -145,11 +142,6 @@ namespace CityScover.Engine
          if (Solver.IsMonitoringEnabled)
          {
             _provider.NotifyCompletion();
-         }
-
-         //Svuota la coda per un nuovo utilizzo.
-         foreach (var solution in Solver.GetProcessedSolutions())
-         {
          }
       }
 

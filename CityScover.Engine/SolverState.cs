@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/09/2018
+// File update: 29/09/2018
 //
 
 using CityScover.Commons;
@@ -25,8 +25,8 @@ namespace CityScover.Engine
    public sealed partial class Solver : Singleton<Solver>
    {
       private BlockingCollection<TOSolution> _solutionsQueue;
-      private BlockingCollection<TOSolution> _processedSolutions;
       private ICollection<Task> _solverTasks;
+      private ICollection<Task> _algorithmTasks;
       
       #region Constructors
       private Solver()
@@ -78,6 +78,8 @@ namespace CityScover.Engine
       
       internal TOSolution BestSolution { get; set; }
 
+      internal IEnumerable<Task> AlgorithmTasks => _algorithmTasks;
+
       internal IEnumerable<Result> InvalidResults { get; set; }
 
       internal IEnumerable<Result> ValidResults { get; set; }      
@@ -88,7 +90,7 @@ namespace CityScover.Engine
       {
          _solutionsQueue = new BlockingCollection<TOSolution>();         
          _solverTasks = new Collection<Task>();
-         _processedSolutions = new BlockingCollection<TOSolution>();
+         _algorithmTasks = new Collection<Task>();
          InvalidResults = new Collection<Result>();
          ValidResults = new Collection<Result>();
       }

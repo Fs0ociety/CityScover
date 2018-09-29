@@ -3,15 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/09/2018
+// File update: 29/09/2018
 //
 
-using CityScover.Commons;
 using CityScover.Data;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +21,7 @@ namespace CityScover.Engine
    /// Contains the Execute method to run the configuration passed as argument.
    /// The Solver uses ExecutionTracer and SolverHelpers classes to do overall work.
    /// </summary>
-   public sealed partial class Solver : Singleton<Solver>
+   public sealed partial class Solver
    {
       #region Private methods
       /// <summary>
@@ -89,14 +87,13 @@ namespace CityScover.Engine
          foreach (var solution in _solutionsQueue.GetConsumingEnumerable())
          {
             Task processingSolutionTask = Task.Run(() => ProcessSolution(solution));
-            _solverTasks.Add(processingSolutionTask);
+            _algorithmTasks.Add(processingSolutionTask);
          }
 
          void ProcessSolution(TOSolution solution)
          {
-            var validatedSolution = SolverValidator.Validate(solution);
-            var evaluatedSolution = SolverEvaluator.Evaluate(validatedSolution);
-            _processedSolutions.Add(evaluatedSolution);
+            SolverValidator.Validate(solution);
+            SolverEvaluator.Evaluate(solution);
          }
       }
 
@@ -145,7 +142,7 @@ namespace CityScover.Engine
             throw new NullReferenceException(nameof(algorithm));
          }
 
-         algorithm.Provider = new AlgorithmTracker() ?? throw new NullReferenceException();
+         algorithm.Provider = new AlgorithmTracker();
          ExecutionReporter reporter = new ExecutionReporter();
          reporter.Subscribe(algorithm.Provider);
 
@@ -188,31 +185,8 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
-      /// <summary>
-      /// Returns the best solution produced from an Algorithm.
-      /// </summary>
-      /// <returns></returns>
-      internal TOSolution GetBestSolution()
-      {
-         var isMinimizingProblem = Problem.IsMinimizing;
-         var costs = from sol in _processedSolutions
-                     select sol.Cost;
-
-         var targetCost = isMinimizingProblem ? costs.Min() : costs.Max();
-
-         return (from solution in _processedSolutions
-                 where solution.Cost == targetCost
-                 select solution).FirstOrDefault();
-      }
-
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType);
-
-      internal IEnumerable<TOSolution> GetProcessedSolutions() => 
-         _processedSolutions.GetConsumingEnumerable();
-
-      internal void StopAddingSolutions() => 
-         _processedSolutions.CompleteAdding();
 
       internal void EnqueueSolution(TOSolution solution) => 
          _solutionsQueue.Add(solution);      
@@ -228,7 +202,7 @@ namespace CityScover.Engine
          InitSolver(configuration);
          InitializeTour();
          _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
-               
+         
          if (IsMonitoringEnabled)
          {
             ExecutionInternalFunc = ExecuteWithMonitoring;
@@ -241,8 +215,8 @@ namespace CityScover.Engine
          }
 
          _solutionsQueue.CompleteAdding();
-         await Task.WhenAll(_solverTasks.ToArray());
-         _processedSolutions.CompleteAdding();
+         await Task.WhenAll(_solverTasks);
+         _solverTasks.Clear();
 
          throw new NotImplementedException(nameof(Execute));
       }

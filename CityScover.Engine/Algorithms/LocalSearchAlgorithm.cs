@@ -3,19 +3,21 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/09/2018
+// File update: 29/09/2018
 //
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
 {
    internal class LocalSearchAlgorithm : Algorithm
    {
-      private double _previousSolutionCost;
-      private double _currentSolutionCost;
+      private double? _previousSolutionCost;
+      private double? _currentSolutionCost;
       private TOSolution _bestSolution;
       private Neighborhood _neighborhood;
 
@@ -71,6 +73,7 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnInitializing();
          _bestSolution = Solver.BestSolution;
+         _currentSolutionCost = _bestSolution.Cost;
       }
 
       internal override void PerformStep()
@@ -78,35 +81,56 @@ namespace CityScover.Engine.Algorithms
          ICollection<TOSolution> processedNeighborhood = new Collection<TOSolution>();
 
          var currentNeighborhood = _neighborhood.GetAllMoves(_bestSolution);
+
+         // TODO: Valutare la chiamata diretta ai componenti SolverValidator e SolverEvaluator sull'intorno
+         // e capire come gestire il discorso del monitoraggio dell'ExecutionReporter.
+
          foreach (var neighborhoodSolution in currentNeighborhood)
          {
             // Notifica gli observers.
             notifyingFunc.Invoke(neighborhoodSolution);
          }
 
-         // Resta in attesa che arrivino elementi dalla coda base del Solver.
-         var processedSolutions = Solver.GetProcessedSolutions();
-         foreach (var processedSolution in processedSolutions)
-         {
-            processedNeighborhood.Add(processedSolution);
-         }
+         Task.WaitAll(Solver.AlgorithmTasks.ToArray());
 
          // Ora sono sicuro di avere tutte le soluzioni dell'intorno valorizzate.
 
-         //TODO: come gestire eventuali best differenti ? (es. Best Improvement se maxImprovementsCount è null,
+         // TODO: come gestire eventuali best differenti ? (es. Best Improvement se maxImprovementsCount è null,
          // altrimenti First Improvement se maxImprovementsCount = 1, K Improvment se maxImprovementsCount = k.
          // Per come è fatta adesso, sarà sempre Best Improvement.
+
+         // Se siamo ispirati (come no) lo faremo.
          var solution = GetBest(processedNeighborhood, _bestSolution, null);
                   
-         _previousSolutionCost = _bestSolution.Cost;
-         if (solution.Cost < _bestSolution.Cost)
+         _previousSolutionCost = _currentSolutionCost;
+         var isMinimizingProblem = Solver.Problem.IsMinimizing;
+
+         // TODO: invocare metodo su Commons per il confronto dei double.
+         if (isMinimizingProblem)
          {
-            _bestSolution = solution;
+            if (solution.Cost < _bestSolution.Cost)
+            {
+               _bestSolution = solution;
+               _currentSolutionCost = solution.Cost;
+            }
+         }
+         else
+         {
+            if (solution.Cost > _bestSolution.Cost)
+            {
+               _bestSolution = solution;
+               _currentSolutionCost = solution.Cost;
+            }
          }
       }
 
       internal override bool StopConditions()
       {
+         if (!_previousSolutionCost.HasValue)
+         {
+            return false;
+         }
+
          return _previousSolutionCost != _currentSolutionCost ||
             _status == AlgorithmStatus.Terminating;
       }

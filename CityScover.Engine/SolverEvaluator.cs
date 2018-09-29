@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/09/2018
+// File update: 29/09/2018
 //
 
 using CityScover.Commons;
@@ -34,7 +34,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
-      internal TOSolution Evaluate(TOSolution solution)
+      internal void Evaluate(TOSolution solution)
       {
          var objectiveFunc = Solver.Problem.ObjectiveFunc;
          solution.Cost = objectiveFunc.Invoke(solution);
@@ -49,8 +49,6 @@ namespace CityScover.Engine
          {
             solution.Cost = penaltyFunc.Invoke(solution);
          }
-         
-         return solution;
       }
       #endregion
    }

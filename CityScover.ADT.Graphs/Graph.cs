@@ -280,7 +280,15 @@ namespace CityScover.ADT.Graphs
       /// <returns></returns>
       public IEnumerable<TNodeKey> GetAdjacentNodes(TNodeKey nodeKey)
       {
-         return GetSuccessorNodes(nodeKey);
+         if (!_nodes.ContainsKey(nodeKey))
+         {
+            throw new InvalidOperationException();
+         }
+
+         return _nodes[nodeKey]
+            .Edges
+            .Where((edge) => !edge.DestNode.Key.Equals(nodeKey))
+            .Select(x => x.DestNode.Key);
       }
 
       /// <summary>

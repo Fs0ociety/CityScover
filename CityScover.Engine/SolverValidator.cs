@@ -3,10 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/09/2018
+// File update: 29/09/2018
 //
 
 using CityScover.Commons;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.Engine
@@ -32,7 +35,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
-      internal TOSolution Validate(TOSolution solution)
+      internal void Validate(TOSolution solution)
       {
          var problemConstraints = Solver.Problem.Constraints;
          var relaxedConstraintsId = WorkingConfiguration.RelaxedConstraintsId;
@@ -48,9 +51,7 @@ namespace CityScover.Engine
          {
             bool isValid = constraint.Value.Invoke(solution);
             solution.ProblemConstraints.Add(constraint.Key, isValid);
-         }
-
-         return solution;
+         }         
       }
       #endregion
    }

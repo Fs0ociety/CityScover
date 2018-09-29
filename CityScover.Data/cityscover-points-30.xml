@@ -2,9 +2,9 @@
 <root>
   <!-- Point of interests -->
   <PointOfInterests>
-    
+
     <!-- Punto di partenza -->
-    
+
     <!-- Nr. 1 -->
     <!-- Hotel Carlton -->
     <PointOfInterest id="1" name="Hotel Carlton">
@@ -12,16 +12,17 @@
       <Category id=""/>
       <ThematicScore category="" value=""/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>
+        <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unit="" duration=""/>
     </PointOfInterest>
 
-    
+
     <!---->
     <!-- Punti d'interesse Storico-Culturali -->
     <!---->
-    
+
     <!-- Nr. 2 -->
     <!-- Castello Estense -->
     <PointOfInterest id="2" name="Castello Estense">
@@ -128,7 +129,8 @@
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
+        <OpeningTime from="" to=""/>
+        <!-- Aperto 24 ore su 24 -->
       </OpeningTimes>
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
@@ -145,7 +147,7 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    
+
     <!---->
     <!-- Punti d'interesse Gastronomici -->
     <!---->
@@ -177,7 +179,7 @@
     </PointOfInterest>
 
     <!-- Nr. 33 -->
-    <!-- Fuori Porta -->    
+    <!-- Fuori Porta -->
     <PointOfInterest id="33" name="Fuori Porta">
       <Coordinates latitude="44,832623" longitude="11,636595"/>
       <Category id="2"/>
@@ -224,7 +226,7 @@
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
-    
+
     <!-- Nr. 49 -->
     <!-- Rifugio Degli Artisti -->
     <PointOfInterest id="49" name="Rifugio Degli Artisti">
@@ -275,19 +277,6 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 57 -->
-    <!-- Sapori di Via Mayr -->
-    <PointOfInterest id="57" name="Sapori di Via Mayr">
-      <Coordinates latitude="44,831622" longitude="11,618102"/>
-      <Category id="2"/>
-      <ThematicScore category="2" value="85" />
-      <OpeningTimes>
-        <OpeningTime from="12:15" to="15:00"/>
-        <OpeningTime from="18:30" to="23:30"/>
-      </OpeningTimes>
-      <TimeVisit unit="min" duration="60"/>
-    </PointOfInterest>
-    
 
     <!---->
     <!-- Punti d'interesse Sportivi -->
@@ -366,7 +355,7 @@
       </OpeningTimes>
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
-    
+
     <!-- Nr. 85 -->
     <!-- Centro Sportivo Polivalente Parco 1° maggio -->
     <PointOfInterest id="85" name="Centro Sportivo Polivalente Parco 1° maggio">
@@ -378,7 +367,7 @@
       </OpeningTimes>
       <TimeVisit unit="min" duration="120"/>
     </PointOfInterest>
-    
+
     <!-- Nr. 86 -->
     <!-- Synergy Lab -->
     <PointOfInterest id="86" name="Synergy Lab">
