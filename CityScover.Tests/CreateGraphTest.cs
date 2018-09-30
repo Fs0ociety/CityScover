@@ -146,5 +146,28 @@ namespace CityScover.Tests
          int P1Grade = graph.GetNodeGrade(1);
          Assert.IsTrue(P1Grade == 2);
       }
+
+      [TestMethod]
+      public void CreateGraph4()
+      {
+         CityMapGraph graph = new CityMapGraph();
+         graph.AddNode(1, new InterestPoint("P1"));
+         graph.AddNode(2, new InterestPoint("P2"));
+         graph.AddNode(3, new InterestPoint("P3"));
+         graph.AddNode(4, new InterestPoint("P4"));
+
+         graph.AddEdge(1, 2);
+         graph.AddEdge(2, 3);
+         graph.AddEdge(3, 4);
+
+         var areAdjacent = graph.AreAdjacentEdges(1, 2, 2, 3);
+         Assert.IsTrue(areAdjacent);
+
+         var areNotAdjacent = graph.AreAdjacentEdges(1, 2, 3, 4);
+         Assert.IsFalse(areNotAdjacent);
+
+         var areNotAdjacent2 = graph.AreAdjacentEdges(1, 2, 3, 2);
+         Assert.IsFalse(areNotAdjacent2);
+      }
    }
 }

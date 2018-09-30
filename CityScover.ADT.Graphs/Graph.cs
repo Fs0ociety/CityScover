@@ -304,6 +304,43 @@ namespace CityScover.ADT.Graphs
          }
          return _nodes[nodeKey].Grade;
       }
+
+      public bool AreAdjacentEdges(TNodeKey startNodeKey1, TNodeKey endNodeKey1, TNodeKey startNodeKey2, TNodeKey endNodeKey2)
+      {
+         if (!_nodes.ContainsKey(startNodeKey1) || 
+             !_nodes.ContainsKey(endNodeKey1) || 
+             !_nodes.ContainsKey(startNodeKey2) || 
+             !_nodes.ContainsKey(endNodeKey2) ||
+             startNodeKey1.Equals(endNodeKey1) ||
+             startNodeKey2.Equals(endNodeKey2) ||
+             (startNodeKey1.Equals(startNodeKey2) && endNodeKey1.Equals(endNodeKey2)))
+         {
+            throw new InvalidOperationException();
+         }
+
+         var firstNodeEdges = _nodes[startNodeKey1].Edges;
+         var secondNodeEdges = _nodes[startNodeKey2].Edges;
+         //var result = from edge in firstNodeEdges
+         //             where (from edge2 in secondNodeEdges
+         //                    where edge2.SourceNode.Key.Equals(edge.DestNode.Key)
+         //                    && edge2.DestNode.Key.Equals(endNodeKey2)
+         //                    select edge2).Any()
+         //                   && edge.SourceNode.Key.Equals(startNodeKey1)
+         //             select edge;
+
+         var result2 = firstNodeEdges.Where(edge => secondNodeEdges.Any(
+                         edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key)
+                         && edge2.DestNode.Key.Equals(endNodeKey2)
+                       ) && edge.SourceNode.Key.Equals(startNodeKey1));
+
+         //var result3 = _nodes.SelectMany(x => x.Value.Edges.Where(
+         //               edge => secondNodeEdges.Any(
+         //                        edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key) 
+         //                        && edge2.DestNode.Key.Equals(endNodeKey2)
+         //                        ) && edge.SourceNode.Key.Equals(startNodeKey1)));
+
+         return result2.Count() == 0 ? false : true;
+      }
       #endregion      
    }
 }
