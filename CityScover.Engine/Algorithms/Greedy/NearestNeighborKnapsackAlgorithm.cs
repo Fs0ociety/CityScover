@@ -34,13 +34,18 @@ namespace CityScover.Engine.Algorithms.Greedy
          // First local function: AddWeightedNode
          void AddWeightedNode(int adjPOIId)
          {
+            var node = _cityMapClone[adjPOIId];
+            if (node.IsVisited)
+            {
+               return;
+            }
+
             RouteWorker edge = _cityMapClone.GetEdge(interestPoint.Entity.Id, adjPOIId);
             if (edge == null)
             {
                return;
             }
-
-            var node = _cityMapClone[adjPOIId];
+            
             var value = node.Entity.Score.Value / edge.Weight.Invoke();
             tempNodes.Add((adjPOIId, value));
          }
@@ -48,8 +53,14 @@ namespace CityScover.Engine.Algorithms.Greedy
          var tempNodesSorted = from node in tempNodes
                                orderby node.Item2 descending
                                select node.Item1;
-         
-         return _cityMapClone[tempNodesSorted.FirstOrDefault()];
+
+         InterestPointWorker candidateNode = default;
+         int candidateNodeId = tempNodesSorted.FirstOrDefault();
+         if (candidateNodeId != 0)
+         {
+            candidateNode = _cityMapClone[candidateNodeId];
+         }
+         return candidateNode;
       }
    }
 }

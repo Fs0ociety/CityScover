@@ -53,6 +53,9 @@ namespace CityScover.Engine.Algorithms.Greedy
          var adjPOIIds = _cityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
          adjPOIIds.ToList().ForEach(adjPOIId => SetBestCandidate(adjPOIId));
 
+         // Caso particolare (gestito solo per irrobustire il codice): se ho 2 nodi del grafo, e
+         // il secondo è già stato visitato, io ritorno null come candidateNode.
+
          // First local function: SetBestCandidate
          void SetBestCandidate(int nodeKey)
          {
@@ -123,6 +126,13 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          var firstPOIId = _startPOI.Entity.Id;
          var neighborPOI = GetBestNeighbor(_startPOI);
+         // Caso particolare descritto nella GetBestNeighbor. Se qua il vicino è null,
+         // io ritorno la soluzione così com'è.
+         if (neighborPOI == null)
+         {
+            return;
+         }
+
          neighborPOI.IsVisited = true;
          var neighborPOIId = neighborPOI.Entity.Id;
          _currentSolution.SolutionGraph.AddNode(neighborPOIId, neighborPOI);
@@ -171,6 +181,10 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void PerformStep()
       {
          var candidatePOI = GetBestNeighbor(_newStartPOI);
+         if (candidatePOI == null)
+         {
+            return;
+         }
 
          candidatePOI.IsVisited = true;
          _currentSolution.SolutionGraph.AddNode(candidatePOI.Entity.Id, candidatePOI);
