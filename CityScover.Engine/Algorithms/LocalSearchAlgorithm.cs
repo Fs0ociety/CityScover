@@ -6,6 +6,7 @@
 // File update: 29/09/2018
 //
 
+using CityScover.Commons;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -131,8 +132,8 @@ namespace CityScover.Engine.Algorithms
             return false;
          }
 
-         return _previousSolutionCost != _currentSolutionCost ||
-            _status == AlgorithmStatus.Terminating;
+         bool areCostsEquals = DoubleExtensions.Equals4DigitPrecision(_previousSolutionCost.Value, _currentSolutionCost.Value);
+         return !areCostsEquals || _status == AlgorithmStatus.Terminating;
       }
       #endregion
    }

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// File update: 30/09/2018
 //
 
 using System;
@@ -16,12 +16,14 @@ namespace CityScover.Engine
       private CityMapGraph _currentSolution;
       private ushort _currentStep;
       private DateTime _timeSpent;
+      private ResultType _resultType;
 
-      public Result(CityMapGraph currentSolution, ushort currentStep, DateTime timeSpent)
+      public Result(CityMapGraph currentSolution, ushort currentStep, DateTime timeSpent, ResultType resultType = ResultType.None)
       {
          _currentSolution = currentSolution;
          _currentStep = currentStep;
          _timeSpent = timeSpent;
+         _resultType = resultType;
       }
    }
 }

@@ -67,6 +67,7 @@
     <Compile Include="ProblemFactory.cs" />
     <Compile Include="ProblemType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultType.cs" />
     <Compile Include="Solver.cs" />
     <Compile Include="SolverValidator.cs" />
     <Compile Include="SolverEvaluator.cs" />

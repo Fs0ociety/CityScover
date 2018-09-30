@@ -98,7 +98,9 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnError();
          _currentStep = default;
-         Result resultError = new Result(_currentSolution.SolutionGraph, _currentStep, _timeSpent);
+         Result resultError = new Result(
+            _currentSolution.SolutionGraph, _currentStep, 
+            _timeSpent, resultType: ResultType.Greedy);
          // Solver.InvalidResults.Add(resultError)
          // TODO: Other activities?
       }
@@ -154,7 +156,9 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnTerminated();
          _cityMapClone = null;
-         Result validResult = new Result(_currentSolution.SolutionGraph, _currentStep, _timeSpent);
+         Result validResult = new Result(
+            _currentSolution.SolutionGraph, _currentStep, 
+            _timeSpent, resultType: ResultType.Greedy);
          // Solver.ValidResults.Add(validResult)
          Task.WaitAll(Solver.AlgorithmTasks.ToArray());
       }

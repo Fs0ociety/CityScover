@@ -7,7 +7,6 @@
 //
 
 using CityScover.Engine.Workers;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
