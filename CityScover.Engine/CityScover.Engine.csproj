@@ -52,6 +52,7 @@
     <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="Algorithms\Greedy\NearestNeighborAlgorithm.cs" />
+    <Compile Include="Algorithms\Greedy\NearestNeighborKnapsackAlgorithm.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Algorithms\LocalSearch\TwoOptNeighborhood.cs" />
     <Compile Include="Algorithms\LocalSearchAlgorithm.cs" />

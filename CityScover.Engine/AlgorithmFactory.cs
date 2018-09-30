@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 14/09/2018
+// File update: 30/09/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -39,6 +39,10 @@ namespace CityScover.Engine
 
             case AlgorithmType.NearestNeighbor:
                algorithm = new NearestNeighborAlgorithm();
+               break;
+
+            case AlgorithmType.NearestNeighborKnapsack:
+               algorithm = new NearestNeighborKnapsackAlgorithm();
                break;
 
             case AlgorithmType.NearestInsertion:

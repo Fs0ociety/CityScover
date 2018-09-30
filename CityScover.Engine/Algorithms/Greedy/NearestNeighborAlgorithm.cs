@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 29/09/2018
+// File update: 30/09/2018
 //
 
 using CityScover.Engine.Workers;
@@ -21,7 +21,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       private double _averageSpeedWalk;
 
       private TOSolution _currentSolution;
-      private CityMapGraph _cityMapClone;
+      protected CityMapGraph _cityMapClone;
       private InterestPointWorker _startPOI;
       private InterestPointWorker _newStartPOI;
       private DateTime _timeSpent;
@@ -40,11 +40,12 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       #region Private methods
       /// <summary>
-      /// Returns the best candidate node near to point of interest passed as argument.
+      /// This implementation is the classic GetClosestNeighborByScore.
+      /// It returns the best candidate node near to point of interest passed as argument.
       /// </summary>
       /// <param name="interestPoint">Point of interest</param>
       /// <returns></returns>
-      private InterestPointWorker GetClosestNeighborByScore(InterestPointWorker interestPoint)
+      protected virtual InterestPointWorker GetBestNeighbor(InterestPointWorker interestPoint)
       {
          int bestScore = default;
          InterestPointWorker candidateNode = default;
@@ -121,7 +122,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _currentSolution.SolutionGraph.AddNode(_startPOI.Entity.Id, _startPOI);
 
          var firstPOIId = _startPOI.Entity.Id;
-         var neighborPOI = GetClosestNeighborByScore(_startPOI);
+         var neighborPOI = GetBestNeighbor(_startPOI);
          neighborPOI.IsVisited = true;
          var neighborPOIId = neighborPOI.Entity.Id;
          _currentSolution.SolutionGraph.AddNode(neighborPOIId, neighborPOI);
@@ -169,7 +170,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override void PerformStep()
       {
-         var candidatePOI = GetClosestNeighborByScore(_newStartPOI);
+         var candidatePOI = GetBestNeighbor(_newStartPOI);
 
          candidatePOI.IsVisited = true;
          _currentSolution.SolutionGraph.AddNode(candidatePOI.Entity.Id, candidatePOI);
