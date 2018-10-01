@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 16/09/2018
+// File update: 01/10/2018
 //
 
 using System;
@@ -28,9 +28,9 @@ namespace CityScover.Engine
       /// <summary>
       /// Abstract automatic properties doesn't create a private backing field.
       /// </summary>
-      internal abstract Func<TOSolution, double> ObjectiveFunc { get; set; }
+      internal abstract Func<TOSolution, int> ObjectiveFunc { get; set; }
 
-      internal abstract Func<TOSolution, double> PenaltyFunc { get; set; }
+      internal abstract Func<TOSolution, int> PenaltyFunc { get; set; }
       #endregion
 
       #region Internal properties

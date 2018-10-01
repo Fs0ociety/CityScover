@@ -80,9 +80,9 @@ namespace CityScover.Engine
 
       internal IEnumerable<Task> AlgorithmTasks => _algorithmTasks;
 
-      internal IEnumerable<Result> InvalidResults { get; set; }
+      internal ICollection<Result> InvalidResults { get; set; }
 
-      internal IEnumerable<Result> ValidResults { get; set; }      
+      internal ICollection<Result> ValidResults { get; set; }      
       #endregion
 
       #region Overrides

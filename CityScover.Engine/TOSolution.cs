@@ -3,11 +3,12 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 19/09/2018
+// File update: 01/10/2018
 //
 
 using CityScover.Engine.Workers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace CityScover.Engine
@@ -33,12 +34,12 @@ namespace CityScover.Engine
       /// <summary>
       /// Property used from SolverEvaluator to set a Cost for the Solution.
       /// </summary>
-      internal double Cost { get; set; }      
+      internal int Cost { get; set; }      
 
       /// <summary>
       /// Property used from SolverEvaluator to set a Penalty for the Solution.
       /// </summary>
-      internal double Penalty { get; set; }
+      internal int Penalty { get; set; }
       
       /// <summary>
       /// Property used from SolverValidator to check the TMax constraint.

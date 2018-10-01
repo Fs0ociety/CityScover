@@ -2,7 +2,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 29/09/2018
+// File update: 01/10/2018
 //
 
 using CityScover.Entities;
@@ -34,7 +34,7 @@ namespace CityScover.Engine.Configs
             TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsCount = 15,
             StartPOIId = 1,
-            WalkingSpeed = 3.0 / 3.6,  // m/s.
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
             RelaxedConstraintsId = {},
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),

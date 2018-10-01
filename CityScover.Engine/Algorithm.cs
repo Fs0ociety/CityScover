@@ -3,10 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/09/2018
+// File update: 01/10/2018
 //
 
 using System;
+using System.Threading.Tasks;
 
 namespace CityScover.Engine
 {
@@ -88,7 +89,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
-      internal void Start()
+      internal async Task Start()
       {         
          OnInitializing();
 
@@ -98,7 +99,7 @@ namespace CityScover.Engine
          {
             try
             {
-               PerformStep();
+               await Task.Run(() => PerformStep());
                _currentStep++;
             }
             catch
@@ -113,7 +114,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal abstract methods
-      internal abstract void PerformStep();
+      internal abstract Task PerformStep();
       internal abstract bool StopConditions();
       #endregion
 

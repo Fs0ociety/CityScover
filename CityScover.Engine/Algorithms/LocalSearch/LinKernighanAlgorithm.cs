@@ -6,6 +6,8 @@
 // File update: 14/09/2018
 //
 
+using System.Threading.Tasks;
+
 namespace CityScover.Engine.Algorithms.LocalSearch
 {
    internal class LinKernighanAlgorithm : Algorithm
@@ -30,7 +32,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
          throw new System.NotImplementedException();
       }
 
-      internal override void PerformStep()
+      internal override async Task PerformStep()
       {
          throw new System.NotImplementedException();
       }

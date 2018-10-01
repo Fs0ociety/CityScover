@@ -320,26 +320,14 @@ namespace CityScover.ADT.Graphs
 
          var firstNodeEdges = _nodes[startNodeKey1].Edges;
          var secondNodeEdges = _nodes[startNodeKey2].Edges;
-         //var result = from edge in firstNodeEdges
-         //             where (from edge2 in secondNodeEdges
-         //                    where edge2.SourceNode.Key.Equals(edge.DestNode.Key)
-         //                    && edge2.DestNode.Key.Equals(endNodeKey2)
-         //                    select edge2).Any()
-         //                   && edge.SourceNode.Key.Equals(startNodeKey1)
-         //             select edge;
 
-         var result2 = firstNodeEdges.Where(edge => secondNodeEdges.Any(
-                         edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key)
-                         && edge2.DestNode.Key.Equals(endNodeKey2)
-                       ) && edge.SourceNode.Key.Equals(startNodeKey1));
-
-         //var result3 = _nodes.SelectMany(x => x.Value.Edges.Where(
-         //               edge => secondNodeEdges.Any(
-         //                        edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key) 
-         //                        && edge2.DestNode.Key.Equals(endNodeKey2)
-         //                        ) && edge.SourceNode.Key.Equals(startNodeKey1)));
-
-         return result2.Count() == 0 ? false : true;
+         var result = firstNodeEdges
+            .Where(edge => secondNodeEdges
+            .Any(edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key) && 
+            edge2.DestNode.Key.Equals(endNodeKey2)) && 
+            edge.SourceNode.Key.Equals(startNodeKey1));
+                  
+         return result.Count() == 0 ? false : true;
       }
       #endregion      
    }

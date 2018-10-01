@@ -52,7 +52,6 @@
     <Compile Include="AlgorithmTest.cs" />
     <Compile Include="CreateGraphTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CityScoverGraphTest.cs" />
     <Compile Include="CommonsTest.cs" />
   </ItemGroup>
   <ItemGroup>

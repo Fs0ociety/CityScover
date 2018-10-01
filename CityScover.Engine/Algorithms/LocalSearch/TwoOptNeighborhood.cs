@@ -3,32 +3,39 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 28/09/2018
+// File update: 01/10/2018
 //
 
 using CityScover.Engine.Workers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CityScover.Engine.Algorithms.LocalSearch
 {
    internal class TwoOptNeighborhood : Neighborhood
    {
-      internal override IEnumerable<TOSolution> GetAllMoves(TOSolution currentSolution)
+      private CityMapGraph _currentSolutionGraph;
+      private CityMapGraph _cityMapClone;
+
+      internal override IEnumerable<TOSolution> GetAllMoves(in TOSolution currentSolution)
       {
+         _cityMapClone = Solver.Instance.CityMapGraph.DeepCopy();
          var neighborhood = new Collection<TOSolution>();
 
-         var currentSolutionGraph = currentSolution.SolutionGraph;
-         var currentSolutionPoints = currentSolutionGraph.Nodes;
-         foreach (var item in currentSolutionPoints)
+         _currentSolutionGraph = currentSolution.SolutionGraph.DeepCopy();
+         var currentSolutionPoints = _currentSolutionGraph.Nodes;
+
+         foreach (var node in currentSolutionPoints)
          {
-            var fixedNode = item;
-            var itemNeighbors = currentSolutionGraph.GetAdjacentNodes(fixedNode.Entity.Id);
+            int fixedNodeId = node.Entity.Id;
+            var itemNeighbors = _currentSolutionGraph.GetAdjacentNodes(fixedNodeId);
 
             foreach (var neighbor in itemNeighbors)
             {
                var candidateEdges = new Collection<RouteWorker>();
-               var currentEdge = currentSolutionGraph.GetEdge(fixedNode.Entity.Id, neighbor);
+               var currentEdge = _currentSolutionGraph.GetEdge(fixedNodeId, neighbor);
                if (currentEdge == null)
                {
                   continue;
@@ -36,37 +43,36 @@ namespace CityScover.Engine.Algorithms.LocalSearch
 
                currentEdge.IsVisited = true;
                var processingNodeId = neighbor;
-               var previousProcessingNodeId = fixedNode.Entity.Id;
+               var previousProcessingNodeId = fixedNodeId;
                int newProcessingNodeId = default;
 
-               while (processingNodeId != previousProcessingNodeId)
+               while (processingNodeId != fixedNodeId)
                {
-                  var nextNeighbors = currentSolutionGraph.GetAdjacentNodes(processingNodeId);
+                  var nextNeighbors = _currentSolutionGraph.GetAdjacentNodes(processingNodeId);
 
                   foreach (var adjacentNodeId in nextNeighbors)
                   {
-                     var procNodeAdjNodeEdge = currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
+                     var procNodeAdjNodeEdge = _currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
                      if (procNodeAdjNodeEdge == null)
                      {
                         continue;
                      }
-
-                     // TODO: Da implementare funzione su libreria dei grafi che controlla se due archi sono adiacenti.
-                     //if(!currentSolutionGraph.AreAdjacentEdges(currentEdge, procNodeAdjNodeEdge))
-                     //{
-                     //   candidateEdges.Add(procNodeAdjNodeEdge);
-                     //}
-
-                     procNodeAdjNodeEdge.IsVisited = true;
-
-                     // TODO: questione grafo non orientato.
-                     var adjNodeProcNodeEdge = currentSolutionGraph.GetEdge(adjacentNodeId, processingNodeId);
-                     if (adjNodeProcNodeEdge == null)
+                     
+                     if (!_currentSolutionGraph.AreAdjacentEdges(
+                           currentEdge.Entity.PointFrom.Id, 
+                           currentEdge.Entity.PointTo.Id, 
+                           procNodeAdjNodeEdge.Entity.PointFrom.Id, 
+                           procNodeAdjNodeEdge.Entity.PointTo.Id) && !IsLastEdge(procNodeAdjNodeEdge))
                      {
-                        continue;
+                        candidateEdges.Add(procNodeAdjNodeEdge);
                      }
 
-                     adjNodeProcNodeEdge.IsVisited = true;
+                     bool IsLastEdge(RouteWorker edge)
+                     {
+                        return edge.Entity.PointTo.Id == fixedNodeId;
+                     }
+
+                     procNodeAdjNodeEdge.IsVisited = true;                     
 
                      if (adjacentNodeId != previousProcessingNodeId)
                      {
@@ -76,7 +82,11 @@ namespace CityScover.Engine.Algorithms.LocalSearch
                   }
                   processingNodeId = newProcessingNodeId;
                }
-               ProcessingCandidates(candidateEdges, currentEdge, neighborhood);
+
+               if (candidateEdges.Count() > 0)
+               {
+                  ProcessingCandidates(candidateEdges, currentEdge, neighborhood);
+               }               
             }
          }
          return neighborhood;
@@ -84,13 +94,48 @@ namespace CityScover.Engine.Algorithms.LocalSearch
 
       private void ProcessingCandidates(Collection<RouteWorker> candidateEdges, RouteWorker currentEdge, Collection<TOSolution> neighborhood)
       {
-         var currentEdgeCost = currentEdge.Weight;
          foreach (var edge in candidateEdges)
          {
-            // TODO: fare un clone per ogni candidato, dove ci tolgo e aggiungo gli archi.
-            //var newSolution = currentSolutionGraph.DeepCopy();
-            //neighborhood.Add(newSolution);
-         }
+            var newSolution = new TOSolution()
+            {
+               SolutionGraph = _currentSolutionGraph.DeepCopy()
+            };
+
+            int edge1PointFromId = currentEdge.Entity.PointFrom.Id;
+            int edge1PointToId = currentEdge.Entity.PointTo.Id;
+            int edge2PointFromId = edge.Entity.PointFrom.Id;
+            int edge2PointToId = edge.Entity.PointTo.Id;
+
+            newSolution.SolutionGraph.RemoveEdge(edge1PointFromId, edge1PointToId);
+            newSolution.SolutionGraph.RemoveEdge(edge2PointFromId, edge2PointToId);
+
+            RouteWorker newEdge1 = _cityMapClone.GetEdge(edge1PointFromId, edge2PointFromId);
+            if (newEdge1 == null)
+            {
+               throw new InvalidOperationException();
+            }
+
+            RouteWorker newEdge2 = _cityMapClone.GetEdge(edge1PointToId, edge2PointToId);
+            if (newEdge2 == null)
+            {
+               throw new InvalidOperationException();
+            }
+
+            newSolution.SolutionGraph.AddEdge(edge1PointFromId, edge2PointFromId, newEdge1);
+            newSolution.SolutionGraph.AddEdge(edge1PointToId, edge2PointToId, newEdge2);
+
+            //Nota: affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di un altro arco.
+            newSolution.SolutionGraph.RemoveEdge(edge1PointToId, edge2PointFromId);
+
+            RouteWorker invertedEdge = _cityMapClone.GetEdge(edge2PointFromId, edge1PointToId);
+            if (invertedEdge == null)
+            {
+               throw new InvalidOperationException();
+            }
+
+            newSolution.SolutionGraph.AddEdge(edge2PointFromId, edge1PointToId, invertedEdge);
+            neighborhood.Add(newSolution);
+         }         
       }
    }
 }

@@ -13,6 +13,7 @@ namespace CityScover.Engine
       None,
       Greedy,
       LocalSearch,
+      Heuristic,
       MetaHeuristic,
    }
 }

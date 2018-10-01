@@ -399,7 +399,7 @@
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="11:00" to="24:00"/>
+        <OpeningTime from="11:00" to="22:30"/>
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CityScover.ADT.Graphs;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -124,27 +125,22 @@ namespace CityScover.Tests
          graph.AddNode(5, new InterestPoint("P5"));
          Assert.IsTrue(graph.NodeCount == 5);
 
-         graph.AddUndirectedEdge(1, 2);
-         graph.AddUndirectedEdge(1, 5);
-         graph.AddUndirectedEdge(2, 4);
-         graph.AddUndirectedEdge(4, 3);
-         graph.AddUndirectedEdge(5, 3);
-         Assert.IsTrue(graph.EdgeCount == 10);
-
-         //graph.AddEdge(1, 2);
-         //graph.AddEdge(2, 1);
-         //graph.AddEdge(1, 5);
-         //graph.AddEdge(5, 1);
-         //graph.AddEdge(2, 4);
-         //graph.AddEdge(4, 2);
-         //graph.AddEdge(5, 3);
-         //graph.AddEdge(3, 5);
-         //graph.AddEdge(3, 4);
-         //graph.AddEdge(4, 3);
+         //graph.AddUndirectedEdge(1, 2);
+         //graph.AddUndirectedEdge(1, 5);
+         //graph.AddUndirectedEdge(2, 4);
+         //graph.AddUndirectedEdge(4, 3);
+         //graph.AddUndirectedEdge(5, 3);
          //Assert.IsTrue(graph.EdgeCount == 10);
-                  
-         int P1Grade = graph.GetNodeGrade(1);
-         Assert.IsTrue(P1Grade == 2);
+
+         graph.AddEdge(1, 2);
+         graph.AddEdge(2, 5);
+         graph.AddEdge(5, 4);
+         graph.AddEdge(4, 3);
+         graph.AddEdge(3, 1);
+         Assert.IsTrue(graph.EdgeCount == 5);
+
+         var P1Neighbors = graph.GetAdjacentNodes(1);
+         Assert.IsTrue(P1Neighbors.Count() == 1);
       }
 
       [TestMethod]

@@ -3,10 +3,10 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 29/09/2018
+// File update: 01/10/2018
 //
 
-using CityScover.Commons;
+using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,8 +17,8 @@ namespace CityScover.Engine.Algorithms
 {
    internal class LocalSearchAlgorithm : Algorithm
    {
-      private double? _previousSolutionCost;
-      private double? _currentSolutionCost;
+      private int _previousSolutionCost;
+      private int _currentSolutionCost;
       private TOSolution _bestSolution;
       private Neighborhood _neighborhood;
 
@@ -74,10 +74,11 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnInitializing();
          _bestSolution = Solver.BestSolution;
-         _currentSolutionCost = _bestSolution.Cost;
+         _currentSolutionCost = _bestSolution.Cost;         
+         _previousSolutionCost = default;
       }
 
-      internal override void PerformStep()
+      internal override async Task PerformStep()
       {
          ICollection<TOSolution> processedNeighborhood = new Collection<TOSolution>();
 
@@ -92,7 +93,7 @@ namespace CityScover.Engine.Algorithms
             notifyingFunc.Invoke(neighborhoodSolution);
          }
 
-         Task.WaitAll(Solver.AlgorithmTasks.ToArray());
+         await Task.WhenAll(Solver.AlgorithmTasks.ToArray());
 
          // Ora sono sicuro di avere tutte le soluzioni dell'intorno valorizzate.
 
@@ -106,7 +107,6 @@ namespace CityScover.Engine.Algorithms
          _previousSolutionCost = _currentSolutionCost;
          var isMinimizingProblem = Solver.Problem.IsMinimizing;
 
-         // TODO: invocare metodo su Commons per il confronto dei double.
          if (isMinimizingProblem)
          {
             if (solution.Cost < _bestSolution.Cost)
@@ -127,13 +127,8 @@ namespace CityScover.Engine.Algorithms
 
       internal override bool StopConditions()
       {
-         if (!_previousSolutionCost.HasValue)
-         {
-            return false;
-         }
-
-         bool areCostsEquals = DoubleExtensions.Equals4DigitPrecision(_previousSolutionCost.Value, _currentSolutionCost.Value);
-         return !areCostsEquals || _status == AlgorithmStatus.Terminating;
+         return _previousSolutionCost == _currentSolutionCost || 
+            _status == AlgorithmStatus.Error;
       }
       #endregion
    }

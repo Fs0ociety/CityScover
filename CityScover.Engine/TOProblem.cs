@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 19/09/2018
+// File update: 01/10/2018
 //
 
 using System;
@@ -14,9 +14,11 @@ namespace CityScover.Engine
 {
    internal class TOProblem : Problem
    {
+      private const int PenaltyAmount = 100;
+
       private readonly DateTime _tMax;
-      private Func<TOSolution, double> _objectiveFunc;
-      private Func<TOSolution, double> _penaltyFunc;
+      private Func<TOSolution, int> _objectiveFunc;
+      private Func<TOSolution, int> _penaltyFunc;
 
       #region Constructors
       internal TOProblem()
@@ -25,17 +27,18 @@ namespace CityScover.Engine
          var solverConfig = Solver.Instance.WorkingConfiguration;
          _tMax = solverConfig.ArrivalTime.Add(solverConfig.TourDuration);
          ObjectiveFunc = CalculateCost;
+         PenaltyFunc = CalculatePenalty;
          IsMinimizing = false;
 
          Constraints.Add(
             new KeyValuePair<byte, Func<TOSolution, bool>>(1, IsTMaxConstraintSatisfied));
-         Constraints.Add(
-            new KeyValuePair<byte, Func<TOSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));
+         //Constraints.Add(
+         //   new KeyValuePair<byte, Func<TOSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));
       }
       #endregion
 
       #region Overrides
-      internal override Func<TOSolution, double> ObjectiveFunc
+      internal override Func<TOSolution, int> ObjectiveFunc
       {
          get => _objectiveFunc;
          set
@@ -47,7 +50,7 @@ namespace CityScover.Engine
          }
       }
 
-      internal override Func<TOSolution, double> PenaltyFunc
+      internal override Func<TOSolution, int> PenaltyFunc
       {
          get => _penaltyFunc;
          set
@@ -70,7 +73,7 @@ namespace CityScover.Engine
       /// <returns>
       /// An Evaluation Object.
       /// </returns>
-      private double CalculateCost(TOSolution solution)
+      private int CalculateCost(TOSolution solution)
       {
          var solutionNodes = solution.SolutionGraph.Nodes;
          return (from node in solutionNodes
@@ -79,10 +82,9 @@ namespace CityScover.Engine
       #endregion
 
       #region Penalty Function delegates
-      private double CalculatePenalty(TOSolution solution)
+      private int CalculatePenalty(TOSolution solution)
       {
-         var solutionCost = solution.Cost;
-         return solutionCost + new Random().Next(10);
+         return PenaltyAmount;
       }
       #endregion
 
