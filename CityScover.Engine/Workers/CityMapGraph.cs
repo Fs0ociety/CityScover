@@ -27,7 +27,8 @@ namespace CityScover.Engine.Workers
 
          foreach (var node in Nodes)
          {
-            foreach (var edge in GetEdges(node.Entity.Id))
+            var edges = GetEdges(node.Entity.Id);
+            foreach (var edge in edges)
             {
                RouteWorker copyRouteWorker = edge.DeepCopy();
                copy.AddEdge(edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id, copyRouteWorker);

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/09/2018
+// File update: 02/10/2018
 //
 
 using System.Collections.Generic;
@@ -26,10 +26,10 @@ namespace CityScover.Engine
       {
          CurrentAlgorithm = algorithm;
          RunningTimes = runningTimes;
-         ChildrenFlows = new Collection<StageFlow>();
+         ChildrenFlows = new Collection<StageFlow>();         
       }
 
-      internal AlgorithmType CurrentAlgorithm { get ; set; }
+      internal AlgorithmType CurrentAlgorithm { get ; set; }      
       internal byte RunningTimes { get; set; }
       internal ICollection<StageFlow> ChildrenFlows { get; set; }
    }

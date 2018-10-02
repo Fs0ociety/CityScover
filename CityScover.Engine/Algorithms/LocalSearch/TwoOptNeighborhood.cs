@@ -59,20 +59,21 @@ namespace CityScover.Engine.Algorithms.LocalSearch
                      }
                      
                      if (!_currentSolutionGraph.AreAdjacentEdges(
-                           currentEdge.Entity.PointFrom.Id, 
+                           currentEdge.Entity.PointFrom.Id,
                            currentEdge.Entity.PointTo.Id, 
                            procNodeAdjNodeEdge.Entity.PointFrom.Id, 
-                           procNodeAdjNodeEdge.Entity.PointTo.Id) && !IsLastEdge(procNodeAdjNodeEdge))
+                           //procNodeAdjNodeEdge.Entity.PointTo.Id) && !IsLastEdge(procNodeAdjNodeEdge))
+                           procNodeAdjNodeEdge.Entity.PointTo.Id))
                      {
                         candidateEdges.Add(procNodeAdjNodeEdge);
                      }
 
-                     bool IsLastEdge(RouteWorker edge)
-                     {
-                        return edge.Entity.PointTo.Id == fixedNodeId;
-                     }
+                     //bool IsLastEdge(RouteWorker edge)
+                     //{
+                     //   return edge.Entity.PointTo.Id == fixedNodeId;
+                     //}
 
-                     procNodeAdjNodeEdge.IsVisited = true;                     
+                     procNodeAdjNodeEdge.IsVisited = true;
 
                      if (adjacentNodeId != previousProcessingNodeId)
                      {
@@ -92,7 +93,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
          return neighborhood;
       }
 
-      private void ProcessingCandidates(Collection<RouteWorker> candidateEdges, RouteWorker currentEdge, Collection<TOSolution> neighborhood)
+      private void ProcessingCandidates(in Collection<RouteWorker> candidateEdges, in RouteWorker currentEdge, in Collection<TOSolution> neighborhood)
       {
          foreach (var edge in candidateEdges)
          {
@@ -124,18 +125,43 @@ namespace CityScover.Engine.Algorithms.LocalSearch
             newSolution.SolutionGraph.AddEdge(edge1PointFromId, edge2PointFromId, newEdge1);
             newSolution.SolutionGraph.AddEdge(edge1PointToId, edge2PointToId, newEdge2);
 
-            //Nota: affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di un altro arco.
-            newSolution.SolutionGraph.RemoveEdge(edge1PointToId, edge2PointFromId);
+            //Nota: affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
 
-            RouteWorker invertedEdge = _cityMapClone.GetEdge(edge2PointFromId, edge1PointToId);
-            if (invertedEdge == null)
-            {
-               throw new InvalidOperationException();
-            }
+            TwoOptTourInversion(currentEdge, newSolution, edge2PointToId);
 
-            newSolution.SolutionGraph.AddEdge(edge2PointFromId, edge1PointToId, invertedEdge);
             neighborhood.Add(newSolution);
-         }         
+         }
+      }
+
+      private void TwoOptTourInversion(in RouteWorker currentEdge, TOSolution newSolution, int edge2PointToId)
+      {
+         int currentNodeId = currentEdge.Entity.PointFrom.Id;
+         Collection<int> visitedNodes = new Collection<int>();
+         while (currentNodeId != edge2PointToId)
+         {
+            var adjacentNodes = newSolution.SolutionGraph.GetAdjacentNodes(currentNodeId);
+            if (adjacentNodes.Count() == 0)
+            {
+               var predecessorAdjNodeId = newSolution.SolutionGraph.GetPredecessorNodes(currentNodeId).Where(node => !visitedNodes.Any(x => x == node)).FirstOrDefault();
+               if (predecessorAdjNodeId == 0)
+               {
+                  throw new InvalidOperationException();
+               }
+
+               newSolution.SolutionGraph.RemoveEdge(predecessorAdjNodeId, currentNodeId);
+               newSolution.SolutionGraph.AddEdge(currentNodeId, predecessorAdjNodeId);
+               visitedNodes.Add(predecessorAdjNodeId);
+               currentNodeId = predecessorAdjNodeId;
+            }
+            else
+            {
+               foreach (var adjacentNode in adjacentNodes)
+               {
+                  visitedNodes.Add(currentNodeId);
+                  currentNodeId = adjacentNode;
+               }
+            }
+         }
       }
    }
 }

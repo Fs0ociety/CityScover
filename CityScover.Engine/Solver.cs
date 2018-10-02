@@ -31,6 +31,7 @@ namespace CityScover.Engine
       private void InitSolver(Configuration configuration)
       {
          WorkingConfiguration = configuration;
+         ConstraintsToRelax.Add(2);
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 

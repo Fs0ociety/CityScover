@@ -51,7 +51,7 @@
     <PointOfInterest id="4" name="Cattedrale di San Giorgio">
       <Coordinates latitude="44,835639" longitude="11,620273"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="95"/>
       <OpeningTimes>
         <OpeningTime from="7:30" to="12:30"/>
         <OpeningTime from="15:00" to="19:00"/>
@@ -64,7 +64,7 @@
     <PointOfInterest id="5" name="Museo Schifanoia">
       <Coordinates latitude="44,830580" longitude="11,629071"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="95"/>
+      <ThematicScore category="1" value="90"/>
       <OpeningTimes>
         <OpeningTime from="09:30" to="18:00"/>
       </OpeningTimes>

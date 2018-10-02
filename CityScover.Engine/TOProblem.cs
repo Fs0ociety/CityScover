@@ -32,8 +32,8 @@ namespace CityScover.Engine
 
          Constraints.Add(
             new KeyValuePair<byte, Func<TOSolution, bool>>(1, IsTMaxConstraintSatisfied));
-         //Constraints.Add(
-         //   new KeyValuePair<byte, Func<TOSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));
+         Constraints.Add(
+            new KeyValuePair<byte, Func<TOSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));
       }
       #endregion
 

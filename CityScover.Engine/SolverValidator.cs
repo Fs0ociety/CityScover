@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 01/10/2018
+// File update: 02/10/2018
 //
 
 using CityScover.Commons;
@@ -34,12 +34,11 @@ namespace CityScover.Engine
       {
          Debug.WriteLine($"{nameof(SolverValidator)} begin Validate() of solution {solution.Id}");
          var problemConstraints = Solver.Problem.Constraints;
-         var relaxedConstraintsId = WorkingConfiguration.RelaxedConstraintsId;
 
          // Get the constraints delegates to be invoked.
          var checkingConstraints = from problemConstraint in problemConstraints
-                                   where !(from relaxedConstraintId in relaxedConstraintsId
-                                           where relaxedConstraintsId.Equals(problemConstraint.Key)
+                                   where !(from relaxedConstraintId in Solver.ConstraintsToRelax
+                                           where relaxedConstraintId.Equals(problemConstraint.Key)
                                            select relaxedConstraintId).Any() && problemConstraint.Value != null
                                    select problemConstraint;
 

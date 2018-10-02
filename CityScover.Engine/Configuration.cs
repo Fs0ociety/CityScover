@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 29/09/2018
+// File update: 02/10/2018
 //
 
 using CityScover.Entities;
@@ -22,7 +22,7 @@ namespace CityScover.Engine
       internal Configuration()
       {
          Stages = new Collection<Stage>();
-         RelaxedConstraintsId = new Collection<byte>();
+         //RelaxedConstraintsId = new Collection<byte>();
       }
       #endregion
 
@@ -35,7 +35,6 @@ namespace CityScover.Engine
       internal TimeSpan TourDuration { get; set; }
       internal ProblemType CurrentProblem { get; set; }
       public bool AlgorithmMonitoring { get; set; }
-      internal ICollection<byte> RelaxedConstraintsId { get; set; }
       internal ICollection<Stage> Stages { get; set; }      
       #endregion
    }

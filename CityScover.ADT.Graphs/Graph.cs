@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.ADT.Graphs
@@ -213,7 +214,7 @@ namespace CityScover.ADT.Graphs
          {
             throw new InvalidOperationException();
          }
-         
+
          //return _nodes.SelectMany(x => x.Value.Edges.Select(k => k.Weight));
          return _nodes[nodeKey].Edges.Select(x => x.Weight);
       }
@@ -320,12 +321,6 @@ namespace CityScover.ADT.Graphs
 
          var firstNodeEdges = _nodes[startNodeKey1].Edges;
          var secondNodeEdges = _nodes[startNodeKey2].Edges;
-
-         //var result = firstNodeEdges
-         //   .Where(edge => secondNodeEdges
-         //   .Any(edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key) &&
-         //   edge2.DestNode.Key.Equals(endNodeKey2)) &&
-         //   edge.SourceNode.Key.Equals(startNodeKey1));
 
          var result = firstNodeEdges
             .Where(edge => secondNodeEdges

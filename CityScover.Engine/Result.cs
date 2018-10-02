@@ -16,12 +16,21 @@ namespace CityScover.Engine
       private TOSolution _currentSolution;
       private DateTime _timeSpent;
       private ResultType _resultType;
+      private Validity _validity;
 
-      public Result(TOSolution currentSolution, DateTime timeSpent, ResultType resultType = ResultType.None)
+      public Result(TOSolution currentSolution, DateTime timeSpent, ResultType resultType = ResultType.None, Validity validity = Validity.None)
       {
          _currentSolution = currentSolution;
          _timeSpent = timeSpent;
          _resultType = resultType;
+         _validity = validity;
       }
+
+      internal enum Validity
+      {
+         None,
+         Valid,
+         Invalid
+      };
    }
 }
