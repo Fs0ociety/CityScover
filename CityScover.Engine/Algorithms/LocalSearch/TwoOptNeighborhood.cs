@@ -132,7 +132,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
          while (currentNodeId != edge2PointFromId)
          {
             var currNodeAdjNode = newSolution.SolutionGraph.GetAdjacentNodes(currentNodeId).Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
-            if (currNodeAdjNode == null)
+            if (currNodeAdjNode == 0)
             {
                throw new InvalidOperationException();
             }

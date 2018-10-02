@@ -102,7 +102,7 @@ namespace CityScover.Engine.Algorithms
          // Per come è fatta adesso, sarà sempre Best Improvement.
 
          // Se siamo ispirati (come no) lo faremo.
-         var solution = GetBest(processedNeighborhood, _bestSolution, null);
+         var solution = GetBest(currentNeighborhood, _bestSolution, null);
                   
          _previousSolutionCost = _currentSolutionCost;
          var isMinimizingProblem = Solver.Problem.IsMinimizing;
