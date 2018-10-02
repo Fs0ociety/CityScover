@@ -6,7 +6,6 @@
 // File update: 01/10/2018
 //
 
-using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
