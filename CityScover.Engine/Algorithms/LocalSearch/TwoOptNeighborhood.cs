@@ -61,18 +61,12 @@ namespace CityScover.Engine.Algorithms.LocalSearch
                      if (!_currentSolutionGraph.AreAdjacentEdges(
                            currentEdge.Entity.PointFrom.Id,
                            currentEdge.Entity.PointTo.Id, 
-                           procNodeAdjNodeEdge.Entity.PointFrom.Id, 
-                           //procNodeAdjNodeEdge.Entity.PointTo.Id) && !IsLastEdge(procNodeAdjNodeEdge))
+                           procNodeAdjNodeEdge.Entity.PointFrom.Id,
                            procNodeAdjNodeEdge.Entity.PointTo.Id))
                      {
                         candidateEdges.Add(procNodeAdjNodeEdge);
                      }
-
-                     //bool IsLastEdge(RouteWorker edge)
-                     //{
-                     //   return edge.Entity.PointTo.Id == fixedNodeId;
-                     //}
-
+                     
                      procNodeAdjNodeEdge.IsVisited = true;
 
                      if (adjacentNodeId != previousProcessingNodeId)
@@ -125,42 +119,29 @@ namespace CityScover.Engine.Algorithms.LocalSearch
             newSolution.SolutionGraph.AddEdge(edge1PointFromId, edge2PointFromId, newEdge1);
             newSolution.SolutionGraph.AddEdge(edge1PointToId, edge2PointToId, newEdge2);
 
-            //Nota: affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
-
-            TwoOptTourInversion(currentEdge, newSolution, edge2PointToId);
+            //Nota: affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.            
+            TwoOptTourInversion(currentEdge, edge, newSolution, edge2PointFromId);
 
             neighborhood.Add(newSolution);
          }
       }
 
-      private void TwoOptTourInversion(in RouteWorker currentEdge, TOSolution newSolution, int edge2PointToId)
+      private void TwoOptTourInversion(in RouteWorker currentEdge, in RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
       {
-         int currentNodeId = currentEdge.Entity.PointFrom.Id;
-         Collection<int> visitedNodes = new Collection<int>();
-         while (currentNodeId != edge2PointToId)
+         int currentNodeId = currentEdge.Entity.PointTo.Id;
+         while (currentNodeId != edge2PointFromId)
          {
-            var adjacentNodes = newSolution.SolutionGraph.GetAdjacentNodes(currentNodeId);
-            if (adjacentNodes.Count() == 0)
+            var currNodeAdjNode = newSolution.SolutionGraph.GetAdjacentNodes(currentNodeId).Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
+            if (currNodeAdjNode == null)
             {
-               var predecessorAdjNodeId = newSolution.SolutionGraph.GetPredecessorNodes(currentNodeId).Where(node => !visitedNodes.Any(x => x == node)).FirstOrDefault();
-               if (predecessorAdjNodeId == 0)
-               {
-                  throw new InvalidOperationException();
-               }
+               throw new InvalidOperationException();
+            }
 
-               newSolution.SolutionGraph.RemoveEdge(predecessorAdjNodeId, currentNodeId);
-               newSolution.SolutionGraph.AddEdge(currentNodeId, predecessorAdjNodeId);
-               visitedNodes.Add(predecessorAdjNodeId);
-               currentNodeId = predecessorAdjNodeId;
-            }
-            else
-            {
-               foreach (var adjacentNode in adjacentNodes)
-               {
-                  visitedNodes.Add(currentNodeId);
-                  currentNodeId = adjacentNode;
-               }
-            }
+            newSolution.SolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
+
+            RouteWorker invertedEdge = newSolution.SolutionGraph.GetEdge(currNodeAdjNode, currentNodeId);
+            newSolution.SolutionGraph.AddEdge(currNodeAdjNode, currentNodeId, invertedEdge);
+            currentNodeId = currNodeAdjNode;
          }
       }
    }
