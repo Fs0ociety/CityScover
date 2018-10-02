@@ -155,15 +155,12 @@ namespace CityScover.Tests
          graph.AddEdge(1, 2);
          graph.AddEdge(2, 3);
          graph.AddEdge(3, 4);
-
-         var areAdjacent = graph.AreAdjacentEdges(1, 2, 2, 3);
-         Assert.IsTrue(areAdjacent);
-
-         var areNotAdjacent = graph.AreAdjacentEdges(1, 2, 3, 4);
-         Assert.IsFalse(areNotAdjacent);
-
-         var areNotAdjacent2 = graph.AreAdjacentEdges(1, 2, 3, 2);
-         Assert.IsFalse(areNotAdjacent2);
+         graph.AddEdge(4, 1);
+         
+         Assert.IsTrue(graph.AreAdjacentEdges(1, 2, 2, 3));
+         Assert.IsFalse(graph.AreAdjacentEdges(1, 2, 3, 4));
+         Assert.IsFalse(graph.AreAdjacentEdges(1, 2, 3, 2));
+         Assert.IsTrue(graph.AreAdjacentEdges(1, 2, 4, 1));         
       }
    }
 }

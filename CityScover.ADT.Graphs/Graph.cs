@@ -321,12 +321,19 @@ namespace CityScover.ADT.Graphs
          var firstNodeEdges = _nodes[startNodeKey1].Edges;
          var secondNodeEdges = _nodes[startNodeKey2].Edges;
 
+         //var result = firstNodeEdges
+         //   .Where(edge => secondNodeEdges
+         //   .Any(edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key) &&
+         //   edge2.DestNode.Key.Equals(endNodeKey2)) &&
+         //   edge.SourceNode.Key.Equals(startNodeKey1));
+
          var result = firstNodeEdges
             .Where(edge => secondNodeEdges
-            .Any(edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key) && 
-            edge2.DestNode.Key.Equals(endNodeKey2)) && 
+            .Any(edge2 => edge2.SourceNode.Key.Equals(edge.DestNode.Key)
+                          || edge2.DestNode.Key.Equals(edge.SourceNode.Key)
+                          && edge2.DestNode.Key.Equals(endNodeKey2)) &&
             edge.SourceNode.Key.Equals(startNodeKey1));
-                  
+
          return result.Count() == 0 ? false : true;
       }
       #endregion      
