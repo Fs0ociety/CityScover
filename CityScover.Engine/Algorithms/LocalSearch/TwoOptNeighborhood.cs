@@ -126,7 +126,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
          }
       }
 
-      private void TwoOptTourInversion(in RouteWorker currentEdge, in RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
+      private void TwoOptTourInversion(in RouteWorker currentEdge, RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
       {
          int currentNodeId = currentEdge.Entity.PointTo.Id;
          while (currentNodeId != edge2PointFromId)
