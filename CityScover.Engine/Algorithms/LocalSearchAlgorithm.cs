@@ -57,24 +57,12 @@ namespace CityScover.Engine.Algorithms
                break;
             }
 
-            var isMinimizingProblem = Solver.Problem.IsMinimizing;
-            if (isMinimizingProblem)
+            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareCosts(solution.Cost, bestSolution.Cost);
+            if (isBetterThanCurrentBestSolution)
             {
-               if (solution.Cost < bestSolution.Cost)
-               {
-                  bestSolution = solution;
-                  _currentSolutionCost = solution.Cost;
-                  currentImprovement++;
-               }
-            }
-            else
-            {
-               if (solution.Cost > bestSolution.Cost)
-               {
-                  bestSolution = solution;
-                  _currentSolutionCost = solution.Cost;
-                  currentImprovement++;
-               }
+               bestSolution = solution;
+               _currentSolutionCost = solution.Cost;
+               currentImprovement++;
             }
          }
 

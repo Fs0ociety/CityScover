@@ -91,7 +91,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
       {
          foreach (var candidateEdge in candidateEdges)
          {
-            var newSolution = new TOSolution()
+            TOSolution newSolution = new TOSolution()
             {
                SolutionGraph = _currentSolutionGraph.DeepCopy()
             };
@@ -104,20 +104,22 @@ namespace CityScover.Engine.Algorithms.LocalSearch
             newSolution.SolutionGraph.RemoveEdge(currentEdgePointFromId, currentEdgePointToId);
             newSolution.SolutionGraph.RemoveEdge(candidateEdgePointFromId, candidateEdgePointToId);
 
-            RouteWorker newEdge1 = _cityMapClone.GetEdge(currentEdgePointFromId, candidateEdgePointFromId);
-            if (newEdge1 == null)
-            {
-               throw new InvalidOperationException();
-            }
+            newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointFromId, candidateEdgePointFromId);
+            newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointToId, candidateEdgePointToId);
+            //RouteWorker newEdge1 = _cityMapClone.GetEdge(currentEdgePointFromId, candidateEdgePointFromId);
+            //if (newEdge1 == null)
+            //{
+            //   throw new InvalidOperationException();
+            //}
 
-            RouteWorker newEdge2 = _cityMapClone.GetEdge(currentEdgePointToId, candidateEdgePointToId);
-            if (newEdge2 == null)
-            {
-               throw new InvalidOperationException();
-            }
+            //RouteWorker newEdge2 = _cityMapClone.GetEdge(currentEdgePointToId, candidateEdgePointToId);
+            //if (newEdge2 == null)
+            //{
+            //   throw new InvalidOperationException();
+            //}
 
-            newSolution.SolutionGraph.AddEdge(currentEdgePointFromId, candidateEdgePointFromId, newEdge1);
-            newSolution.SolutionGraph.AddEdge(currentEdgePointToId, candidateEdgePointToId, newEdge2);
+            //newSolution.SolutionGraph.AddEdge(currentEdgePointFromId, candidateEdgePointFromId, newEdge1);
+            //newSolution.SolutionGraph.AddEdge(currentEdgePointToId, candidateEdgePointToId, newEdge2);
             //Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
             TwoOptTourInversion(currentEdge, candidateEdge, newSolution, candidateEdgePointFromId);
             neighborhood.Add(newSolution);
@@ -139,13 +141,14 @@ namespace CityScover.Engine.Algorithms.LocalSearch
 
             newSolution.SolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
 
-            RouteWorker invertedEdge = _cityMapClone.GetEdge(currNodeAdjNode, currentNodeId);
-            if (invertedEdge == null)
-            {
-               throw new InvalidOperationException();
-            }
+            newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
+            //RouteWorker invertedEdge = _cityMapClone.GetEdge(currNodeAdjNode, currentNodeId);
+            //if (invertedEdge == null)
+            //{
+            //   throw new InvalidOperationException();
+            //}
 
-            newSolution.SolutionGraph.AddEdge(currNodeAdjNode, currentNodeId, invertedEdge);
+            //newSolution.SolutionGraph.AddEdge(currNodeAdjNode, currentNodeId, invertedEdge);
             currentNodeId = currNodeAdjNode;
          }
       }

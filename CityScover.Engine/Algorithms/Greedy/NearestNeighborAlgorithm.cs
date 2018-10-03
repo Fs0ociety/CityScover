@@ -144,13 +144,14 @@ namespace CityScover.Engine.Algorithms.Greedy
          var neighborPOIId = neighborPOI.Entity.Id;
          _currentSolutionGraph.AddNode(neighborPOIId, neighborPOI);
 
-         RouteWorker edge1 = _cityMapClone.GetEdge(firstPOIId, neighborPOIId);
-         if (edge1 == null)
-         {
-            throw new InvalidOperationException();
-         }
+         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, firstPOIId, neighborPOIId);
+         //RouteWorker edge1 = _cityMapClone.GetEdge(firstPOIId, neighborPOIId);
+         //if (edge1 == null)
+         //{
+         //   throw new InvalidOperationException();
+         //}
 
-         _currentSolutionGraph.AddEdge(firstPOIId, neighborPOIId, edge1);
+         //_currentSolutionGraph.AddEdge(firstPOIId, neighborPOIId, edge1);
          _newStartPOI = neighborPOI;
 
          InterestPointWorker GetStartPOI()
@@ -177,13 +178,14 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnTerminating();
 
-         RouteWorker edge1 = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, _startPOI.Entity.Id);
-         if (edge1 == null)
-         {
-            throw new InvalidOperationException();
-         }
+         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, _startPOI.Entity.Id);
+         //RouteWorker edge1 = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, _startPOI.Entity.Id);
+         //if (edge1 == null)
+         //{
+         //   throw new InvalidOperationException();
+         //}
 
-         _currentSolutionGraph.AddEdge(_newStartPOI.Entity.Id, _startPOI.Entity.Id, edge1);
+         //_currentSolutionGraph.AddEdge(_newStartPOI.Entity.Id, _startPOI.Entity.Id, edge1);
          Solver.BestSolution = _solutions.Last();
       }
 
@@ -198,13 +200,14 @@ namespace CityScover.Engine.Algorithms.Greedy
          candidatePOI.IsVisited = true;
          _currentSolutionGraph.AddNode(candidatePOI.Entity.Id, candidatePOI);
 
-         RouteWorker candidateEdge1 = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
-         if (candidateEdge1 == null)
-         {
-            throw new InvalidOperationException();
-         }
+         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
+         //RouteWorker candidateEdge1 = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
+         //if (candidateEdge1 == null)
+         //{
+         //   throw new InvalidOperationException();
+         //}
 
-         _currentSolutionGraph.AddEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id, candidateEdge1);
+         //_currentSolutionGraph.AddEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id, candidateEdge1);
          var (tVisit, tWalk, tReturn) = CalculateTimes();
          _newStartPOI = candidatePOI;
 

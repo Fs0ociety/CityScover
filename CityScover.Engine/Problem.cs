@@ -39,6 +39,14 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
+      /// <summary>
+      /// Ritorna il miglior costo tra cost1 e cost2, a seconda che il
+      /// problema sia di massimo o di minimo. Ad esempio, se il problema è di
+      /// massimo, la funzione ritornerà true se cost1 > cost2.
+      /// </summary>
+      /// <param name="cost1">Primo costo</param>
+      /// <param name="cost2">Secondo costo</param>
+      /// <returns>Il confronto da fare.</returns>
       internal bool CompareCosts(int cost1, int cost2)
       {
          return (IsMinimizing ? cost1 < cost2 : cost1 > cost2);         
