@@ -9,7 +9,6 @@
 using CityScover.Engine.Algorithms;
 using CityScover.Engine.Algorithms.Greedy;
 using CityScover.Engine.Algorithms.LocalSearch;
-using System;
 
 namespace CityScover.Engine
 {

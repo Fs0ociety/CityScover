@@ -21,8 +21,8 @@ namespace CityScover.Engine
 
       #region Protected members
       protected AlgorithmStatus _status;
-      protected ushort _currentStep = default;
-      protected Action<TOSolution> notifyingFunc = default;
+      protected ushort _currentStep;
+      protected Action<TOSolution> notifyingFunc;
       protected Solver Solver => Solver.Instance;
       #endregion
 

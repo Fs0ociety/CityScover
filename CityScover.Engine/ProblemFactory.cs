@@ -6,8 +6,6 @@
 // File update: 13/09/2018
 //
 
-using System;
-
 namespace CityScover.Engine
 {
    /// <summary>

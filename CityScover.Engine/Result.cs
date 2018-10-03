@@ -7,7 +7,6 @@
 //
 
 using System;
-using CityScover.Engine.Workers;
 
 namespace CityScover.Engine
 {

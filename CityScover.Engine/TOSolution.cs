@@ -8,14 +8,13 @@
 
 using CityScover.Engine.Workers;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace CityScover.Engine
 {
    internal class TOSolution
    {
-      private static int _sequenceId = default;
+      private static int _sequenceId;
 
       #region Constructors
       internal TOSolution()
