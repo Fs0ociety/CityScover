@@ -8,7 +8,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.ADT.Graphs
@@ -48,6 +47,11 @@ namespace CityScover.ADT.Graphs
       /// <param name="key">Chiave del nodo.</param>
       /// <returns>Dato del nodo specificato.</returns>
       public TNodeData this[TNodeKey key] => _nodes[key].Data;
+
+      /// <summary>
+      /// Restituisce l'insieme degli archi.
+      /// </summary>
+      public IEnumerable<TEdgeWeight> Edges => _nodes.SelectMany(x => x.Value.Edges.Select(y => y.Weight));
       #endregion
 
       #region Public methods

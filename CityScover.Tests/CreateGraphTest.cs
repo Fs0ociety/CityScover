@@ -152,15 +152,19 @@ namespace CityScover.Tests
          graph.AddNode(3, new InterestPoint("P3"));
          graph.AddNode(4, new InterestPoint("P4"));
 
-         graph.AddEdge(1, 2);
-         graph.AddEdge(2, 3);
-         graph.AddEdge(3, 4);
-         graph.AddEdge(4, 1);
+         graph.AddEdge(1, 2, new Route(100.0));
+         graph.AddEdge(2, 3, new Route(200.0));
+         graph.AddEdge(3, 4, new Route(300.0));
+         graph.AddEdge(4, 1, new Route(400.0));
          
          Assert.IsTrue(graph.AreAdjacentEdges(1, 2, 2, 3));
          Assert.IsFalse(graph.AreAdjacentEdges(1, 2, 3, 4));
          Assert.IsFalse(graph.AreAdjacentEdges(1, 2, 3, 2));
-         Assert.IsTrue(graph.AreAdjacentEdges(1, 2, 4, 1));         
+         Assert.IsTrue(graph.AreAdjacentEdges(1, 2, 4, 1));
+
+         IEnumerable<Route> edges = graph.Edges;
+
+         IEnumerable<Route> nodeEdges = graph.GetEdges(1);
       }
    }
 }

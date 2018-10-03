@@ -73,7 +73,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       private IEnumerable<InterestPointWorker> GetClosestNeighbors(InterestPointWorker endPOI)
       {
          int bestScore = default;
-         ICollection<InterestPointWorker> potentialCandidates = new Collection<InterestPointWorker>();
+         IList<InterestPointWorker> potentialCandidates = new List<InterestPointWorker>();
 
          var adjPOIIds = _cityMapClone.GetAdjacentNodes(endPOI.Entity.Id);
          adjPOIIds.ToList().ForEach(adjPOIId => SetBestCandidate(adjPOIId));
@@ -120,9 +120,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
                      : node.Entity.Id;
                }
             }
-
-            // TODO: CAMBIARE IN PREPEND!! Come diavolo si fa in LINQ? Ricerchina..
-            potentialCandidates.Add(candidateNode);
+            
+            potentialCandidates.Insert(0, candidateNode);
          }
 
          return potentialCandidates;
@@ -130,7 +129,15 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       private (CityMapGraph steamSet, CityMapGraph cycleSet) BuildSteamAndCycle(InterestPointWorker sNode)
       {
-         throw new NotImplementedException();
+         CityMapGraph steamSet = new CityMapGraph();
+         CityMapGraph cycleSet = new CityMapGraph();
+
+         cycleSet.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNode.Entity.Id);
+         foreach (var edge in _currentSolutionGraph.Edges)
+         {
+            
+         }
+         return (steamSet, cycleSet);
       }
 
       private void BuildHamiltonianPath((CityMapGraph steamSet, CityMapGraph cycleSet) p, CityMapGraph currentSolutionGraph)
@@ -171,7 +178,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
                .FirstOrDefault();
          }
 
-         // TODO: manca gestione nodo endPOI. Da mettere.
+         // TODO: manca gestione nodo endPOI. Da mettere.         
       }
 
       internal override void OnTerminated()
@@ -218,6 +225,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          var (steamSet, cycleSet) = BuildSteamAndCycle(sNode);
          BuildHamiltonianPath((steamSet, cycleSet), _currentSolutionGraph);
          ConnectHamiltonianPath(_currentSolutionGraph);
+         _executedSteps++;
       }
 
       internal override bool StopConditions()
