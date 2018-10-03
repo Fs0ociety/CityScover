@@ -47,37 +47,30 @@ namespace CityScover.Engine
       private void InitializeTour()
       {
          CityScoverRepository.LoadPoints(WorkingConfiguration.PointsCount);
-         FilterPointsByCategory();
 
-         void FilterPointsByCategory()
-         {
-            Points = from point in CityScoverRepository.Points
-                     where point.Category.Id == WorkingConfiguration.TourCategory ||
-                           point.Category.Id == TourCategoryType.None   // Hotel
-                     select point;
-         }
+         // Filtering points by category.
+         Points = from point in CityScoverRepository.Points
+                  where point.Category.Id == WorkingConfiguration.TourCategory ||
+                        point.Category.Id == TourCategoryType.None   // Hotel
+                  select point;
 
          RoutesGenerator.GenerateRoutes(Points, Points.Count());
          CityScoverRepository.LoadRoutes(Points);
 
-         CreateCityGraph();
-
-         void CreateCityGraph()
+         // Creation of the Graph.
+         CityMapGraph cityGraph = new CityMapGraph();
+         foreach (var point in Points)
          {
-            CityMapGraph cityGraph = new CityMapGraph();
-            foreach (var point in Points)
-            {
-               cityGraph.AddNode(point.Id, new InterestPointWorker(point));
-            }
-
-            var routes = CityScoverRepository.Routes;
-            foreach (var route in routes)
-            {
-               cityGraph.AddEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
-            }
-
-            CityMapGraph = cityGraph;
+            cityGraph.AddNode(point.Id, new InterestPointWorker(point));
          }
+
+         var routes = CityScoverRepository.Routes;
+         foreach (var route in routes)
+         {
+            cityGraph.AddEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
+         }
+
+         CityMapGraph = cityGraph;
       }
 
       /// <summary>
@@ -189,8 +182,8 @@ namespace CityScover.Engine
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType);
 
-      internal void EnqueueSolution(TOSolution solution) => 
-         _solutionsQueue.Add(solution);      
+      internal void EnqueueSolution(TOSolution solution) =>
+         _solutionsQueue.Add(solution);
       #endregion
 
       #region Public methods
@@ -203,7 +196,7 @@ namespace CityScover.Engine
          InitSolver(configuration);
          InitializeTour();
          _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
-         
+
          if (IsMonitoringEnabled)
          {
             ExecutionInternalFunc = ExecuteWithMonitoring;

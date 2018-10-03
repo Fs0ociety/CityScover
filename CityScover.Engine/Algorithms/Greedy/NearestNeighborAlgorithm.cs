@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// File update: 04/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace CityScover.Engine.Algorithms.Greedy
 {
    /// <summary>
-   /// TODO
+   /// This class implements the Nearest Neighbor algorithm of the Greedy family's algorithms.
    /// </summary>
    internal class NearestNeighborAlgorithm : Algorithm
    {
@@ -41,6 +41,36 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
+      private (TimeSpan tVisit, TimeSpan tWalk, TimeSpan tReturn) CalculateTimesByNextPoint(InterestPointWorker point)
+      {
+         TimeSpan timeVisit = default;
+         TimeSpan timeWalk = default;
+         TimeSpan timeReturn = default;
+
+         if (point.Entity.TimeVisit.HasValue)
+         {
+            timeVisit = point.Entity.TimeVisit.Value;
+         }
+
+         RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, point.Entity.Id);
+         if (edge == null)
+         {
+            throw new NullReferenceException(nameof(edge));
+         }
+         timeWalk = TimeSpan.FromMinutes(edge.Weight() / _averageSpeedWalk / 60.0);
+
+         RouteWorker returnEdge = _cityMapClone.GetEdge(point.Entity.Id, _startPOI.Entity.Id);
+         if (returnEdge == null)
+         {
+            throw new NullReferenceException(nameof(returnEdge));
+         }
+         timeReturn = TimeSpan.FromMinutes(returnEdge.Weight() / _averageSpeedWalk / 60.0);
+
+         return (timeVisit, timeWalk, timeReturn);
+      }
+      #endregion
+
+      #region Protected methods
       /// <summary>
       /// This implementation is the classic GetClosestNeighborByScore.
       /// It returns the best candidate node near to point of interest passed as argument.
@@ -199,16 +229,8 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          candidatePOI.IsVisited = true;
          _currentSolutionGraph.AddNode(candidatePOI.Entity.Id, candidatePOI);
-
          _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
-         //RouteWorker candidateEdge1 = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
-         //if (candidateEdge1 == null)
-         //{
-         //   throw new InvalidOperationException();
-         //}
-
-         //_currentSolutionGraph.AddEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id, candidateEdge1);
-         var (tVisit, tWalk, tReturn) = CalculateTimes();
+         var (tVisit, tWalk, tReturn) = CalculateTimesByNextPoint(candidatePOI);
          _newStartPOI = candidatePOI;
 
          TOSolution newSolution = new TOSolution()
@@ -222,38 +244,10 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          // Notify observers.
          notifyingFunc.Invoke(newSolution);
+         
+         // PROVVISORIO
          //Task.WaitAll(Solver.AlgorithmTasks.ToArray());
-
          await Task.Delay(500).ConfigureAwait(continueOnCapturedContext: false);
-
-         // Local function: CalculateTimes
-         (TimeSpan tVisit, TimeSpan tWalk, TimeSpan tReturn) CalculateTimes()
-         {
-            TimeSpan timeVisit = default;
-            TimeSpan timeWalk = default;
-            TimeSpan timeReturn = default;
-
-            if (candidatePOI.Entity.TimeVisit.HasValue)
-            {
-               timeVisit = candidatePOI.Entity.TimeVisit.Value;
-            }
-
-            RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, candidatePOI.Entity.Id);
-            if (edge == null)
-            {
-               throw new NullReferenceException(nameof(edge));
-            }
-            timeWalk = TimeSpan.FromMinutes(edge.Weight() / _averageSpeedWalk / 60);
-
-            RouteWorker returnEdge = _cityMapClone.GetEdge(candidatePOI.Entity.Id, _startPOI.Entity.Id);
-            if (returnEdge == null)
-            {
-               throw new NullReferenceException(nameof(returnEdge));
-            }
-            timeReturn = TimeSpan.FromMinutes(returnEdge.Weight() / _averageSpeedWalk / 60);
-
-            return (timeVisit, timeWalk, timeReturn);
-         }
       }
 
       internal override bool StopConditions()

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// File update: 04/10/2018
 //
 
 using System;
@@ -57,7 +57,7 @@ namespace CityScover.Engine.Algorithms
                break;
             }
 
-            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareCosts(solution.Cost, bestSolution.Cost);
+            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, bestSolution.Cost);
             if (isBetterThanCurrentBestSolution)
             {
                bestSolution = solution;
@@ -83,14 +83,13 @@ namespace CityScover.Engine.Algorithms
       {
          var currentNeighborhood = _neighborhood.GetAllMoves(_bestSolution);
 
-         // TODO: Valutare la chiamata diretta ai componenti SolverValidator e SolverEvaluator sull'intorno
-         // e capire come gestire il discorso del monitoraggio dell'ExecutionReporter.
+         // TODO: Capire come gestire il monitoraggio dell'ExecutionReporter.
          Debug.WriteLine("Starting Local Search Validation");
          foreach (var neighborhoodSolution in currentNeighborhood)
          {
             // Notifica gli observers.
             notifyingFunc.Invoke(neighborhoodSolution);
-            await Task.Delay(100);
+            await Task.Delay(100).ConfigureAwait(continueOnCapturedContext: false);
          }
 
          await Task.WhenAll(Solver.AlgorithmTasks.ToArray());
@@ -102,10 +101,10 @@ namespace CityScover.Engine.Algorithms
          // Per come è fatta adesso, sarà sempre Best Improvement.
 
          // Se siamo ispirati (come no) lo faremo.
-         var solution = GetBest(currentNeighborhood, _bestSolution, null);
-                  
+         var solution = GetBest(currentNeighborhood, _bestSolution, null);         
          _previousSolutionCost = _currentSolutionCost;
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareCosts(solution.Cost, _bestSolution.Cost);
+
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
          if (isBetterThanCurrentBestSolution)
          {
             _bestSolution = solution;

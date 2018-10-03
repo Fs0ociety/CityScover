@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// File update: 04/10/2018
 //
 
 using System;
@@ -44,12 +44,14 @@ namespace CityScover.Engine
       /// problema sia di massimo o di minimo. Ad esempio, se il problema è di
       /// massimo, la funzione ritornerà true se cost1 > cost2.
       /// </summary>
-      /// <param name="cost1">Primo costo</param>
-      /// <param name="cost2">Secondo costo</param>
+      /// <param name="firstSolutionCost">Costo prima soluzione</param>
+      /// <param name="secondSolutionCost">Costo seconda soluzione</param>
       /// <returns>Il confronto da fare.</returns>
-      internal bool CompareCosts(int cost1, int cost2)
+      internal bool CompareSolutionsCost(int firstSolutionCost, int secondSolutionCost)
       {
-         return (IsMinimizing ? cost1 < cost2 : cost1 > cost2);         
+         return IsMinimizing
+            ? firstSolutionCost < secondSolutionCost
+            : firstSolutionCost > secondSolutionCost;
       }
       #endregion
    }

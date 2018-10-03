@@ -193,7 +193,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          // Notifica gli observers.
          notifyingFunc.Invoke(newSolution);
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareCosts(_currentSolution.Cost, _bestSolution.Cost);
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, _bestSolution.Cost);
          if (isBetterThanCurrentBestSolution)
          {
             _bestSolution = _currentSolution;            

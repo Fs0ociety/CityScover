@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/09/2018
+// File update: 04/10/2018
 //
 
 using System;
@@ -22,7 +22,7 @@ namespace CityScover.Engine
       private IDisposable _unsubscriber;
 
       #region Constructors
-      public ExecutionReporter()
+      internal ExecutionReporter()
       {
          // TODO
       }

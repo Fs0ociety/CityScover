@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// File update: 04/10/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -14,6 +14,22 @@ namespace CityScover.Engine.Workers
    internal sealed class CityMapGraph : Graph<int, InterestPointWorker, RouteWorker>
    {
       #region Internal methods
+      internal void AddRouteFromGraph(CityMapGraph source, int fromPOIKey, int toPOIKey)
+      {
+         if (source == null)
+         {
+            throw new ArgumentNullException();
+         }
+
+         RouteWorker edge = source.GetEdge(fromPOIKey, toPOIKey);
+         if (edge == null)
+         {
+            throw new InvalidOperationException();
+         }
+
+         AddEdge(fromPOIKey, toPOIKey, edge);
+      }
+
       /// <summary>
       /// A deep copy of the current CityMapGraph object.
       /// </summary>
@@ -37,22 +53,6 @@ namespace CityScover.Engine.Workers
             }
          }
          return copy;
-      }
-      
-      internal void AddRouteFromGraph(CityMapGraph source, int fromPOIKey, int toPOIKey)
-      {
-         if (source == null)
-         {
-            throw new ArgumentNullException();
-         }
-
-         RouteWorker edge = source.GetEdge(fromPOIKey, toPOIKey);
-         if (edge == null)
-         {
-            throw new InvalidOperationException();
-         }
-
-         AddEdge(fromPOIKey, toPOIKey, edge);
       }
       #endregion
    }

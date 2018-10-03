@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// File update: 04/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -106,20 +106,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
 
             newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointFromId, candidateEdgePointFromId);
             newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointToId, candidateEdgePointToId);
-            //RouteWorker newEdge1 = _cityMapClone.GetEdge(currentEdgePointFromId, candidateEdgePointFromId);
-            //if (newEdge1 == null)
-            //{
-            //   throw new InvalidOperationException();
-            //}
 
-            //RouteWorker newEdge2 = _cityMapClone.GetEdge(currentEdgePointToId, candidateEdgePointToId);
-            //if (newEdge2 == null)
-            //{
-            //   throw new InvalidOperationException();
-            //}
-
-            //newSolution.SolutionGraph.AddEdge(currentEdgePointFromId, candidateEdgePointFromId, newEdge1);
-            //newSolution.SolutionGraph.AddEdge(currentEdgePointToId, candidateEdgePointToId, newEdge2);
             //Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
             TwoOptTourInversion(currentEdge, candidateEdge, newSolution, candidateEdgePointFromId);
             neighborhood.Add(newSolution);
@@ -134,21 +121,14 @@ namespace CityScover.Engine.Algorithms.LocalSearch
          {
             var currNodeAdjNode = newSolution.SolutionGraph.GetAdjacentNodes(currentNodeId)
                .Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
+
             if (currNodeAdjNode == 0)
             {
                throw new InvalidOperationException();
             }
 
             newSolution.SolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
-
             newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
-            //RouteWorker invertedEdge = _cityMapClone.GetEdge(currNodeAdjNode, currentNodeId);
-            //if (invertedEdge == null)
-            //{
-            //   throw new InvalidOperationException();
-            //}
-
-            //newSolution.SolutionGraph.AddEdge(currNodeAdjNode, currentNodeId, invertedEdge);
             currentNodeId = currNodeAdjNode;
          }
       }

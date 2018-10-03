@@ -108,7 +108,7 @@ namespace CityScover.Engine
             }
          }
                   
-         OnTerminating();         
+         OnTerminating();
          OnTerminated();
       }
       #endregion
