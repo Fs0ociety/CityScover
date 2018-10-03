@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 01/10/2018
+// File update: 03/10/2018
 //
 
 using System;
@@ -36,6 +36,13 @@ namespace CityScover.Engine
       #region Internal properties
       internal ICollection<KeyValuePair<byte, Func<TOSolution, bool>>> Constraints { get; }
       internal bool IsMinimizing { get; set; } = true;
+      #endregion
+
+      #region Internal methods
+      internal bool CompareCosts(int cost1, int cost2)
+      {
+         return (IsMinimizing ? cost1 < cost2 : cost1 > cost2);         
+      }
       #endregion
    }
 }

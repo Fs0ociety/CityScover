@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 01/10/2018
+// File update: 03/10/2018
 //
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,10 +58,24 @@ namespace CityScover.Engine.Algorithms
                break;
             }
 
-            if (solution.Cost < bestSolution.Cost)
+            var isMinimizingProblem = Solver.Problem.IsMinimizing;
+            if (isMinimizingProblem)
             {
-               bestSolution = solution;
-               currentImprovement++;
+               if (solution.Cost < bestSolution.Cost)
+               {
+                  bestSolution = solution;
+                  _currentSolutionCost = solution.Cost;
+                  currentImprovement++;
+               }
+            }
+            else
+            {
+               if (solution.Cost > bestSolution.Cost)
+               {
+                  bestSolution = solution;
+                  _currentSolutionCost = solution.Cost;
+                  currentImprovement++;
+               }
             }
          }
 
@@ -79,17 +94,16 @@ namespace CityScover.Engine.Algorithms
 
       internal override async Task PerformStep()
       {
-         ICollection<TOSolution> processedNeighborhood = new Collection<TOSolution>();
-
          var currentNeighborhood = _neighborhood.GetAllMoves(_bestSolution);
 
          // TODO: Valutare la chiamata diretta ai componenti SolverValidator e SolverEvaluator sull'intorno
          // e capire come gestire il discorso del monitoraggio dell'ExecutionReporter.
-
+         Debug.WriteLine("Starting Local Search Validation");
          foreach (var neighborhoodSolution in currentNeighborhood)
          {
             // Notifica gli observers.
             notifyingFunc.Invoke(neighborhoodSolution);
+            await Task.Delay(100);
          }
 
          await Task.WhenAll(Solver.AlgorithmTasks.ToArray());
@@ -104,23 +118,11 @@ namespace CityScover.Engine.Algorithms
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
                   
          _previousSolutionCost = _currentSolutionCost;
-         var isMinimizingProblem = Solver.Problem.IsMinimizing;
-
-         if (isMinimizingProblem)
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareCosts(solution.Cost, _bestSolution.Cost);
+         if (isBetterThanCurrentBestSolution)
          {
-            if (solution.Cost < _bestSolution.Cost)
-            {
-               _bestSolution = solution;
-               _currentSolutionCost = solution.Cost;
-            }
-         }
-         else
-         {
-            if (solution.Cost > _bestSolution.Cost)
-            {
-               _bestSolution = solution;
-               _currentSolutionCost = solution.Cost;
-            }
+            _bestSolution = solution;
+            _currentSolutionCost = solution.Cost;
          }
       }
 

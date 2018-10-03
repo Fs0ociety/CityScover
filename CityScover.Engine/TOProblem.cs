@@ -3,11 +3,12 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 01/10/2018
+// File update: 03/10/2018
 //
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CityScover.Engine
@@ -76,8 +77,31 @@ namespace CityScover.Engine
       private int CalculateCost(TOSolution solution)
       {
          var solutionNodes = solution.SolutionGraph.Nodes;
-         return (from node in solutionNodes
-                 select node.Entity.Score.Value).Sum();
+
+         var totalScoreNodes = (from node in solutionNodes
+                                select node.Entity.Score.Value).Sum();
+
+         int totalScoreEdges = default;
+         solutionNodes.ToList().ForEach(node =>
+         {
+            var edges = solution.SolutionGraph.GetEdges(node.Entity.Id);
+            try
+            {
+               var edge = edges.FirstOrDefault();
+               if (edge != null)
+               {
+                  totalScoreEdges += checked((int)edge.Weight());
+               }
+            }
+            catch (OverflowException ex)
+            {
+               // PROVVISORIO
+               Debug.WriteLine(
+                  $"Objective Function exception during conversion double to int {ex.Message}");
+            }
+         });
+
+         return totalScoreNodes + totalScoreEdges;
       }
       #endregion
 
