@@ -28,43 +28,33 @@ namespace CityScover.Engine
       NearestNeighborKnapsack = 2,
 
       /// <summary>
-      /// NearestInsertion algorithm enumerator.
-      /// </summary>
-      NearestInsertion = 3,
-
-      /// <summary>
       /// CheapestInsertion algorithm enumerator.
       /// </summary>
-      CheapestInsertion = 4,
+      CheapestInsertion = 3,
 
       /// <summary>
       /// TwoOpt algorithm enumerator.
       /// </summary>
-      TwoOpt = 5,
+      TwoOpt = 4,
 
       /// <summary>
       /// CitySwap algorithm enumerator.
       /// </summary>
-      CitySwap = 6,
+      CitySwap = 5,
 
       /// <summary>
       /// LinKernighan algorithm enumerator.
       /// </summary>
-      LinKernighan = 7,
-
-      /// <summary>
-      /// IteratedLocalSearch algorithm enumerator.
-      /// </summary>
-      IteratedLocalSearch = 8,
+      LinKernighan = 6,
 
       /// <summary>
       /// TabuSearch algorithm enumerator.
       /// </summary>
-      TabuSearch = 9,
+      TabuSearch = 7,
 
       /// <summary>
       /// VariableNeighborhoodSearch algorithm enumerator.
       /// </summary>
-      VariableNeighborhoodSearch = 10
+      VariableNeighborhoodSearch = 8
    }
 }

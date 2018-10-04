@@ -13,8 +13,8 @@ namespace CityScover.Tests
 
       public Algorithm1()
       {
-         _innerAlgorithmTypes = new Collection<AlgorithmType>() {
-            AlgorithmType.NearestInsertion,
+         _innerAlgorithmTypes = new Collection<AlgorithmType>()
+         {
             AlgorithmType.TabuSearch
          };
       }

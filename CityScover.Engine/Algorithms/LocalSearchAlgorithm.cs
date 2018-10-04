@@ -83,16 +83,19 @@ namespace CityScover.Engine.Algorithms
       {
          var currentNeighborhood = _neighborhood.GetAllMoves(_bestSolution);
 
-         // TODO: Capire come gestire il monitoraggio dell'ExecutionReporter.
-         Debug.WriteLine("Starting Local Search Validation");
          foreach (var neighborhoodSolution in currentNeighborhood)
          {
             // Notifica gli observers.
-            notifyingFunc.Invoke(neighborhoodSolution);
-            await Task.Delay(100).ConfigureAwait(continueOnCapturedContext: false);
+            Solver.EnqueueSolution(neighborhoodSolution);
+            await Task.Delay(500).ConfigureAwait(continueOnCapturedContext: false);
+
+            if (Solver.IsMonitoringEnabled)
+            {
+               Provider.NotifyObservers(neighborhoodSolution);
+            }
          }
 
-         await Task.WhenAll(Solver.AlgorithmTasks.ToArray());
+         await Task.WhenAll(Solver.AlgorithmTasks.Values.ToList());
 
          // Ora sono sicuro di avere tutte le soluzioni dell'intorno valorizzate.
 

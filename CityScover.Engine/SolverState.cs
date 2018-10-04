@@ -26,8 +26,8 @@ namespace CityScover.Engine
    {
       private BlockingCollection<TOSolution> _solutionsQueue;
       private ICollection<Task> _solverTasks;
-      private ICollection<Task> _algorithmTasks;
-      
+      private IDictionary<int, Task> _algorithmTasks;
+
       #region Constructors
       private Solver()
       {
@@ -78,11 +78,11 @@ namespace CityScover.Engine
       
       internal TOSolution BestSolution { get; set; }
 
-      internal IEnumerable<Task> AlgorithmTasks => _algorithmTasks;
+      internal IDictionary<int, Task> AlgorithmTasks => _algorithmTasks;
       
-      internal ICollection<Result> Results { get; set; }
+      internal IDictionary<ResultType, Result> Results { get; private set; }
 
-      internal ICollection<byte> ConstraintsToRelax { get; set; }
+      internal ICollection<byte> ConstraintsToRelax { get; private set; }
       #endregion
 
       #region Overrides
@@ -90,8 +90,8 @@ namespace CityScover.Engine
       {
          _solutionsQueue = new BlockingCollection<TOSolution>();         
          _solverTasks = new Collection<Task>();
-         _algorithmTasks = new Collection<Task>();
-         Results = new Collection<Result>();
+         _algorithmTasks = new Dictionary<int, Task>();
+         Results = new Dictionary<ResultType, Result>();
          ConstraintsToRelax = new Collection<byte>();
       }
       #endregion

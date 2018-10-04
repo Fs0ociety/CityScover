@@ -178,7 +178,19 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
                .FirstOrDefault();
          }
 
-         // TODO: manca gestione nodo endPOI. Da mettere.         
+         _endPOI = GetEndPOI();
+
+         // TODO: manca gestione nodo endPOI. Da mettere.
+         InterestPointWorker GetEndPOI()
+         {
+            //_cityMapClone.Nodes.Where(node => _cityMapClone.Edges.Where(edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId).Select(x => x.Entity.PointFrom).FirstOrDefault())
+            var result = (from node in _cityMapClone.Nodes
+                         where node.Entity.Id == (from edge in _cityMapClone.Edges
+                                                  where edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId
+                                                  select edge.Entity.PointFrom.Id).FirstOrDefault()
+                         select node).FirstOrDefault();
+            return result;
+         }
       }
 
       internal override void OnTerminated()
@@ -191,14 +203,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          base.OnTerminating();
 
-         // Mando via solo la soluzione h-esima da validare.
-         TOSolution newSolution = new TOSolution()
-         {
-            SolutionGraph = _currentSolutionGraph.DeepCopy()
-         };
-
          // Notifica gli observers.
-         notifyingFunc.Invoke(newSolution);
+         // TODO
 
          bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, _bestSolution.Cost);
          if (isBetterThanCurrentBestSolution)
@@ -225,6 +231,18 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          var (steamSet, cycleSet) = BuildSteamAndCycle(sNode);
          BuildHamiltonianPath((steamSet, cycleSet), _currentSolutionGraph);
          ConnectHamiltonianPath(_currentSolutionGraph);
+
+         TOSolution newSolution = new TOSolution()
+         {
+            SolutionGraph = _currentSolutionGraph.DeepCopy()
+         };
+         Solver.EnqueueSolution(newSolution);
+         await Task.Delay(500).ConfigureAwait(continueOnCapturedContext: false);
+
+         if (Solver.IsMonitoringEnabled)
+         {
+            Provider.NotifyObservers(newSolution);
+         }
          _executedSteps++;
       }
 

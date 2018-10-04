@@ -44,9 +44,6 @@ namespace CityScover.Engine
                algorithm = new NearestNeighborKnapsackAlgorithm();
                break;
 
-            case AlgorithmType.NearestInsertion:
-               break;
-
             case AlgorithmType.CheapestInsertion:
                break;
 
@@ -58,9 +55,6 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.LinKernighan:
-               break;
-
-            case AlgorithmType.IteratedLocalSearch:
                break;
 
             case AlgorithmType.TabuSearch:

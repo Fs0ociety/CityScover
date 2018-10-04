@@ -41,7 +41,14 @@ namespace CityScover.Services
          foreach (var tourConfig in _tourConfigurations)
          {
             await solver.Execute(tourConfig);
+            //ReportConfiguration();
          }
+      }
+
+      public void ReportConfiguration()
+      {
+         // Usa stampe ordinate. Valutare un eventuale ReportService.
+         throw new System.NotImplementedException();
       }
       #endregion
    }

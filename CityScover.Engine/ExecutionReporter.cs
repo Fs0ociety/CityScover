@@ -8,6 +8,8 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -20,6 +22,7 @@ namespace CityScover.Engine
    internal class ExecutionReporter : IObserver<TOSolution>
    {
       private IDisposable _unsubscriber;
+      private Stopwatch _timer;
 
       #region Constructors
       internal ExecutionReporter()
@@ -59,29 +62,38 @@ namespace CityScover.Engine
             throw new ArgumentNullException(nameof(algorithm));
          }
 
-         Stopwatch timer = Stopwatch.StartNew();
+         _timer = Stopwatch.StartNew();
          await Task.Run(() => algorithm.Start());
-         timer.Stop();
-         RunningTime = timer;
+         RunningTime = _timer;
       }
       #endregion
 
-      #region Interfaces implementation
+      #region IObserver implementation
       public void OnNext(TOSolution solution)
       {
-         Debug.WriteLine("Solution received");
-         Solver.EnqueueSolution(solution);
+         Task taskToAwait = Solver.AlgorithmTasks[solution.Id];
+         Task.WaitAll(taskToAwait);
+         Console.WriteLine($"{nameof(ExecutionReporter)} " +
+            $"- Solution received: {solution.Id}, COST: {solution.Cost} PENALTY: {solution.Penalty}");
       }
    
       public void OnError(Exception error)
       {
-         Debug.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred!\n");
+         _timer.Stop();
+         Console.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred!\n");
          throw error;
       }
 
       public void OnCompleted()
       {
-         throw new NotImplementedException();
+         _timer.Stop();
+         string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
+         Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
+            $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.");
+
+         ResultType resultType = Result.GetResultTypeFromAlgorithmType(Solver.CurrentStage.Flow.CurrentAlgorithm);
+         Result algorithmResult = Solver.Results[resultType];
+         algorithmResult.RunningTime = _timer;
       }
       #endregion
    }

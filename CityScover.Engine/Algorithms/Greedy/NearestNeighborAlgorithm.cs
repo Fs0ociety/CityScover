@@ -138,8 +138,8 @@ namespace CityScover.Engine.Algorithms.Greedy
          base.OnError();
          _currentStep = default;
          TOSolution lastProducedSolution = _solutions.Last();
-         Result resultError = new Result(lastProducedSolution, _timeSpent, resultType: ResultType.Greedy, Result.Validity.Invalid);
-         Solver.Results.Add(resultError);
+         Result resultError = new Result(lastProducedSolution, _timeSpent, Result.Validity.Invalid);
+         Solver.Results.Add(ResultType.Greedy, resultError);
       }
 
       internal override void OnInitializing()
@@ -175,13 +175,6 @@ namespace CityScover.Engine.Algorithms.Greedy
          _currentSolutionGraph.AddNode(neighborPOIId, neighborPOI);
 
          _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, firstPOIId, neighborPOIId);
-         //RouteWorker edge1 = _cityMapClone.GetEdge(firstPOIId, neighborPOIId);
-         //if (edge1 == null)
-         //{
-         //   throw new InvalidOperationException();
-         //}
-
-         //_currentSolutionGraph.AddEdge(firstPOIId, neighborPOIId, edge1);
          _newStartPOI = neighborPOI;
 
          InterestPointWorker GetStartPOI()
@@ -196,26 +189,19 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override void OnTerminated()
       {
-         base.OnTerminated();
+         //base.OnTerminated();
          _cityMapClone = null;
          TOSolution bestProducedSolution = _solutions.Last();
-         Result validResult = new Result(bestProducedSolution, _timeSpent, resultType: ResultType.Greedy, Result.Validity.Valid);
-         Solver.Results.Add(validResult);
-         Task.WaitAll(Solver.AlgorithmTasks.ToArray());
+         Result validResult = new Result(bestProducedSolution, _timeSpent, Result.Validity.Valid);
+         Solver.Results.Add(ResultType.Greedy, validResult);
+         Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
+         base.OnTerminated();
       }
 
       internal override void OnTerminating()
       {
          base.OnTerminating();
-
          _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, _startPOI.Entity.Id);
-         //RouteWorker edge1 = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, _startPOI.Entity.Id);
-         //if (edge1 == null)
-         //{
-         //   throw new InvalidOperationException();
-         //}
-
-         //_currentSolutionGraph.AddEdge(_newStartPOI.Entity.Id, _startPOI.Entity.Id, edge1);
          Solver.BestSolution = _solutions.Last();
       }
 
@@ -241,13 +227,17 @@ namespace CityScover.Engine.Algorithms.Greedy
                                   .Add(tReturn)
          };
          _solutions.Add(newSolution);
-
-         // Notify observers.
-         notifyingFunc.Invoke(newSolution);
+         Solver.EnqueueSolution(newSolution);
          
          // PROVVISORIO
          //Task.WaitAll(Solver.AlgorithmTasks.ToArray());
          await Task.Delay(500).ConfigureAwait(continueOnCapturedContext: false);
+
+         // Notify observers.
+         if (Solver.IsMonitoringEnabled)
+         {
+            Provider.NotifyObservers(newSolution);
+         }
       }
 
       internal override bool StopConditions()

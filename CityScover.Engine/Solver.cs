@@ -48,7 +48,7 @@ namespace CityScover.Engine
       {
          CityScoverRepository.LoadPoints(WorkingConfiguration.PointsCount);
 
-         // Filtering points by category.
+         // Filtering points by tour category.
          Points = from point in CityScoverRepository.Points
                   where point.Category.Id == WorkingConfiguration.TourCategory ||
                         point.Category.Id == TourCategoryType.None   // Hotel
@@ -81,7 +81,7 @@ namespace CityScover.Engine
          foreach (var solution in _solutionsQueue.GetConsumingEnumerable())
          {
             Task processingSolutionTask = Task.Run(() => ProcessSolution(solution));
-            _algorithmTasks.Add(processingSolutionTask);
+            _algorithmTasks.Add(solution.Id, processingSolutionTask);
          }
 
          void ProcessSolution(TOSolution solution)
@@ -153,6 +153,7 @@ namespace CityScover.Engine
          finally
          {
             reporter.Unsubscribe();
+            reporter = null;
          }
 
          if (!exceptionOccurred)

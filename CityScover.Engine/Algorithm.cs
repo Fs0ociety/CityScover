@@ -22,7 +22,6 @@ namespace CityScover.Engine
       #region Protected members
       protected AlgorithmStatus _status;
       protected ushort _currentStep;
-      protected Action<TOSolution> notifyingFunc;
       protected Solver Solver => Solver.Instance;
       #endregion
 
@@ -122,15 +121,6 @@ namespace CityScover.Engine
       internal virtual void OnInitializing()
       {
          _status = AlgorithmStatus.Initializing;
-
-         if (Solver.IsMonitoringEnabled)
-         {
-            notifyingFunc = _provider.NotifyObservers;
-         }
-         else
-         {
-            notifyingFunc = Solver.EnqueueSolution;
-         }
       }
       internal virtual void OnTerminating()
       {

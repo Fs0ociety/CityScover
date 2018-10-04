@@ -13,7 +13,7 @@ using System.Linq;
 namespace CityScover.Engine
 {
    /// <summary>
-   /// TODO
+   /// This class has the responsability to validate a Solution received from the Solver instance.
    /// </summary>
    internal sealed class SolverValidator : Singleton<SolverValidator>
    {
@@ -32,7 +32,6 @@ namespace CityScover.Engine
       #region Internal methods
       internal void Validate(TOSolution solution)
       {
-         Debug.WriteLine($"{nameof(SolverValidator)} begin Validate() of solution {solution.Id}");
          var problemConstraints = Solver.Problem.Constraints;
 
          // Get the constraints delegates to be invoked.
@@ -47,7 +46,6 @@ namespace CityScover.Engine
             bool isValid = constraint.Value.Invoke(solution);
             solution.ProblemConstraints.Add(constraint.Key, isValid);
          }
-         Debug.WriteLine($"{nameof(SolverValidator)} end Validate() of solution {solution.Id}");
       }
       #endregion
    }

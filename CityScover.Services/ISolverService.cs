@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 04/10/2018
 //
 
 using System.Threading.Tasks;
@@ -15,6 +15,11 @@ namespace CityScover.Services
       /// <summary>
       /// Invoke the Solver instance of CityScover.Engine to run configurations contained into RunningConfigs.
       /// </summary>      
-      Task Run();      
+      Task Run();
+
+      /// <summary>
+      /// Invoke the Solver instance to display results at the end of Configuration's execution.
+      /// </summary>
+      void ReportConfiguration();
    }
 }
