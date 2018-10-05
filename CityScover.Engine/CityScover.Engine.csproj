@@ -51,11 +51,12 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
-    <Compile Include="Algorithms\Greedy\NearestNeighborAlgorithm.cs" />
-    <Compile Include="Algorithms\Greedy\NearestNeighborKnapsackAlgorithm.cs" />
+    <Compile Include="Algorithms\Greedy\NearestNeighbor.cs" />
+    <Compile Include="Algorithms\Greedy\NearestNeighborKnapsack.cs" />
+    <Compile Include="Algorithms\LocalSearches\TwoOptNeighborhood.cs" />
+    <Compile Include="Algorithms\Metaheuristics\TabuSearch.cs" />
     <Compile Include="Result.cs" />
-    <Compile Include="Algorithms\LocalSearch\TwoOptNeighborhood.cs" />
-    <Compile Include="Algorithms\LocalSearchAlgorithm.cs" />
+    <Compile Include="Algorithms\LocalSearch.cs" />
     <Compile Include="Algorithms\VariableDepthSearch\LinKernighanAlgorithm.cs" />
     <Compile Include="Algorithms\Neighborhood.cs" />
     <Compile Include="AlgorithmTracker.cs" />
@@ -104,5 +105,6 @@
     <None Include="CityScoverEngine.cd" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

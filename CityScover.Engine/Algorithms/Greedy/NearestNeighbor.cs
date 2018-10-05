@@ -18,7 +18,7 @@ namespace CityScover.Engine.Algorithms.Greedy
    /// <summary>
    /// This class implements the Nearest Neighbor algorithm of the Greedy family's algorithms.
    /// </summary>
-   internal class NearestNeighborAlgorithm : Algorithm
+   internal class NearestNeighbor : Algorithm
    {
       private double _averageSpeedWalk;
       private ICollection<TOSolution> _solutions;
@@ -29,12 +29,12 @@ namespace CityScover.Engine.Algorithms.Greedy
       private DateTime _timeSpent;
 
       #region Constructors
-      internal NearestNeighborAlgorithm()
+      internal NearestNeighbor()
          : this(null)
       {
       }
 
-      internal NearestNeighborAlgorithm(AlgorithmTracker provider)
+      internal NearestNeighbor(AlgorithmTracker provider)
          : base(provider)
       {
       }

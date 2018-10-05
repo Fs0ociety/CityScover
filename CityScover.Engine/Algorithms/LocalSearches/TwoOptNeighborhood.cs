@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 04/10/2018
+// File update: 05/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace CityScover.Engine.Algorithms.LocalSearch
+namespace CityScover.Engine.Algorithms.LocalSearches
 {
    internal class TwoOptNeighborhood : Neighborhood
    {
@@ -57,16 +57,16 @@ namespace CityScover.Engine.Algorithms.LocalSearch
                      {
                         continue;
                      }
-                     
+
                      if (!_currentSolutionGraph.AreAdjacentEdges(
                            currentEdge.Entity.PointFrom.Id,
-                           currentEdge.Entity.PointTo.Id, 
+                           currentEdge.Entity.PointTo.Id,
                            procNodeAdjNodeEdge.Entity.PointFrom.Id,
                            procNodeAdjNodeEdge.Entity.PointTo.Id))
                      {
                         candidateEdges.Add(procNodeAdjNodeEdge);
                      }
-                     
+
                      procNodeAdjNodeEdge.IsVisited = true;
 
                      if (adjacentNodeId != previousProcessingNodeId)
@@ -81,7 +81,7 @@ namespace CityScover.Engine.Algorithms.LocalSearch
                if (candidateEdges.Any())
                {
                   ProcessingCandidates(candidateEdges, currentEdge, neighborhood);
-               }               
+               }
             }
          }
          return neighborhood;

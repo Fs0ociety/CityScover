@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 30/09/2018
+// File update: 05/10/2018
 //
 
 using CityScover.Engine.Algorithms;
 using CityScover.Engine.Algorithms.Greedy;
-using CityScover.Engine.Algorithms.LocalSearch;
+using CityScover.Engine.Algorithms.LocalSearches;
+using CityScover.Engine.Algorithms.Metaheuristics;
 
 namespace CityScover.Engine
 {
@@ -37,18 +38,18 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.NearestNeighbor:
-               algorithm = new NearestNeighborAlgorithm();
+               algorithm = new NearestNeighbor();
                break;
 
             case AlgorithmType.NearestNeighborKnapsack:
-               algorithm = new NearestNeighborKnapsackAlgorithm();
+               algorithm = new NearestNeighborKnapsack();
                break;
 
             case AlgorithmType.CheapestInsertion:
                break;
 
             case AlgorithmType.TwoOpt:
-               algorithm = new LocalSearchAlgorithm(new TwoOptNeighborhood());
+               algorithm = new LocalSearch(new TwoOptNeighborhood());
                break;
 
             case AlgorithmType.CitySwap:
@@ -58,6 +59,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TabuSearch:
+               algorithm = new TabuSearch();
                break;
 
             case AlgorithmType.VariableNeighborhoodSearch:

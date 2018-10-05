@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace CityScover.Engine.Algorithms.Greedy
 {
-   internal class NearestNeighborKnapsackAlgorithm : NearestNeighborAlgorithm
+   internal class NearestNeighborKnapsack : NearestNeighbor
    {
       /// <summary>
       /// This implementation is the knapsack style Best Closest Neighbor variant.

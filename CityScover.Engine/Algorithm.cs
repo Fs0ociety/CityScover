@@ -3,10 +3,9 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 01/10/2018
+// File update: 05/10/2018
 //
 
-using System;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine

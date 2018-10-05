@@ -8,13 +8,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
 {
-   internal class LocalSearchAlgorithm : Algorithm
+   internal class LocalSearch : Algorithm
    {
       private int _previousSolutionCost;
       private int _currentSolutionCost;
@@ -22,12 +21,12 @@ namespace CityScover.Engine.Algorithms
       private Neighborhood _neighborhood;
 
       #region Constructors
-      internal LocalSearchAlgorithm(Neighborhood neighborhood)
+      internal LocalSearch(Neighborhood neighborhood)
          : this(neighborhood, null)
       {
       }
 
-      public LocalSearchAlgorithm(Neighborhood neighborhood, AlgorithmTracker provider)
+      public LocalSearch(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
          _neighborhood = neighborhood;
