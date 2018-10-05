@@ -179,16 +179,18 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          }
 
          _endPOI = GetEndPOI();
-
-         // TODO: manca gestione nodo endPOI. Da mettere.
+                  
          InterestPointWorker GetEndPOI()
          {
-            //_cityMapClone.Nodes.Where(node => _cityMapClone.Edges.Where(edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId).Select(x => x.Entity.PointFrom).FirstOrDefault())
-            var result = (from node in _cityMapClone.Nodes
-                         where node.Entity.Id == (from edge in _cityMapClone.Edges
-                                                  where edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId
-                                                  select edge.Entity.PointFrom.Id).FirstOrDefault()
-                         select node).FirstOrDefault();
+            var result = _cityMapClone.Nodes.Where(
+               node => node.Entity.Id.Equals(_cityMapClone.Edges.Where(
+                  edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId).Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
+            
+            //var result = (from node in _cityMapClone.Nodes
+            //             where node.Entity.Id == (from edge in _cityMapClone.Edges
+            //                                      where edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId
+            //                                      select edge.Entity.PointFrom.Id).FirstOrDefault()
+            //             select node).FirstOrDefault();
             return result;
          }
       }
