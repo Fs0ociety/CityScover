@@ -23,23 +23,23 @@ namespace CityScover.Engine
       /// <returns>
       /// The Problem's instance.
       /// </returns>
-      internal static Problem CreateProblem(ProblemType currentProblem)
+      internal static Problem CreateProblem(ProblemFamily currentProblem)
       {
          Problem problem = default;
 
          switch (currentProblem)
          {
-            case ProblemType.None:
+            case ProblemFamily.None:
                break;
 
-            case ProblemType.TeamOrienteering:
+            case ProblemFamily.TeamOrienteering:
                problem = new TOProblem();
                break;
 
-            case ProblemType.TravellingSalesmanProblem:
+            case ProblemFamily.TravellingSalesmanProblem:
                break;
 
-            case ProblemType.VehicleRoutingProblem:
+            case ProblemFamily.VehicleRoutingProblem:
                break;
 
             default:

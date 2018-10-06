@@ -2,7 +2,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 01/10/2018
+// File update: 06/10/2018
 //
 
 using CityScover.Entities;
@@ -30,14 +30,14 @@ namespace CityScover.Engine.Configs
          #region Configuration 1
          _configurations.Add(new Configuration()
          {
-            CurrentProblem = ProblemType.TeamOrienteering,
+            CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsCount = 15,
             StartPOIId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),
-            AlgorithmMonitoring = true,
+            AlgorithmMonitoring = false,
             Stages = 
             {
                new Stage()

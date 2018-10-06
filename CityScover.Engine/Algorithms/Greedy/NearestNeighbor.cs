@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 04/10/2018
+// File update: 06/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -139,7 +139,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _currentStep = default;
          TOSolution lastProducedSolution = _solutions.Last();
          Result resultError = new Result(lastProducedSolution, _timeSpent, Result.Validity.Invalid);
-         Solver.Results.Add(ResultType.Greedy, resultError);
+         Solver.Results.Add(AlgorithmFamily.Greedy, resultError);
       }
 
       internal override void OnInitializing()
@@ -189,11 +189,10 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override void OnTerminated()
       {
-         //base.OnTerminated();
          _cityMapClone = null;
          TOSolution bestProducedSolution = _solutions.Last();
          Result validResult = new Result(bestProducedSolution, _timeSpent, Result.Validity.Valid);
-         Solver.Results.Add(ResultType.Greedy, validResult);
+         Solver.Results.Add(AlgorithmFamily.Greedy, validResult);
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          base.OnTerminated();
       }
@@ -228,10 +227,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          };
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
-         
-         // PROVVISORIO
-         //Task.WaitAll(Solver.AlgorithmTasks.ToArray());
-         await Task.Delay(500).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 
          // Notify observers.
          if (Solver.IsMonitoringEnabled)

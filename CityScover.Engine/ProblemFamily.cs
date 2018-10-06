@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/09/2018
+// File update: 06/10/2018
 //
 
 namespace CityScover.Engine
 {
-   public enum ProblemType
+   #region Enumerations
+   internal enum ProblemFamily
    {
       /// <summary>
       /// Invalid problem.
@@ -33,4 +34,5 @@ namespace CityScover.Engine
       // ...
       // Add your own new problem's types here to expand new possible problems to solve.
    }
+   #endregion
 }

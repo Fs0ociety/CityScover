@@ -3,13 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 04/10/2018
+// File update: 06/10/2018
 //
 
 using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -27,7 +25,6 @@ namespace CityScover.Engine
       #region Constructors
       internal ExecutionReporter()
       {
-         // TODO
       }
       #endregion
 
@@ -91,7 +88,7 @@ namespace CityScover.Engine
          Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.");
 
-         ResultType resultType = Result.GetResultTypeFromAlgorithmType(Solver.CurrentStage.Flow.CurrentAlgorithm);
+         AlgorithmFamily resultType = Result.GetAlgorithmFamilyByAlgorithmType(Solver.CurrentStage.Flow.CurrentAlgorithm);
          Result algorithmResult = Solver.Results[resultType];
          algorithmResult.RunningTime = _timer;
       }

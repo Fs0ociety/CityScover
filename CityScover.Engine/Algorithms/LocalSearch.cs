@@ -3,12 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 04/10/2018
+// File update: 06/10/2018
 //
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
@@ -86,15 +85,14 @@ namespace CityScover.Engine.Algorithms
          {
             // Notifica gli observers.
             Solver.EnqueueSolution(neighborhoodSolution);
-            await Task.Delay(500).ConfigureAwait(continueOnCapturedContext: false);
+            await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 
             if (Solver.IsMonitoringEnabled)
             {
                Provider.NotifyObservers(neighborhoodSolution);
             }
          }
-
-         await Task.WhenAll(Solver.AlgorithmTasks.Values.ToList());
+         await Task.WhenAll(Solver.AlgorithmTasks.Values);
 
          // Ora sono sicuro di avere tutte le soluzioni dell'intorno valorizzate.
 
@@ -112,6 +110,21 @@ namespace CityScover.Engine.Algorithms
             _bestSolution = solution;
             _currentSolutionCost = solution.Cost;
          }
+      }
+
+      internal override void OnError()
+      {
+         base.OnError();
+      }
+
+      internal override void OnTerminating()
+      {
+         base.OnTerminating();
+      }
+
+      internal override void OnTerminated()
+      {
+         base.OnTerminated();
       }
 
       internal override bool StopConditions()

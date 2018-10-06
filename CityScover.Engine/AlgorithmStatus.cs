@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 17/08/2018
+// File update: 06/10/2018
 //
 
 namespace CityScover.Engine
 {
-   public enum AlgorithmStatus
+   #region Enumerations
+   internal enum AlgorithmStatus
    {
       /// <summary>
       /// Invalid status of the Algorithm.
@@ -40,4 +41,5 @@ namespace CityScover.Engine
       /// </summary>
       Error
    }
+   #endregion
 }

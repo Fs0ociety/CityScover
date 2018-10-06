@@ -6,6 +6,7 @@
 // File update: 05/10/2018
 //
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -25,6 +26,11 @@ namespace CityScover.Engine
 
       internal StageFlow(AlgorithmType algorithm, byte runningCount)
       {
+         if (runningCount == 0)
+         {
+            throw new ArgumentException($"Bad configuration format: " +
+               $"{nameof(runningCount)} parameter must be greater than 0.");
+         }
          CurrentAlgorithm = algorithm;
          RunningCount = runningCount;
          ChildrenFlows = new Collection<StageFlow>();

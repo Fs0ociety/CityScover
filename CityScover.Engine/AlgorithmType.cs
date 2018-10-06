@@ -8,6 +8,7 @@
 
 namespace CityScover.Engine
 {
+   #region Enumerations
    public enum AlgorithmType
    {
       /// <summary>
@@ -20,7 +21,7 @@ namespace CityScover.Engine
       /// with classic closest neighbor best function enumerator.
       /// </summary>
       NearestNeighbor = 1,
-      
+
       /// <summary>
       /// NearestNeighbor algorithm 
       /// with knapsack best function enumerator.
@@ -57,4 +58,5 @@ namespace CityScover.Engine
       /// </summary>
       VariableNeighborhoodSearch = 8
    }
+   #endregion
 }

@@ -33,7 +33,7 @@ namespace CityScover.Engine
       internal double WalkingSpeed { get; set; }
       internal DateTime ArrivalTime { get; set; }
       internal TimeSpan TourDuration { get; set; }
-      internal ProblemType CurrentProblem { get; set; }
+      internal ProblemFamily CurrentProblem { get; set; }
       public bool AlgorithmMonitoring { get; set; }
       internal ICollection<Stage> Stages { get; set; }      
       #endregion

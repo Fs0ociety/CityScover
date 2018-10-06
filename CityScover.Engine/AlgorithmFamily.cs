@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 30/09/2018
+// File update: 06/10/2018
 //
 
 namespace CityScover.Engine
 {
-   internal enum ResultType
+   #region Enumerations
+   internal enum AlgorithmFamily
    {
       None,
       Greedy,
@@ -16,4 +17,5 @@ namespace CityScover.Engine
       Heuristic,
       MetaHeuristic,
    }
+   #endregion
 }
