@@ -17,15 +17,15 @@ namespace CityScover.Engine.Algorithms
       private int _previousSolutionCost;
       private int _currentSolutionCost;
       private TOSolution _bestSolution;
-      private Neighborhood _neighborhood;
+      private INeighborhood _neighborhood;
 
       #region Constructors
-      internal LocalSearch(Neighborhood neighborhood)
+      internal LocalSearch(INeighborhood neighborhood)
          : this(neighborhood, null)
       {
       }
 
-      public LocalSearch(Neighborhood neighborhood, AlgorithmTracker provider)
+      public LocalSearch(INeighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
          _neighborhood = neighborhood;
@@ -37,7 +37,7 @@ namespace CityScover.Engine.Algorithms
       {
          if (neighborhood == null || currentSolution == null)
          {
-            throw new ArgumentNullException(nameof(Neighborhood));
+            throw new ArgumentNullException(nameof(INeighborhood));
          }
 
          if (maxImprovementsCount.HasValue && maxImprovementsCount == 0)
@@ -129,8 +129,15 @@ namespace CityScover.Engine.Algorithms
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == _currentSolutionCost || 
-            _status == AlgorithmStatus.Error;
+         if (AcceptImprovementsOnly)
+         {
+            return _currentSolutionCost < _previousSolutionCost ||
+               _status == AlgorithmStatus.Error;
+         }
+
+         return true;
+         //return _previousSolutionCost == _currentSolutionCost || 
+         //   _status == AlgorithmStatus.Error;
       }
       #endregion
    }

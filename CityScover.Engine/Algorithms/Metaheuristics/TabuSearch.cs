@@ -20,8 +20,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
    internal class TabuSearch : Algorithm
    {
-      private Neighborhood _localSearchNeighborhood;    // Approccio 1
-      private LocalSearch _localSearchAlgorithm;   // Approccio 2
+      private LocalSearch _localSearchAlgorithm;
       private IList<TOSolution> _tabuList;
       private TOSolution _bestSolution;
       private int _currentIteration;
@@ -58,37 +57,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          return algorithms;
       }
 
-      private LocalSearch GetInnerAlgorithm()
-      {
-         LocalSearch ls = default;
-         var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms == null)
-         {
-            return null;
-         }
-
-         var algorithmFlow = childrenAlgorithms.FirstOrDefault();
-         if (algorithmFlow == null)
-         {
-            return null;
-         }
-
-         var algorithmFamily = Result.GetAlgorithmFamilyByAlgorithmType(algorithmFlow.CurrentAlgorithm);
-         if (algorithmFamily != AlgorithmFamily.LocalSearch)
-         {
-            return null;
-         }
-
-         Algorithm algorithm = Solver.GetAlgorithm(algorithmFlow.CurrentAlgorithm);
-         if (algorithm is LocalSearch)
-         {
-            ls = (LocalSearch)algorithm;
-         }
-
-         return ls;
-      }
-
-      private Neighborhood GetLocalSearchNeighborhood()
+      private LocalSearch GetLocalSearchAlgorithm()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
          if (childrenAlgorithms == null)
@@ -105,7 +74,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          switch (algorithmFlow.CurrentAlgorithm)
          {
             case AlgorithmType.TwoOpt:
-               _localSearchNeighborhood = new TwoOptNeighborhood();
+               _localSearchAlgorithm = 
+                  new LocalSearch(new TabuSearchTwoOptNeighborhood());
                break;
 
             case AlgorithmType.CitySwap:
@@ -115,11 +85,11 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             // Repeat for other Local Search algorithms...
 
             default:
-               _localSearchNeighborhood = null;
+               _localSearchAlgorithm = null;
                break;
          }
 
-         return _localSearchNeighborhood;
+         return _localSearchAlgorithm;
       }
       #endregion
 
@@ -131,8 +101,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _currentIteration = default;
          _bestSolution = Solver.BestSolution;
          _tabuList = new List<TOSolution>();
-         _localSearchAlgorithm = GetInnerAlgorithm();
-         _localSearchNeighborhood = GetLocalSearchNeighborhood();
+         _localSearchAlgorithm = GetLocalSearchAlgorithm();
 
          if (_localSearchAlgorithm == null)
          {
@@ -140,25 +109,19 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
-         if (_localSearchNeighborhood == null)
-         {
-            throw new InvalidOperationException("Tabù Search neighborhood");
-         }
+         _localSearchAlgorithm.AcceptImprovementsOnly = false;
       }
 
       internal override async Task PerformStep()
       {
-         #region Approccio 1: Neighborhood
-         var neighborhood = _localSearchNeighborhood.GetAllMoves(_bestSolution);
-         // TODO: Validate each solution of the Neighborhood
-         // TODO: Invoke the Best function on Neighborhood
-         #endregion
+         await Task.Run(() => _localSearchAlgorithm.PerformStep());
 
-         #region Approccio 2 - Algorithm invocation
-         await Task.Run(() => _localSearchAlgorithm.Start());
-         // Need to access to the CurrentSolution property of the local search algorithm to continue. 
-         #endregion
-
+         if (!_tabuList.Any())
+         {
+            throw new InvalidOperationException(
+               $"{nameof(_tabuList)} cannot be empty.");
+         }
+                                 
          foreach (var item in _tabuList)
          {
             // TODO: Handle expiration

@@ -55,10 +55,12 @@
     <Compile Include="Algorithms\Greedy\NearestNeighborKnapsack.cs" />
     <Compile Include="Algorithms\LocalSearches\TwoOptNeighborhood.cs" />
     <Compile Include="Algorithms\Metaheuristics\TabuSearch.cs" />
+    <Compile Include="Algorithms\Metaheuristics\TabuSearchNeighborhood.cs" />
+    <Compile Include="Algorithms\Metaheuristics\TabuSearchTwoOptNeighborhood.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Algorithms\LocalSearch.cs" />
     <Compile Include="Algorithms\VariableDepthSearch\LinKernighanAlgorithm.cs" />
-    <Compile Include="Algorithms\Neighborhood.cs" />
+    <Compile Include="Algorithms\INeighborhood.cs" />
     <Compile Include="AlgorithmTracker.cs" />
     <Compile Include="AlgorithmType.cs" />
     <Compile Include="Configuration.cs" />

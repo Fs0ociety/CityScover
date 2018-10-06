@@ -166,33 +166,30 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          // TODO: la prende dal solver?
          _bestSolution = Solver.BestSolution;
          _currentSolutionGraph = _bestSolution.SolutionGraph.DeepCopy();
-         _startPOI = GetStartPOI();
 
-         // TODO: Refactoring, è doppia.
-         InterestPointWorker GetStartPOI()
+         var startPOIId = Solver.WorkingConfiguration.StartPOIId;
+         _startPOI = _cityMapClone.Nodes
+            .Where(x => x.Entity.Id == startPOIId)
+            .FirstOrDefault();
+         
+         _endPOI = _cityMapClone.Nodes.Where(
+            node => node.Entity.Id.Equals(_cityMapClone.Edges.Where(
+               edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId).Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
+
+         if (_startPOI == null || _endPOI == null)
          {
-            var startPOIId = Solver.WorkingConfiguration.StartPOIId;
-
-            return _cityMapClone.Nodes
-               .Where(x => x.Entity.Id == startPOIId)
-               .FirstOrDefault();
+            throw new NullReferenceException();
          }
 
-         _endPOI = GetEndPOI();
-                  
-         InterestPointWorker GetEndPOI()
-         {
-            var result = _cityMapClone.Nodes.Where(
-               node => node.Entity.Id.Equals(_cityMapClone.Edges.Where(
-                  edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId).Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
-            
-            //var result = (from node in _cityMapClone.Nodes
-            //             where node.Entity.Id == (from edge in _cityMapClone.Edges
-            //                                      where edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId
-            //                                      select edge.Entity.PointFrom.Id).FirstOrDefault()
-            //             select node).FirstOrDefault();
-            return result;
-         }
+         //InterestPointWorker GetEndPOI()
+         //{
+         //   var result = (from node in _cityMapClone.Nodes
+         //                 where node.Entity.Id == (from edge in _cityMapClone.Edges
+         //                                          where edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId
+         //                                          select edge.Entity.PointFrom.Id).FirstOrDefault()
+         //                 select node).FirstOrDefault();
+         //   return result;
+         //}
       }
 
       internal override void OnTerminated()

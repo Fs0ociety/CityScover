@@ -14,12 +14,12 @@ using System.Linq;
 
 namespace CityScover.Engine.Algorithms.LocalSearches
 {
-   internal class TwoOptNeighborhood : Neighborhood
+   internal class TwoOptNeighborhood : INeighborhood
    {
       private CityMapGraph _currentSolutionGraph;
       private CityMapGraph _cityMapClone;
 
-      internal override IEnumerable<TOSolution> GetAllMoves(in TOSolution currentSolution)
+      internal IEnumerable<TOSolution> GetAllMoves(in TOSolution currentSolution)
       {
          _cityMapClone = Solver.Instance.CityMapGraph.DeepCopy();
          var neighborhood = new Collection<TOSolution>();
@@ -131,6 +131,16 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
             currentNodeId = currNodeAdjNode;
          }
+      }
+
+      //IEnumerable<TOSolution> GetAllMoves(in TOSolution currentSolution, IList<int> tabuList)
+      //{
+      //   return GetAllMoves(currentSolution);
+      //}
+
+      IEnumerable<TOSolution> INeighborhood.GetAllMoves(in TOSolution currentSolution)
+      {
+         throw new NotImplementedException();
       }
    }
 }

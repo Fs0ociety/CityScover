@@ -45,9 +45,9 @@ namespace CityScover.Engine
       #endregion
 
       #region Static methods
-      internal static AlgorithmFamily GetAlgorithmFamilyByAlgorithmType(AlgorithmType algorithm)
+      internal static AlgorithmFamily GetAlgorithmFamilyByType(AlgorithmType algorithm)
       {
-         AlgorithmFamily result = default;
+         AlgorithmFamily result = default; 
 
          switch (algorithm)
          {

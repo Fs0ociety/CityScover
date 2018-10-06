@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 05/10/2018
+// File update: 06/10/2018
 //
 
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace CityScover.Engine
    /// </summary>
    internal abstract class Algorithm
    {
-      private bool _acceptImprovements;
+      private bool _acceptImprovementsOnly;
       private AlgorithmTracker _provider;
 
       #region Protected members
@@ -30,9 +30,9 @@ namespace CityScover.Engine
       {
       }
 
-      internal Algorithm(AlgorithmTracker provider, bool acceptImprovements = true)
+      internal Algorithm(AlgorithmTracker provider, bool acceptImprovementsOnly = true)
       {
-         _acceptImprovements = acceptImprovements;
+         _acceptImprovementsOnly = acceptImprovementsOnly;
          _provider = provider;
       }
       #endregion
@@ -63,12 +63,12 @@ namespace CityScover.Engine
 
       internal bool AcceptImprovementsOnly
       {
-         get => _acceptImprovements;
+         get => _acceptImprovementsOnly;
          set
          {
-            if (_acceptImprovements != value)
+            if (_acceptImprovementsOnly != value)
             {
-               _acceptImprovements = value;
+               _acceptImprovementsOnly = value;
             }
          }
       }
