@@ -6,7 +6,6 @@
 // File update: 06/10/2018
 //
 
-using CityScover.Engine.Algorithms.LocalSearches;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

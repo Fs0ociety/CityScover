@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 05/10/2018
+// File update: 07/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -34,49 +34,14 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
             foreach (var neighbor in itemNeighbors)
             {
-               var candidateEdges = new Collection<RouteWorker>();
                var currentEdge = _currentSolutionGraph.GetEdge(fixedNodeId, neighbor);
                if (currentEdge == null)
                {
                   continue;
                }
 
-               currentEdge.IsVisited = true;
-               var processingNodeId = neighbor;
-               var previousProcessingNodeId = fixedNodeId;
-               int newProcessingNodeId = default;
-
-               while (processingNodeId != fixedNodeId)
-               {
-                  var nextNeighbors = _currentSolutionGraph.GetAdjacentNodes(processingNodeId);
-
-                  foreach (var adjacentNodeId in nextNeighbors)
-                  {
-                     var procNodeAdjNodeEdge = _currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
-                     if (procNodeAdjNodeEdge == null)
-                     {
-                        continue;
-                     }
-
-                     if (!_currentSolutionGraph.AreAdjacentEdges(
-                           currentEdge.Entity.PointFrom.Id,
-                           currentEdge.Entity.PointTo.Id,
-                           procNodeAdjNodeEdge.Entity.PointFrom.Id,
-                           procNodeAdjNodeEdge.Entity.PointTo.Id))
-                     {
-                        candidateEdges.Add(procNodeAdjNodeEdge);
-                     }
-
-                     procNodeAdjNodeEdge.IsVisited = true;
-
-                     if (adjacentNodeId != previousProcessingNodeId)
-                     {
-                        previousProcessingNodeId = processingNodeId;
-                        newProcessingNodeId = adjacentNodeId;
-                     }
-                  }
-                  processingNodeId = newProcessingNodeId;
-               }
+               var candidateEdges = new Collection<RouteWorker>();
+               SetCandidates(candidateEdges, currentEdge, fixedNodeId, neighbor);
 
                if (candidateEdges.Any())
                {
@@ -87,7 +52,47 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          return neighborhood;
       }
 
-      private void ProcessingCandidates(in Collection<RouteWorker> candidateEdges, in RouteWorker currentEdge, in Collection<TOSolution> neighborhood)
+      internal void SetCandidates(Collection<RouteWorker> candidateEdges, RouteWorker currentEdge, int fixedNodeId, int neighborNodeId)
+      {
+         currentEdge.IsVisited = true;
+         var processingNodeId = neighborNodeId;
+         var previousProcessingNodeId = fixedNodeId;
+         int newProcessingNodeId = default;
+
+         while (processingNodeId != fixedNodeId)
+         {
+            var nextNeighbors = _currentSolutionGraph.GetAdjacentNodes(processingNodeId);
+
+            foreach (var adjacentNodeId in nextNeighbors)
+            {
+               var procNodeAdjNodeEdge = _currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
+               if (procNodeAdjNodeEdge == null)
+               {
+                  continue;
+               }
+
+               if (!_currentSolutionGraph.AreAdjacentEdges(
+                     currentEdge.Entity.PointFrom.Id,
+                     currentEdge.Entity.PointTo.Id,
+                     procNodeAdjNodeEdge.Entity.PointFrom.Id,
+                     procNodeAdjNodeEdge.Entity.PointTo.Id))
+               {
+                  candidateEdges.Add(procNodeAdjNodeEdge);
+               }
+
+               procNodeAdjNodeEdge.IsVisited = true;
+
+               if (adjacentNodeId != previousProcessingNodeId)
+               {
+                  previousProcessingNodeId = processingNodeId;
+                  newProcessingNodeId = adjacentNodeId;
+               }
+            }
+            processingNodeId = newProcessingNodeId;
+         }
+      }
+
+      internal void ProcessingCandidates(in Collection<RouteWorker> candidateEdges, in RouteWorker currentEdge, in Collection<TOSolution> neighborhood)
       {
          foreach (var candidateEdge in candidateEdges)
          {
@@ -108,12 +113,12 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointToId, candidateEdgePointToId);
 
             //Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
-            TwoOptTourInversion(currentEdge, candidateEdge, newSolution, candidateEdgePointFromId);
+            TwoOptSwap(currentEdge, candidateEdge, newSolution, candidateEdgePointFromId);
             neighborhood.Add(newSolution);
          }
       }
 
-      private void TwoOptTourInversion(in RouteWorker currentEdge, RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
+      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
       {
          int currentNodeId = currentEdge.Entity.PointTo.Id;
 
@@ -132,11 +137,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             currentNodeId = currNodeAdjNode;
          }
       }
-
-      //IEnumerable<TOSolution> GetAllMoves(in TOSolution currentSolution, IList<int> tabuList)
-      //{
-      //   return GetAllMoves(currentSolution);
-      //}
 
       IEnumerable<TOSolution> INeighborhood.GetAllMoves(in TOSolution currentSolution)
       {
