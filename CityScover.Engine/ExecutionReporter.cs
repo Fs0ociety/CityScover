@@ -86,7 +86,7 @@ namespace CityScover.Engine
          _timer.Stop();
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
          Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
-            $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.");
+            $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
          AlgorithmFamily resultType = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);
          Result algorithmResult = Solver.Results[resultType];

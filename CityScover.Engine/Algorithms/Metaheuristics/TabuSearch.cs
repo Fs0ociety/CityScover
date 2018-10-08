@@ -6,6 +6,8 @@
 // File update: 06/10/2018
 //
 
+using CityScover.Engine.Algorithms.LocalSearches;
+using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,11 +22,11 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
    internal class TabuSearch : Algorithm
    {
       private LocalSearch _localSearchAlgorithm;
-      private IList<TOSolution> _tabuList;
+      private IList<RouteWorker> _tabuList;
       private TOSolution _bestSolution;
       private int _currentIteration;
-      private readonly int _maxImprovements;    // Si potrebbe gestire nello StageFlow della Configurazione
-      private readonly int _maxIterations;      // Si potrebbe gestire nello StageFlow della Configurazione
+      private int _maxImprovements;
+      private int _maxIterations;
 
       #region Constructors
       internal TabuSearch()
@@ -73,8 +75,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          switch (algorithmFlow.CurrentAlgorithm)
          {
             case AlgorithmType.TwoOpt:
-               _localSearchAlgorithm = 
-                  new LocalSearch(new TabuSearchTwoOptNeighborhood());
+               _localSearchAlgorithm = new LocalSearch(new TabuSearchNeighborhood(
+                  new TwoOptNeighborhood()), Provider);
                break;
 
             case AlgorithmType.CitySwap:
@@ -98,8 +100,10 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          base.OnInitializing();
 
          _currentIteration = default;
+         _maxIterations = 2;
+         _maxImprovements = _maxIterations;
          _bestSolution = Solver.BestSolution;
-         _tabuList = new List<TOSolution>();
+         _tabuList = new List<RouteWorker>();
          _localSearchAlgorithm = GetLocalSearchAlgorithm();
 
          if (_localSearchAlgorithm == null)
@@ -113,14 +117,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       internal override async Task PerformStep()
       {
-         await Task.Run(() => _localSearchAlgorithm.PerformStep());
+         await _localSearchAlgorithm.Start();
 
          if (!_tabuList.Any())
          {
             throw new InvalidOperationException(
                $"{nameof(_tabuList)} cannot be empty.");
          }
-                                 
+
          foreach (var item in _tabuList)
          {
             // TODO: Handle expiration
@@ -135,6 +139,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnTerminating()
       {
          base.OnTerminating();
+         Solver.BestSolution = _bestSolution;
       }
 
       internal override void OnTerminated()

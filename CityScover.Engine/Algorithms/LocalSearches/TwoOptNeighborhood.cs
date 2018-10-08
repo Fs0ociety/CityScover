@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 07/10/2018
+// File update: 08/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -14,18 +14,21 @@ using System.Linq;
 
 namespace CityScover.Engine.Algorithms.LocalSearches
 {
-   internal class TwoOptNeighborhood : INeighborhood
+   internal class TwoOptNeighborhood : Neighborhood
    {
-      private CityMapGraph _currentSolutionGraph;
       private CityMapGraph _cityMapClone;
+      private CityMapGraph _currentSolutionGraph;
 
-      internal IEnumerable<TOSolution> GetAllMoves(in TOSolution currentSolution)
+      internal TwoOptNeighborhood()
       {
          _cityMapClone = Solver.Instance.CityMapGraph.DeepCopy();
-         var neighborhood = new Collection<TOSolution>();
+      }
 
-         _currentSolutionGraph = currentSolution.SolutionGraph.DeepCopy();
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution)
+      {
+         _currentSolutionGraph = solution.SolutionGraph.DeepCopy();
          var currentSolutionPoints = _currentSolutionGraph.Nodes;
+         var candidateEdges = new Dictionary<RouteWorker, IEnumerable<RouteWorker>>();
 
          foreach (var node in currentSolutionPoints)
          {
@@ -34,88 +37,79 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
             foreach (var neighbor in itemNeighbors)
             {
+               var candidateEdgesCurrentEdge = new Collection<RouteWorker>();
                var currentEdge = _currentSolutionGraph.GetEdge(fixedNodeId, neighbor);
                if (currentEdge == null)
                {
                   continue;
                }
 
-               var candidateEdges = new Collection<RouteWorker>();
-               SetCandidates(candidateEdges, currentEdge, fixedNodeId, neighbor);
+               currentEdge.IsVisited = true;
+               var processingNodeId = neighbor;
+               var previousProcessingNodeId = fixedNodeId;
+               int newProcessingNodeId = default;
 
-               if (candidateEdges.Any())
+               while (processingNodeId != fixedNodeId)
                {
-                  ProcessingCandidates(candidateEdges, currentEdge, neighborhood);
+                  var nextNeighbors = _currentSolutionGraph.GetAdjacentNodes(processingNodeId);
+
+                  foreach (var adjacentNodeId in nextNeighbors)
+                  {
+                     var procNodeAdjNodeEdge = _currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
+                     if (procNodeAdjNodeEdge == null)
+                     {
+                        continue;
+                     }
+
+                     if (!_currentSolutionGraph.AreAdjacentEdges(
+                           currentEdge.Entity.PointFrom.Id,
+                           currentEdge.Entity.PointTo.Id,
+                           procNodeAdjNodeEdge.Entity.PointFrom.Id,
+                           procNodeAdjNodeEdge.Entity.PointTo.Id))
+                     {
+                        candidateEdgesCurrentEdge.Add(procNodeAdjNodeEdge);
+                     }
+
+                     procNodeAdjNodeEdge.IsVisited = true;
+
+                     if (adjacentNodeId != previousProcessingNodeId)
+                     {
+                        previousProcessingNodeId = processingNodeId;
+                        newProcessingNodeId = adjacentNodeId;
+                     }
+                  }
+                  processingNodeId = newProcessingNodeId;
                }
+
+               candidateEdges.Add(currentEdge, candidateEdgesCurrentEdge);
             }
          }
-         return neighborhood;
+
+         return candidateEdges;
       }
 
-      internal void SetCandidates(Collection<RouteWorker> candidateEdges, RouteWorker currentEdge, int fixedNodeId, int neighborNodeId)
+      internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
-         currentEdge.IsVisited = true;
-         var processingNodeId = neighborNodeId;
-         var previousProcessingNodeId = fixedNodeId;
-         int newProcessingNodeId = default;
-
-         while (processingNodeId != fixedNodeId)
+         TOSolution newSolution = new TOSolution()
          {
-            var nextNeighbors = _currentSolutionGraph.GetAdjacentNodes(processingNodeId);
+            SolutionGraph = _currentSolutionGraph.DeepCopy()
+         };
 
-            foreach (var adjacentNodeId in nextNeighbors)
-            {
-               var procNodeAdjNodeEdge = _currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
-               if (procNodeAdjNodeEdge == null)
-               {
-                  continue;
-               }
+         int currentEdgePointFromId = currentEdge.Entity.PointFrom.Id;
+         int currentEdgePointToId = currentEdge.Entity.PointTo.Id;
+         int candidateEdgePointFromId = candidateEdge.Entity.PointFrom.Id;
+         int candidateEdgePointToId = candidateEdge.Entity.PointTo.Id;
 
-               if (!_currentSolutionGraph.AreAdjacentEdges(
-                     currentEdge.Entity.PointFrom.Id,
-                     currentEdge.Entity.PointTo.Id,
-                     procNodeAdjNodeEdge.Entity.PointFrom.Id,
-                     procNodeAdjNodeEdge.Entity.PointTo.Id))
-               {
-                  candidateEdges.Add(procNodeAdjNodeEdge);
-               }
+         newSolution.SolutionGraph.RemoveEdge(currentEdgePointFromId, currentEdgePointToId);
+         newSolution.SolutionGraph.RemoveEdge(candidateEdgePointFromId, candidateEdgePointToId);
 
-               procNodeAdjNodeEdge.IsVisited = true;
+         newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointFromId, candidateEdgePointFromId);
+         newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointToId, candidateEdgePointToId);
 
-               if (adjacentNodeId != previousProcessingNodeId)
-               {
-                  previousProcessingNodeId = processingNodeId;
-                  newProcessingNodeId = adjacentNodeId;
-               }
-            }
-            processingNodeId = newProcessingNodeId;
-         }
-      }
+         // Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
+         TwoOptSwap(currentEdge, candidateEdge, newSolution, candidateEdgePointFromId);
 
-      internal void ProcessingCandidates(in Collection<RouteWorker> candidateEdges, in RouteWorker currentEdge, in Collection<TOSolution> neighborhood)
-      {
-         foreach (var candidateEdge in candidateEdges)
-         {
-            TOSolution newSolution = new TOSolution()
-            {
-               SolutionGraph = _currentSolutionGraph.DeepCopy()
-            };
-
-            int currentEdgePointFromId = currentEdge.Entity.PointFrom.Id;
-            int currentEdgePointToId = currentEdge.Entity.PointTo.Id;
-            int candidateEdgePointFromId = candidateEdge.Entity.PointFrom.Id;
-            int candidateEdgePointToId = candidateEdge.Entity.PointTo.Id;
-
-            newSolution.SolutionGraph.RemoveEdge(currentEdgePointFromId, currentEdgePointToId);
-            newSolution.SolutionGraph.RemoveEdge(candidateEdgePointFromId, candidateEdgePointToId);
-
-            newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointFromId, candidateEdgePointFromId);
-            newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointToId, candidateEdgePointToId);
-
-            //Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
-            TwoOptSwap(currentEdge, candidateEdge, newSolution, candidateEdgePointFromId);
-            neighborhood.Add(newSolution);
-         }
+         return newSolution;
       }
 
       private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
@@ -136,11 +130,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
             currentNodeId = currNodeAdjNode;
          }
-      }
-
-      IEnumerable<TOSolution> INeighborhood.GetAllMoves(in TOSolution currentSolution)
-      {
-         throw new NotImplementedException();
       }
    }
 }

@@ -37,7 +37,7 @@ namespace CityScover.Engine.Configs
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),
-            AlgorithmMonitoring = false,
+            AlgorithmMonitoring = true,
             Stages = 
             {
                new Stage()

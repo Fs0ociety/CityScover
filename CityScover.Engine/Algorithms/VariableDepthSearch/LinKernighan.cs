@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.VariableDepthSearch
 {
-   internal class LinKernighanAlgorithm : Algorithm
+   internal class LinKernighan : Algorithm
    {
       private CityMapGraph _cityMapClone;
       private CityMapGraph _currentSolutionGraph;
@@ -27,12 +27,12 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       private byte _executedSteps;
 
       #region Constructors
-      internal LinKernighanAlgorithm(byte steps)
+      internal LinKernighan(byte steps)
          : this(steps, null)
       {         
       }
 
-      internal LinKernighanAlgorithm(byte steps, AlgorithmTracker tracker)
+      internal LinKernighan(byte steps, AlgorithmTracker tracker)
          : base(tracker)
       {
          MaxSteps = steps;

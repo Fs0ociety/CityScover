@@ -17,18 +17,18 @@ namespace CityScover.Engine.Algorithms
       private int _previousSolutionCost;
       private int _currentSolutionCost;
       private TOSolution _bestSolution;
-      private INeighborhood _neighborhood;
+      private NeighborhoodFacade _neighborhoodFacade;
 
       #region Constructors
-      internal LocalSearch(INeighborhood neighborhood)
+      internal LocalSearch(Neighborhood neighborhood) 
          : this(neighborhood, null)
       {
       }
 
-      public LocalSearch(INeighborhood neighborhood, AlgorithmTracker provider)
+      public LocalSearch(Neighborhood neighborhood, AlgorithmTracker provider) 
          : base(provider)
       {
-         _neighborhood = neighborhood;
+         _neighborhoodFacade = new NeighborhoodFacade(neighborhood);
       }
       #endregion
 
@@ -37,7 +37,7 @@ namespace CityScover.Engine.Algorithms
       {
          if (neighborhood == null || currentSolution == null)
          {
-            throw new ArgumentNullException(nameof(INeighborhood));
+            throw new ArgumentNullException(nameof(neighborhood));
          }
 
          if (maxImprovementsCount.HasValue && maxImprovementsCount == 0)
@@ -73,13 +73,13 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnInitializing();
          _bestSolution = Solver.BestSolution;
-         _currentSolutionCost = _bestSolution.Cost;         
+         _currentSolutionCost = _bestSolution.Cost;
          _previousSolutionCost = default;
       }
 
       internal override async Task PerformStep()
       {
-         var currentNeighborhood = _neighborhood.GetAllMoves(_bestSolution);
+         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);
 
          foreach (var neighborhoodSolution in currentNeighborhood)
          {
@@ -101,7 +101,7 @@ namespace CityScover.Engine.Algorithms
          // Per come è fatta adesso, sarà sempre Best Improvement.
 
          // Se siamo ispirati (come no) lo faremo.
-         var solution = GetBest(currentNeighborhood, _bestSolution, null);         
+         var solution = GetBest(currentNeighborhood, _bestSolution, null);
          _previousSolutionCost = _currentSolutionCost;
 
          bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
@@ -120,6 +120,7 @@ namespace CityScover.Engine.Algorithms
       internal override void OnTerminating()
       {
          base.OnTerminating();
+         Solver.BestSolution = _bestSolution;
       }
 
       internal override void OnTerminated()
@@ -129,15 +130,15 @@ namespace CityScover.Engine.Algorithms
 
       internal override bool StopConditions()
       {
-         if (AcceptImprovementsOnly)
-         {
-            return _currentSolutionCost < _previousSolutionCost ||
-               _status == AlgorithmStatus.Error;
-         }
+         //if (AcceptImprovementsOnly)
+         //{
+         //   return _currentSolutionCost < _previousSolutionCost ||
+         //      _status == AlgorithmStatus.Error;
+         //}
 
-         return true;
-         //return _previousSolutionCost == _currentSolutionCost || 
-         //   _status == AlgorithmStatus.Error;
+         //return true;
+         return _previousSolutionCost == _currentSolutionCost ||
+            _status == AlgorithmStatus.Error;
       }
       #endregion
    }
