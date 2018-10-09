@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 06/10/2018
+// File update: 09/10/2018
 //
 
 using CityScover.Engine.Algorithms.LocalSearches;
@@ -22,11 +22,12 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
    internal class TabuSearch : Algorithm
    {
       private LocalSearch _localSearchAlgorithm;
-      private IList<RouteWorker> _tabuList;
+      private byte _localSearchRunningCount;
+      private IList<RouteWorker> _tabuList;     // Capire come sarà formata al suo interno la Tabu List con il parametro expiration.
       private TOSolution _bestSolution;
       private int _currentIteration;
-      private int _maxImprovements;
-      private int _maxIterations;
+      private int _maxImprovements;    // L'idea è di gestire maxImprovements nello StageFlow come fatto per il RunningCount
+      private int _maxIterations;      // L'idea è di gestire maxIteration nello StageFlow come fatto per il RunningCount
 
       #region Constructors
       internal TabuSearch()
@@ -71,6 +72,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          {
             return null;
          }
+         _localSearchRunningCount = algorithmFlow.RunningCount;
 
          switch (algorithmFlow.CurrentAlgorithm)
          {
@@ -117,18 +119,24 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       internal override async Task PerformStep()
       {
-         await _localSearchAlgorithm.Start();
-
-         if (!_tabuList.Any())
+         if (_localSearchRunningCount > 0)
          {
-            throw new InvalidOperationException(
-               $"{nameof(_tabuList)} cannot be empty.");
-         }
+            await _localSearchAlgorithm.Start();
 
-         foreach (var item in _tabuList)
-         {
-            // TODO: Handle expiration
+            //if (!_tabuList.Any())
+            //{
+            //   throw new InvalidOperationException(
+            //      $"{nameof(_tabuList)} cannot be empty.");
+            //}
+
+            foreach (var item in _tabuList)
+            {
+               // TODO: Handle expiration criteria.
+            }
+
+            _localSearchRunningCount--;
          }
+         _currentIteration++;
       }
 
       internal override void OnError()
@@ -150,8 +158,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override bool StopConditions()
       {
          // TODO: handle exiting condition with MAX_IMPROVEMENTS AND MAX_ITERATIONS.
-         return _currentIteration == _maxImprovements || 
-            _currentIteration == _maxIterations || 
+         return _currentIteration == _maxImprovements ||
+            _currentIteration == _maxIterations ||
             _status == AlgorithmStatus.Error;
       }
       #endregion

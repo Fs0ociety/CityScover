@@ -15,10 +15,10 @@ namespace CityScover.Engine
    /// <summary>
    /// This abstract class represents a template for a generic problem.
    /// </summary>
-   internal abstract class Problem
+   internal abstract class ProblemBase
    {
       #region Constructors
-      internal Problem()
+      internal ProblemBase()
       {
          Constraints = new Collection<KeyValuePair<byte, Func<TOSolution, bool>>>();
       }

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 06/10/2018
+// File update: 09/10/2018
 //
 
 using System;
@@ -42,7 +42,7 @@ namespace CityScover.Engine.Algorithms
 
          if (maxImprovementsCount.HasValue && maxImprovementsCount == 0)
          {
-            throw new ArgumentException("Se maxImprovementsCount è valorizzato, non può avere valore 0.");
+            throw new ArgumentException("maxImprovementsCount can not have value 0.");
          }
 
          TOSolution bestSolution = currentSolution;
@@ -81,15 +81,15 @@ namespace CityScover.Engine.Algorithms
       {
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);
 
-         foreach (var neighborhoodSolution in currentNeighborhood)
+         foreach (var neighborSolution in currentNeighborhood)
          {
-            // Notifica gli observers.
-            Solver.EnqueueSolution(neighborhoodSolution);
+            Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 
             if (Solver.IsMonitoringEnabled)
             {
-               Provider.NotifyObservers(neighborhoodSolution);
+               // Notifica gli observers.
+               Provider.NotifyObservers(neighborSolution);
             }
          }
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
@@ -101,6 +101,7 @@ namespace CityScover.Engine.Algorithms
          // Per come è fatta adesso, sarà sempre Best Improvement.
 
          // Se siamo ispirati (come no) lo faremo.
+
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
          _previousSolutionCost = _currentSolutionCost;
 
@@ -130,14 +131,7 @@ namespace CityScover.Engine.Algorithms
 
       internal override bool StopConditions()
       {
-         //if (AcceptImprovementsOnly)
-         //{
-         //   return _currentSolutionCost < _previousSolutionCost ||
-         //      _status == AlgorithmStatus.Error;
-         //}
-
-         //return true;
-         return _previousSolutionCost == _currentSolutionCost ||
+         return _previousSolutionCost == _currentSolutionCost || 
             _status == AlgorithmStatus.Error;
       }
       #endregion

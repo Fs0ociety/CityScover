@@ -2,7 +2,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 06/10/2018
+// File update: 09/10/2018
 //
 
 using CityScover.Entities;
@@ -38,7 +38,7 @@ namespace CityScover.Engine.Configs
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),
             AlgorithmMonitoring = true,
-            Stages = 
+            Stages =
             {
                new Stage()
                {

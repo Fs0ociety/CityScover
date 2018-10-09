@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// File update: 09/10/2018
 //
 
 using CityScover.Commons;
@@ -48,6 +48,7 @@ namespace CityScover.Services
       public void ReportConfiguration()
       {
          // Usa stampe ordinate. Valutare un eventuale ReportService.
+         // Accedere ai dati contenuti nel Solver per la visualizzazione ordinata delle informazioni relative alla configurazione eseguita.
          throw new System.NotImplementedException();
       }
       #endregion

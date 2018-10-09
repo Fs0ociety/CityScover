@@ -63,7 +63,7 @@ namespace CityScover.Engine
       /// <summary>
       /// TODO
       /// </summary>
-      internal Problem Problem { get; private set; }
+      internal ProblemBase Problem { get; private set; }
 
       /// <summary>
       /// Points of interest filtered from the graph of the city.

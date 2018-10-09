@@ -212,8 +212,6 @@ namespace CityScover.Engine
          _solutionsQueue.CompleteAdding();
          await Task.WhenAll(_solverTasks);
          _solverTasks.Clear();
-
-         throw new NotImplementedException(nameof(Execute));
       }
       #endregion
    }

@@ -3,13 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 13/09/2018
+// File update: 09/10/2018
 //
 
 namespace CityScover.Engine
 {
    /// <summary>
-   /// Create the concrete instance of the specific problem.
+   /// ProblemFactory class to create the concrete ProblemBase derived classes.
    /// </summary>
    internal class ProblemFactory
    {
@@ -23,23 +23,23 @@ namespace CityScover.Engine
       /// <returns>
       /// The Problem's instance.
       /// </returns>
-      internal static Problem CreateProblem(ProblemFamily currentProblem)
+      internal static ProblemBase CreateProblem(ProblemFamily currentProblem)
       {
-         Problem problem = default;
+         ProblemBase problem = default;
 
          switch (currentProblem)
          {
             case ProblemFamily.None:
                break;
 
-            case ProblemFamily.TeamOrienteering:
-               problem = new TOProblem();
-               break;
-
             case ProblemFamily.TravellingSalesmanProblem:
                break;
 
             case ProblemFamily.VehicleRoutingProblem:
+               break;
+
+            case ProblemFamily.TeamOrienteering:
+               problem = new TOProblem();
                break;
 
             default:

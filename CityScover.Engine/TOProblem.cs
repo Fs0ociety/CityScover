@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace CityScover.Engine
 {
-   internal class TOProblem : Problem
+   internal class TOProblem : ProblemBase
    {
       private const int PenaltyAmount = 100;
 

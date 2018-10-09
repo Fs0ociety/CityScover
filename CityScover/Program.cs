@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 15/09/2018
+// File update: 09/10/2018
 //
 
 using CityScover.Services;
@@ -23,9 +23,28 @@ namespace CityScover
          ReadKey();
       }
 
-
       #region Private static methods
       private static void DisplayLogo()
+      {
+         string logo = string.Empty;
+         logo += "                                                                                                                   \n";
+         logo += "                                                                                                                   \n";
+         logo += "                 ██                                                                                                   \n";
+         logo += "                                                                                                                   \n";
+         logo += "      ▄████████  ▄█      ███     ▄██   ▄      ▄████████  ▄████████  ▄██████▄   ▄█    █▄     ▄████████    ▄████████ \n";
+         logo += "     ███    ███ ███  ▀█████████▄ ███   ██▄   ███    ███ ███    ███ ███    ███ ███    ███   ███    ███   ███    ███ \n";
+         logo += "     ███    █▀  ███▌    ▀███▀▀██ ███▄▄▄███   ███    █▀  ███    █▀  ███    ███ ███    ███   ███    █▀    ███    ███ \n";
+         logo += "     ███        ███▌     ███   ▀ ▀▀▀▀▀▀███   ███        ███        ███    ███ ███    ███  ▄███▄▄▄      ▄███▄▄▄▄██▀ \n";
+         logo += "     ███        ███▌     ███     ▄██   ███ ▀███████████ ███        ███    ███ ███    ███ ▀▀███▀▀▀     ▀▀███▀▀▀▀▀   \n";
+         logo += "     ███    █▄  ███      ███     ███   ███          ███ ███    █▄  ███    ███ ███    ███   ███    █▄  ▀███████████ \n";
+         logo += "     ███    ███ ███      ███     ███   ███    ▄█    ███ ███    ███ ███    ███ ███    ███   ███    ███   ███    ███ \n";
+         logo += "     ████████▀  █▀      ▄████▀    ▀█████▀   ▄████████▀  ████████▀   ▀██████▀   ▀██████▀    ██████████   ███    ███ \n";
+         logo += "                                                                                                        ███    ███ \n";
+         logo += "                                                                                                                   \n";
+         WriteLine($"{logo}");
+      }
+
+      private static void DisplayLogo2()
       {
          string logo = string.Empty;
          logo += "                                                                                                                                                                                                  \n";

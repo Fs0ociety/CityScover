@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 06/10/2018
+// File update: 09/10/2018
 //
 
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CityScover.Engine
 {
    /// <summary>
-   /// This abstract class represents a generic interface Algorithm to execute.
+   /// This abstract class represents the interface for a generic Algorithm type.
    /// </summary>
    internal abstract class Algorithm
    {
