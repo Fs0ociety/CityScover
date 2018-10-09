@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 08/10/2018
+// File update: 09/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -19,11 +19,36 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       private CityMapGraph _cityMapClone;
       private CityMapGraph _currentSolutionGraph;
 
+      #region Constructors
       internal TwoOptNeighborhood()
       {
          _cityMapClone = Solver.Instance.CityMapGraph.DeepCopy();
       }
+      #endregion
 
+      #region Private methods
+      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
+      {
+         int currentNodeId = currentEdge.Entity.PointTo.Id;
+
+         while (currentNodeId != edge2PointFromId)
+         {
+            var currNodeAdjNode = newSolution.SolutionGraph.GetAdjacentNodes(currentNodeId)
+               .Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
+
+            if (currNodeAdjNode == 0)
+            {
+               throw new InvalidOperationException();
+            }
+
+            newSolution.SolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
+            newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
+            currentNodeId = currNodeAdjNode;
+         }
+      }
+      #endregion
+
+      #region Internal methods
       internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution)
       {
          _currentSolutionGraph = solution.SolutionGraph.DeepCopy();
@@ -111,25 +136,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          return newSolution;
       }
-
-      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
-      {
-         int currentNodeId = currentEdge.Entity.PointTo.Id;
-
-         while (currentNodeId != edge2PointFromId)
-         {
-            var currNodeAdjNode = newSolution.SolutionGraph.GetAdjacentNodes(currentNodeId)
-               .Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
-
-            if (currNodeAdjNode == 0)
-            {
-               throw new InvalidOperationException();
-            }
-
-            newSolution.SolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
-            newSolution.SolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
-            currentNodeId = currNodeAdjNode;
-         }
-      }
+      #endregion
    }
 }

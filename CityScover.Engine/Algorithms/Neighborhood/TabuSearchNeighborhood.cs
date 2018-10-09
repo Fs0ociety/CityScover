@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 08/10/2018
+// File update: 09/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -25,10 +25,13 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       }
       #endregion
 
+      #region Protected properties
       protected IList<RouteWorker> TabuList => _tabuList;
+      #endregion
 
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution) => 
-         _neighborhoodWorker.GetCandidates(solution);
+      #region Internal methods
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution) =>
+   _neighborhoodWorker.GetCandidates(solution);
 
       internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
@@ -37,5 +40,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          TOSolution solution = _neighborhoodWorker.ProcessCandidate(currentEdge, candidateEdge);
          return solution;
       }
+      #endregion
    }
 }
