@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// File update: 09/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -27,15 +27,14 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       private byte _executedSteps;
 
       #region Constructors
-      internal LinKernighan(byte steps)
-         : this(steps, null)
+      internal LinKernighan()
+         : this(null)
       {         
       }
 
-      internal LinKernighan(byte steps, AlgorithmTracker tracker)
+      internal LinKernighan(AlgorithmTracker tracker)
          : base(tracker)
       {
-         MaxSteps = steps;
       }
       #endregion
 
@@ -163,6 +162,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
+         MaxSteps = 2;
          // TODO: la prende dal solver?
          _bestSolution = Solver.BestSolution;
          _currentSolutionGraph = _bestSolution.SolutionGraph.DeepCopy();

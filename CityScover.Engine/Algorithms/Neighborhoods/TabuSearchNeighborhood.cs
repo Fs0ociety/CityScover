@@ -10,7 +10,7 @@ using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
 
-namespace CityScover.Engine.Algorithms.Metaheuristics
+namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal class TabuSearchNeighborhood : Neighborhood
    {

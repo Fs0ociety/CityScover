@@ -6,6 +6,7 @@
 // File update: 09/10/2018
 //
 
+using CityScover.Engine.Algorithms.Neighborhoods;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace CityScover.Engine.Algorithms.LocalSearches
+namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal class TwoOptNeighborhood : Neighborhood
    {

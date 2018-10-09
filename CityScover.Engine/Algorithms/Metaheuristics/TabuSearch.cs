@@ -6,7 +6,7 @@
 // File update: 09/10/2018
 //
 
-using CityScover.Engine.Algorithms.LocalSearches;
+using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;

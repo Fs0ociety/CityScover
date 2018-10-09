@@ -9,7 +9,7 @@
 using CityScover.Engine.Workers;
 using System.Collections.Generic;
 
-namespace CityScover.Engine.Algorithms
+namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal abstract class Neighborhood
    {

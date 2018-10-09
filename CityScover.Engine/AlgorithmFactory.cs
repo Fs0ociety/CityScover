@@ -8,8 +8,9 @@
 
 using CityScover.Engine.Algorithms;
 using CityScover.Engine.Algorithms.Greedy;
-using CityScover.Engine.Algorithms.LocalSearches;
 using CityScover.Engine.Algorithms.Metaheuristics;
+using CityScover.Engine.Algorithms.Neighborhoods;
+using CityScover.Engine.Algorithms.VariableDepthSearch;
 
 namespace CityScover.Engine
 {
@@ -56,6 +57,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.LinKernighan:
+               algorithm = new LinKernighan();
                break;
 
             case AlgorithmType.TabuSearch:
