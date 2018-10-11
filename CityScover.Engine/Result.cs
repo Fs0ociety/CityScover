@@ -63,7 +63,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.LinKernighan:
-               result = AlgorithmFamily.Heuristic;
+               result = AlgorithmFamily.Improvement;
                break;
 
             case AlgorithmType.TabuSearch:

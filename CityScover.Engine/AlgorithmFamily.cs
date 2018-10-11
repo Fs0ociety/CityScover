@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 06/10/2018
+// File update: 11/10/2018
 //
 
 namespace CityScover.Engine
@@ -14,7 +14,7 @@ namespace CityScover.Engine
       None,
       Greedy,
       LocalSearch,
-      Heuristic,
+      Improvement,
       MetaHeuristic,
    }
    #endregion

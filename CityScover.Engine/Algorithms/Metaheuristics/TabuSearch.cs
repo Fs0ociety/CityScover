@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// File update: 11/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -34,7 +34,12 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
       }
 
-      internal TabuSearch(AlgorithmTracker provider)
+      internal TabuSearch(Neighborhood neighborhood) 
+         : this(neighborhood, null)
+      {
+      }
+   
+      internal TabuSearch(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
       }
@@ -125,9 +130,10 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                $"{nameof(_tabuList)} cannot be empty.");
          }
 
+         // DA RIVEDERE
          foreach (var move in _tabuList)
          {
-            if (move.Expiration >= _tabuList.Count)
+            if (move.Expiration >= _tabuList.Count)   // Gestire con il "Tenure"
             {
                // Aspiration Criteria
                _tabuList.Remove(move);

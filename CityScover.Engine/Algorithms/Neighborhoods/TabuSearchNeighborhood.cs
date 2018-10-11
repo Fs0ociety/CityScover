@@ -3,13 +3,14 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 10/10/2018
+// File update: 11/10/2018
 //
 
 using CityScover.Engine.Algorithms.Metaheuristics;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.Engine.Algorithms.Neighborhoods
@@ -20,10 +21,25 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       private IList<TabuMove> _tabuList;
 
       #region Constructors
+      internal TabuSearchNeighborhood()
+      {
+      }
+
       internal TabuSearchNeighborhood(Neighborhood neighborhood, IList<TabuMove> tabuList)
       {
          _neighborhoodWorker = neighborhood ?? throw new ArgumentNullException();
          _tabuList = tabuList;
+      }
+      #endregion
+
+      #region Internal properties
+      internal Neighborhood NeighborhoodWorker
+      {
+         get => _neighborhoodWorker;
+         set
+         {
+            _neighborhoodWorker = value ?? throw new ArgumentNullException($"{nameof(value)} can not be null");
+         }
       }
       #endregion
 
@@ -39,10 +55,15 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          if (forbiddenMove != null)
          {
-            if (forbiddenMove.Expiration < _tabuList.Count)
-            {
-               return default;
-            }
+            // NON NECESSARIO?
+            //if (_tabuList is List<TabuMove> tabuList)
+            //{
+            //   if (forbiddenMove.Expiration < tabuList.Capacity)
+            //   {
+            //      return default;
+            //   }
+            //}
+            return default;
          }
 
          TOSolution solution = _neighborhoodWorker.ProcessCandidate(currentEdge, candidateEdge);

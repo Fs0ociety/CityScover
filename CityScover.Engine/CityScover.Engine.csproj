@@ -59,6 +59,8 @@
     <Compile Include="Algorithms\Metaheuristics\TabuSearch.cs" />
     <Compile Include="Algorithms\Neighborhoods\TabuSearchNeighborhood.cs" />
     <Compile Include="Algorithms\Neighborhoods\NeighborhoodFacade.cs" />
+    <Compile Include="NeighborhoodFactory.cs" />
+    <Compile Include="NeighborhoodType.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Algorithms\LocalSearches\LocalSearch.cs" />
     <Compile Include="Algorithms\VariableDepthSearch\LinKernighan.cs" />
