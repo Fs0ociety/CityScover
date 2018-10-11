@@ -21,13 +21,12 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
    internal class TabuSearch : Algorithm
    {
-      private LocalSearch _localSearchAlgorithm;
-      private byte _localSearchRunningCount;
-      private IList<RouteWorker> _tabuList;     // Capire come sarà formata al suo interno la Tabu List con il parametro expiration.
+      private LocalSearch _innerAlgorithm;
       private TOSolution _bestSolution;
+      private IList<TabuMove> _tabuList;
       private int _currentIteration;
+      private int _maxIterations;
       private int _maxImprovements;    // L'idea è di gestire maxImprovements nello StageFlow come fatto per il RunningCount
-      private int _maxIterations;      // L'idea è di gestire maxIteration nello StageFlow come fatto per il RunningCount
 
       #region Constructors
       internal TabuSearch()
@@ -72,13 +71,13 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          {
             return null;
          }
-         _localSearchRunningCount = algorithmFlow.RunningCount;
+         _maxIterations = algorithmFlow.RunningCount;
 
          switch (algorithmFlow.CurrentAlgorithm)
          {
             case AlgorithmType.TwoOpt:
-               _localSearchAlgorithm = new LocalSearch(new TabuSearchNeighborhood(
-                  new TwoOptNeighborhood()), Provider);
+               _innerAlgorithm = new LocalSearch(new TabuSearchNeighborhood(
+                  new TwoOptNeighborhood(), _tabuList), Provider);
                break;
 
             case AlgorithmType.CitySwap:
@@ -88,11 +87,11 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             // Repeat for other Local Search algorithms...
 
             default:
-               _localSearchAlgorithm = null;
+               _innerAlgorithm = null;
                break;
          }
 
-         return _localSearchAlgorithm;
+         return _innerAlgorithm;
       }
       #endregion
 
@@ -102,39 +101,37 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          base.OnInitializing();
 
          _currentIteration = default;
-         _maxIterations = 2;
          _maxImprovements = _maxIterations;
          _bestSolution = Solver.BestSolution;
-         _tabuList = new List<RouteWorker>();
-         _localSearchAlgorithm = GetLocalSearchAlgorithm();
+         _tabuList = new List<TabuMove>();
+         _innerAlgorithm = GetLocalSearchAlgorithm();
 
-         if (_localSearchAlgorithm == null)
+         if (_innerAlgorithm == null)
          {
             throw new InvalidOperationException($"Bad configuration format: " +
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
-         _localSearchAlgorithm.AcceptImprovementsOnly = false;
+         _innerAlgorithm.AcceptImprovementsOnly = false;
       }
 
       internal override async Task PerformStep()
       {
-         if (_localSearchRunningCount > 0)
+         await _innerAlgorithm.Start();
+
+         if (!_tabuList.Any())
          {
-            await _localSearchAlgorithm.Start();
+            throw new InvalidOperationException(
+               $"{nameof(_tabuList)} cannot be empty.");
+         }
 
-            //if (!_tabuList.Any())
-            //{
-            //   throw new InvalidOperationException(
-            //      $"{nameof(_tabuList)} cannot be empty.");
-            //}
-
-            foreach (var item in _tabuList)
+         foreach (var move in _tabuList)
+         {
+            if (move.Expiration >= _tabuList.Count)
             {
-               // TODO: Handle expiration criteria.
+               // Aspiration Criteria
+               _tabuList.Remove(move);
             }
-
-            _localSearchRunningCount--;
          }
          _currentIteration++;
       }
@@ -157,7 +154,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       internal override bool StopConditions()
       {
-         // TODO: handle exiting condition with MAX_IMPROVEMENTS AND MAX_ITERATIONS.
          return _currentIteration == _maxImprovements ||
             _currentIteration == _maxIterations ||
             _status == AlgorithmStatus.Error;

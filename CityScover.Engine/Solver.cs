@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 29/09/2018
+// File update: 11/10/2018
 //
 
 using CityScover.Data;
@@ -173,7 +173,7 @@ namespace CityScover.Engine
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
             CurrentStage = stage;
-            Algorithm algorithm = AlgorithmFactory.CreateAlgorithm(stage.Flow.CurrentAlgorithm);
+            Algorithm algorithm = GetAlgorithm(stage.Flow.CurrentAlgorithm);
             await executionFunc.Invoke(algorithm);
          }
       }

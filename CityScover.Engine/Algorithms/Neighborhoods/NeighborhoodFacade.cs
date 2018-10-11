@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 08/10/2018
+// File update: 10/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -25,27 +25,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       }
       #endregion
 
-      #region Internal methods
-      internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution)
-      {
-         var candidateEdges = _neighborhood.GetCandidates(solution);
-         if (candidateEdges == null)
-         {
-            return null;
-         }
-
-         ICollection<TOSolution> neighborhood = new Collection<TOSolution>();
-         if (candidateEdges.Any())
-         {
-            ProcessCandidates(candidateEdges, solution, neighborhood);
-         }
-
-         return neighborhood;
-      }
-      #endregion
-      
       #region Private methods
-      private void ProcessCandidates(IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges, 
+      private void ProcessCandidates(IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges,
          TOSolution solution, ICollection<TOSolution> neighborhood)
       {
          foreach (var currentEdge in candidateEdges.Keys)
@@ -54,9 +35,32 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             foreach (var candidateEdge in edges)
             {
                TOSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
-               neighborhood.Add(newSolution);
+               if (newSolution != null)
+               {
+                  neighborhood.Add(newSolution);
+               }
             }
          }
+      }
+      #endregion
+
+      #region Internal methods
+      internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution)
+      {
+         ICollection<TOSolution> neighborhood = default;
+         var candidateEdges = _neighborhood.GetCandidates(solution);
+         if (candidateEdges == null)
+         {
+            return neighborhood;
+         }
+
+         if (candidateEdges.Any())
+         {
+            neighborhood = new Collection<TOSolution>();
+            ProcessCandidates(candidateEdges, solution, neighborhood);
+         }
+
+         return neighborhood;
       }
       #endregion
    }

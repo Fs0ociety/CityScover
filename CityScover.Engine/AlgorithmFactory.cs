@@ -11,6 +11,7 @@ using CityScover.Engine.Algorithms.Greedy;
 using CityScover.Engine.Algorithms.Metaheuristics;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
+using System;
 
 namespace CityScover.Engine
 {
@@ -47,6 +48,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.CheapestInsertion:
+               // TODO
                break;
 
             case AlgorithmType.TwoOpt:
@@ -54,6 +56,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.CitySwap:
+               // TODO
                break;
 
             case AlgorithmType.LinKernighan:
@@ -65,6 +68,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.VariableNeighborhoodSearch:
+               // TODO
                break;
 
             default:
