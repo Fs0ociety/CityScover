@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace CityScover.Engine.Algorithms.Neighborhoods
 {
-   internal class TwoOptNeighborhood : Neighborhood
+   internal class TwoOptNeighborhood : Neighborhood<RouteWorker, IEnumerable<RouteWorker>>
    {
       private CityMapGraph _cityMapClone;
       private CityMapGraph _currentSolutionGraph;
@@ -135,6 +135,17 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          TwoOptSwap(currentEdge, candidateEdge, newSolution, candidateEdgePointFromId);
 
          return newSolution;
+      }
+
+      internal override ICollection<TOSolution> BuildNeighborhood(RouteWorker currentEdge, IEnumerable<RouteWorker> candidateEdges)
+      {
+         ICollection<TOSolution> solutions = new Collection<TOSolution>();
+         foreach (var candidateEdge in candidateEdges)
+         {
+            TOSolution newSolution = ProcessCandidate(currentEdge, candidateEdge);
+            solutions.Add(newSolution);
+         }
+         return solutions;
       }
       #endregion
    }

@@ -11,6 +11,8 @@ using CityScover.Engine.Algorithms.Greedy;
 using CityScover.Engine.Algorithms.Metaheuristics;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
+using CityScover.Engine.Workers;
+using System.Collections.Generic;
 
 namespace CityScover.Engine
 {
@@ -50,7 +52,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-               algorithm = new LocalSearch(new TwoOptNeighborhood());
+               algorithm = new LocalSearch<RouteWorker, IEnumerable<RouteWorker>>(new TwoOptNeighborhood());
                break;
 
             case AlgorithmType.CitySwap:

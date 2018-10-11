@@ -21,7 +21,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
    internal class TabuSearch : Algorithm
    {
-      private LocalSearch _localSearchAlgorithm;
+      private Algorithm _localSearchAlgorithm;
       private byte _localSearchRunningCount;
       private IList<RouteWorker> _tabuList;     // Capire come sarà formata al suo interno la Tabu List con il parametro expiration.
       private TOSolution _bestSolution;
@@ -59,7 +59,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          return algorithms;
       }
 
-      private LocalSearch GetLocalSearchAlgorithm()
+      private Algorithm GetLocalSearchAlgorithm()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
          if (childrenAlgorithms == null)
@@ -77,7 +77,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          switch (algorithmFlow.CurrentAlgorithm)
          {
             case AlgorithmType.TwoOpt:
-               _localSearchAlgorithm = new LocalSearch(new TabuSearchNeighborhood(
+               _localSearchAlgorithm = new LocalSearch<RouteWorker, IEnumerable<RouteWorker>>(new TabuSearchNeighborhood<RouteWorker, IEnumerable<RouteWorker>>(
                   new TwoOptNeighborhood()), Provider);
                break;
 

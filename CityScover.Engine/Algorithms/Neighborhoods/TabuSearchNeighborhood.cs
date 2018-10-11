@@ -12,13 +12,13 @@ using System.Collections.Generic;
 
 namespace CityScover.Engine.Algorithms.Neighborhoods
 {
-   internal class TabuSearchNeighborhood : Neighborhood
+   internal class TabuSearchNeighborhood<T1, T2> : Neighborhood<T1, T2>
    {
-      private Neighborhood _neighborhoodWorker;
+      private Neighborhood<T1, T2> _neighborhoodWorker;
       private IList<RouteWorker> _tabuList;
 
       #region Constructors
-      internal TabuSearchNeighborhood(Neighborhood neighborhoodWorker)
+      internal TabuSearchNeighborhood(Neighborhood<T1, T2> neighborhoodWorker)
       {
          _neighborhoodWorker = neighborhoodWorker ?? throw new ArgumentNullException();
          _tabuList = new List<RouteWorker>();
@@ -27,13 +27,18 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
       #region Protected properties
       protected IList<RouteWorker> TabuList => _tabuList;
+
+      internal override ICollection<TOSolution> BuildNeighborhood(T1 currentEdge, T2 candidateEdges)
+      {
+         throw new NotImplementedException();
+      }
       #endregion
 
       #region Internal methods
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution) =>
+      internal override IDictionary<T1, T2> GetCandidates(in TOSolution solution) =>
    _neighborhoodWorker.GetCandidates(solution);
 
-      internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
+      internal override TOSolution ProcessCandidate(T1 currentEdge, T1 candidateEdge)
       {
          // TODO: Controllare che la coppia (currentEdge, candidateEdge) non sia bloccata.
 

@@ -13,23 +13,23 @@ using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
 {
-   internal class LocalSearch : Algorithm
+   internal class LocalSearch<T1, T2> : Algorithm
    {
       private int _previousSolutionCost;
       private int _currentSolutionCost;
       private TOSolution _bestSolution;
-      private NeighborhoodFacade _neighborhoodFacade;
+      private NeighborhoodFacade<T1, T2> _neighborhoodFacade;
 
       #region Constructors
-      internal LocalSearch(Neighborhood neighborhood) 
+      internal LocalSearch(Neighborhood<T1, T2> neighborhood) 
          : this(neighborhood, null)
       {
       }
 
-      public LocalSearch(Neighborhood neighborhood, AlgorithmTracker provider) 
+      public LocalSearch(Neighborhood<T1, T2> neighborhood, AlgorithmTracker provider) 
          : base(provider)
       {
-         _neighborhoodFacade = new NeighborhoodFacade(neighborhood);
+         _neighborhoodFacade = new NeighborhoodFacade<T1, T2>(neighborhood);
       }
       #endregion
 
