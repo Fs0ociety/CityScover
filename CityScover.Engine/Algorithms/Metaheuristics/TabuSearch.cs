@@ -116,7 +116,9 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          await _innerAlgorithm.Start();
 
-         // DA RIVEDERE
+         // TODO: Eliminare il MAX IMPROVEMENTS E USARE LA CONDIZIONE DI STOP SULLO STALLO
+         // (Stallo = no improvement per almeno k iterazioni)
+
          foreach (var move in _neighborhood.TabuList)
          {
             if (move.Expiration >= _neighborhood.TabuList.Count)   // Gestire con il "Tenure" e non il Count della Tabu list

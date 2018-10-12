@@ -59,14 +59,6 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          if (forbiddenMove != null)
          {
-            // NON NECESSARIO?
-            //if (_tabuList is List<TabuMove> tabuList)
-            //{
-            //   if (forbiddenMove.Expiration < tabuList.Capacity)
-            //   {
-            //      return default;
-            //   }
-            //}
             return default;
          }
 
