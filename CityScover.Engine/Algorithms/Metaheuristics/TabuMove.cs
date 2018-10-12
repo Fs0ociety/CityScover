@@ -30,9 +30,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal RouteWorker FirstEdge { get; set; }
       internal RouteWorker SecondEdge { get; set; }
       internal int Expiration { get; set; }
-
-      // Need to add a reference to the new solution??
-      // internal int SolutionId { get; set; }
       #endregion
 
       #region IEquatable implementation

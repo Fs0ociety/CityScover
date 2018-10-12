@@ -22,6 +22,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private int _currentIteration;
       private int _maxIterations;
       private int _maxImprovements;    // L'idea è di gestire maxImprovements nello StageFlow come fatto per il RunningCount
+      private int _tenure;
 
       #region Constructors
       internal TabuSearch()
@@ -114,12 +115,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override async Task PerformStep()
       {
          await _innerAlgorithm.Start();
-
-         if (!_neighborhood.TabuList.Any())
-         {
-            throw new InvalidOperationException(
-               $"{nameof(_neighborhood.TabuList)} cannot be empty.");
-         }
 
          // DA RIVEDERE
          foreach (var move in _neighborhood.TabuList)

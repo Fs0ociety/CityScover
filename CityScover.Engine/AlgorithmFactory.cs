@@ -12,6 +12,7 @@ using CityScover.Engine.Algorithms.Metaheuristics;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
+using System.Collections.Generic;
 
 namespace CityScover.Engine
 {
@@ -82,7 +83,7 @@ namespace CityScover.Engine
       /// Create the concrete instance of the Algorithm with a specified Neighborhood as parameter.
       /// </summary>
       /// <param name="currentAlgorithm"> Algorithm type to create. </param>
-      /// <param name="neighborhood"> Neighborhood to pass to the Algorithm. </param>
+      /// <param name="neighborhood"> Neighborhood type to pass to the Algorithm. </param>
       /// <returns> The Algorithm's instance to run. </returns>
       internal static Algorithm CreateAlgorithm(AlgorithmType currentAlgorithm, Neighborhood neighborhood)
       {
@@ -92,6 +93,33 @@ namespace CityScover.Engine
          }
 
          Algorithm algorithm = default;
+
+         switch (currentAlgorithm)
+         {
+            case AlgorithmType.None:
+               break;
+
+            case AlgorithmType.TwoOpt:
+            case AlgorithmType.CitySwap:
+               algorithm = new LocalSearch(neighborhood);
+               break;
+
+            default:
+               break;
+         }
+         return algorithm;
+      }
+
+      internal static Algorithm CreateAlgorithm<TNeighborhood>(AlgorithmType currentAlgorithm, TNeighborhood neighborhood)
+         where TNeighborhood : Neighborhood
+      {
+         if (EqualityComparer<TNeighborhood>.Default.Equals(neighborhood, default))
+         {
+            throw new ArgumentNullException(nameof(neighborhood));
+         }
+
+         Algorithm algorithm = default;
+
          switch (currentAlgorithm)
          {
             case AlgorithmType.None:
