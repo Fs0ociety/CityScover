@@ -3,27 +3,22 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 11/10/2018
+// File update: 12/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
-using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.Metaheuristics
 {
-   // Optimizing tabu list size for the traveling salesman problem
-   // https://www.sciencedirect.com/science/article/pii/S0305054897000300
-
    internal class TabuSearch : Algorithm
    {
       private LocalSearch _innerAlgorithm;
+      private TabuSearchNeighborhood _neighborhood;
       private TOSolution _bestSolution;
-      private IList<TabuMove> _tabuList;
       private int _currentIteration;
       private int _maxIterations;
       private int _maxImprovements;    // L'idea è di gestire maxImprovements nello StageFlow come fatto per il RunningCount
@@ -34,34 +29,41 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
       }
 
-      internal TabuSearch(Neighborhood neighborhood) 
+      internal TabuSearch(Neighborhood neighborhood)
          : this(neighborhood, null)
       {
       }
-   
+
       internal TabuSearch(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
+         if (neighborhood is TabuSearchNeighborhood tbNeighborhood)
+         {
+            _neighborhood = tbNeighborhood;
+         }
       }
       #endregion
 
       #region Private methods
-      private IEnumerable<Algorithm> GetInnerAlgorithms()
-      {
-         var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms == null)
-         {
-            return null;
-         }
 
-         ICollection<Algorithm> algorithms = new Collection<Algorithm>();
-         foreach (var children in childrenAlgorithms)
-         {
-            algorithms.Add(Solver.GetAlgorithm(children.CurrentAlgorithm));
-         }
+      #region Temporary code for VNS algorithm
+      //private IEnumerable<Algorithm> GetInnerAlgorithms()
+      //{
+      //   var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
+      //   if (childrenAlgorithms == null)
+      //   {
+      //      return null;
+      //   }
 
-         return algorithms;
-      }
+      //   ICollection<Algorithm> algorithms = new Collection<Algorithm>();
+      //   foreach (var children in childrenAlgorithms)
+      //   {
+      //      algorithms.Add(Solver.GetAlgorithm(children.CurrentAlgorithm));
+      //   }
+
+      //   return algorithms;
+      //}
+      #endregion
 
       private LocalSearch GetLocalSearchAlgorithm()
       {
@@ -71,29 +73,19 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             return null;
          }
 
-         var algorithmFlow = childrenAlgorithms.FirstOrDefault();
-         if (algorithmFlow == null)
+         var flow = childrenAlgorithms.FirstOrDefault();
+         if (flow == null)
          {
             return null;
          }
-         _maxIterations = algorithmFlow.RunningCount;
 
-         switch (algorithmFlow.CurrentAlgorithm)
+         _neighborhood.NeighborhoodWorker = NeighborhoodFactory.CreateNeighborhood(flow.CurrentAlgorithm);
+         Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm, _neighborhood);
+
+         if (algorithm is LocalSearch ls)
          {
-            case AlgorithmType.TwoOpt:
-               _innerAlgorithm = new LocalSearch(new TabuSearchNeighborhood(
-                  new TwoOptNeighborhood(), _tabuList), Provider);
-               break;
-
-            case AlgorithmType.CitySwap:
-               // TODO: Create CitySwap neighborhood object
-               break;
-
-            // Repeat for other Local Search algorithms...
-
-            default:
-               _innerAlgorithm = null;
-               break;
+            _innerAlgorithm = ls;
+            _maxIterations = flow.RunningCount;
          }
 
          return _innerAlgorithm;
@@ -104,11 +96,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
-
-         _currentIteration = default;
-         _maxImprovements = _maxIterations;
+         //_maxImprovements = _maxIterations;   // Gestire diversamente
          _bestSolution = Solver.BestSolution;
-         _tabuList = new List<TabuMove>();
          _innerAlgorithm = GetLocalSearchAlgorithm();
 
          if (_innerAlgorithm == null)
@@ -117,26 +106,28 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
+         _neighborhood.TabuList = new List<TabuMove>();
          _innerAlgorithm.AcceptImprovementsOnly = false;
+         _innerAlgorithm.Provider = Provider;
       }
 
       internal override async Task PerformStep()
       {
          await _innerAlgorithm.Start();
 
-         if (!_tabuList.Any())
+         if (!_neighborhood.TabuList.Any())
          {
             throw new InvalidOperationException(
-               $"{nameof(_tabuList)} cannot be empty.");
+               $"{nameof(_neighborhood.TabuList)} cannot be empty.");
          }
 
          // DA RIVEDERE
-         foreach (var move in _tabuList)
+         foreach (var move in _neighborhood.TabuList)
          {
-            if (move.Expiration >= _tabuList.Count)   // Gestire con il "Tenure"
+            if (move.Expiration >= _neighborhood.TabuList.Count)   // Gestire con il "Tenure" e non il Count della Tabu list
             {
                // Aspiration Criteria
-               _tabuList.Remove(move);
+               _neighborhood.TabuList.Remove(move);
             }
          }
          _currentIteration++;

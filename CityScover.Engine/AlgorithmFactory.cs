@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 11/10/2018
+// File update: 12/10/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -24,17 +24,14 @@ namespace CityScover.Engine
       /// <summary>
       /// Creates the concrete instance of the Algorithm type.
       /// </summary>
-      /// <param name="currentAlgorithm">
-      /// Algorithm type to create.
-      /// </param>
-      /// <returns>
-      /// The Algorithm's instance to run.
-      /// </returns>
-      internal static Algorithm CreateAlgorithm(AlgorithmType currentAlgorithm)
+      /// <param name="algorithmType"> Algorithm type to create. </param>
+      /// <returns> The Algorithm's instance to run. </returns>
+      internal static Algorithm CreateAlgorithm(AlgorithmType algorithmType)
       {
          Algorithm algorithm = default;
+         Neighborhood neighborhood = default;
 
-         switch (currentAlgorithm)
+         switch (algorithmType)
          {
             case AlgorithmType.None:
                break;
@@ -48,15 +45,16 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.CheapestInsertion:
-               // TODO
+               // ... TODO ...
                break;
 
             case AlgorithmType.TwoOpt:
-               algorithm = new LocalSearch(new TwoOptNeighborhood());
+               neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
+               algorithm = new LocalSearch(neighborhood);
                break;
 
             case AlgorithmType.CitySwap:
-               // TODO
+               // ... TODO ...
                break;
 
             case AlgorithmType.LinKernighan:
@@ -64,12 +62,15 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TabuSearch:
-               algorithm = new TabuSearch();
+               neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
+               algorithm = new TabuSearch(neighborhood);
                break;
 
             case AlgorithmType.VariableNeighborhoodSearch:
-               // TODO
+               // ... TODO ...
                break;
+
+            // Add new Algorithm types here ...
 
             default:
                break;
@@ -77,74 +78,31 @@ namespace CityScover.Engine
          return algorithm;
       }
 
-      internal static Algorithm CreateAlgorithm(AlgorithmType currentAlgorithm, NeighborhoodType neighborhood)
+      /// <summary>
+      /// Create the concrete instance of the Algorithm with a specified Neighborhood as parameter.
+      /// </summary>
+      /// <param name="currentAlgorithm"> Algorithm type to create. </param>
+      /// <param name="neighborhood"> Neighborhood to pass to the Algorithm. </param>
+      /// <returns> The Algorithm's instance to run. </returns>
+      internal static Algorithm CreateAlgorithm(AlgorithmType currentAlgorithm, Neighborhood neighborhood)
       {
-         Algorithm algorithm = default;
-         Neighborhood neighborhoodWorker = default;
+         if (neighborhood == null)
+         {
+            throw new ArgumentNullException(nameof(neighborhood));
+         }
 
+         Algorithm algorithm = default;
          switch (currentAlgorithm)
          {
             case AlgorithmType.None:
                break;
 
-            case AlgorithmType.NearestNeighbor:
-               algorithm = new NearestNeighbor();
-               break;
-
-            case AlgorithmType.NearestNeighborKnapsack:
-               algorithm = new NearestNeighborKnapsack();
-               break;
-
-            case AlgorithmType.CheapestInsertion:
-               // TODO
-               break;
-
             case AlgorithmType.TwoOpt:
-               neighborhoodWorker = NeighborhoodFactory.CreateNeighborhood(neighborhood);
-               algorithm = new LocalSearch(neighborhoodWorker);
-               break;
-
             case AlgorithmType.CitySwap:
-               // TODO
-               break;
-
-            case AlgorithmType.LinKernighan:
-               algorithm = new LinKernighan();
-               break;
-
-            case AlgorithmType.TabuSearch:
-               neighborhoodWorker = NeighborhoodFactory.CreateNeighborhood(neighborhood);
-               algorithm = new TabuSearch(neighborhoodWorker);
-               break;
-
-            case AlgorithmType.VariableNeighborhoodSearch:
-               // TODO
+               algorithm = new LocalSearch(neighborhood);
                break;
 
             default:
-               break;
-         }
-         return algorithm;
-      }
-
-      internal static Algorithm CreateAlgorithmByFamily(AlgorithmFamily family, 
-         AlgorithmType algorithmType, NeighborhoodType neighborhoodType)
-      {
-         Algorithm algorithm = default;
-
-         switch (family)
-         {
-            case AlgorithmFamily.None:
-               break;
-
-            case AlgorithmFamily.Greedy:
-               algorithm = CreateAlgorithm(algorithmType, NeighborhoodType.None);
-               break;
-
-            case AlgorithmFamily.LocalSearch:
-            case AlgorithmFamily.MetaHeuristic:
-            case AlgorithmFamily.Improvement:
-               algorithm = CreateAlgorithm(algorithmType, neighborhoodType);
                break;
          }
          return algorithm;

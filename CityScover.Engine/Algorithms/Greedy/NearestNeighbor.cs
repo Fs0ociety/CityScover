@@ -179,7 +179,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          InterestPointWorker GetStartPOI()
          {
-            var startPOIId = Solver.WorkingConfiguration.StartPOIId;
+            var startPOIId = Solver.WorkingConfiguration.StartingPointId;
 
             return _cityMapClone.Nodes
                .Where(x => x.Entity.Id == startPOIId)

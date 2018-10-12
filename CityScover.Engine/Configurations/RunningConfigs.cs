@@ -2,7 +2,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// File update: 12/10/2018
 //
 
 using CityScover.Entities;
@@ -32,8 +32,8 @@ namespace CityScover.Engine.Configs
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsCount = 15,
-            StartPOIId = 1,
+            PointsCount = 15,    // Problem size
+            StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(6, 0, 0),
@@ -43,6 +43,7 @@ namespace CityScover.Engine.Configs
                new Stage()
                {
                   Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor
@@ -51,6 +52,7 @@ namespace CityScover.Engine.Configs
                new Stage()
                {
                   Description = StageType.StageTwo,
+                  Category = AlgorithmFamily.LocalSearch,
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TwoOpt
@@ -59,6 +61,7 @@ namespace CityScover.Engine.Configs
                new Stage()
                {
                   Description = StageType.StageThree,
+                  Category = AlgorithmFamily.MetaHeuristic,
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 06/10/2018
+// File update: 12/10/2018
 //
 
 using System;
@@ -54,11 +54,6 @@ namespace CityScover.Engine
       /// <returns></returns>
       internal async Task Run(Algorithm algorithm)
       {
-         if (algorithm == null)
-         {
-            throw new ArgumentNullException(nameof(algorithm));
-         }
-
          _timer = Stopwatch.StartNew();
          await Task.Run(() => algorithm.Start());
          RunningTime = _timer;

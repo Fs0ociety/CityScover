@@ -3,10 +3,11 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 11/10/2018
+// File update: 12/10/2018
 //
 
 using CityScover.Data;
+using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
@@ -99,12 +100,6 @@ namespace CityScover.Engine
       private async Task ExecuteWithoutMonitoring(Algorithm algorithm)
       {
          bool exceptionOccurred = false;
-
-         if (algorithm == null)
-         {
-            throw new NullReferenceException(nameof(algorithm));
-         }
-
          try
          {
             await Task.Run(() => algorithm.Start());
@@ -130,12 +125,6 @@ namespace CityScover.Engine
       private async Task ExecuteWithMonitoring(Algorithm algorithm)
       {
          bool exceptionOccurred = false;
-
-         if (algorithm == null)
-         {
-            throw new NullReferenceException(nameof(algorithm));
-         }
-
          algorithm.Provider = new AlgorithmTracker();
          ExecutionReporter reporter = new ExecutionReporter();
          reporter.Subscribe(algorithm.Provider);
@@ -174,6 +163,10 @@ namespace CityScover.Engine
          {
             CurrentStage = stage;
             Algorithm algorithm = GetAlgorithm(stage.Flow.CurrentAlgorithm);
+            if (algorithm == null)
+            {
+               throw new NullReferenceException(nameof(algorithm));
+            }
             await executionFunc.Invoke(algorithm);
          }
       }
@@ -182,6 +175,9 @@ namespace CityScover.Engine
       #region Internal methods
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType);
+
+      internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood neighborhood) =>
+         AlgorithmFactory.CreateAlgorithm(algorithmType, neighborhood);
 
       internal void EnqueueSolution(TOSolution solution) =>
          _solutionsQueue.Add(solution);

@@ -4,7 +4,7 @@
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
 // 
-// File update: 17/09/2018
+// File update: 12/10/2018
 //
 
 namespace CityScover.Engine
@@ -20,6 +20,7 @@ namespace CityScover.Engine
 
       #region Public properties
       internal StageType Description { get; set; }
+      internal AlgorithmFamily Category { get; set; }
       internal StageFlow Flow { get; set; }
       #endregion
    }

@@ -167,14 +167,14 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          _bestSolution = Solver.BestSolution;
          _currentSolutionGraph = _bestSolution.SolutionGraph.DeepCopy();
 
-         var startPOIId = Solver.WorkingConfiguration.StartPOIId;
+         var startPOIId = Solver.WorkingConfiguration.StartingPointId;
          _startPOI = _cityMapClone.Nodes
             .Where(x => x.Entity.Id == startPOIId)
             .FirstOrDefault();
          
          _endPOI = _cityMapClone.Nodes.Where(
             node => node.Entity.Id.Equals(_cityMapClone.Edges.Where(
-               edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId).Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
+               edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartingPointId).Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
 
          if (_startPOI == null || _endPOI == null)
          {

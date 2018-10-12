@@ -10,7 +10,6 @@ using CityScover.Engine.Algorithms.Metaheuristics;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.Engine.Algorithms.Neighborhoods
@@ -24,7 +23,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal TabuSearchNeighborhood()
       {
       }
-
+   
       internal TabuSearchNeighborhood(Neighborhood neighborhood, IList<TabuMove> tabuList)
       {
          _neighborhoodWorker = neighborhood ?? throw new ArgumentNullException();
@@ -36,10 +35,15 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal Neighborhood NeighborhoodWorker
       {
          get => _neighborhoodWorker;
-         set
-         {
-            _neighborhoodWorker = value ?? throw new ArgumentNullException($"{nameof(value)} can not be null");
-         }
+         set => _neighborhoodWorker = value ?? 
+            throw new ArgumentNullException($"{nameof(value)} can not be null");
+      }
+
+      internal IList<TabuMove> TabuList
+      {
+         get => _tabuList;
+         set => _tabuList = value ?? 
+            throw new ArgumentNullException($"{nameof(value)} can not be null");
       }
       #endregion
 
