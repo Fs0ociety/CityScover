@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using System;
@@ -14,7 +17,9 @@ namespace CityScover.Engine.Workers
 {
    internal sealed class RouteWorker : IGraphEdgeWeight
    {
+      #region Private fields
       private bool _isVisited;
+      #endregion
 
       #region Constructors
       internal RouteWorker(Route route)

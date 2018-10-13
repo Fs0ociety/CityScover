@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -15,10 +18,12 @@ namespace CityScover.Engine.Algorithms
 {
    internal class LocalSearch : Algorithm
    {
+      #region Private fields
       private int _previousSolutionCost;
       private int _currentSolutionCost;
       private TOSolution _bestSolution;
       private NeighborhoodFacade _neighborhoodFacade;
+      #endregion
 
       #region Constructors
       internal LocalSearch(Neighborhood neighborhood) 
@@ -73,6 +78,7 @@ namespace CityScover.Engine.Algorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          _bestSolution = Solver.BestSolution;
          _currentSolutionCost = _bestSolution.Cost;
          _previousSolutionCost = default;
@@ -132,8 +138,20 @@ namespace CityScover.Engine.Algorithms
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == _currentSolutionCost || 
-            _status == AlgorithmStatus.Error;
+         bool shouldStop = default;
+
+         if (AcceptImprovementsOnly)
+         {
+            shouldStop = _previousSolutionCost == _currentSolutionCost;
+         }
+         else
+         {
+            // For (Meta)Heuristic algorithms
+            //
+            // ... Other conditions??
+         }
+
+         return shouldStop || _status == AlgorithmStatus.Error;
       }
       #endregion
    }

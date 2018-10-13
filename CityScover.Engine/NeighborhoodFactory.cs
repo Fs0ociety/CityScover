@@ -2,17 +2,20 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
-using System;
 
 namespace CityScover.Engine
 {
    internal class NeighborhoodFactory
    {
+      #region Internal static methods
       internal static Neighborhood CreateNeighborhood(AlgorithmType algorithmType)
       {
          Neighborhood neighborhood = default;
@@ -41,5 +44,6 @@ namespace CityScover.Engine
          }
          return neighborhood;
       }
+      #endregion
    }
 }

@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using System;
@@ -19,8 +22,10 @@ namespace CityScover.Engine
    /// </summary>
    internal class ExecutionReporter : IObserver<TOSolution>
    {
+      #region Private fields
       private IDisposable _unsubscriber;
       private Stopwatch _timer;
+      #endregion
 
       #region Constructors
       internal ExecutionReporter()

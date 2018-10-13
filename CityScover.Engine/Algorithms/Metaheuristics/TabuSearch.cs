@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -16,13 +19,15 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 {
    internal class TabuSearch : Algorithm
    {
+      #region Private fields
       private LocalSearch _innerAlgorithm;
       private TabuSearchNeighborhood _neighborhood;
       private TOSolution _bestSolution;
-      private int _currentIteration;
-      private int _maxIterations;
-      private int _maxImprovements;    // L'idea è di gestire maxImprovements nello StageFlow come fatto per il RunningCount
       private int _tenure;
+      private int _maxIterations;
+      private int _noImprovementsCount;
+      private int _currentIteration;
+      #endregion
 
       #region Constructors
       internal TabuSearch()
@@ -46,25 +51,20 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #endregion
 
       #region Private methods
+      private int CalculateTabuTenure(int problemSize)
+      {
+         #region Code for testing...
+         //int start = (problemSize + 8 - 1) / 8;
+         //int end = (problemSize + 4 - 1) / 4;
 
-      #region Temporary code for VNS algorithm
-      //private IEnumerable<Algorithm> GetInnerAlgorithms()
-      //{
-      //   var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-      //   if (childrenAlgorithms == null)
-      //   {
-      //      return null;
-      //   }
+         //_tenure = new Random().Next(2) == 0 ? start : end;
+         //return _tenure;
+         #endregion
 
-      //   ICollection<Algorithm> algorithms = new Collection<Algorithm>();
-      //   foreach (var children in childrenAlgorithms)
-      //   {
-      //      algorithms.Add(Solver.GetAlgorithm(children.CurrentAlgorithm));
-      //   }
-
-      //   return algorithms;
-      //}
-      #endregion
+         return new Random().Next(2) == 0 ?
+            (problemSize + 8 - 1) / 8 :
+            (problemSize + 4 - 1) / 4;
+      }
 
       private LocalSearch GetLocalSearchAlgorithm()
       {
@@ -91,14 +91,25 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          return _innerAlgorithm;
       }
+
+      private void AspirationCriteria()
+      {
+         foreach (var tabuMove in _neighborhood.TabuList)
+         {
+            if (tabuMove.Expiration >= _tenure)
+            {
+               _neighborhood.TabuList.Remove(tabuMove);
+            }
+         }
+      }
       #endregion
 
       #region Overrides
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         //_maxImprovements = _maxIterations;   // Gestire diversamente
          _bestSolution = Solver.BestSolution;
+         _tenure = CalculateTabuTenure(Solver.ProblemSize);
          _innerAlgorithm = GetLocalSearchAlgorithm();
 
          if (_innerAlgorithm == null)
@@ -116,17 +127,20 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          await _innerAlgorithm.Start();
 
-         // TODO: Eliminare il MAX IMPROVEMENTS E USARE LA CONDIZIONE DI STOP SULLO STALLO
-         // (Stallo = no improvement per almeno k iterazioni)
+         //if (Solver.BestSolution.Cost < Solver.PreviousStageSolutionCost)
+         //{
+         //   _noImprovementsCount++;
+         //}
 
-         foreach (var move in _neighborhood.TabuList)
+         bool isBetterThanPreviousBestSolution =
+            Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
+
+         if (!isBetterThanPreviousBestSolution)
          {
-            if (move.Expiration >= _neighborhood.TabuList.Count)   // Gestire con il "Tenure" e non il Count della Tabu list
-            {
-               // Aspiration Criteria
-               _neighborhood.TabuList.Remove(move);
-            }
+            _noImprovementsCount++;
          }
+      
+         AspirationCriteria();
          _currentIteration++;
       }
 
@@ -148,8 +162,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       internal override bool StopConditions()
       {
-         return _currentIteration == _maxImprovements ||
-            _currentIteration == _maxIterations ||
+         return _currentIteration == _maxIterations || 
+            _noImprovementsCount == _maxIterations || 
             _status == AlgorithmStatus.Error;
       }
       #endregion

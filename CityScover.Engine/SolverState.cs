@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 05/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Commons;
@@ -13,6 +16,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -24,9 +28,11 @@ namespace CityScover.Engine
    /// </summary>
    public sealed partial class Solver : Singleton<Solver>
    {
+      #region Private fields
       private BlockingCollection<TOSolution> _solutionsQueue;
       private ICollection<Task> _solverTasks;
       private IDictionary<int, Task> _algorithmTasks;
+      #endregion
 
       #region Constructors
       private Solver()
@@ -61,22 +67,28 @@ namespace CityScover.Engine
       internal Stage CurrentStage { get; private set; }
 
       /// <summary>
-      /// TODO
-      /// </summary>
-      internal ProblemBase Problem { get; private set; }
-
-      /// <summary>
       /// Points of interest filtered from the graph of the city.
       /// </summary>
       internal IEnumerable<InterestPoint> Points { get; private set; }
 
       /// <summary>
-      /// Complete graph created which represents the graph of the city.
-      /// This object is created by Solver.
+      /// Current type of Operating Reasearch problem.
+      /// </summary>
+      internal ProblemBase Problem { get; private set; }
+
+      /// <summary>
+      /// Instance size of the current problem.
+      /// </summary>
+      internal int ProblemSize => Points.Count();
+
+      /// <summary>
+      /// Current Graph representing the map of the city.
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
       
       internal TOSolution BestSolution { get; set; }
+
+      internal int PreviousStageSolutionCost { get; set; }
 
       internal IDictionary<int, Task> AlgorithmTasks => _algorithmTasks;
       

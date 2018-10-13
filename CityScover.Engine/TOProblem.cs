@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using System;
@@ -15,11 +18,15 @@ namespace CityScover.Engine
 {
    internal class TOProblem : ProblemBase
    {
+      #region Constants
       private const int PenaltyAmount = 100;
+      #endregion
 
+      #region Private fields
       private readonly DateTime _tMax;
       private Func<TOSolution, int> _objectiveFunc;
       private Func<TOSolution, int> _penaltyFunc;
+      #endregion
 
       #region Constructors
       internal TOProblem()

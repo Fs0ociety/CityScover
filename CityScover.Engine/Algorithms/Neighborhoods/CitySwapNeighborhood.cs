@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -16,8 +19,10 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal class CitySwapNeighborhood : Neighborhood
    {
+      #region Private fields
       private CityMapGraph _cityMapClone;
       private CityMapGraph _startSolutionGraph;
+      #endregion
 
       #region Constructors
       internal CitySwapNeighborhood()

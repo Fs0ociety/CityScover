@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using System.Threading.Tasks;
@@ -15,8 +18,10 @@ namespace CityScover.Engine
    /// </summary>
    internal abstract class Algorithm
    {
+      #region Private fields
       private bool _acceptImprovementsOnly;
       private AlgorithmTracker _provider;
+      #endregion
 
       #region Protected members
       protected AlgorithmStatus _status;

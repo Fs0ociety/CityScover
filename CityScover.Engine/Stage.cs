@@ -2,9 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
 // 
-// File update: 12/10/2018
+// File update: 13/10/2018
 //
 
 namespace CityScover.Engine

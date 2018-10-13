@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -21,7 +24,7 @@ namespace CityScover.Engine
    /// </summary>
    internal class AlgorithmFactory
    {
-      #region Internal methods
+      #region Internal static methods
       /// <summary>
       /// Creates the concrete instance of the Algorithm type.
       /// </summary>

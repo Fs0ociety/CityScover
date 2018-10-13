@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 06/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using System;
@@ -13,10 +16,12 @@ namespace CityScover.Engine
 {
    internal class Result
    {
+      #region Private fields
       private TOSolution _currentSolution;
       private DateTime _timeSpent;
       private Validity _validity;
       private Stopwatch _runningTime;
+      #endregion
 
       #region Constructors
       internal Result(TOSolution currentSolution, DateTime timeSpent, Validity validity = Validity.None)

@@ -1,8 +1,12 @@
-﻿// CityScover
+﻿//
+// CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 12/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Entities;
@@ -14,7 +18,9 @@ namespace CityScover.Engine.Configs
 {
    public static class RunningConfigs
    {
+      #region Private fields
       private readonly static ICollection<Configuration> _configurations;
+      #endregion
 
       #region Static Constructors
       static RunningConfigs()

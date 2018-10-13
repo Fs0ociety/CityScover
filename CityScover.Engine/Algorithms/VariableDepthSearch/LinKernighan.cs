@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -17,6 +20,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 {
    internal class LinKernighan : Algorithm
    {
+      #region Private fields
       private CityMapGraph _cityMapClone;
       private CityMapGraph _currentSolutionGraph;
       private TOSolution _bestSolution;
@@ -25,6 +29,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       private InterestPointWorker _startPOI;
       private InterestPointWorker _endPOI;
       private byte _executedSteps;
+      #endregion
 
       #region Constructors
       internal LinKernighan()

@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 01/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -14,7 +17,9 @@ namespace CityScover.Engine
 {
    internal class TOSolution
    {
+      #region Private fields
       private static int _sequenceId;
+      #endregion
 
       #region Constructors
       internal TOSolution()

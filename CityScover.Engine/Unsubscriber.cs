@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 07/09/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using System;
@@ -17,8 +20,10 @@ namespace CityScover.Engine
    /// <typeparam name="Solution"></typeparam>
    internal class Unsubscriber<Solution> : IDisposable
    {
+      #region Private fields
       private ICollection<IObserver<Solution>> _observers;
       private readonly IObserver<Solution> _observer;
+      #endregion
 
       #region Constructors
       internal Unsubscriber(ICollection<IObserver<Solution>> observers, IObserver<Solution> observer)

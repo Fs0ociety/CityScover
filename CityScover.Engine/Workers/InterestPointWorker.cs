@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 13/10/2018
 //
 
 using CityScover.Entities;
@@ -12,13 +15,17 @@ namespace CityScover.Engine.Workers
 {
    internal sealed class InterestPointWorker
    {
+      #region Private fields
       private InterestPoint _entity;
       private bool _isVisited;
+      #endregion
 
+      #region Constructors
       internal InterestPointWorker(InterestPoint interestPoint)
       {
          _entity = interestPoint;
       }
+      #endregion
 
       #region Internal properties
       internal InterestPoint Entity
