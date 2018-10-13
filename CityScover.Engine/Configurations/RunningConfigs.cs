@@ -71,9 +71,10 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
+                     MaximumDeadlockIterations = 2,
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.TwoOpt, 1)
+                        new StageFlow(AlgorithmType.TwoOpt, 3)
                      }
                   }
                }

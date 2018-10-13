@@ -70,9 +70,6 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          TOSolution solution = _neighborhoodWorker.ProcessCandidate(currentEdge, candidateEdge);
          TabuMove reversedMove = new TabuMove(currentEdge, candidateEdge, expiration: 0);
          _tabuList.Add(reversedMove);
-         _tabuList.Where(move => !move.Equals(reversedMove)).ToList().
-            ForEach(move => move.Expiration++);
-
          return solution;
       }
       #endregion

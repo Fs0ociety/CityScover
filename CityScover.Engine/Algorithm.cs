@@ -9,6 +9,7 @@
 // File update: 13/10/2018
 //
 
+using System;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -105,9 +106,9 @@ namespace CityScover.Engine
                await Task.Run(() => PerformStep());
                _currentStep++;
             }
-            catch
+            catch(Exception ex)
             {               
-               OnError();
+               OnError(ex);
             }
          }
                   
@@ -140,12 +141,12 @@ namespace CityScover.Engine
          }
       }
 
-      internal virtual void OnError()
+      internal virtual void OnError(Exception exception)
       {
          _status = AlgorithmStatus.Error;
          if (Solver.IsMonitoringEnabled)
          {
-            _provider.NotifyError();
+            _provider.NotifyError(exception);
          }
       }
       #endregion

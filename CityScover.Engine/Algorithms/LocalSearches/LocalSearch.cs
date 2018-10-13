@@ -109,20 +109,40 @@ namespace CityScover.Engine.Algorithms
 
          // Se siamo ispirati (come no) lo faremo.
 
+         // TODO
+         // Per l'invocazione dell'algoritmo di miglioramento Lin Kernighan utilizzare due ulteriori variabili:
+         // 1. Un delta fissato all'inzio che indica una variazione di costo generica.
+         // 2. Un contatore che mi tiene traccia di quante volte ho migliorato con una variazione (differenza tra i costi delle due soluzioni) inferiore al delta.
+         //
+         // Pertanto, l'invocazione dell'algoritmo avviene quando il contatore raggiunge una soglia fissata. (e.g. dopo 4 giri della PerformStep())
+
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
          _previousSolutionCost = _currentSolutionCost;
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
-         if (isBetterThanCurrentBestSolution)
+         if (AcceptImprovementsOnly)
+         {
+            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
+            if (isBetterThanCurrentBestSolution)
+            {
+               _bestSolution = solution;
+               _currentSolutionCost = solution.Cost;
+            }
+         }
+         else
          {
             _bestSolution = solution;
             _currentSolutionCost = solution.Cost;
          }
+         
       }
 
-      internal override void OnError()
+      internal override void OnError(Exception exception)
       {
-         base.OnError();
+         base.OnError(exception);
+
+         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
+         Result resultError = new Result(_bestSolution, null, Result.Validity.Invalid);
+         Solver.Results.Add(AlgorithmFamily.LocalSearch, resultError);
       }
 
       internal override void OnTerminating()
@@ -133,25 +153,23 @@ namespace CityScover.Engine.Algorithms
 
       internal override void OnTerminated()
       {
+         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
+         Result validResult = new Result(_bestSolution, null, Result.Validity.Valid);
+         //if (AcceptImprovementsOnly)
+         //{
+         //   Solver.Results.Add(AlgorithmFamily.LocalSearch, validResult);
+         //}
+         //else
+         //{
+         //   Solver.Results.Add(AlgorithmFamily.MetaHeuristic, validResult);
+         //}
          base.OnTerminated();
       }
 
       internal override bool StopConditions()
       {
-         bool shouldStop = default;
-
-         if (AcceptImprovementsOnly)
-         {
-            shouldStop = _previousSolutionCost == _currentSolutionCost;
-         }
-         else
-         {
-            // For (Meta)Heuristic algorithms
-            //
-            // ... Other conditions??
-         }
-
-         return shouldStop || _status == AlgorithmStatus.Error;
+         return _previousSolutionCost == _currentSolutionCost || 
+            _status == AlgorithmStatus.Error;
       }
       #endregion
    }

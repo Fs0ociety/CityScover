@@ -156,7 +156,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #endregion
 
       #region Overrides
-      internal override void OnError()
+      internal override void OnError(Exception exception)
       {
          throw new System.NotImplementedException();
       }

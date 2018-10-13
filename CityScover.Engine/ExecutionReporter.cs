@@ -9,6 +9,7 @@
 // File update: 13/10/2018
 //
 
+using CityScover.Engine.Workers;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -37,6 +38,24 @@ namespace CityScover.Engine
       internal Solver Solver => Solver.Instance;
 
       public Stopwatch RunningTime { get; set; }
+      #endregion
+
+      #region Private methods
+      private void DisplaySolutionGraph(TOSolution solution)
+      {
+         CityMapGraph solutionGraph = solution.SolutionGraph;
+         string result = String.Empty;
+         for (int i = 1; i <= solutionGraph.NodeCount; i++)
+         {
+            InterestPointWorker node = solutionGraph[i];
+            result += $"({node.Entity.Id} -- {node.Entity.Name})";
+            if (i < solutionGraph.NodeCount)
+            {
+               result += $" --> ";
+            }
+         }
+         Console.WriteLine(result);
+      }
       #endregion
 
       #region Internal methods
@@ -84,13 +103,14 @@ namespace CityScover.Engine
       public void OnCompleted()
       {
          _timer.Stop();
+         //DisplaySolutionGraph(Solver.BestSolution);
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
          Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
-         AlgorithmFamily resultType = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);
-         Result algorithmResult = Solver.Results[resultType];
-         algorithmResult.RunningTime = _timer;
+         //AlgorithmFamily resultType = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);
+         //Result algorithmResult = Solver.Results[resultType];
+         //algorithmResult.RunningTime = _timer;
       }
       #endregion
    }

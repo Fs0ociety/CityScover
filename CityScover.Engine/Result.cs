@@ -18,13 +18,13 @@ namespace CityScover.Engine
    {
       #region Private fields
       private TOSolution _currentSolution;
-      private DateTime _timeSpent;
+      private DateTime? _timeSpent;
       private Validity _validity;
       private Stopwatch _runningTime;
       #endregion
 
       #region Constructors
-      internal Result(TOSolution currentSolution, DateTime timeSpent, Validity validity = Validity.None)
+      internal Result(TOSolution currentSolution, DateTime? timeSpent = null, Validity validity = Validity.None)
       {
          _currentSolution = currentSolution;
          _timeSpent = timeSpent;

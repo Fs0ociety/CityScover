@@ -38,11 +38,11 @@ namespace CityScover.Engine
          }
       }
 
-      public virtual void NotifyError()
+      public virtual void NotifyError(Exception exception)
       {
          foreach (var observer in _observers)
          {
-            observer.OnError(new Exception("Cost exceeds maximum value."));
+            observer.OnError(exception);
          }
       }
 

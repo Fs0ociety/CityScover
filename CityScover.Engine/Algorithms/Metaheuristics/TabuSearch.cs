@@ -25,6 +25,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private TOSolution _bestSolution;
       private int _tenure;
       private int _maxIterations;
+      private int _maxDeadlockIterations;
       private int _noImprovementsCount;
       private int _currentIteration;
       #endregion
@@ -87,6 +88,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          {
             _innerAlgorithm = ls;
             _maxIterations = flow.RunningCount;
+            _maxDeadlockIterations = flow.MaximumDeadlockIterations;
          }
 
          return _innerAlgorithm;
@@ -94,7 +96,10 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       private void AspirationCriteria()
       {
-         foreach (var tabuMove in _neighborhood.TabuList)
+         // DA VERIFICARE PER ERRORE: "La raccolta è stata modificata"
+         // https://entityframework.net/it/knowledge-base/34823174/-la-raccolta-e-stata-modificata--l-operazione-di-enumerazione-potrebbe-non-eseguire-l-errore-durante-la-lettura-dei-dati
+         var fakeTabuList = _neighborhood.TabuList.ToList();
+         foreach (var tabuMove in fakeTabuList)
          {
             if (tabuMove.Expiration >= _tenure)
             {
@@ -125,12 +130,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       internal override async Task PerformStep()
       {
+         _neighborhood.TabuList.ToList().ForEach(move => move.Expiration++);
          await _innerAlgorithm.Start();
-
-         //if (Solver.BestSolution.Cost < Solver.PreviousStageSolutionCost)
-         //{
-         //   _noImprovementsCount++;
-         //}
 
          bool isBetterThanPreviousBestSolution =
             Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
@@ -139,14 +140,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          {
             _noImprovementsCount++;
          }
-      
+
          AspirationCriteria();
          _currentIteration++;
       }
 
-      internal override void OnError()
+      internal override void OnError(Exception exception)
       {
-         base.OnError();
+         base.OnError(exception);
       }
 
       internal override void OnTerminating()
@@ -162,9 +163,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       internal override bool StopConditions()
       {
-         return _currentIteration == _maxIterations || 
-            _noImprovementsCount == _maxIterations || 
-            _status == AlgorithmStatus.Error;
+         bool shouldStop = _currentIteration == _maxIterations 
+            || _status == AlgorithmStatus.Error;
+
+         if (_maxDeadlockIterations > 0)
+         {
+            shouldStop = shouldStop || _noImprovementsCount == _maxDeadlockIterations;
+         }
+         return shouldStop;
       }
       #endregion
    }

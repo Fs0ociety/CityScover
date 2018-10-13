@@ -42,7 +42,8 @@ namespace CityScover.Engine
 
       #region Internal properties
       internal AlgorithmType CurrentAlgorithm { get; set; }
-      internal byte RunningCount { get; set; }
+      internal byte RunningCount { get; set; }      
+      internal byte MaximumDeadlockIterations { get; set; }
       internal ICollection<StageFlow> ChildrenFlows { get; set; }
       #endregion
    }

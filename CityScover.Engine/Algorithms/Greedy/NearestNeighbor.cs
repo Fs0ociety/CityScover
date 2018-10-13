@@ -215,9 +215,9 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
       }
 
-      internal override void OnError()
+      internal override void OnError(Exception exception)
       {
-         base.OnError();
+         base.OnError(exception);
          _currentStep = default;
          TOSolution lastProducedSolution = _solutions.Last();
          Result resultError = new Result(lastProducedSolution, _timeSpent, Result.Validity.Invalid);
