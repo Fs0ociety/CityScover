@@ -6,12 +6,13 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 14/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
@@ -26,12 +27,12 @@ namespace CityScover.Engine.Algorithms
       #endregion
 
       #region Constructors
-      internal LocalSearch(Neighborhood neighborhood) 
+      internal LocalSearch(Neighborhood neighborhood)
          : this(neighborhood, null)
       {
       }
 
-      public LocalSearch(Neighborhood neighborhood, AlgorithmTracker provider) 
+      public LocalSearch(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
          _neighborhoodFacade = new NeighborhoodFacade(neighborhood);
@@ -133,7 +134,6 @@ namespace CityScover.Engine.Algorithms
             _bestSolution = solution;
             _currentSolutionCost = solution.Cost;
          }
-         
       }
 
       internal override void OnError(Exception exception)
@@ -141,8 +141,10 @@ namespace CityScover.Engine.Algorithms
          base.OnError(exception);
 
          // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
-         Result resultError = new Result(_bestSolution, null, Result.Validity.Invalid);
-         Solver.Results.Add(AlgorithmFamily.LocalSearch, resultError);
+         Result resultError =
+            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
+         resultError.ResultFamily = AlgorithmFamily.LocalSearch;
+         Solver.Results.Add(resultError);
       }
 
       internal override void OnTerminating()
@@ -154,21 +156,16 @@ namespace CityScover.Engine.Algorithms
       internal override void OnTerminated()
       {
          // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
-         Result validResult = new Result(_bestSolution, null, Result.Validity.Valid);
-         //if (AcceptImprovementsOnly)
-         //{
-         //   Solver.Results.Add(AlgorithmFamily.LocalSearch, validResult);
-         //}
-         //else
-         //{
-         //   Solver.Results.Add(AlgorithmFamily.MetaHeuristic, validResult);
-         //}
+         Result validResult =
+            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
+         validResult.ResultFamily = AlgorithmFamily.LocalSearch;
+         Solver.Results.Add(validResult);
          base.OnTerminated();
       }
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == _currentSolutionCost || 
+         return _previousSolutionCost == _currentSolutionCost ||
             _status == AlgorithmStatus.Error;
       }
       #endregion

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 14/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -96,10 +96,11 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       private void AspirationCriteria()
       {
-         // DA VERIFICARE PER ERRORE: "La raccolta è stata modificata"
-         // https://entityframework.net/it/knowledge-base/34823174/-la-raccolta-e-stata-modificata--l-operazione-di-enumerazione-potrebbe-non-eseguire-l-errore-durante-la-lettura-dei-dati
-         var fakeTabuList = _neighborhood.TabuList.ToList();
-         foreach (var tabuMove in fakeTabuList)
+         // Using LINQ with generic Predicate<T> delegate to remove items in Tabu list.
+         //_neighborhood.TabuList.ToList().RemoveAll(tabuMove => tabuMove.Expiration >= _tenure);
+
+         // Using classic foreach, iterating over a copy of the Tabu list.
+         foreach (var tabuMove in _neighborhood.TabuList.ToList())
          {
             if (tabuMove.Expiration >= _tenure)
             {

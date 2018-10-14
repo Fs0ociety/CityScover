@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 14/10/2018
 //
 
 using System;
@@ -20,6 +20,7 @@ namespace CityScover.Engine
    internal abstract class Algorithm
    {
       #region Private fields
+      private readonly AlgorithmType _currentAlgorithm;
       private bool _acceptImprovementsOnly;
       private AlgorithmTracker _provider;
       #endregion
@@ -38,12 +39,15 @@ namespace CityScover.Engine
 
       internal Algorithm(AlgorithmTracker provider, bool acceptImprovementsOnly = true)
       {
+         _currentAlgorithm = Solver.CurrentStage.Flow.CurrentAlgorithm;
          _acceptImprovementsOnly = acceptImprovementsOnly;
          _provider = provider;
       }
       #endregion
 
       #region Internal properties
+      protected AlgorithmType CurrentAlgorithm => _currentAlgorithm;
+
       protected ushort CurrentStep
       {
          get => _currentStep;

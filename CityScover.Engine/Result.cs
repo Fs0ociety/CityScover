@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 14/10/2018
 //
 
 using System;
@@ -18,16 +18,20 @@ namespace CityScover.Engine
    {
       #region Private fields
       private TOSolution _currentSolution;
+      private AlgorithmFamily _resultFamily;
+      private AlgorithmType _runningAlgorithm;
       private DateTime? _timeSpent;
       private Validity _validity;
       private Stopwatch _runningTime;
       #endregion
 
       #region Constructors
-      internal Result(TOSolution currentSolution, DateTime? timeSpent = null, Validity validity = Validity.None)
+      internal Result(TOSolution solution, AlgorithmType runningAlgorithm, 
+         DateTime? time = null, Validity validity = Validity.None)
       {
-         _currentSolution = currentSolution;
-         _timeSpent = timeSpent;
+         _currentSolution = solution;
+         _runningAlgorithm = runningAlgorithm;
+         _timeSpent = time;
          _validity = validity;
       }
       #endregion
@@ -42,6 +46,12 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal properties
+      internal AlgorithmFamily ResultFamily
+      {
+         get => _resultFamily;
+         set => _resultFamily = value;
+      }
+
       internal Stopwatch RunningTime
       {
          get => _runningTime;

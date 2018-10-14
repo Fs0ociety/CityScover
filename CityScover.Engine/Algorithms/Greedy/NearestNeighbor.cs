@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 14/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -220,8 +220,10 @@ namespace CityScover.Engine.Algorithms.Greedy
          base.OnError(exception);
          _currentStep = default;
          TOSolution lastProducedSolution = _solutions.Last();
-         Result resultError = new Result(lastProducedSolution, _timeSpent, Result.Validity.Invalid);
-         Solver.Results.Add(AlgorithmFamily.Greedy, resultError);
+         Result resultError = 
+            new Result(lastProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Invalid);
+         resultError.ResultFamily = AlgorithmFamily.Greedy;
+         Solver.Results.Add(resultError);
       }
 
       internal override void OnTerminating()
@@ -235,16 +237,17 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          _cityMapClone = null;
          TOSolution bestProducedSolution = _solutions.Last();
-         Result validResult = new Result(bestProducedSolution, _timeSpent, Result.Validity.Valid);
-         Solver.Results.Add(AlgorithmFamily.Greedy, validResult);
+         Result validResult = 
+            new Result(bestProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Valid);
+         validResult.ResultFamily = AlgorithmFamily.Greedy;
+         Solver.Results.Add(validResult);
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          base.OnTerminated();
       }
 
       internal override bool StopConditions()
       {
-         return 
-            _currentSolutionGraph.NodeCount == Solver.CityMapGraph.NodeCount ||
+         return _currentSolutionGraph.NodeCount == Solver.CityMapGraph.NodeCount || 
             _status == AlgorithmStatus.Error;
       }
       #endregion
