@@ -73,7 +73,6 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-            case AlgorithmType.CitySwap:
                result = AlgorithmFamily.LocalSearch;
                break;
 

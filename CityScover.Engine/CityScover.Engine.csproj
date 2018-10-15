@@ -54,7 +54,6 @@
     <Compile Include="Algorithms\Greedy\NearestNeighbor.cs" />
     <Compile Include="Algorithms\Greedy\NearestNeighborKnapsack.cs" />
     <Compile Include="Algorithms\Metaheuristics\TabuMove.cs" />
-    <Compile Include="Algorithms\Neighborhoods\CitySwapNeighborhood.cs" />
     <Compile Include="Algorithms\Neighborhoods\TwoOptNeighborhood.cs" />
     <Compile Include="Algorithms\Metaheuristics\TabuSearch.cs" />
     <Compile Include="Algorithms\Neighborhoods\TabuSearchNeighborhood.cs" />

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 15/10/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -31,6 +31,26 @@ namespace CityScover.Engine.Workers
          }
 
          AddEdge(fromPOIKey, toPOIKey, edge);
+      }
+
+      internal void AddNodeFromGraph(CityMapGraph source, int nodeKey)
+      {
+         if (ContainsNode(nodeKey))
+         {
+            return;
+         }
+
+         if (source == null)
+         {
+            throw new ArgumentNullException();
+         }
+
+         if (!source.ContainsNode(nodeKey))
+         {
+            throw new InvalidOperationException();
+         }
+
+         AddNode(nodeKey, source[nodeKey]);
       }
 
       /// <summary>

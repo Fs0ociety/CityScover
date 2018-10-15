@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 15/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -131,34 +131,63 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          return potentialCandidates;
       }
 
-      private (CityMapGraph steamSet, CityMapGraph cycleSet) BuildSteamAndCycle(InterestPointWorker sNode)
+      private (CityMapGraph steamSet, CityMapGraph cycleSet) BuildSteamAndCycle(int sNodeId)
       {
          CityMapGraph steamSet = new CityMapGraph();
          CityMapGraph cycleSet = new CityMapGraph();
 
-         cycleSet.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNode.Entity.Id);
-         foreach (var edge in _currentSolutionGraph.Edges)
-         {
-            
-         }
+         cycleSet.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
+         _currentSolutionGraph.Edges.ToList().ForEach(
+            edge =>
+            {
+               if (edge.Entity.PointFrom.Id == _startPOI.Entity.Id || edge.Entity.PointTo.Id == _startPOI.Entity.Id)
+               {
+                  steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
+                  steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
+                  steamSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
+               }
+               else
+               {
+                  if (edge.Entity.PointFrom.Id != sNodeId)
+                  {
+                     cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
+                     cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
+                     cycleSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
+                  }
+               }
+            });
          return (steamSet, cycleSet);
       }
 
-      private void BuildHamiltonianPath((CityMapGraph steamSet, CityMapGraph cycleSet) p, CityMapGraph currentSolutionGraph)
+      private void BuildHamiltonianPath((CityMapGraph steamSet, CityMapGraph cycleSet) steamAndCycle, int sNodeId)
       {
-         throw new NotImplementedException();
-      }
+         steamAndCycle.steamSet.AddGraph(steamAndCycle.cycleSet, sNodeId);
+         _currentSolutionGraph = steamAndCycle.steamSet;
 
-      private void ConnectHamiltonianPath(CityMapGraph currentSolutionGraph)
-      {
-         throw new NotImplementedException();
-      } 
+         // Connetto il ciclo nell'unico modo possibile.
+         RouteWorker result = (from edge in _currentSolutionGraph.Edges
+                               where edge.Entity.PointFrom.Id != _startPOI.Entity.Id
+                               && _currentSolutionGraph.GetNodeGrade(edge.Entity.PointFrom.Id) == 2
+                               select edge).FirstOrDefault();
+         if (result == null)
+         {
+            throw new InvalidOperationException();
+         }
+
+         _currentSolutionGraph.AddEdge(result.Entity.PointFrom.Id, result.Entity.PointTo.Id, result);
+      }
       #endregion
 
       #region Overrides
       internal override void OnError(Exception exception)
       {
-         throw new System.NotImplementedException();
+         base.OnError(exception);
+
+         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
+         Result resultError =
+            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
+         resultError.ResultFamily = AlgorithmFamily.Improvement;
+         Solver.Results.Add(resultError);
       }
 
       internal override void OnInitializing()
@@ -185,30 +214,22 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          {
             throw new NullReferenceException();
          }
-
-         //InterestPointWorker GetEndPOI()
-         //{
-         //   var result = (from node in _cityMapClone.Nodes
-         //                 where node.Entity.Id == (from edge in _cityMapClone.Edges
-         //                                          where edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartPOIId
-         //                                          select edge.Entity.PointFrom.Id).FirstOrDefault()
-         //                 select node).FirstOrDefault();
-         //   return result;
-         //}
       }
 
       internal override void OnTerminated()
       {
-         base.OnTerminated();
+         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
+         Result validResult =
+            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
+         validResult.ResultFamily = AlgorithmFamily.Improvement;
+         Solver.Results.Add(validResult);
          _cityMapClone = null;
+         base.OnTerminated();
       }
 
       internal override void OnTerminating()
       {
          base.OnTerminating();
-
-         // Notifica gli observers.
-         // TODO
 
          bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, _bestSolution.Cost);
          if (isBetterThanCurrentBestSolution)
@@ -232,16 +253,17 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             }
          }
 
-         var (steamSet, cycleSet) = BuildSteamAndCycle(sNode);
-         BuildHamiltonianPath((steamSet, cycleSet), _currentSolutionGraph);
-         ConnectHamiltonianPath(_currentSolutionGraph);
+         int sNodeId = sNode.Entity.Id;
+         var (steamSet, cycleSet) = BuildSteamAndCycle(sNodeId);
+         BuildHamiltonianPath((steamSet, cycleSet), sNodeId);
 
+         // TODO: serve la Deep copy?
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _currentSolutionGraph.DeepCopy()
          };
          Solver.EnqueueSolution(newSolution);
-         await Task.Delay(500).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 
          if (Solver.IsMonitoringEnabled)
          {

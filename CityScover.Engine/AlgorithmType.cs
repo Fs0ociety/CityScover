@@ -42,24 +42,19 @@ namespace CityScover.Engine
       TwoOpt = 4,
 
       /// <summary>
-      /// CitySwap algorithm enumerator.
-      /// </summary>
-      CitySwap = 5,
-
-      /// <summary>
       /// LinKernighan algorithm enumerator.
       /// </summary>
-      LinKernighan = 6,
+      LinKernighan = 5,
 
       /// <summary>
       /// TabuSearch algorithm enumerator.
       /// </summary>
-      TabuSearch = 7,
+      TabuSearch = 6,
 
       /// <summary>
       /// VariableNeighborhoodSearch algorithm enumerator.
       /// </summary>
-      VariableNeighborhoodSearch = 8
+      VariableNeighborhoodSearch = 7
    }
    #endregion
 }

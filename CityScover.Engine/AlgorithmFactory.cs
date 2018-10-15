@@ -57,10 +57,6 @@ namespace CityScover.Engine
                algorithm = new LocalSearch(neighborhood);
                break;
 
-            case AlgorithmType.CitySwap:
-               // ... TODO ...
-               break;
-
             case AlgorithmType.LinKernighan:
                algorithm = new LinKernighan();
                break;
@@ -68,10 +64,6 @@ namespace CityScover.Engine
             case AlgorithmType.TabuSearch:
                neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
                algorithm = new TabuSearch(neighborhood);
-               break;
-
-            case AlgorithmType.VariableNeighborhoodSearch:
-               // ... TODO ...
                break;
 
             // Add new Algorithm types here ...
@@ -103,7 +95,6 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-            case AlgorithmType.CitySwap:
                algorithm = new LocalSearch(neighborhood);
                break;
 
@@ -129,7 +120,6 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-            case AlgorithmType.CitySwap:
                algorithm = new LocalSearch(neighborhood);
                break;
 
