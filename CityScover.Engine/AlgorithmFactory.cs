@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 15/10/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -49,7 +49,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.CheapestInsertion:
-               // ... TODO ...
+               algorithm = new CheapestInsertion();
                break;
 
             case AlgorithmType.TwoOpt:
