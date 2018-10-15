@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/10/2018
+// File update: 15/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -26,11 +26,14 @@ namespace CityScover.Engine.Algorithms.Greedy
       #region Private fields
       private double _averageSpeedWalk;
       private ICollection<TOSolution> _solutions;
-      protected CityMapGraph _cityMapClone;
       private CityMapGraph _currentSolutionGraph;
       private InterestPointWorker _startPOI;
       private InterestPointWorker _newStartPOI;
       private DateTime _timeSpent;
+      #endregion
+
+      #region Protected fields
+      protected CityMapGraph _cityMapClone;
       #endregion
 
       #region Constructors
@@ -105,7 +108,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
             var deltaScore = Math.Abs(node.Entity.Score.Value -
                interestPoint.Entity.Score.Value);
-
+         
             if (deltaScore > bestScore)
             {
                bestScore = deltaScore;
@@ -148,16 +151,16 @@ namespace CityScover.Engine.Algorithms.Greedy
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _timeSpent = DateTime.Now;
          _startPOI = GetStartPOI();
-         _startPOI.IsVisited = true;
 
          if (_startPOI == null)
          {
-            throw new OperationCanceledException(nameof(_startPOI));
+            throw new OperationCanceledException(
+               $"{nameof(_startPOI)} in {nameof(NearestNeighbor)}");
          }
 
-         _currentSolutionGraph.AddNode(_startPOI.Entity.Id, _startPOI);
-
-         var firstPOIId = _startPOI.Entity.Id;
+         _startPOI.IsVisited = true;
+         var startingPointId = _startPOI.Entity.Id;
+         _currentSolutionGraph.AddNode(startingPointId, _startPOI);
          var neighborPOI = GetBestNeighbor(_startPOI);
          // Caso particolare descritto nella GetBestNeighbor.
          // Se qua il vicino è null, io ritorno la soluzione così com'è.
@@ -169,8 +172,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          neighborPOI.IsVisited = true;
          var neighborPOIId = neighborPOI.Entity.Id;
          _currentSolutionGraph.AddNode(neighborPOIId, neighborPOI);
-
-         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, firstPOIId, neighborPOIId);
+         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, startingPointId, neighborPOIId);
          _newStartPOI = neighborPOI;
 
          InterestPointWorker GetStartPOI()
@@ -247,7 +249,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override bool StopConditions()
       {
-         return _currentSolutionGraph.NodeCount == Solver.CityMapGraph.NodeCount || 
+         return _currentSolutionGraph.NodeCount == _cityMapClone.NodeCount || 
             _status == AlgorithmStatus.Error;
       }
       #endregion
