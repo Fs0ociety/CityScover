@@ -6,13 +6,13 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 16/10/2018
 //
 
 namespace CityScover.Engine
 {
    #region Enumerations
-   internal enum AlgorithmFamily
+   public enum AlgorithmFamily
    {
       /// <summary>
       /// Invalid algorithm category.

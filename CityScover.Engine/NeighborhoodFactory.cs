@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 16/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -27,10 +27,6 @@ namespace CityScover.Engine
 
             case AlgorithmType.TwoOpt:
                neighborhood = new TwoOptNeighborhood();
-               break;
-
-            case AlgorithmType.CitySwap:
-               neighborhood = new CitySwapNeighborhood();
                break;
 
             case AlgorithmType.TabuSearch:

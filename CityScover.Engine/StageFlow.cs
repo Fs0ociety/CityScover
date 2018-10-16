@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 16/10/2018
 //
 
 using System;
@@ -19,7 +19,7 @@ namespace CityScover.Engine
    /// Tree structure for a stage execution flow.
    /// Built with a Composite Pattern (without children of different types, only the same type, like recursion).
    /// </summary>
-   internal class StageFlow
+   public class StageFlow
    {
       #region Constructors
       internal StageFlow()
@@ -41,10 +41,11 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal properties
-      internal AlgorithmType CurrentAlgorithm { get; set; }
-      internal byte RunningCount { get; set; }      
-      internal byte MaximumDeadlockIterations { get; set; }
-      internal ICollection<StageFlow> ChildrenFlows { get; set; }
+      public AlgorithmType CurrentAlgorithm { get; set; }
+      public byte RunningCount { get; set; }      
+      public byte MaximumDeadlockIterations { get; set; }
+      public ICollection<StageFlow> ChildrenFlows { get; set; }
       #endregion
    }
 }
+

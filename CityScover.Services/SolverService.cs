@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 16/10/2018
 //
 
 using CityScover.Commons;
@@ -43,6 +46,13 @@ namespace CityScover.Services
             await solver.Execute(tourConfig);
             //ReportConfiguration();
          }
+      }
+
+      public void Run(Configuration configuration)
+      {
+         var solver = Solver.Instance;
+         Task.Run(() => solver.Execute(configuration));
+         //ReportConfiguration();
       }
 
       public void ReportConfiguration()

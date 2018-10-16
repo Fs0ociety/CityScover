@@ -6,12 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 16/10/2018
 //
 
 namespace CityScover.Engine
 {
-   internal class Stage
+   public class Stage
    {
       #region Constructors
       internal Stage()
@@ -21,9 +21,9 @@ namespace CityScover.Engine
       #endregion
 
       #region Public properties
-      internal StageType Description { get; set; }
-      internal AlgorithmFamily Category { get; set; }
-      internal StageFlow Flow { get; set; }
+      public StageType Description { get; set; }
+      public AlgorithmFamily Category { get; set; }
+      public StageFlow Flow { get; set; }
       #endregion
    }
 }

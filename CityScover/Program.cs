@@ -2,9 +2,13 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 16/10/2018
 //
+
 
 using CityScover.Services;
 using System.Threading.Tasks;
@@ -17,8 +21,10 @@ namespace CityScover
       static async Task Main(string[] args)
       {
          DisplayLogo();
-         ISolverService solverService = SolverService.Instance;
-         await solverService.Run();
+         IConfigurationService configService = ConfigurationService.Instance;
+         configService.ShowConfigurationsMenu();
+         //ISolverService solverService = SolverService.Instance;
+         //await solverService.Run();
          WriteLine("Press any key to continue...");
          ReadKey();
       }
