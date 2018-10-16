@@ -3,11 +3,12 @@
 // Version 1.0
 //
 // Authors: Riccardo Mariotti
-// File update: 16/09/2018
+// File update: 17/10/2018
 //
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.ADT.Graphs
@@ -364,6 +365,65 @@ namespace CityScover.ADT.Graphs
             AddNode(graphNodeId, graph[graphNodeId]);
             AddEdge(anchorNode, graphNodeId, graph.GetEdge(anchorNode, graphNodeId));
          }
+      }
+
+      /// <summary>
+      /// Algoritmo di visita in ampiezza (Breadth First Search).
+      /// </summary>
+      /// <param name="startNodeKey"></param>
+      /// <param name="markVisitedNodeStrategy"></param>
+      /// <param name="isVisitedNodeStrategy"></param>
+      /// <param name="nodeVisitStrategy"></param>
+      /// <param name="edgeVisitStrategy"></param>
+      /// <returns></returns>
+      public IEnumerable<TNodeData> BreadthFirstSearch(TNodeKey startNodeKey, 
+         Action<TNodeData> markVisitedNodeStrategy,
+         Func<TNodeData, bool> isVisitedNodeStrategy,
+         Action<TNodeData> nodeVisitStrategy = null, 
+         Action<TEdgeWeight> edgeVisitStrategy = null)
+      {
+         if (markVisitedNodeStrategy == null || isVisitedNodeStrategy == null)
+         {
+            throw new ArgumentNullException();
+         }
+
+         TNodeData startNodeData = _nodes[startNodeKey].Data;
+         ICollection<TNodeData> visit = new Collection<TNodeData>
+         {
+            startNodeData
+         };
+
+         Queue<TNodeKey> queue = new Queue<TNodeKey>();
+
+         // marca il vertice startNode.
+         markVisitedNodeStrategy.Invoke(startNodeData);
+         queue.Enqueue(startNodeKey);
+         while (queue.Count > 0)
+         {
+            TNodeKey u = queue.Dequeue();
+
+            // visita il nodo u.
+            var uData = _nodes[u].Data;
+            nodeVisitStrategy?.Invoke(uData);
+
+            foreach (var edge in _nodes[u].Edges)
+            {
+               // visita l'arco edge.
+               edgeVisitStrategy?.Invoke(edge.Weight);
+
+               var v = edge.DestNode;
+               TNodeData vData = v.Data;
+               if (!isVisitedNodeStrategy.Invoke(vData))
+               {
+                  queue.Enqueue(v.Key);
+                  // marca il vertice v.
+                  markVisitedNodeStrategy.Invoke(vData);
+                  // rendi u padre di v.
+                  visit.Add(vData);
+               }
+            }
+         }
+         return visit;
       }
       #endregion      
    }

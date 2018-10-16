@@ -18,6 +18,7 @@ namespace CityScover.Tests
          }
 
          public string Name { get; set; }
+         public bool IsVisited { get; set; }
       }
 
       private class Route : IGraphEdgeWeight
@@ -165,6 +166,32 @@ namespace CityScover.Tests
          IEnumerable<Route> edges = graph.Edges;
 
          IEnumerable<Route> nodeEdges = graph.GetEdges(1);
+
+         CityMapGraph graph2 = new CityMapGraph();
+
+         graph2.AddNode(1, new InterestPoint("P1"));
+         graph2.AddNode(2, new InterestPoint("P2"));
+         graph2.AddNode(3, new InterestPoint("P3"));
+         graph2.AddNode(4, new InterestPoint("P4"));
+         graph2.AddNode(5, new InterestPoint("P5"));
+         graph2.AddNode(6, new InterestPoint("P6"));
+         graph2.AddNode(7, new InterestPoint("P7"));
+         graph2.AddNode(8, new InterestPoint("P8"));
+
+         graph2.AddEdge(1, 2, new Route(10.0));
+         graph2.AddEdge(2, 4, new Route(10.0));
+         graph2.AddEdge(4, 3, new Route(10.0));
+         graph2.AddEdge(3, 5, new Route(10.0));
+         graph2.AddEdge(5, 6, new Route(10.0));
+         graph2.AddEdge(6, 7, new Route(10.0));
+         graph2.AddEdge(7, 8, new Route(10.0));
+
+         string prova = $"PROVA: ";
+         IEnumerable<InterestPoint> visit = graph2.BreadthFirstSearch(1, 
+            node => node.IsVisited = true, 
+            (node) => { return node.IsVisited; }, 
+            node => prova += node.Name,
+            edge => prova += " -- ");
       }
    }
 }

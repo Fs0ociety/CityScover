@@ -45,15 +45,20 @@ namespace CityScover.Engine
       {
          CityMapGraph solutionGraph = solution.SolutionGraph;
          string result = String.Empty;
-         for (int i = 1; i <= solutionGraph.NodeCount; i++)
-         {
-            InterestPointWorker node = solutionGraph[i];
-            result += $"({node.Entity.Id} -- {node.Entity.Name})";
-            if (i < solutionGraph.NodeCount)
-            {
-               result += $" --> ";
-            }
-         }
+         //for (int i = 1; i <= solutionGraph.NodeCount; i++)
+         //{
+         //   InterestPointWorker node = solutionGraph[i];
+         //   result += $"({node.Entity.Id} -- {node.Entity.Name})";
+         //   if (i < solutionGraph.NodeCount)
+         //   {
+         //      result += $" --> ";
+         //   }
+         //}
+
+         solutionGraph.BreadthFirstSearch(1, node => node.IsVisited = true, 
+            (node) => { return node.IsVisited; }, 
+            node => result += $"({node.Entity.Id} -- {node.Entity.Name})", 
+            edge => result += $" --> ");
          Console.WriteLine(result);
       }
       #endregion
@@ -103,6 +108,7 @@ namespace CityScover.Engine
       public void OnCompleted()
       {
          _timer.Stop();
+
          //DisplaySolutionGraph(Solver.BestSolution);
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
          Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
