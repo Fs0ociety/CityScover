@@ -24,10 +24,12 @@ namespace CityScover.Engine.Algorithms.Greedy
    internal class CheapestInsertion : Algorithm
    {
       #region Private fields
+      private double _averageSpeedWalk;
       private ICollection<TOSolution> _solutions;
-      private CityMapGraph _currentSolutionGraph;
+      private CityMapGraph _tour;
       private InterestPointWorker _startingPoint;
       private InterestPointWorker _newStartingPoint;
+      private DateTime _timeSpent;
       #endregion
 
       #region Protected fields
@@ -47,13 +49,76 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
+      private InterestPointWorker GetStartPOI()
+      {
+         var startPOIId = Solver.WorkingConfiguration.StartingPointId;
+
+         return _cityMapClone.Nodes
+            .Where(x => x.Entity.Id == startPOIId)
+            .FirstOrDefault();
+      }
+
       // ... TODO ...
       #endregion
 
       #region Protected methods
-      protected virtual InterestPointWorker GetBestNeighbor(InterestPointWorker startingPoint)
+      protected virtual InterestPointWorker GetFirstBestNeighbor(InterestPointWorker startingPoint)
       {
-         throw new NotImplementedException();
+         int bestScore = default;
+         InterestPointWorker candidateNode = default;
+
+         var neighbors = _cityMapClone.GetAdjacentNodes(startingPoint.Entity.Id);
+         neighbors.ToList().ForEach(neighborId => SetBestCandidate(neighborId));
+
+         void SetBestCandidate(int nodeKey)
+         {
+            var neighbor = _cityMapClone[nodeKey];
+            if (neighbor.IsVisited)
+            {
+               return;
+            }
+
+            int pointScore = neighbor.Entity.Score.Value;
+            if (pointScore > bestScore)
+            {
+               bestScore = pointScore;
+               candidateNode = neighbor;
+            }
+            else if (pointScore == bestScore)
+            {
+               SetRandomCandidateId(out int pointId);
+               candidateNode = _cityMapClone[pointId];
+            }
+
+            void SetRandomCandidateId(out int id)
+            {
+               if (candidateNode == null)
+               {
+                  id = neighbor.Entity.Id;
+               }
+               else
+               {
+                  id = (new Random().Next(2) != 0)
+                     ? candidateNode.Entity.Id
+                     : neighbor.Entity.Id;
+               }
+            }
+         }
+
+         return candidateNode;
+      }
+
+      protected virtual (InterestPointWorker, InterestPointWorker) GetBestNeighbors(InterestPointWorker startingPoint)
+      {
+         // Tuple version
+         //(InterestPointWorker candidateNode, InterestPointWorker candidateNeighbor) candidateNodes = default;
+         int bestScore = default;
+         InterestPointWorker candidateNode = default;
+         InterestPointWorker candidateNeighbor = default;
+
+         // ... TODO ...
+         
+         return (candidateNode, candidateNeighbor);
       }
       #endregion
 
@@ -62,8 +127,8 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnInitializing();
          _solutions = new Collection<TOSolution>();
+         _tour = new CityMapGraph();
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
-         _currentSolutionGraph = new CityMapGraph();
          _startingPoint = GetStartPOI();
 
          if (_startingPoint == null)
@@ -72,35 +137,34 @@ namespace CityScover.Engine.Algorithms.Greedy
                $"{nameof(_startingPoint)} in {nameof(CheapestInsertion)}");
          }
 
-         _startingPoint.IsVisited = true;
          int startingPointId = _startingPoint.Entity.Id;
-         _currentSolutionGraph.AddNode(startingPointId, _startingPoint);
-         InterestPointWorker bestNeighbor = GetBestNeighbor(_startingPoint);
-
+         _tour.AddNode(startingPointId, _startingPoint);
+         _startingPoint.IsVisited = true;
+         InterestPointWorker bestNeighbor = GetFirstBestNeighbor(_startingPoint);
          if (bestNeighbor == null)
          {
             return;
          }
 
-         bestNeighbor.IsVisited = true;
          int bestNeighborId = bestNeighbor.Entity.Id;
-         _currentSolutionGraph.AddNode(bestNeighborId, bestNeighbor);
-         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, startingPointId, bestNeighborId);
+         _tour.AddNode(bestNeighborId, bestNeighbor);
+         bestNeighbor.IsVisited = true;
+         _tour.AddRouteFromGraph(_cityMapClone, startingPointId, bestNeighborId);
          _newStartingPoint = _startingPoint;
-
-         InterestPointWorker GetStartPOI()
-         {
-            var startPOIId = Solver.WorkingConfiguration.StartingPointId;
-
-            return _cityMapClone.Nodes
-               .Where(x => x.Entity.Id == startPOIId)
-               .FirstOrDefault();
-         }
       }
 
-      internal override Task PerformStep()
+      internal override async Task PerformStep()
       {
-         throw new NotImplementedException();
+         var (candidateNode, neighbor) = GetBestNeighbors(_newStartingPoint);
+         if (candidateNode == null || neighbor == null)
+         {
+            return;
+         }
+
+         // ... TODO ... Insert the candidaNode between _newStartingPoint and neighbor in the _tour graph.
+
+         await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+         // ... TODO ...
       }
 
       internal override void OnError(Exception exception)
@@ -120,7 +184,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override bool StopConditions()
       {
-         return _currentSolutionGraph.NodeCount == _cityMapClone.NodeCount ||
+         return _tour.NodeCount == _cityMapClone.NodeCount ||
             _status == AlgorithmStatus.Error;
       }
       #endregion

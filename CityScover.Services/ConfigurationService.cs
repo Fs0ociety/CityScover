@@ -46,7 +46,8 @@ namespace CityScover.Services
       #region Private methods
       private void DisplayConfiguration(Configuration configuration)
       {
-         WriteLine("\t General configuration informations:");
+         WriteLine("\t============================================================");
+         WriteLine("\t GENERAL CONFIGURATION INFORMATIONS\n");
          WriteLine($"\t Tour category:          \"{configuration.TourCategory}\"");
          WriteLine($"\t Starting point:         \"{configuration.StartingPointId} (Hotel Carlton)\"");
          WriteLine($"\t Problem size:           \"{configuration.PointsCount} points of interest\"");
@@ -55,33 +56,34 @@ namespace CityScover.Services
          WriteLine($"\t Tour duration:          \"{configuration.TourDuration.Hours} hours\"");
          WriteLine($"\t Algorithm monitoring:   \"{configuration.AlgorithmMonitoring}\"");
          WriteLine("\t============================================================");
+         WriteLine("\t CONFIGURATION'S STAGES\n");
 
          foreach (var stage in configuration.Stages)
          {
-            WriteLine($"\t Description:         \"{stage.Description}\"");
-            WriteLine($"\t Algorithm family:    \"{stage.Category}\"");
-            WriteLine($"\t Current algorithm:   \"{stage.Flow.CurrentAlgorithm}\"");
-            WriteLine($"\t Max iterations:      \"{stage.Flow.RunningCount}\"");
-            WriteLine($"\t Deadlock condition:  \"{stage.Flow.MaximumDeadlockIterations}\"");
+            WriteLine($"\t     Description:         \"{stage.Description}\"");
+            WriteLine($"\t     Algorithm family:    \"{stage.Category}\"");
+            WriteLine($"\t     Current algorithm:   \"{stage.Flow.CurrentAlgorithm}\"");
+            WriteLine($"\t     Max iterations:      \"{stage.Flow.RunningCount}\"");
+            WriteLine($"\t     Deadlock condition:  \"{stage.Flow.MaximumDeadlockIterations}\"");
             if (!stage.Flow.ChildrenFlows.Any())
             {
-               WriteLine("\t============================================================");
+               WriteLine("\t    --------------------------------------------------------");
             }
             else
             {
-               WriteLine($"\n\t \"{stage.Flow.CurrentAlgorithm} inner algorithms\"");
+               WriteLine($"\n\t     \"{stage.Flow.CurrentAlgorithm} inner algorithms\"");
                foreach (var childrenFlow in stage.Flow.ChildrenFlows)
                {
-                  WriteLine("\t {");
-                  WriteLine($"\t    Current algorithm:   \"{childrenFlow.CurrentAlgorithm}\"");
-                  WriteLine($"\t    Max iterations:      \"{childrenFlow.RunningCount}\"");
-                  WriteLine($"\t    Deadlock condition:  \"{childrenFlow.MaximumDeadlockIterations}\"");
-                  WriteLine("\t }");
-                  WriteLine("\t============================================================");
+                  WriteLine("\t     {");
+                  WriteLine($"\t        Current algorithm:   \"{childrenFlow.CurrentAlgorithm}\"");
+                  WriteLine($"\t        Max iterations:      \"{childrenFlow.RunningCount}\"");
+                  WriteLine($"\t        Deadlock condition:  \"{childrenFlow.MaximumDeadlockIterations}\"");
+                  WriteLine("\t     }");
+                  WriteLine("\t    --------------------------------------------------------");
                }
             }
          }
-         WriteLine();
+         WriteLine("\t============================================================\n");
 
          string choice = string.Empty;
          bool result = default;
@@ -93,7 +95,7 @@ namespace CityScover.Services
             result = choice == "y" || choice == "n";
             if (!result)
             {
-               WriteLine($"String {choice} is not valid. Enter \"y\" or \"N\".\n");
+               WriteLine($"String \"{choice}\" is not valid. Enter \"y\" or \"N\".\n");
             }
          } while (!result);
 

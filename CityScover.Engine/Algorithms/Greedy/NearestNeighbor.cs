@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 15/10/2018
+// File update: 16/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -49,7 +49,16 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
-      private (TimeSpan tVisit, TimeSpan tWalk, TimeSpan tReturn) CalculateTimesByNextPoint(InterestPointWorker point)
+      private InterestPointWorker GetStartPOI()
+      {
+         var startPOIId = Solver.WorkingConfiguration.StartingPointId;
+
+         return _cityMapClone.Nodes
+            .Where(x => x.Entity.Id == startPOIId)
+            .FirstOrDefault();
+      }
+
+      private (TimeSpan, TimeSpan, TimeSpan) CalculateTimesByNextPoint(InterestPointWorker point)
       {
          TimeSpan timeVisit = default;
          TimeSpan timeWalk = default;
@@ -100,7 +109,6 @@ namespace CityScover.Engine.Algorithms.Greedy
          void SetBestCandidate(int nodeKey)
          {
             var node = _cityMapClone[nodeKey];
-
             if (node.IsVisited)
             {
                return;
@@ -174,15 +182,6 @@ namespace CityScover.Engine.Algorithms.Greedy
          _currentSolutionGraph.AddNode(neighborPOIId, neighborPOI);
          _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, startingPointId, neighborPOIId);
          _newStartPOI = neighborPOI;
-
-         InterestPointWorker GetStartPOI()
-         {
-            var startPOIId = Solver.WorkingConfiguration.StartingPointId;
-
-            return _cityMapClone.Nodes
-               .Where(x => x.Entity.Id == startPOIId)
-               .FirstOrDefault();
-         }
       }
 
       internal override async Task PerformStep()
