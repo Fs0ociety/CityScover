@@ -55,10 +55,18 @@ namespace CityScover.Engine
          //   }
          //}
 
-         solutionGraph.BreadthFirstSearch(1, node => node.IsVisited = true, 
-            (node) => { return node.IsVisited; }, 
-            node => result += $"({node.Entity.Id} -- {node.Entity.Name})", 
-            edge => result += $" --> ");
+         // NOTA: da gestire nodo di partenza diverso da 1!!
+         // Intendo nel check del quarto delegato.
+         solutionGraph.BreadthFirstSearch(1,
+            (node, isVisited) => node.IsVisited = isVisited,
+            (node) => { return node.IsVisited; },
+            node => result += $"({node.Entity.Id} -- {node.Entity.Name})",
+            edge => {
+               if (edge.Entity.PointTo.Id != 1)
+               {
+                  result += $" --> ";
+               }
+            });
          Console.WriteLine(result);
       }
       #endregion
@@ -109,7 +117,7 @@ namespace CityScover.Engine
       {
          _timer.Stop();
 
-         //DisplaySolutionGraph(Solver.BestSolution);
+         DisplaySolutionGraph(Solver.BestSolution);
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
          Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");

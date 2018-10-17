@@ -377,7 +377,7 @@ namespace CityScover.ADT.Graphs
       /// <param name="edgeVisitStrategy"></param>
       /// <returns></returns>
       public IEnumerable<TNodeData> BreadthFirstSearch(TNodeKey startNodeKey, 
-         Action<TNodeData> markVisitedNodeStrategy,
+         Action<TNodeData, bool> markVisitedNodeStrategy,
          Func<TNodeData, bool> isVisitedNodeStrategy,
          Action<TNodeData> nodeVisitStrategy = null, 
          Action<TEdgeWeight> edgeVisitStrategy = null)
@@ -385,6 +385,12 @@ namespace CityScover.ADT.Graphs
          if (markVisitedNodeStrategy == null || isVisitedNodeStrategy == null)
          {
             throw new ArgumentNullException();
+         }
+
+         // marco inizialimente tutti i vertici come non visitati.
+         foreach (var node in Nodes)
+         {
+            markVisitedNodeStrategy.Invoke(node, false);
          }
 
          TNodeData startNodeData = _nodes[startNodeKey].Data;
@@ -396,7 +402,7 @@ namespace CityScover.ADT.Graphs
          Queue<TNodeKey> queue = new Queue<TNodeKey>();
 
          // marca il vertice startNode.
-         markVisitedNodeStrategy.Invoke(startNodeData);
+         markVisitedNodeStrategy.Invoke(startNodeData, true);
          queue.Enqueue(startNodeKey);
          while (queue.Count > 0)
          {
@@ -417,7 +423,7 @@ namespace CityScover.ADT.Graphs
                {
                   queue.Enqueue(v.Key);
                   // marca il vertice v.
-                  markVisitedNodeStrategy.Invoke(vData);
+                  markVisitedNodeStrategy.Invoke(vData, true);
                   // rendi u padre di v.
                   visit.Add(vData);
                }
