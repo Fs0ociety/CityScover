@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 18/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -74,14 +74,16 @@ namespace CityScover.Engine.Algorithms.Greedy
          {
             throw new NullReferenceException(nameof(edge));
          }
-         timeWalk = TimeSpan.FromMinutes(edge.Weight() / _averageSpeedWalk / 60.0);
+
+         double averageSpeedWalk = _averageSpeedWalk / 60.0;
+         timeWalk = TimeSpan.FromMinutes(edge.Weight() / averageSpeedWalk);
 
          RouteWorker returnEdge = _cityMapClone.GetEdge(point.Entity.Id, _startPOI.Entity.Id);
          if (returnEdge == null)
          {
             throw new NullReferenceException(nameof(returnEdge));
          }
-         timeReturn = TimeSpan.FromMinutes(returnEdge.Weight() / _averageSpeedWalk / 60.0);
+         timeReturn = TimeSpan.FromMinutes(returnEdge.Weight() / averageSpeedWalk);
 
          return (timeVisit, timeWalk, timeReturn);
       }

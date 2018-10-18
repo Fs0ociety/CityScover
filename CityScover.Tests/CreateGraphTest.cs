@@ -187,11 +187,11 @@ namespace CityScover.Tests
          graph2.AddEdge(7, 8, new Route(10.0));
 
          string prova = $"PROVA: ";
-         IEnumerable<InterestPoint> visit = graph2.BreadthFirstSearch(1, 
-            node => node.IsVisited = true, 
-            (node) => { return node.IsVisited; }, 
-            node => prova += node.Name,
-            edge => prova += " -- ");
+         //IEnumerable<InterestPoint> visit = graph2.BreadthFirstSearch(1, 
+         //   node => node.IsVisited = true, 
+         //   (node) => { return node.IsVisited; }, 
+         //   node => prova += node.Name,
+         //   edge => prova += " -- ");
       }
    }
 }

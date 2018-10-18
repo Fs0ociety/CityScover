@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 18/10/2018
 //
 
 using CityScover.Entities;
@@ -53,6 +53,7 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor
+                     //CurrentAlgorithm = AlgorithmType.CheapestInsertion
                   }
                },
                new Stage()

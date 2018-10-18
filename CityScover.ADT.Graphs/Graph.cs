@@ -387,7 +387,7 @@ namespace CityScover.ADT.Graphs
             throw new ArgumentNullException();
          }
 
-         // marco inizialimente tutti i vertici come non visitati.
+         // Marco inizialmente tutti i vertici come non visitati.
          foreach (var node in Nodes)
          {
             markVisitedNodeStrategy.Invoke(node, false);
@@ -401,20 +401,20 @@ namespace CityScover.ADT.Graphs
 
          Queue<TNodeKey> queue = new Queue<TNodeKey>();
 
-         // marca il vertice startNode.
+         // Marca il vertice startNode.
          markVisitedNodeStrategy.Invoke(startNodeData, true);
          queue.Enqueue(startNodeKey);
          while (queue.Count > 0)
          {
             TNodeKey u = queue.Dequeue();
 
-            // visita il nodo u.
+            // Visita il nodo u.
             var uData = _nodes[u].Data;
             nodeVisitStrategy?.Invoke(uData);
 
             foreach (var edge in _nodes[u].Edges)
             {
-               // visita l'arco edge.
+               // Visita l'arco edge.
                edgeVisitStrategy?.Invoke(edge.Weight);
 
                var v = edge.DestNode;
@@ -422,9 +422,9 @@ namespace CityScover.ADT.Graphs
                if (!isVisitedNodeStrategy.Invoke(vData))
                {
                   queue.Enqueue(v.Key);
-                  // marca il vertice v.
+                  // Marca il vertice v.
                   markVisitedNodeStrategy.Invoke(vData, true);
-                  // rendi u padre di v.
+                  // Rende u padre di v.
                   visit.Add(vData);
                }
             }

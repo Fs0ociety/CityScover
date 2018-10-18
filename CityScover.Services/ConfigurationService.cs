@@ -6,13 +6,13 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 18/10/2018
 //
 
 using CityScover.Commons;
 using CityScover.Engine;
 using CityScover.Engine.Configs;
-using System;
+using CityScover.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Console;
@@ -86,18 +86,19 @@ namespace CityScover.Services
          WriteLine("\t============================================================\n");
 
          string choice = string.Empty;
-         bool result = default;
+         bool canProceed = default;
 
          do
          {
             Write("Do you want to run this configuration? [y/N]: ");
-            choice = ReadLine().Trim(' ').ToLower();
-            result = choice == "y" || choice == "n";
-            if (!result)
+            choice = ReadLine().Trim().ToLower();
+            canProceed = choice == "y" || choice == "n";
+
+            if (!canProceed)
             {
                WriteLine($"String \"{choice}\" is not valid. Enter \"y\" or \"N\".\n");
             }
-         } while (!result);
+         } while (!canProceed);
 
          if (choice == "y")
          {
@@ -110,14 +111,19 @@ namespace CityScover.Services
       private void ShowAvailableConfigurationMenu()
       {
          string configChoice = string.Empty;
-         bool result = default;
+         bool canProceed = default;
          int choiceValue = default;
 
          while (true)
          {
             do
             {
-               WriteLine("Configurations available:\n");
+               WriteLine();
+               WriteLine("*************************************************************************");
+               WriteLine("                         AVAILABLE CONFIGURATIONS                        ");
+               WriteLine("*************************************************************************");
+               WriteLine();
+
                for (int confIndex = 0; confIndex < Configurations.Count; ++confIndex)
                {
                   WriteLine($"> Configuration {confIndex + 1}");
@@ -131,14 +137,13 @@ namespace CityScover.Services
                {
                   return;
                }
-               result = int.TryParse(configChoice, out choiceValue) &&
+               canProceed = int.TryParse(configChoice, out choiceValue) &&
                   Enumerable.Range(1, Configurations.Count).Contains(choiceValue);
-               if (!result)
+               if (!canProceed)
                {
                   WriteLine($"Enter a value between {1} - {Configurations.Count}.\n");
                }
-
-            } while (!result);
+            } while (!canProceed);
 
             DisplayConfiguration(Configurations.ElementAt(--choiceValue));
          }
@@ -146,7 +151,128 @@ namespace CityScover.Services
 
       private void ShowCustomConfigurationMenu()
       {
-         throw new NotImplementedException();
+         WriteLine();
+         WriteLine("*************************************************************************");
+         WriteLine("                      NEW CUSTOM CONFIGURATIONS                          ");
+         WriteLine("*************************************************************************");
+         WriteLine();
+
+         object[] configurationParams;
+
+         int problemSize = GetProblemSize();
+         if (problemSize < 0)
+         {
+            return;
+         }
+
+         TourCategoryType tourCategory = GetTourCategory();
+         if (tourCategory == TourCategoryType.None)
+         {
+            return;
+         }
+      }
+
+      private TourCategoryType GetTourCategory()
+      {
+         TourCategoryType tourCategory = default;
+         string choice = string.Empty;
+         bool canProceed = default;
+
+         do
+         {
+            WriteLine("\n-----> TOUR CATEGORY <-----\n");
+            WriteLine("<1> Historical and Cultural");
+            WriteLine("<2> Culinary");
+            WriteLine("<3> Sport");
+            WriteLine("<4> Go Back\n");
+
+            Write("Select the Tour category: ");
+            choice = ReadLine().Trim();
+            canProceed = int.TryParse(choice, out _);
+
+            switch (choice)
+            {
+               case "1":
+                  tourCategory = TourCategoryType.HistoricalAndCultural;
+                  break;
+               case "2":
+                  tourCategory = TourCategoryType.Culinary;
+                  break;
+               case "3":
+                  tourCategory = TourCategoryType.Sport;
+                  break;
+               case "4":
+                  tourCategory = TourCategoryType.None;
+                  break;
+            }
+         } while (!canProceed);
+
+         return tourCategory;
+      }
+
+      private static int GetProblemSize()
+      {
+         string choice = string.Empty;
+         bool canProceed = default;
+         int nodesCount = default;
+
+         do
+         {
+            WriteLine("\n-----> PROBLEM SIZE <-----\n");
+            WriteLine("<1> 15 nodes");
+            WriteLine("<2> 20 nodes");
+            WriteLine("<3> 30 nodes");
+            WriteLine("<4> 45 nodes");
+            WriteLine("<5> 60 nodes");
+            WriteLine("<6> 75 nodes");
+            WriteLine("<7> 90 nodes");
+            WriteLine("<8> Over 100 nodes");
+            WriteLine("<9> Go Back\n");
+
+            Write("Enter a problem size [number of nodes]: ");
+            choice = ReadLine().Trim();
+            canProceed = int.TryParse(choice, out _);
+
+            switch (choice)
+            {
+               case "1":
+                  nodesCount = 15;
+                  break;
+               case "2":
+                  nodesCount = 20;
+                  break;
+               case "3":
+                  nodesCount = 30;
+                  break;
+               case "4":
+                  nodesCount = 45;
+                  break;
+               case "5":
+                  nodesCount = 60;
+                  break;
+               case "6":
+                  nodesCount = 75;
+                  break;
+               case "7":
+                  nodesCount = 90;
+                  break;
+               case "8":
+                  Write("Insert a custom number of nodes: ");
+                  choice = ReadLine().Trim();
+                  nodesCount = int.Parse(choice);
+                  break;
+               case "9":
+                  nodesCount = -1;
+                  break;
+
+               default:
+                  canProceed = false;
+                  WriteLine("Enter a value between [1-8].\n");
+                  break;
+            }
+         } while (!canProceed);
+
+         return nodesCount;
       }
       #endregion
 
@@ -155,10 +281,14 @@ namespace CityScover.Services
 
       public void ShowConfigurationsMenu()
       {
-         WriteLine("************************* Configurations Menu *************************\n");
+         WriteLine();
+         WriteLine("*************************************************************************");
+         WriteLine("                         CONFIGURATIONS MENU                             ");
+         WriteLine("*************************************************************************");
+         WriteLine();
 
          string choice = string.Empty;
-         bool result = default;
+         bool canProceed = default;
          bool isExiting = default;
 
          while (true)
@@ -166,35 +296,33 @@ namespace CityScover.Services
             do
             {
                WriteLine("Choose a following option:\n");
-               WriteLine("> 1. Run a configuration from those available.");
-               WriteLine("> 2. Create a custom configuration.");
-               WriteLine("> 3. Exit.\n");
-               Write("> ");
-               choice = ReadLine();
+               WriteLine("<1> Run a configuration from those available.");
+               WriteLine("<2> Create a custom configuration.");
+               WriteLine("<3> Exit.\n");
+               Write("Enter a choice: ");
+               choice = ReadLine().Trim();
+               canProceed = int.TryParse(choice, out _);
 
-               result = int.TryParse(choice, out int value) &&
-                  Enumerable.Range(1, 3).Contains(value);
-               if (!result)
+               switch (choice)
                {
-                  WriteLine("Enter a value between [1-3].\n");
+                  case "1":
+                     ShowAvailableConfigurationMenu();
+                     break;
+
+                  case "2":
+                     ShowCustomConfigurationMenu();
+                     break;
+
+                  case "3":
+                     isExiting = true;
+                     break;
+
+                  default:
+                     canProceed = false;
+                     WriteLine("Enter a value between [1-3].\n");
+                     break;
                }
-
-            } while (!result);
-
-            switch (choice)
-            {
-               case "1":
-                  ShowAvailableConfigurationMenu();
-                  break;
-
-               case "2":
-                  ShowCustomConfigurationMenu();
-                  break;
-
-               case "3":
-                  isExiting = true;
-                  break;
-            }
+            } while (!canProceed);
 
             if (isExiting)
             {
