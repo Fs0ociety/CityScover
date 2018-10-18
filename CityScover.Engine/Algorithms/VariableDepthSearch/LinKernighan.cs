@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 15/10/2018
+// File update: 18/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -197,9 +197,14 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
          MaxSteps = 2;
-         // TODO: la prende dal solver?
+         
          _bestSolution = Solver.BestSolution;
-         _currentSolutionGraph = _bestSolution.SolutionGraph.DeepCopy();
+         _currentSolution = new TOSolution
+         {
+            SolutionGraph = _bestSolution.SolutionGraph.DeepCopy()
+         };
+
+         _currentSolutionGraph = _currentSolution.SolutionGraph;
 
          var startPOIId = Solver.WorkingConfiguration.StartingPointId;
          _startPOI = _cityMapClone.Nodes

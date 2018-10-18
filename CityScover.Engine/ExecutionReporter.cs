@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 18/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -45,24 +45,14 @@ namespace CityScover.Engine
       {
          CityMapGraph solutionGraph = solution.SolutionGraph;
          string result = String.Empty;
-         //for (int i = 1; i <= solutionGraph.NodeCount; i++)
-         //{
-         //   InterestPointWorker node = solutionGraph[i];
-         //   result += $"({node.Entity.Id} -- {node.Entity.Name})";
-         //   if (i < solutionGraph.NodeCount)
-         //   {
-         //      result += $" --> ";
-         //   }
-         //}
 
-         // NOTA: da gestire nodo di partenza diverso da 1!!
-         // Intendo nel check del quarto delegato.
-         solutionGraph.BreadthFirstSearch(1,
+         int startPOIId = Solver.WorkingConfiguration.StartingPointId;
+         solutionGraph.BreadthFirstSearch(startPOIId,
             (node, isVisited) => node.IsVisited = isVisited,
             (node) => { return node.IsVisited; },
             node => result += $"({node.Entity.Id} -- {node.Entity.Name})",
             edge => {
-               if (edge.Entity.PointTo.Id != 1)
+               if (edge.Entity.PointTo.Id != startPOIId)
                {
                   result += $" --> ";
                }
