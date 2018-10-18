@@ -77,6 +77,12 @@ namespace CityScover.Engine.Workers
          }
          return copy;
       }
+
+      internal void CalculateTimes()
+      {
+         int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
+         // TODO
+      }
       #endregion
    }
 }

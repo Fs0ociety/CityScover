@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 20/09/2018
+// File update: 19/10/2018
 //
 
 using System;
@@ -13,7 +13,7 @@ namespace CityScover.Entities
    public struct IntervalTime
    {
       #region Constructors
-      public IntervalTime(TimeSpan openingTime, TimeSpan closingTime)
+      public IntervalTime(DateTime openingTime, DateTime closingTime)
       {
          OpeningTime = openingTime;
          ClosingTime = closingTime;
@@ -21,8 +21,8 @@ namespace CityScover.Entities
       #endregion
 
       #region Public properties
-      public TimeSpan? OpeningTime { get; }
-      public TimeSpan? ClosingTime { get; }
+      public DateTime? OpeningTime { get; }
+      public DateTime? ClosingTime { get; }
       #endregion
 
       #region Public methods

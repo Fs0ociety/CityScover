@@ -164,7 +164,7 @@ namespace CityScover.Data
                               {
                                  try
                                  {
-                                    pointBuilder.AddOpeningTime(new IntervalTime(TimeSpan.Parse(openingTime), TimeSpan.Parse(closingTime)));
+                                    pointBuilder.AddOpeningTime(new IntervalTime(DateTime.Parse(openingTime), DateTime.Parse(closingTime)));
                                  }
                                  catch (FormatException exception)
                                  {

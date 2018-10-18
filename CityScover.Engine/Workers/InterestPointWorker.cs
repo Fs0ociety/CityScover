@@ -72,22 +72,6 @@ namespace CityScover.Engine.Workers
             }
          }
       }
-
-      internal DateTime TotalTime
-      {
-         get
-         {
-            TimeSpan visitTime = default;
-            if (_entity.TimeVisit.HasValue)
-            {
-               visitTime = _entity.TimeVisit.Value;
-            }
-
-            return _arrivalTime
-               .Add(_waitOpeningTime)
-               .Add(visitTime);
-         }
-      }
       #endregion
 
       #region Internal methods
@@ -96,6 +80,19 @@ namespace CityScover.Engine.Workers
          InterestPointWorker copy = (InterestPointWorker)MemberwiseClone();
          copy.Entity = Entity.DeepCopy();
          return copy;
+      }
+
+      internal DateTime GetTotalTime()
+      {
+         TimeSpan visitTime = default;
+         if (_entity.TimeVisit.HasValue)
+         {
+            visitTime = _entity.TimeVisit.Value;
+         }
+
+         return _arrivalTime
+            .Add(_waitOpeningTime)
+            .Add(visitTime);
       }
       #endregion
    }

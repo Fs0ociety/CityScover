@@ -6,9 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 18/10/2018
 //
 
+using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -122,7 +123,29 @@ namespace CityScover.Engine
       #region Constraints delegates
       private bool IsTimeWindowsConstraintSatisfied(TOSolution solution)
       {
-         throw new NotImplementedException();
+         bool satisfied = false;
+         CityMapGraph solutionGraph = solution.SolutionGraph;
+         int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
+         foreach (var node in solutionGraph.Nodes)
+         {
+            if (node.Entity.Id == startPOIId)
+            {
+               satisfied = true;
+               break;
+            }
+
+            DateTime totalNodeTime = node.GetTotalTime();
+            foreach (var openingTime in node.Entity.OpeningTimes)
+            {
+               if (!openingTime.OpeningTime.HasValue && !openingTime.ClosingTime.HasValue ||
+                   totalNodeTime >= openingTime.OpeningTime.Value && totalNodeTime <= openingTime.ClosingTime.Value)
+               {
+                  satisfied = true;
+                  break;
+               }
+            }
+         }
+         return satisfied;
       }
 
       private bool IsTMaxConstraintSatisfied(TOSolution solution)
