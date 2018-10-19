@@ -81,7 +81,7 @@ namespace CityScover.Engine.Workers
          copy.Entity = Entity.DeepCopy();
          return copy;
       }
-
+   
       internal DateTime GetTotalTime()
       {
          TimeSpan visitTime = default;

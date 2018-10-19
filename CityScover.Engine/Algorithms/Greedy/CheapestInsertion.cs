@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/10/2018
+// File update: 19/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -137,84 +137,24 @@ namespace CityScover.Engine.Algorithms.Greedy
          return candidateNode;
       }
 
-      //protected virtual (InterestPointWorker, InterestPointWorker) GetBestNeighbors(InterestPointWorker interestPoint)
-      //{
-      //   int bestScore = default;
-      //   InterestPointWorker candidateNode = default;
-      //   InterestPointWorker candidateNeighbor = default;
-
-      //   foreach (var currentPoint in _tour.Nodes)
-      //   {
-      //      int currentPointId = currentPoint.Entity.Id;
-      //      int currentPointScore = currentPoint.Entity.Score.Value;
-      //      var neighborPoints = _cityMapClone.GetAdjacentNodes(currentPointId);
-
-      //      foreach (var neighborPointId in neighborPoints)    // Valutare uso di ForEach di LINQ
-      //      {
-      //         var processingEdge = _cityMapClone.GetEdge(currentPointId, neighborPointId);
-
-      //         if (processingEdge == null)
-      //         {
-      //            throw new NullReferenceException(nameof(processingEdge));
-      //         }
-      //         if (processingEdge.IsVisited)
-      //         {
-      //            continue;
-      //         }
-
-      //         InterestPointWorker neighborPoint = _cityMapClone[neighborPointId];
-      //         int neighborPointScore = neighborPoint.Entity.Score.Value;
-      //         int currPointToNeighborScore = Math.Abs(currentPointScore - neighborPointScore);
-
-      //         foreach (var node in _cityMapClone.Nodes)
-      //         {
-      //            int nodeId = node.Entity.Id;
-      //            int nodeScore = node.Entity.Score.Value;
-      //            bool canCompareCosts = !_tour.ContainsNode(nodeId) && nodeId != neighborPointId && !node.IsVisited;
-
-      //            if (canCompareCosts)
-      //            {
-      //               int currPointToNodeScore = Math.Abs(currentPointScore - nodeScore);
-      //               int nodeToNeighborScore = Math.Abs(nodeScore - neighborPointScore);
-      //               int deltaScore = currPointToNodeScore + nodeToNeighborScore - currPointToNeighborScore;
-
-      //               if (deltaScore > bestScore)
-      //               {
-      //                  bestScore = deltaScore;
-      //                  candidateNode = node;
-      //                  candidateNeighbor = neighborPoint;
-      //               }
-      //            }
-      //         }
-      //         processingEdge.IsVisited = true;
-      //      }
-      //   }
-
-      //   return (candidateNode, candidateNeighbor);
-      //}
-
       protected virtual InterestPointWorker GetBestNeighbor()
       {
          int bestScore = default;
          InterestPointWorker candidateNode = default;
+         Collection<InterestPointWorker> candidateNodes = new Collection<InterestPointWorker>();
 
          foreach (var currentPoint in _tour.Nodes)
          {
             int currentPointId = currentPoint.Entity.Id;
             int currentPointScore = currentPoint.Entity.Score.Value;
-            var neighborPoints = _cityMapClone.GetAdjacentNodes(currentPointId);
+            var neighborPoints = _tour.GetAdjacentNodes(currentPointId);
 
             foreach (var neighborPointId in neighborPoints)    // Valutare uso di ForEach di LINQ
             {
                var processingEdge = _cityMapClone.GetEdge(currentPointId, neighborPointId);
-
                if (processingEdge == null)
                {
                   throw new NullReferenceException(nameof(processingEdge));
-               }
-               if (processingEdge.IsVisited)
-               {
-                  continue;
                }
 
                InterestPointWorker neighborPoint = _cityMapClone[neighborPointId];
@@ -238,9 +178,23 @@ namespace CityScover.Engine.Algorithms.Greedy
                         bestScore = deltaScore;
                         candidateNode = node;
                      }
+                     else if (deltaScore == 0 || deltaScore == bestScore)
+                     {
+                        candidateNodes.Add(node);
+                     }
                   }
                }
                processingEdge.IsVisited = true;
+
+               bool hasToBeSettedCandidate = candidateNode == null || 
+                  (candidateNode != null && candidateNodes.Any());
+
+               if (hasToBeSettedCandidate)
+               {
+                  var candidateIndex = new Random().Next(0, candidateNodes.Count);
+                  candidateNode = candidateNodes[candidateIndex];
+                  candidateNodes.Clear();
+               }
             }
          }
       
@@ -285,7 +239,6 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override async Task PerformStep()
       {
-         //var (candidateNode, neighbor) = GetBestNeighbors(_newStartingPoint);
          InterestPointWorker candidateNode = GetBestNeighbor();
          if (candidateNode == null)
          {
@@ -302,9 +255,10 @@ namespace CityScover.Engine.Algorithms.Greedy
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _tour,
-            TimeSpent = _timeSpent.Add(tWalk)
-                         .Add(tVisit)
-                         .Add(tReturn)
+            TimeSpent = _timeSpent
+                        .Add(tWalk)
+                        .Add(tVisit)
+                        .Add(tReturn)
          };
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);

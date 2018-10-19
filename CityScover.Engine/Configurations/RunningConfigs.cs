@@ -52,8 +52,8 @@ namespace CityScover.Engine.Configs
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.NearestNeighbor
-                     //CurrentAlgorithm = AlgorithmType.CheapestInsertion
+                     //CurrentAlgorithm = AlgorithmType.NearestNeighbor
+                     CurrentAlgorithm = AlgorithmType.CheapestInsertion
                   }
                },
                new Stage()
