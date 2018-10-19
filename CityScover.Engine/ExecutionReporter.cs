@@ -6,12 +6,13 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/10/2018
+// File update: 19/10/2018
 //
 
 using CityScover.Engine.Workers;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -112,9 +113,12 @@ namespace CityScover.Engine
          Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
-         //AlgorithmFamily resultType = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);
-         //Result algorithmResult = Solver.Results[resultType];
-         //algorithmResult.RunningTime = _timer;
+         AlgorithmFamily resultFamily = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);
+         Result algorithmResult = Solver.Results.Where(result => result.ResultFamily == resultFamily).FirstOrDefault();
+         if (algorithmResult != null)
+         {
+            algorithmResult.RunningTime = _timer;
+         }
       }
       #endregion
    }

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/10/2018
+// File update: 19/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -203,9 +203,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _currentSolutionGraph,
-            TimeSpent = _timeSpent.Add(tWalk)
-                                  .Add(tVisit)
-                                  .Add(tReturn)
+            TimeSpent = _timeSpent.Add(tWalk).Add(tVisit).Add(tReturn)
          };
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
@@ -220,13 +218,13 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override void OnError(Exception exception)
       {
-         base.OnError(exception);
          _currentStep = default;
          TOSolution lastProducedSolution = _solutions.Last();
          Result resultError = 
             new Result(lastProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Invalid);
          resultError.ResultFamily = AlgorithmFamily.Greedy;
          Solver.Results.Add(resultError);
+         base.OnError(exception);
       }
 
       internal override void OnTerminating()

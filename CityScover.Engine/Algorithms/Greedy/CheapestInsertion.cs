@@ -29,7 +29,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       private CityMapGraph _tour;
       private InterestPointWorker _startingPoint;
       private InterestPointWorker _newStartingPoint;
-      private InterestPointWorker _finalPoint;
+      private InterestPointWorker _endPoint;
       private DateTime _timeSpent;
       #endregion
 
@@ -88,10 +88,8 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          return (timeVisit, timeWalk, timeReturn);
       }
-      #endregion
 
-      #region Protected methods
-      protected virtual InterestPointWorker GetFirstBestNeighbor(InterestPointWorker interestPoint)
+      private InterestPointWorker GetFirstBestNeighbor(InterestPointWorker interestPoint)
       {
          int bestScore = default;
          InterestPointWorker candidateNode = default;
@@ -137,7 +135,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          return candidateNode;
       }
 
-      protected virtual InterestPointWorker GetBestNeighbor()
+      private InterestPointWorker GetBestNeighbor()
       {
          int bestScore = default;
          InterestPointWorker candidateNode = default;
@@ -149,12 +147,12 @@ namespace CityScover.Engine.Algorithms.Greedy
             int currentPointScore = currentPoint.Entity.Score.Value;
             var neighborPoints = _tour.GetAdjacentNodes(currentPointId);
 
-            foreach (var neighborPointId in neighborPoints)    // Valutare uso di ForEach di LINQ
+            foreach (var neighborPointId in neighborPoints)
             {
                var processingEdge = _cityMapClone.GetEdge(currentPointId, neighborPointId);
                if (processingEdge == null)
                {
-                  throw new NullReferenceException(nameof(processingEdge));
+                  return null;
                }
 
                InterestPointWorker neighborPoint = _cityMapClone[neighborPointId];
@@ -184,21 +182,22 @@ namespace CityScover.Engine.Algorithms.Greedy
                      }
                   }
                }
-               processingEdge.IsVisited = true;
 
-               bool hasToBeSettedCandidate = candidateNode == null || 
-                  (candidateNode != null && candidateNodes.Any());
-
-               if (hasToBeSettedCandidate)
+               if (HasToBeSettedCandidateNode(candidateNode, candidateNodes))
                {
-                  var candidateIndex = new Random().Next(0, candidateNodes.Count);
-                  candidateNode = candidateNodes[candidateIndex];
+                  var nodeIndex = new Random().Next(0, candidateNodes.Count);
+                  candidateNode = candidateNodes[nodeIndex];
                   candidateNodes.Clear();
                }
             }
          }
       
          return candidateNode;
+      }
+
+      private bool HasToBeSettedCandidateNode(InterestPointWorker candidateNode, IEnumerable<InterestPointWorker> candidateNodes)
+      {
+         return candidateNode == null || (candidateNode != null && candidateNodes.Any());
       }
       #endregion
 
@@ -234,7 +233,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          bestNeighbor.IsVisited = true;
          _tour.AddRouteFromGraph(_cityMapClone, startingPointId, bestNeighborId);
          _newStartingPoint = _startingPoint;
-         _finalPoint = bestNeighbor;
+         _endPoint = bestNeighbor;
       }
 
       internal override async Task PerformStep()
@@ -247,18 +246,15 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          _tour.AddNode(candidateNode.Entity.Id, candidateNode);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartingPoint.Entity.Id, candidateNode.Entity.Id);
-         _tour.AddRouteFromGraph(_cityMapClone, candidateNode.Entity.Id, _finalPoint.Entity.Id);
-         _tour.RemoveEdge(_newStartingPoint.Entity.Id, _finalPoint.Entity.Id);
+         _tour.AddRouteFromGraph(_cityMapClone, candidateNode.Entity.Id, _endPoint.Entity.Id);
+         _tour.RemoveEdge(_newStartingPoint.Entity.Id, _endPoint.Entity.Id);
          var (tVisit, tWalk, tReturn) = CalculateTimesByNextPoint(candidateNode);
          _newStartingPoint = candidateNode;
 
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _tour,
-            TimeSpent = _timeSpent
-                        .Add(tWalk)
-                        .Add(tVisit)
-                        .Add(tReturn)
+            TimeSpent = _timeSpent.Add(tWalk).Add(tVisit).Add(tReturn)
          };
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
@@ -273,18 +269,31 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override void OnError(Exception exception)
       {
+         _currentStep = default;
+         TOSolution lastProducedSolution = _solutions.Last();
+         Result resultError =
+            new Result(lastProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Invalid);
+         resultError.ResultFamily = AlgorithmFamily.Greedy;
+         Solver.Results.Add(resultError);
          base.OnError(exception);
       }
 
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         _tour.AddRouteFromGraph(_cityMapClone, _finalPoint.Entity.Id, _startingPoint.Entity.Id);
+         _tour.AddRouteFromGraph(_cityMapClone, _endPoint.Entity.Id, _startingPoint.Entity.Id);
          Solver.BestSolution = _solutions.Last();
       }
 
       internal override void OnTerminated()
       {
+         _cityMapClone = null;
+         TOSolution bestProducedSolution = _solutions.Last();
+         Result validResult =
+            new Result(bestProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Valid);
+         validResult.ResultFamily = AlgorithmFamily.Greedy;
+         Solver.Results.Add(validResult);
+         Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          base.OnTerminated();
       }
 

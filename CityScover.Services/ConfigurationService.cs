@@ -13,6 +13,7 @@ using CityScover.Commons;
 using CityScover.Engine;
 using CityScover.Engine.Configs;
 using CityScover.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static System.Console;
@@ -170,6 +171,8 @@ namespace CityScover.Services
          {
             return;
          }
+
+         double walkingSpeed = GetWalkingSpeed();
       }
 
       private TourCategoryType GetTourCategory()
@@ -273,6 +276,60 @@ namespace CityScover.Services
          } while (!canProceed);
 
          return nodesCount;
+      }
+
+      private double GetWalkingSpeed()
+      {
+         string choice = string.Empty;
+         bool canProceed = default;
+         double walkingSpeed = default;
+
+         do
+         {
+            WriteLine("\n-----> WALKING SPEED <-----\n");
+            Write("Enter the \"walking speed\" of the tourist in km/h. Valid range [1 - 10]: ");
+            // Inserire opzione per ritornare indietro nel menu.
+            choice = ReadLine().Trim();
+            canProceed = double.TryParse(choice, out walkingSpeed) && walkingSpeed >= 1 && walkingSpeed <= 10;
+            if (!canProceed)
+            {
+               WriteLine($"Invalid speed value. Valid range is [1 - 10] \n");
+            }
+         } while (!canProceed);
+
+         return walkingSpeed;
+      }
+
+      private DateTime GetArrivalTime()
+      {
+         string choice = string.Empty;
+         bool canProceed = default;
+
+         throw new NotImplementedException();
+      }
+
+      private TimeSpan GetTourDuration()
+      {
+         string choice = string.Empty;
+         bool canProceed = default;
+
+         throw new NotImplementedException();
+      }
+
+      private bool GetAlgorithmMonitoring()
+      {
+         string choice = string.Empty;
+         bool canProceed = default;
+
+         throw new NotImplementedException();
+      }
+
+      private ICollection<Stage> GetStages()
+      {
+         string choice = string.Empty;
+         bool canProceed = default;
+
+         throw new NotImplementedException();
       }
       #endregion
 
