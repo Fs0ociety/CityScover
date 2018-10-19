@@ -81,7 +81,21 @@ namespace CityScover.Engine.Workers
       internal void CalculateTimes()
       {
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
-         // TODO
+         BreadthFirstSearch(startPOIId,
+            (node, isVisited) => node.IsVisited = isVisited,
+            node => { return node.IsVisited; },
+            node =>
+            {
+               //TimeSpan timeVisit = default;
+               //if (point.Entity.TimeVisit.HasValue)
+               //{
+               //   timeVisit = point.Entity.TimeVisit.Value;
+               //}
+            },
+            edge =>
+            {
+
+            });         
       }
       #endregion
    }
