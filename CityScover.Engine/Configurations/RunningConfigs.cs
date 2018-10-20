@@ -64,6 +64,7 @@ namespace CityScover.Engine.Configs
                   {
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
                      ImprovementThreshold = 100,
+                     MaxIterationsWithImprovements = 2,
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.LinKernighan, 1)
@@ -77,8 +78,8 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
-                     //CurrentAlgorithm = AlgorithmType.LinKernighan,
                      MaximumDeadlockIterations = 2,
+                     CanExecuteImprovements = false,
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.TwoOpt, 3)

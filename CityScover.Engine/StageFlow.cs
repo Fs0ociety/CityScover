@@ -27,7 +27,7 @@ namespace CityScover.Engine
       {
       }
 
-      internal StageFlow(AlgorithmType algorithm, byte runningCount)
+      internal StageFlow(AlgorithmType algorithm, byte runningCount, bool canExecuteImprovements = true)
       {
          if (runningCount == 0)
          {
@@ -36,15 +36,18 @@ namespace CityScover.Engine
          }
          CurrentAlgorithm = algorithm;
          RunningCount = runningCount;
+         CanExecuteImprovements = canExecuteImprovements;
          ChildrenFlows = new Collection<StageFlow>();
       }
       #endregion
 
       #region Internal properties
       public AlgorithmType CurrentAlgorithm { get; set; }
-      public byte RunningCount { get; set; }      
+      public byte RunningCount { get; set; }
+      public bool CanExecuteImprovements { get; set; }
       public byte MaximumDeadlockIterations { get; set; }
       public byte ImprovementThreshold { get; set; }
+      public byte MaxIterationsWithImprovements { get; set; }
       public ICollection<StageFlow> ChildrenFlows { get; set; }
       #endregion
    }

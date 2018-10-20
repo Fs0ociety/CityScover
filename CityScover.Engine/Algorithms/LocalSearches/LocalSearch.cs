@@ -6,10 +6,11 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/10/2018
+// File update: 2010/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
+using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,10 @@ namespace CityScover.Engine.Algorithms
       #region Private fields
       private int _previousSolutionCost;
       private int _currentSolutionCost;
+      private byte _iterationsWithoutImprovement;
+      private bool _shouldRunImprovementAlgorithm;
+      private byte _improvementThreshold;
+      private byte _maxIterationsWithoutImprovements;
       private TOSolution _bestSolution;
       private NeighborhoodFacade _neighborhoodFacade;
       #endregion
@@ -66,13 +71,60 @@ namespace CityScover.Engine.Algorithms
             if (isBetterThanCurrentBestSolution)
             {
                bestSolution = solution;
-               _currentSolutionCost = solution.Cost;
                currentImprovement++;
             }
          }
 
          return bestSolution;
       }
+
+      private Algorithm GetImprovementAlgorithm()
+      {
+         var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
+         if (childrenAlgorithms == null)
+         {
+            return null;
+         }
+
+         var flow = childrenAlgorithms.FirstOrDefault();
+         if (flow == null)
+         {
+            return null;
+         }
+
+         Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm);
+
+         if (algorithm is LinKernighan lk)
+         {
+            lk.MaxSteps = flow.RunningCount;
+            lk.CurrentBestSolution = _bestSolution;
+         }
+
+         return algorithm;
+      }
+
+      private async Task RunImprovementLogic()
+      {
+         Algorithm improvementAlgorithm = GetImprovementAlgorithm();
+         if (improvementAlgorithm == null)
+         {
+            throw new InvalidOperationException($"Bad configuration format: " +
+               $"{nameof(Solver.WorkingConfiguration)}.");
+         }
+
+         await improvementAlgorithm.Start();
+         ClearState();
+      }
+
+      private void ClearState()
+      {
+         _iterationsWithoutImprovement = 0;
+         _shouldRunImprovementAlgorithm = false;
+      }
+      #endregion
+
+      #region Internal properties
+      internal bool CanExecuteImprovementAlgorithms { get; set; }
       #endregion
 
       #region Overrides
@@ -80,13 +132,25 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnInitializing();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
+         _improvementThreshold = Solver.CurrentStage.Flow.ImprovementThreshold;
+         _maxIterationsWithoutImprovements = Solver.CurrentStage.Flow.MaxIterationsWithImprovements;
+         CanExecuteImprovementAlgorithms = Solver.CurrentStage.Flow.CanExecuteImprovements;
          _bestSolution = Solver.BestSolution;
          _currentSolutionCost = _bestSolution.Cost;
          _previousSolutionCost = default;
+         _iterationsWithoutImprovement = default;
+         _shouldRunImprovementAlgorithm = default;
       }
 
       internal override async Task PerformStep()
       {
+         if (CanExecuteImprovementAlgorithms &&
+            _shouldRunImprovementAlgorithm)
+         {
+            Task improvementTask = Task.Run(() => RunImprovementLogic());
+            await improvementTask;
+         }
+
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);
 
          foreach (var neighborSolution in currentNeighborhood)
@@ -101,22 +165,6 @@ namespace CityScover.Engine.Algorithms
             }
          }
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
-
-         // Ora sono sicuro di avere tutte le soluzioni dell'intorno valorizzate.
-
-         // TODO: come gestire eventuali best differenti ? (es. Best Improvement se maxImprovementsCount è null,
-         // altrimenti First Improvement se maxImprovementsCount = 1, K Improvment se maxImprovementsCount = k.
-         // Per come è fatta adesso, sarà sempre Best Improvement.
-
-         // Se siamo ispirati (come no) lo faremo.
-
-         // TODO
-         // Per l'invocazione dell'algoritmo di miglioramento Lin Kernighan utilizzare due ulteriori variabili:
-         // 1. Un delta fissato all'inzio che indica una variazione di costo generica.
-         // 2. Un contatore che mi tiene traccia di quante volte ho migliorato con una variazione (differenza tra i costi delle due soluzioni) inferiore al delta.
-         //
-         // Pertanto, l'invocazione dell'algoritmo avviene quando il contatore raggiunge una soglia fissata. (e.g. dopo 4 giri della PerformStep())
-
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
          _previousSolutionCost = _currentSolutionCost;
 
@@ -127,6 +175,16 @@ namespace CityScover.Engine.Algorithms
             {
                _bestSolution = solution;
                _currentSolutionCost = solution.Cost;
+
+               if (CanExecuteImprovementAlgorithms)
+               {
+                  var delta = _currentSolutionCost - _previousSolutionCost;
+                  if (delta < _improvementThreshold)
+                  {
+                     _iterationsWithoutImprovement++;
+                     _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+                  } 
+               }
             }
          }
          else
@@ -138,13 +196,12 @@ namespace CityScover.Engine.Algorithms
 
       internal override void OnError(Exception exception)
       {
-         base.OnError(exception);
-
          // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
          Result resultError =
             new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
          resultError.ResultFamily = AlgorithmFamily.LocalSearch;
          Solver.Results.Add(resultError);
+         base.OnError(exception);
       }
 
       internal override void OnTerminating()

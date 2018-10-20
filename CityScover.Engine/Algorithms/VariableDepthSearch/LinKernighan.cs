@@ -23,7 +23,6 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #region Private fields
       private CityMapGraph _cityMapClone;
       private CityMapGraph _currentSolutionGraph;
-      private TOSolution _bestSolution;
       private TOSolution _currentSolution;
       private ICollection<RouteWorker> _executedMoves;
       private InterestPointWorker _startPOI;
@@ -44,7 +43,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #endregion
 
       #region Internal properties
-      internal byte MaxSteps { get; private set; }
+      internal TOSolution CurrentBestSolution { get; set; }
+      internal byte MaxSteps { get; set; }
       #endregion
 
       #region Private methods
@@ -181,13 +181,12 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #region Overrides
       internal override void OnError(Exception exception)
       {
-         base.OnError(exception);
-
          // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
          Result resultError =
-            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
+            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
          resultError.ResultFamily = AlgorithmFamily.Improvement;
          Solver.Results.Add(resultError);
+         base.OnError(exception);
       }
 
       internal override void OnInitializing()
@@ -196,12 +195,10 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
-         MaxSteps = 2;
-         
-         _bestSolution = Solver.BestSolution;
+
          _currentSolution = new TOSolution
          {
-            SolutionGraph = _bestSolution.SolutionGraph.DeepCopy()
+            SolutionGraph = CurrentBestSolution.SolutionGraph.DeepCopy()
          };
 
          _currentSolutionGraph = _currentSolution.SolutionGraph;
@@ -226,7 +223,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
          Result validResult =
-            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
+            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
          validResult.ResultFamily = AlgorithmFamily.Improvement;
          Solver.Results.Add(validResult);
          _cityMapClone = null;
@@ -237,10 +234,10 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          base.OnTerminating();
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, _bestSolution.Cost);
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, CurrentBestSolution.Cost);
          if (isBetterThanCurrentBestSolution)
          {
-            _bestSolution = _currentSolution;            
+            CurrentBestSolution = _currentSolution;            
          }
       }
 

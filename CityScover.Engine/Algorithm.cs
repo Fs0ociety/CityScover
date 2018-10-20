@@ -111,7 +111,7 @@ namespace CityScover.Engine
                _currentStep++;
             }
             catch(Exception ex)
-            {               
+            {
                OnError(ex);
             }
          }
