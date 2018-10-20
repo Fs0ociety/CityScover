@@ -126,19 +126,13 @@ namespace CityScover.Engine
          bool satisfied = false;
          CityMapGraph solutionGraph = solution.SolutionGraph;
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
-         foreach (var node in solutionGraph.Nodes)
+         foreach (var node in solutionGraph.TourPoints)
          {
-            if (node.Entity.Id == startPOIId)
-            {
-               satisfied = true;
-               break;
-            }
-
             DateTime totalNodeTime = node.GetTotalTime();
-            foreach (var openingTime in node.Entity.OpeningTimes)
+            foreach (var time in node.Entity.OpeningTimes)
             {
-               if (!openingTime.OpeningTime.HasValue && !openingTime.ClosingTime.HasValue ||
-                   totalNodeTime >= openingTime.OpeningTime.Value && totalNodeTime <= openingTime.ClosingTime.Value)
+               if ((!time.OpeningTime.HasValue && !time.ClosingTime.HasValue) ||
+                   totalNodeTime >= time.OpeningTime.Value && totalNodeTime <= time.ClosingTime.Value)
                {
                   satisfied = true;
                   break;

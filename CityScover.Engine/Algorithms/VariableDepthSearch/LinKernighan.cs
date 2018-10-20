@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/10/2018
+// File update: 20/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -210,11 +210,12 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          _startPOI = _cityMapClone.Nodes
             .Where(x => x.Entity.Id == startPOIId)
             .FirstOrDefault();
-         
-         _endPOI = _cityMapClone.Nodes.Where(
-            node => node.Entity.Id.Equals(_cityMapClone.Edges.Where(
-               edge => edge.Entity.PointTo.Id == Solver.WorkingConfiguration.StartingPointId).Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
 
+         _endPOI = _currentSolutionGraph.Nodes
+            .Where(node => node.Entity.Id.Equals(_currentSolutionGraph.Edges
+            .Where(edge => edge.Entity.PointTo.Id == startPOIId)
+            .Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
+         
          if (_startPOI == null || _endPOI == null)
          {
             throw new NullReferenceException();

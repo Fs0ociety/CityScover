@@ -6,16 +6,24 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 15/10/2018
+// File update: 20/10/2018
 //
 
 using CityScover.ADT.Graphs;
+using CityScover.Entities;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CityScover.Engine.Workers
 {
    internal sealed class CityMapGraph : Graph<int, InterestPointWorker, RouteWorker>
    {
+      #region Internal properties
+      internal IEnumerable<InterestPointWorker> TourPoints => 
+         Nodes.Where(node => node.Entity.Id != Solver.Instance.WorkingConfiguration.StartingPointId);      
+      #endregion
+
       #region Internal methods
       internal void AddRouteFromGraph(CityMapGraph source, int fromPOIKey, int toPOIKey)
       {
@@ -81,20 +89,48 @@ namespace CityScover.Engine.Workers
       internal void CalculateTimes()
       {
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
+         DateTime currNodeArrivalTime = default;
+         TimeSpan currNodeWaitOpeningTime = default;
+
          BreadthFirstSearch(startPOIId,
             (node, isVisited) => node.IsVisited = isVisited,
             node => { return node.IsVisited; },
             node =>
             {
-               //TimeSpan timeVisit = default;
-               //if (point.Entity.TimeVisit.HasValue)
-               //{
-               //   timeVisit = point.Entity.TimeVisit.Value;
-               //}
+               if (node.Entity.Id == startPOIId)
+               {
+                  return;
+               }
+
+               node.ArrivalTime = currNodeArrivalTime;
+               node.WaitOpeningTime = currNodeWaitOpeningTime;
             },
             edge =>
             {
+               double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed / 60.0;
+               TimeSpan timeWalk = TimeSpan.FromMinutes(edge.Weight() / averageSpeedWalk);
+               currNodeArrivalTime = currNodeArrivalTime.Add(timeWalk);
 
+               TimeSpan deltaOpeningTime = default;
+               InterestPoint destNodeEdge = edge.Entity.PointTo;
+               foreach (var time in destNodeEdge.OpeningTimes)
+               {
+                  if (!time.OpeningTime.HasValue)
+                  {
+                     continue;
+                  }
+
+                  DateTime openingTime = time.OpeningTime.Value;
+                  if (currNodeArrivalTime < openingTime)
+                  {
+                     TimeSpan currDeltaOpeningTime = openingTime.Subtract(currNodeArrivalTime);
+                     if (currDeltaOpeningTime < deltaOpeningTime)
+                     {
+                        deltaOpeningTime = currDeltaOpeningTime;
+                     }
+                  }
+               }
+               currNodeWaitOpeningTime = deltaOpeningTime;
             });         
       }
       #endregion

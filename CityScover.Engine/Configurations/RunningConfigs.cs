@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/10/2018
+// File update: 20/10/2018
 //
 
 using CityScover.Entities;
@@ -62,7 +62,12 @@ namespace CityScover.Engine.Configs
                   Category = AlgorithmFamily.LocalSearch,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.TwoOpt
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     ImprovementThreshold = 100,
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.LinKernighan, 1)
+                     }
                   }
                },
                new Stage()
@@ -72,6 +77,7 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
+                     //CurrentAlgorithm = AlgorithmType.LinKernighan,
                      MaximumDeadlockIterations = 2,
                      ChildrenFlows =
                      {
