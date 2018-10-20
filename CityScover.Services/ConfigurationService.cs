@@ -15,6 +15,7 @@ using CityScover.Engine.Configs;
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using static System.Console;
 
@@ -129,9 +130,9 @@ namespace CityScover.Services
                {
                   WriteLine($"> Configuration {confIndex + 1}");
                }
-               WriteLine($"> Go back [Press \"Enter\" key]\n");
+               WriteLine($"> Back [Press \"Enter\" key]\n");
 
-               Write("Show a configuration: ");
+               Write("Enter the configuration to display: ");
                configChoice = ReadLine();
 
                if (configChoice == string.Empty)
@@ -152,27 +153,83 @@ namespace CityScover.Services
 
       private void ShowCustomConfigurationMenu()
       {
-         WriteLine();
-         WriteLine("*************************************************************************");
-         WriteLine("                      NEW CUSTOM CONFIGURATIONS                          ");
-         WriteLine("*************************************************************************");
-         WriteLine();
+         string choice = string.Empty;
+         int choiceValue = default;
+         bool canProceed = default;
+         bool settingsCompleted = default;
 
-         object[] configurationParams;
+         do
+         {
+            WriteLine();
+            WriteLine("*************************************************************************");
+            WriteLine("                      NEW CONFIGURATION'S SETTINGS                       ");
+            WriteLine("*************************************************************************");
+            WriteLine();
+            WriteLine("<1> Set Problem size");
+            WriteLine("<2> Set Tour Category");
+            WriteLine("<3> Set Walking Speed");
+            WriteLine("<4> Set Arrival Time");
+            WriteLine("<5> Set Tour duration");
+            WriteLine("<6> Set Algorithm parameters");
+            WriteLine("<7> Set Algorithm's stages");
+            WriteLine("<8> Back");
+            Write("Select an option: ");
+            choice = ReadLine().Trim();
+            canProceed = int.TryParse(choice, out choiceValue)
+               && choiceValue >= 1 && choiceValue <= 7;
 
-         int problemSize = GetProblemSize();
+            if (!canProceed)
+            {
+               WriteLine($"Insert a value between 1 and 8.\n");
+            }
+         } while (!canProceed);
+
+         object[] configurationParams = default;
+         int problemSize = default;
+         TourCategoryType tourCategory = default;
+         double walkingSpeed = default;
+         DateTime arrivalTime = default;
+         TimeSpan tourDuration = default;
+         bool algorithmMonitoring = default;
+         Collection<Stage> stages = new Collection<Stage>();
+         settingsCompleted = problemSize > 0 &&
+            tourCategory != TourCategoryType.None &&
+            walkingSpeed > 0.0;
+         canProceed = settingsCompleted;
+
+         switch (choiceValue)
+         {
+            case 1:
+               problemSize = GetProblemSize();
+               break;
+            case 2:
+               tourCategory = GetTourCategory();
+               break;
+            case 3:
+               walkingSpeed = GetWalkingSpeed();
+               break;
+            case 4:
+
+               break;
+            case 5:
+               break;
+            case 6:
+               break;
+            case 7:
+               break;
+            default:
+               break;
+         }
+
          if (problemSize < 0)
          {
             return;
          }
 
-         TourCategoryType tourCategory = GetTourCategory();
          if (tourCategory == TourCategoryType.None)
          {
             return;
          }
-
-         double walkingSpeed = GetWalkingSpeed();
       }
 
       private TourCategoryType GetTourCategory()
