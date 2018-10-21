@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 2010/2018
+// File update: 22/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -33,7 +33,7 @@ namespace CityScover.Engine.Algorithms
 
       #region Constructors
       internal LocalSearch(Neighborhood neighborhood)
-         : this(neighborhood, null)
+         : this(neighborhood, provider: null)
       {
       }
 
@@ -112,14 +112,9 @@ namespace CityScover.Engine.Algorithms
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
-         await improvementAlgorithm.Start();
-         ClearState();
-      }
-
-      private void ClearState()
-      {
-         _iterationsWithoutImprovement = 0;
+         await Task.Run(() => improvementAlgorithm.Start());
          _shouldRunImprovementAlgorithm = false;
+         _iterationsWithoutImprovement = 0;
       }
       #endregion
 
@@ -144,11 +139,9 @@ namespace CityScover.Engine.Algorithms
 
       internal override async Task PerformStep()
       {
-         if (CanExecuteImprovementAlgorithms &&
-            _shouldRunImprovementAlgorithm)
+         if (CanExecuteImprovementAlgorithms && _shouldRunImprovementAlgorithm)
          {
-            Task improvementTask = Task.Run(() => RunImprovementLogic());
-            await improvementTask;
+            await RunImprovementLogic();
          }
 
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);

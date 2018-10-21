@@ -131,7 +131,6 @@ namespace CityScover.Services
                   WriteLine($"> Configuration {confIndex + 1}");
                }
                WriteLine($"> Back [Press \"Enter\" key]\n");
-
                Write("Enter the configuration to display: ");
                configChoice = ReadLine();
 
@@ -139,6 +138,7 @@ namespace CityScover.Services
                {
                   return;
                }
+
                canProceed = int.TryParse(configChoice, out choiceValue) &&
                   Enumerable.Range(1, Configurations.Count).Contains(choiceValue);
                if (!canProceed)
@@ -157,117 +157,78 @@ namespace CityScover.Services
          int choiceValue = default;
          bool canProceed = default;
          bool settingsCompleted = default;
+         bool isExiting = false;
 
-         do
+         while (!isExiting)
          {
-            WriteLine();
-            WriteLine("*************************************************************************");
-            WriteLine("                      NEW CONFIGURATION'S SETTINGS                       ");
-            WriteLine("*************************************************************************");
-            WriteLine();
-            WriteLine("<1> Set Problem size");
-            WriteLine("<2> Set Tour Category");
-            WriteLine("<3> Set Walking Speed");
-            WriteLine("<4> Set Arrival Time");
-            WriteLine("<5> Set Tour duration");
-            WriteLine("<6> Set Algorithm parameters");
-            WriteLine("<7> Set Algorithm's stages");
-            WriteLine("<8> Back");
-            Write("Select an option: ");
-            choice = ReadLine().Trim();
-            canProceed = int.TryParse(choice, out choiceValue)
-               && choiceValue >= 1 && choiceValue <= 7;
-
-            if (!canProceed)
+            do
             {
-               WriteLine($"Insert a value between 1 and 8.\n");
-            }
-         } while (!canProceed);
+               WriteLine();
+               WriteLine("*************************************************************************");
+               WriteLine("                      NEW CONFIGURATION'S SETTINGS                       ");
+               WriteLine("*************************************************************************");
+               WriteLine();
+               WriteLine("<1> Set Problem size");
+               WriteLine("<2> Set Tour Category");
+               WriteLine("<3> Set Walking Speed");
+               WriteLine("<4> Set Arrival Time");
+               WriteLine("<5> Set Tour duration");
+               WriteLine("<6> Set Algorithm parameters");
+               WriteLine("<7> Set Algorithm's stages");
+               WriteLine("<8> Back");
+               Write("Select an option: ");
+               choice = ReadLine().Trim();
+               canProceed = int.TryParse(choice, out choiceValue)
+                  && choiceValue >= 1 && choiceValue <= 7;
 
-         object[] configurationParams = default;
-         int problemSize = default;
-         TourCategoryType tourCategory = default;
-         double walkingSpeed = default;
-         DateTime arrivalTime = default;
-         TimeSpan tourDuration = default;
-         bool algorithmMonitoring = default;
-         Collection<Stage> stages = new Collection<Stage>();
-         settingsCompleted = problemSize > 0 &&
-            tourCategory != TourCategoryType.None &&
-            walkingSpeed > 0.0;
-         canProceed = settingsCompleted;
+               if (!canProceed)
+               {
+                  WriteLine($"Insert a value between 1 and 8.\n");
+               }
+            } while (!canProceed);
 
-         switch (choiceValue)
-         {
-            case 1:
-               problemSize = GetProblemSize();
-               break;
-            case 2:
-               tourCategory = GetTourCategory();
-               break;
-            case 3:
-               walkingSpeed = GetWalkingSpeed();
-               break;
-            case 4:
+            object[] configurationParams = default;
+            int problemSize = default;
+            TourCategoryType tourCategory = default;
+            double walkingSpeed = default;
+            DateTime arrivalTime = default;
+            TimeSpan tourDuration = default;
+            bool algorithmMonitoring = default;
+            Collection<Stage> stages = new Collection<Stage>();
 
-               break;
-            case 5:
-               break;
-            case 6:
-               break;
-            case 7:
-               break;
-            default:
-               break;
-         }
-
-         if (problemSize < 0)
-         {
-            return;
-         }
-
-         if (tourCategory == TourCategoryType.None)
-         {
-            return;
-         }
-      }
-
-      private TourCategoryType GetTourCategory()
-      {
-         TourCategoryType tourCategory = default;
-         string choice = string.Empty;
-         bool canProceed = default;
-
-         do
-         {
-            WriteLine("\n-----> TOUR CATEGORY <-----\n");
-            WriteLine("<1> Historical and Cultural");
-            WriteLine("<2> Culinary");
-            WriteLine("<3> Sport");
-            WriteLine("<4> Go Back\n");
-
-            Write("Select the Tour category: ");
-            choice = ReadLine().Trim();
-            canProceed = int.TryParse(choice, out _);
-
-            switch (choice)
+            switch (choiceValue)
             {
-               case "1":
-                  tourCategory = TourCategoryType.HistoricalAndCultural;
+               case 1:
+                  problemSize = GetProblemSize();
                   break;
-               case "2":
-                  tourCategory = TourCategoryType.Culinary;
+               case 2:
+                  tourCategory = GetTourCategory();
                   break;
-               case "3":
-                  tourCategory = TourCategoryType.Sport;
+               case 3:
+                  walkingSpeed = GetWalkingSpeed();
                   break;
-               case "4":
-                  tourCategory = TourCategoryType.None;
+               case 4:
+                  arrivalTime = GetArrivalTime();
+                  break;
+               case 5:
+                  tourDuration = GetTourDuration();
+                  break;
+               case 6:
+                  break;
+               case 7:
+                  break;
+               case 8:
+                  isExiting = true;
+                  break;
+               default:
                   break;
             }
-         } while (!canProceed);
 
-         return tourCategory;
+            settingsCompleted = problemSize > 0 &&
+               tourCategory != TourCategoryType.None &&
+               walkingSpeed > 0.0;
+            isExiting = settingsCompleted;
+         }
       }
 
       private static int GetProblemSize()
@@ -287,7 +248,7 @@ namespace CityScover.Services
             WriteLine("<6> 75 nodes");
             WriteLine("<7> 90 nodes");
             WriteLine("<8> Over 100 nodes");
-            WriteLine("<9> Go Back\n");
+            WriteLine("<9> Back\n");
 
             Write("Enter a problem size [number of nodes]: ");
             choice = ReadLine().Trim();
@@ -322,9 +283,7 @@ namespace CityScover.Services
                   nodesCount = int.Parse(choice);
                   break;
                case "9":
-                  nodesCount = -1;
                   break;
-
                default:
                   canProceed = false;
                   WriteLine("Enter a value between [1-8].\n");
@@ -333,6 +292,44 @@ namespace CityScover.Services
          } while (!canProceed);
 
          return nodesCount;
+      }
+
+      private TourCategoryType GetTourCategory()
+      {
+         TourCategoryType tourCategory = default;
+         string choice = string.Empty;
+         bool canProceed = default;
+
+         do
+         {
+            WriteLine("\n-----> TOUR CATEGORY <-----\n");
+            WriteLine("<1> Historical and Cultural");
+            WriteLine("<2> Culinary");
+            WriteLine("<3> Sport");
+            WriteLine("<4> Back\n");
+
+            Write("Select the Tour category: ");
+            choice = ReadLine().Trim();
+            canProceed = int.TryParse(choice, out _);
+
+            switch (choice)
+            {
+               case "1":
+                  tourCategory = TourCategoryType.HistoricalAndCultural;
+                  break;
+               case "2":
+                  tourCategory = TourCategoryType.Culinary;
+                  break;
+               case "3":
+                  tourCategory = TourCategoryType.Sport;
+                  break;
+               case "4":
+                  tourCategory = TourCategoryType.None;
+                  break;
+            }
+         } while (!canProceed);
+
+         return tourCategory;
       }
 
       private double GetWalkingSpeed()
@@ -344,13 +341,18 @@ namespace CityScover.Services
          do
          {
             WriteLine("\n-----> WALKING SPEED <-----\n");
-            Write("Enter the \"walking speed\" of the tourist in km/h. Valid range [1 - 10]: ");
-            // Inserire opzione per ritornare indietro nel menu.
+            Write("Select the \"walking speed\" of the tourist in km/h. Valid range is [1 - 8]. [Press \"Enter\" key to go back.]\n");
             choice = ReadLine().Trim();
+            if (choice == string.Empty)
+            {
+               return default;
+            }
+
             canProceed = double.TryParse(choice, out walkingSpeed) && walkingSpeed >= 1 && walkingSpeed <= 10;
             if (!canProceed)
             {
-               WriteLine($"Invalid speed value. Valid range is [1 - 10] \n");
+               WriteLine($"Invalid speed value. Insert the speed without \"km/h\" string. " +
+                  $"Valid range is [1 - 10]\n");
             }
          } while (!canProceed);
 
@@ -359,10 +361,19 @@ namespace CityScover.Services
 
       private DateTime GetArrivalTime()
       {
-         string choice = string.Empty;
+         DateTime arrivalTime = default;
+         string arrivalTimeStr = string.Empty;
          bool canProceed = default;
 
-         throw new NotImplementedException();
+         do
+         {
+            WriteLine("\n-----> HOTEL ARRIVAL TIME <-----\n");
+            Write("Insert the arrival time to Hotel: [Press \"Enter\" key to go back.]\n");
+            arrivalTimeStr = ReadLine().Trim();
+            canProceed = DateTime.TryParse(arrivalTimeStr, out arrivalTime);
+         } while (!canProceed);
+
+         return arrivalTime;
       }
 
       private TimeSpan GetTourDuration()

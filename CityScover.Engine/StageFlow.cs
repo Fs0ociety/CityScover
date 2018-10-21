@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 20/10/2018
+// File update: 22/10/2018
 //
 
 using System;
@@ -34,6 +34,7 @@ namespace CityScover.Engine
             throw new ArgumentException($"Bad configuration format: " +
                $"{nameof(runningCount)} parameter must be greater than 0.");
          }
+
          CurrentAlgorithm = algorithm;
          RunningCount = runningCount;
          CanExecuteImprovements = canExecuteImprovements;
