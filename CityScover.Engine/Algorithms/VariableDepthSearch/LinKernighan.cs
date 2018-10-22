@@ -48,38 +48,37 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #endregion
 
       #region Private methods
-      private IEnumerable<InterestPointWorker> GetClosestSNeighbors(InterestPointWorker endPOI, CityMapGraph currentSolutionGraph)
-      {
-         //IEnumerable<InterestPointWorker> endPOINeighbors = GetClosestNeighbors(endPOI);
-         //IEnumerable<int> endPOIAdjNodes = _cityMapClone.GetAdjacentNodes(endPOI.Entity.Id);
+      private IEnumerable<InterestPointWorker> GetClosestSNeighbors()
+      {         
+         //IEnumerable<InterestPointWorker> cityMapNeighbors = GetClosestNeighbors();
          //ICollection<InterestPointWorker> sCandidates = new Collection<InterestPointWorker>();
-
-         //foreach (var neighbor in endPOINeighbors)
+         //foreach (var node in cityMapNeighbors)
          //{
-         //   foreach (var adjNode in endPOIAdjNodes)
+         //   if (!_currentSolutionGraph.ContainsNode(node.Entity.Id))
          //   {
-         //      if (_currentSolutionGraph.ContainsNode(adjNode) && neighbor.Entity.Id != adjNode)
-         //      {
-         //         sCandidates.Add(neighbor);
-         //      }
+         //      continue;
+         //   }
+
+         //   RouteWorker nodeEdge = _currentSolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
+         //   if (nodeEdge.Entity.PointTo.Id != _endPOI.Entity.Id)
+         //   {
+         //      sCandidates.Add(node);
          //   }
          //}
 
-         var sCandidates = from neighbor in GetClosestNeighbors(endPOI)
-                           from adjNode in _cityMapClone.GetAdjacentNodes(endPOI.Entity.Id)
-                           where neighbor.Entity.Id != adjNode
-                           && _currentSolutionGraph.ContainsNode(adjNode)
-                           select neighbor;
-
-         return sCandidates;
+         return from neighbor in GetClosestNeighbors()
+                from edge in _currentSolutionGraph.GetEdges(neighbor.Entity.Id)
+                where edge.Entity.PointTo.Id != _endPOI.Entity.Id
+                && _currentSolutionGraph.ContainsNode(neighbor.Entity.Id)
+                select neighbor;
       }
 
-      private IEnumerable<InterestPointWorker> GetClosestNeighbors(InterestPointWorker endPOI)
+      private IEnumerable<InterestPointWorker> GetClosestNeighbors()
       {
          int bestScore = default;
-         IList<InterestPointWorker> potentialCandidates = new List<InterestPointWorker>();
+         ICollection<InterestPointWorker> potentialCandidates = new Collection<InterestPointWorker>();
 
-         var adjPOIIds = _cityMapClone.GetAdjacentNodes(endPOI.Entity.Id);
+         var adjPOIIds = _cityMapClone.GetAdjacentNodes(_endPOI.Entity.Id).Where(nodeId => nodeId != _startPOI.Entity.Id);
          adjPOIIds.ToList().ForEach(adjPOIId => SetBestCandidate(adjPOIId));
 
          // Caso particolare (gestito solo per irrobustire il codice): se ho 2 nodi del grafo, e
@@ -91,13 +90,13 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
             InterestPointWorker candidateNode = default;
             var node = _cityMapClone[nodeKey];
-            if (node.IsVisited)
-            {
-               return;
-            }
+            //if (node.IsVisited)
+            //{
+            //   return;
+            //}
 
             var deltaScore = Math.Abs(node.Entity.Score.Value -
-               endPOI.Entity.Score.Value);
+               _endPOI.Entity.Score.Value);
 
             if (deltaScore > bestScore)
             {
@@ -124,11 +123,14 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
                      : node.Entity.Id;
                }
             }
-            
-            potentialCandidates.Insert(0, candidateNode);
+
+            if (candidateNode != null)
+            {
+               potentialCandidates.Add(candidateNode);
+            }
          }
 
-         return potentialCandidates;
+         return potentialCandidates.OrderByDescending(node => node.Entity.Score.Value);
       }
 
       private (CityMapGraph steamSet, CityMapGraph cycleSet) BuildSteamAndCycle(int sNodeId)
@@ -136,6 +138,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          CityMapGraph steamSet = new CityMapGraph();
          CityMapGraph cycleSet = new CityMapGraph();
 
+         cycleSet.AddNodeFromGraph(_currentSolutionGraph, _endPOI.Entity.Id);
+         cycleSet.AddNodeFromGraph(_currentSolutionGraph, sNodeId);
          cycleSet.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
          _currentSolutionGraph.Edges.ToList().ForEach(
             edge =>
@@ -217,6 +221,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          {
             throw new NullReferenceException();
          }
+
+         // Tolgo l'arco (j,i).
+         _currentSolutionGraph.RemoveEdge(_endPOI.Entity.Id, _startPOI.Entity.Id);
       }
 
       internal override void OnTerminated()
@@ -244,7 +251,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       internal override async Task PerformStep()
       {
          InterestPointWorker sNode = default;
-         var sNodesCandidates = GetClosestSNeighbors(_endPOI, _currentSolutionGraph);
+         var sNodesCandidates = GetClosestSNeighbors();
          foreach (var node in sNodesCandidates)
          {
             RouteWorker fromEndNodeToSNodeEdge = _cityMapClone.GetEdge(_endPOI.Entity.Id, node.Entity.Id);

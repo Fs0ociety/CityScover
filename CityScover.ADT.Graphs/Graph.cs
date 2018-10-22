@@ -338,36 +338,6 @@ namespace CityScover.ADT.Graphs
       }
 
       /// <summary>
-      /// Collega il grafo passato come parametro al grafo d'istanza.
-      /// Notare che non fa una deep copy di tutto il grafo parametro, ma collega
-      /// solamente il nodo anchor del grafo parametro al grafo d'istanza mediante i nodi
-      /// adiacenti del grafo parametro.
-      /// In questa prima implementazione eventuali nodi scollegati del grafo parametro
-      /// rimangono scollegati.
-      /// </summary>
-      /// <param name="graph">Il grafo da collegare.</param>
-      /// <param name="anchorNode">Il nodo comune ai due grafi che fa da ancora.</param>
-      public void AddGraph(Graph<TNodeKey, TNodeData, TEdgeWeight> graph, TNodeKey anchorNode)
-      {
-         if (graph == null)
-         {
-            throw new ArgumentNullException();
-         }
-
-         if (!_nodes.ContainsKey(anchorNode) ||
-             !graph.ContainsNode(anchorNode))
-         {
-            throw new InvalidOperationException();
-         }
-
-         foreach (var graphNodeId in graph.GetAdjacentNodes(anchorNode))
-         {
-            AddNode(graphNodeId, graph[graphNodeId]);
-            AddEdge(anchorNode, graphNodeId, graph.GetEdge(anchorNode, graphNodeId));
-         }
-      }
-
-      /// <summary>
       /// Algoritmo di visita in ampiezza (Breadth First Search).
       /// </summary>
       /// <param name="startNodeKey"></param>

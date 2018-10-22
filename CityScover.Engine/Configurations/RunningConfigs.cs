@@ -63,7 +63,7 @@ namespace CityScover.Engine.Configs
                   {
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
                      ImprovementThreshold = 100,
-                     MaxIterationsWithImprovements = 2,
+                     MaxIterationsWithoutImprovements = 2,
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.LinKernighan, 1)
