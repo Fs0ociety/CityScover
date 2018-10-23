@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/10/2018
+// File update: 23/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -25,7 +25,7 @@ namespace CityScover.Engine.Algorithms
       private int _currentSolutionCost;
       private byte _iterationsWithoutImprovement;
       private bool _shouldRunImprovementAlgorithm;
-      private byte _improvementThreshold;
+      private ushort _improvementThreshold;
       private byte _maxIterationsWithoutImprovements;
       private TOSolution _bestSolution;
       private NeighborhoodFacade _neighborhoodFacade;
@@ -100,6 +100,7 @@ namespace CityScover.Engine.Algorithms
             lk.CurrentBestSolution = _bestSolution;
          }
 
+         algorithm.Provider = Provider;
          return algorithm;
       }
 
@@ -128,7 +129,7 @@ namespace CityScover.Engine.Algorithms
          base.OnInitializing();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          _improvementThreshold = Solver.CurrentStage.Flow.ImprovementThreshold;
-         _maxIterationsWithoutImprovements = Solver.CurrentStage.Flow.MaxIterationsWithImprovements;
+         _maxIterationsWithoutImprovements = Solver.CurrentStage.Flow.MaxIterationsWithoutImprovements;
          CanExecuteImprovementAlgorithms = Solver.CurrentStage.Flow.CanExecuteImprovements;
          _bestSolution = Solver.BestSolution;
          _currentSolutionCost = _bestSolution.Cost;
