@@ -16,7 +16,6 @@ using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using static System.Console;
 
