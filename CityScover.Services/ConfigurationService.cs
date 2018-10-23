@@ -16,6 +16,7 @@ using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using static System.Console;
 
@@ -35,6 +36,12 @@ namespace CityScover.Services
     * 
     * Strip seconds from datetime
     * https://stackoverflow.com/questions/31578289/strip-seconds-from-datetime
+    * 
+    * How to parse a string into a nullable int
+    * https://stackoverflow.com/questions/45030/how-to-parse-a-string-into-a-nullable-int
+    * 
+    * How to use int.TryParse with nullable int? [duplicate]
+    * https://stackoverflow.com/questions/3390750/how-to-use-int-tryparse-with-nullable-int/3390929
     */
 
    public class ConfigurationService : Singleton<ConfigurationService>, IConfigurationService
@@ -173,13 +180,13 @@ namespace CityScover.Services
                WriteLine("<3> Set Walking Speed");
                WriteLine("<4> Set Arrival Time");
                WriteLine("<5> Set Tour duration");
-               WriteLine("<6> Set Algorithm parameters");
+               WriteLine("<6> Set Algorithm monitoring");
                WriteLine("<7> Set Algorithm's stages");
-               WriteLine("<8> Back");
+               WriteLine("<8> Back\n");
                Write("Select an option: ");
                choice = ReadLine().Trim();
                canProceed = int.TryParse(choice, out choiceValue)
-                  && choiceValue >= 1 && choiceValue <= 7;
+                  && choiceValue >= 1 && choiceValue <= 8;
 
                if (!canProceed)
                {
@@ -188,11 +195,11 @@ namespace CityScover.Services
             } while (!canProceed);
 
             object[] configurationParams = default;
-            int problemSize = default;
+            int? problemSize = default;
             TourCategoryType tourCategory = default;
-            double walkingSpeed = default;
-            DateTime arrivalTime = default;
-            TimeSpan tourDuration = default;
+            double? walkingSpeed = default;
+            DateTime? arrivalTime = default;
+            TimeSpan? tourDuration = default;
             bool algorithmMonitoring = default;
             Collection<Stage> stages = new Collection<Stage>();
 
@@ -214,6 +221,7 @@ namespace CityScover.Services
                   tourDuration = GetTourDuration();
                   break;
                case 6:
+                  algorithmMonitoring = GetAlgorithmMonitoring();
                   break;
                case 7:
                   break;
@@ -224,18 +232,15 @@ namespace CityScover.Services
                   break;
             }
 
-            settingsCompleted = problemSize > 0 &&
-               tourCategory != TourCategoryType.None &&
-               walkingSpeed > 0.0;
-            isExiting = settingsCompleted;
+            // ... TODO ...
          }
       }
 
-      private static int GetProblemSize()
+      private static int? GetProblemSize()
       {
          string choice = string.Empty;
          bool canProceed = default;
-         int nodesCount = default;
+         int? nodesCount = default;
 
          do
          {
@@ -291,18 +296,23 @@ namespace CityScover.Services
             }
          } while (!canProceed);
 
+         if (nodesCount.HasValue)
+         {
+            WriteLine($"{nodesCount} nodes set!");
+         }
+
          return nodesCount;
       }
 
       private TourCategoryType GetTourCategory()
       {
-         TourCategoryType tourCategory = default;
          string choice = string.Empty;
          bool canProceed = default;
+         TourCategoryType tourCategory = default;
 
+         WriteLine("\n-----> TOUR CATEGORY <-----\n");
          do
          {
-            WriteLine("\n-----> TOUR CATEGORY <-----\n");
             WriteLine("<1> Historical and Cultural");
             WriteLine("<2> Culinary");
             WriteLine("<3> Sport");
@@ -329,67 +339,157 @@ namespace CityScover.Services
             }
          } while (!canProceed);
 
+         if (tourCategory != TourCategoryType.None)
+         {
+            WriteLine($"\"{tourCategory}\" tour set!");
+         }
+
          return tourCategory;
       }
 
-      private double GetWalkingSpeed()
+      private double? GetWalkingSpeed()
       {
-         string choice = string.Empty;
+         string walkingSpeedStr = string.Empty;
          bool canProceed = default;
-         double walkingSpeed = default;
+         double? walkingSpeed = default;
 
+         WriteLine("\n-----> WALKING SPEED <-----\n");
          do
          {
-            WriteLine("\n-----> WALKING SPEED <-----\n");
-            Write("Select the \"walking speed\" of the tourist in km/h. Valid range is [1 - 8]. [Press \"Enter\" key to go back.]\n");
-            choice = ReadLine().Trim();
-            if (choice == string.Empty)
+            Write("Set the \"walking speed\" of the tourist in km/h. Valid range is [1 - 8]. [Press \"Enter\" key to go back.]: ");
+            walkingSpeedStr = ReadLine().Trim();
+
+            canProceed = double.TryParse(walkingSpeedStr, out var walkSpeed)
+               || walkSpeed >= 1 && walkSpeed <= 10;
+
+            if (walkingSpeedStr == string.Empty)
             {
                return default;
             }
 
-            canProceed = double.TryParse(choice, out walkingSpeed) && walkingSpeed >= 1 && walkingSpeed <= 10;
-            if (!canProceed)
+            if (canProceed)
+            {
+               walkingSpeed = walkSpeed;
+            }
+            else
             {
                WriteLine($"Invalid speed value. Insert the speed without \"km/h\" string. " +
                   $"Valid range is [1 - 10]\n");
             }
          } while (!canProceed);
 
+         if (walkingSpeed.HasValue)
+         {
+            WriteLine($"\n\"Walking speed\" set to {walkingSpeed.Value} Km/h.");
+         }
+
          return walkingSpeed;
       }
 
-      private DateTime GetArrivalTime()
+      private DateTime? GetArrivalTime()
       {
-         DateTime arrivalTime = default;
          string arrivalTimeStr = string.Empty;
          bool canProceed = default;
+         DateTime? arrivalTime = default;
 
+         WriteLine("\n-----> HOTEL ARRIVAL TIME <-----\n");
          do
          {
-            WriteLine("\n-----> HOTEL ARRIVAL TIME <-----\n");
-            Write("Insert the arrival time to Hotel: [Press \"Enter\" key to go back.]\n");
+            Write("Insert the \"Arrival time\" to Hotel in the format (DD/MM/AAAA OR h:m) [Press \"Enter\" key to go back.]: ");
             arrivalTimeStr = ReadLine().Trim();
-            canProceed = DateTime.TryParse(arrivalTimeStr, out arrivalTime);
+            if (arrivalTimeStr == string.Empty)
+            {
+               return default;
+            }
+
+            canProceed = DateTime.TryParse(arrivalTimeStr, out DateTime arrTime)
+               && arrTime.Hour > 0;
+
+            if (canProceed)
+            {
+               arrivalTime = arrTime;
+            }
+            else
+            {
+               WriteLine($"Invalid \"Arrival time\". Valid format: [dd/mm/aaaa OR hh:mm]\n");
+            }
+
          } while (!canProceed);
+
+         if (arrivalTime.HasValue)
+         {
+            WriteLine($"\n\"Arrival\" time at the Hotel set at: {arrivalTime}");
+         }
 
          return arrivalTime;
       }
 
-      private TimeSpan GetTourDuration()
+      private TimeSpan? GetTourDuration()
       {
-         string choice = string.Empty;
-         bool canProceed = default;
 
-         throw new NotImplementedException();
+         string tourDurationStr = string.Empty;
+         bool canProceed = default;
+         string format = "h\\:mm";
+         TimeSpan? tourDuration = default;
+
+         WriteLine("\n-----> TOUR DURATION <-----\n");
+         do
+         {
+            Write("Insert the duration of the tour in hours: [Press \"Enter\" key to go back.]\n");
+            tourDurationStr = ReadLine().Trim();
+            if (tourDurationStr == string.Empty)
+            {
+               return default;
+            }
+
+            canProceed = TimeSpan.TryParseExact(tourDurationStr, format, null, out var duration)
+               && duration.Hours >= 1;
+
+            if (canProceed)
+            {
+               tourDuration = duration;
+            }
+            else
+            {
+               WriteLine("Invalid \"Tour duration\". The duration must be greater than or equals to 1.");
+            }
+
+         } while (!canProceed);
+
+         if (tourDuration.HasValue)
+         {
+            WriteLine($"\nTour duration set to: {tourDuration.Value.Hours} hours " +
+               $"and {tourDuration.Value.Minutes} minutes");
+         }
+
+         return tourDuration;
       }
 
       private bool GetAlgorithmMonitoring()
       {
          string choice = string.Empty;
          bool canProceed = default;
+         bool toMonitoring = default;
 
-         throw new NotImplementedException();
+         WriteLine("\n-----> ALGORITHM MONITORING <-----\n");
+         do
+         {
+            WriteLine("Do you want to monitor algorithms's executions? [y/N]");
+            choice = ReadLine().Trim();
+            canProceed = choice == "y" || choice == "Y" || 
+               choice == "n" || choice == "N";
+
+            if (canProceed)
+            {
+               toMonitoring = true;
+            }
+            else
+            {
+               WriteLine("Invalid choice. Enter \"Y or y\" or \"N or n\"");
+            }
+         } while (!canProceed);
+
+         return toMonitoring;
       }
 
       private ICollection<Stage> GetStages()

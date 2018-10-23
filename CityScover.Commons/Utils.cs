@@ -30,5 +30,23 @@
       //   }
       //   return result;
       //}
+
+      public static int? ToNullableInt(this string s)
+      {
+         if (int.TryParse(s, out int i))
+         {
+            return i;
+         }
+         return null;
+      }
+
+      public static double? ToNullableDouble(this string s)
+      {
+         if (double.TryParse(s, out double i))
+         {
+            return i;
+         }
+         return null;
+      }
    }
 }

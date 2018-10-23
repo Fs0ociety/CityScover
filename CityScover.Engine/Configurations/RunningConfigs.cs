@@ -66,7 +66,7 @@ namespace CityScover.Engine.Configs
                      MaxIterationsWithImprovements = 2,
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.LinKernighan, 1)
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1)
                      }
                   }
                },
@@ -81,7 +81,7 @@ namespace CityScover.Engine.Configs
                      CanExecuteImprovements = false,
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.TwoOpt, 3)
+                        new StageFlow(AlgorithmType.TwoOpt, runningCount: 3)
                      }
                   }
                }
