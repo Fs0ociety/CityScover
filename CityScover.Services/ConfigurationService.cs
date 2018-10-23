@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/10/2018
+// File update: 23/10/2018
 //
 
 using CityScover.Commons;
@@ -45,9 +45,12 @@ namespace CityScover.Services
 
    public class ConfigurationService : Singleton<ConfigurationService>, IConfigurationService
    {
+      private readonly int _maxStagesCount = 3;
+
       #region Constructors
       private ConfigurationService()
       {
+         _maxStagesCount = 3;
       }
       #endregion
 
@@ -116,6 +119,7 @@ namespace CityScover.Services
          }
       }
 
+      #region Existing Configurations menu
       private void ShowAvailableConfigurationMenu()
       {
          string configChoice = string.Empty;
@@ -156,6 +160,7 @@ namespace CityScover.Services
             DisplayConfiguration(Configurations.ElementAt(--choiceValue));
          }
       }
+      #endregion
 
       private void ShowCustomConfigurationMenu()
       {
@@ -165,15 +170,16 @@ namespace CityScover.Services
          bool settingsCompleted = default;
          bool isExiting = false;
 
+         WriteLine();
+         WriteLine("*************************************************************************");
+         WriteLine("                      NEW CONFIGURATION'S SETTINGS                       ");
+         WriteLine("*************************************************************************");
+         WriteLine();
+
          while (!isExiting)
          {
             do
             {
-               WriteLine();
-               WriteLine("*************************************************************************");
-               WriteLine("                      NEW CONFIGURATION'S SETTINGS                       ");
-               WriteLine("*************************************************************************");
-               WriteLine();
                WriteLine("<1> Set Problem size");
                WriteLine("<2> Set Tour Category");
                WriteLine("<3> Set Walking Speed");
@@ -194,6 +200,10 @@ namespace CityScover.Services
             } while (!canProceed);
 
             object[] configurationParams = default;
+            /* TODO
+             * inserire i seguenti campi della configurazione come campi privati di classe 
+             * per la successiva creazione della configurazione
+             */
             int? problemSize = default;
             TourCategoryType tourCategory = default;
             double? walkingSpeed = default;
@@ -223,6 +233,7 @@ namespace CityScover.Services
                   algorithmMonitoring = GetAlgorithmMonitoring();
                   break;
                case 7:
+                  stages = GetAlgorithmStages();
                   break;
                case 8:
                   isExiting = true;
@@ -235,6 +246,7 @@ namespace CityScover.Services
          }
       }
 
+      #region Problem Size menu
       private static int? GetProblemSize()
       {
          string choice = string.Empty;
@@ -302,7 +314,9 @@ namespace CityScover.Services
 
          return nodesCount;
       }
+      #endregion
 
+      #region Tour Category menu
       private TourCategoryType GetTourCategory()
       {
          string choice = string.Empty;
@@ -345,7 +359,9 @@ namespace CityScover.Services
 
          return tourCategory;
       }
+      #endregion
 
+      #region Walking Speed menu
       private double? GetWalkingSpeed()
       {
          string walkingSpeedStr = string.Empty;
@@ -355,17 +371,16 @@ namespace CityScover.Services
          WriteLine("\n-----> WALKING SPEED <-----\n");
          do
          {
-            Write("Set the \"walking speed\" of the tourist in km/h. Valid range is [1 - 8]. [Press \"Enter\" key to go back.]: ");
+            Write("Set the \"walking speed\" of the tourist in km/h. Valid range is [1 - 8]. " +
+               "[Press \"Enter\" key to go back.]: ");
             walkingSpeedStr = ReadLine().Trim();
-
             canProceed = double.TryParse(walkingSpeedStr, out var walkSpeed)
                || walkSpeed >= 1 && walkSpeed <= 10;
 
             if (walkingSpeedStr == string.Empty)
             {
-               return default;
+               break;
             }
-
             if (canProceed)
             {
                walkingSpeed = walkSpeed;
@@ -384,7 +399,9 @@ namespace CityScover.Services
 
          return walkingSpeed;
       }
+      #endregion
 
+      #region Arrival Time menu
       private DateTime? GetArrivalTime()
       {
          string arrivalTimeStr = string.Empty;
@@ -394,13 +411,13 @@ namespace CityScover.Services
          WriteLine("\n-----> HOTEL ARRIVAL TIME <-----\n");
          do
          {
-            Write("Insert the \"Arrival time\" to Hotel in the format (DD/MM/AAAA OR h:m) [Press \"Enter\" key to go back.]: ");
+            Write("Insert the \"Arrival time\" to Hotel in the format (DD/MM/AAAA OR h:m) " +
+               "[Press \"Enter\" key to go back.]: ");
             arrivalTimeStr = ReadLine().Trim();
             if (arrivalTimeStr == string.Empty)
             {
-               return default;
+               break;
             }
-
             canProceed = DateTime.TryParse(arrivalTimeStr, out DateTime arrTime)
                && arrTime.Hour > 0;
 
@@ -422,10 +439,11 @@ namespace CityScover.Services
 
          return arrivalTime;
       }
+      #endregion
 
+      #region Tour Duration menu
       private TimeSpan? GetTourDuration()
       {
-
          string tourDurationStr = string.Empty;
          bool canProceed = default;
          string format = "h\\:mm";
@@ -434,11 +452,12 @@ namespace CityScover.Services
          WriteLine("\n-----> TOUR DURATION <-----\n");
          do
          {
-            Write("Insert the duration of the tour in hours: [Press \"Enter\" key to go back.]\n");
+            Write("Insert the duration of the tour in hours: " +
+               "[Press \"Enter\" key to go back.]\n");
             tourDurationStr = ReadLine().Trim();
             if (tourDurationStr == string.Empty)
             {
-               return default;
+               break;
             }
 
             canProceed = TimeSpan.TryParseExact(tourDurationStr, format, null, out var duration)
@@ -463,7 +482,9 @@ namespace CityScover.Services
 
          return tourDuration;
       }
+      #endregion
 
+      #region Algorithm Monitoring menu
       private bool GetAlgorithmMonitoring()
       {
          string choice = string.Empty;
@@ -475,7 +496,7 @@ namespace CityScover.Services
          {
             WriteLine("Do you want to monitor algorithms's executions? [y/N]");
             choice = ReadLine().Trim();
-            canProceed = choice == "y" || choice == "Y" || 
+            canProceed = choice == "y" || choice == "Y" ||
                choice == "n" || choice == "N";
 
             if (canProceed)
@@ -490,14 +511,163 @@ namespace CityScover.Services
 
          return toMonitoring;
       }
+      #endregion
 
-      private ICollection<Stage> GetStages()
+      #region Menu stages
+      private Collection<Stage> GetAlgorithmStages()
+      {
+         Collection<Stage> stages = new Collection<Stage>();
+         WriteLine("\n-----> STAGES'S CONFIGURATION <-----\n");
+
+         for (int stageCount = 1; stageCount <= _maxStagesCount; ++stageCount)
+         {
+            Stage stage = GetStageSettings(stageCount);
+            if (stage.Flow.CurrentAlgorithm == AlgorithmType.None)
+            {
+               break;
+            }
+            stages.Add(stage);
+         }
+
+         return stages;
+      }
+
+      private Stage GetStageSettings(int stageId)
       {
          string choice = string.Empty;
          bool canProceed = default;
+         Stage stage = new Stage();
+         WriteLine($"\n-----> STAGE {stageId} SETTINGS <-----\n");
 
-         throw new NotImplementedException();
+         if (stageId == 1)
+         {
+            WriteLine($"Set the Greedy algorithm of stage number {stageId}.\n");
+            stage.Description = StageType.StageOne;
+            stage.Category = AlgorithmFamily.Greedy;
+            AlgorithmType algorithm = GetGreedyAlgorithm();
+            stage.Flow.CurrentAlgorithm = algorithm;
+         }
+         else if (stageId == 2)
+         {
+            WriteLine($"Set the Local Search algorithm of stage number {stageId}.\n");
+            stage.Description = StageType.StageTwo;
+            stage.Category = AlgorithmFamily.LocalSearch;
+            stage.Flow.CurrentAlgorithm = GetLocalSearchAlgorithm();
+            if (stage.Flow.CurrentAlgorithm != AlgorithmType.None)
+            {
+               var (improvementThreshold, maxIterationsWithoutImprovements) = GetLocalSearchParameters();
+               stage.Flow.ImprovementThreshold = improvementThreshold;
+               stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
+               WriteLine($"Do you want to set an improvement algorithm for stage number {stageId}? [y/N]");
+               string response = ReadLine().Trim();
+               if (response == "y" || response == "Y")
+               {
+                  SetInnerAlgorithm(stageId);
+               }
+            }
+         }
+         else if (stageId == 3)
+         {
+            WriteLine($"Set the MetaHeuristic algorithm of stage number {stageId}.\n");
+            stage.Description = StageType.StageThree;
+            stage.Category = AlgorithmFamily.MetaHeuristic;
+         }
+         else
+         {
+            // ...
+         }
+
+         return stage;
       }
+
+      private static AlgorithmType GetGreedyAlgorithm()
+      {
+         string choice = string.Empty;
+         AlgorithmType algorithm = default;
+
+         WriteLine("<1> Nearest Neighbor");
+         WriteLine("<2> Nearest Neighbor Knapsack");
+         WriteLine("<3> Cheapest Insertion");
+         WriteLine("<4> Back\n");
+         choice = ReadLine().Trim();
+
+         switch (choice)
+         {
+            case "1":
+               algorithm = AlgorithmType.NearestNeighbor;
+               break;
+            case "2":
+               algorithm = AlgorithmType.NearestNeighborKnapsack;
+               break;
+            case "3":
+               algorithm = AlgorithmType.CheapestInsertion;
+               break;
+            default:
+               break;
+         }
+         return algorithm;
+      }
+
+      private AlgorithmType GetLocalSearchAlgorithm()
+      {
+         string choice = string.Empty;
+         AlgorithmType algorithm = default;
+
+         WriteLine("<1> Two Opt");
+         WriteLine("<2> Back\n");
+         choice = ReadLine().Trim();
+
+         switch (choice)
+         {
+            case "1":
+               algorithm = AlgorithmType.TwoOpt;
+               break;
+            default:
+               break;
+         }
+         return algorithm;
+      }
+
+      private (byte, byte) GetLocalSearchParameters()
+      {
+         byte maxIterationsWithoutImprovements = default;
+         byte improvementThreshold = default;
+         bool canProceed = default;
+
+         WriteLine("\n-----> TUNING PARAMETERS <-----\n");
+         do
+         {
+            Write("Set the \"Maximum iterations without improvements\" to trigger the improvement algorithm " +
+               "[Range: 1 - 255]: ");
+            string firstParam = ReadLine().Trim();
+            Write("Set the \"improvement threshold\" " +
+               "[Range: 1 - 255]: ");
+            string secondParam = ReadLine().Trim();
+
+            canProceed = byte.TryParse(firstParam, out byte firstParamValue);
+            canProceed = byte.TryParse(secondParam, out byte secondParamValue);
+            canProceed |= firstParamValue > 0 && secondParamValue > 0;
+
+            if (canProceed)
+            {
+               maxIterationsWithoutImprovements = firstParamValue;
+               improvementThreshold = secondParamValue;
+            }
+            else
+            {
+               WriteLine("Invalid parameters settings. Valid range: [1 - 255]\n");
+            }
+         } while (!canProceed);
+
+         return (improvementThreshold, maxIterationsWithoutImprovements);
+      }
+
+      private void SetInnerAlgorithm(int stageId)
+      {
+         // ... TODO ...
+      }
+      #endregion
+
       #endregion
 
       #region IConfigurationService implementation

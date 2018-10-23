@@ -51,7 +51,6 @@ namespace CityScover.Engine.Algorithms
          {
             throw new ArgumentNullException(nameof(neighborhood));
          }
-
          if (maxImprovementsCount.HasValue && maxImprovementsCount == 0)
          {
             throw new ArgumentException("maxImprovementsCount can not have value 0.");
@@ -104,7 +103,7 @@ namespace CityScover.Engine.Algorithms
          return algorithm;
       }
 
-      private async Task RunImprovementLogic()
+      private async Task RunImprovementAlgorithm()
       {
          Algorithm improvementAlgorithm = GetImprovementAlgorithm();
          if (improvementAlgorithm == null)
@@ -142,7 +141,7 @@ namespace CityScover.Engine.Algorithms
       {
          if (CanExecuteImprovementAlgorithms && _shouldRunImprovementAlgorithm)
          {
-            await RunImprovementLogic();
+            await RunImprovementAlgorithm();
          }
 
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);

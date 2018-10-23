@@ -46,7 +46,7 @@ namespace CityScover.Engine
       public byte RunningCount { get; set; } = default;
       public bool CanExecuteImprovements { get; set; } = true;
       public byte ImprovementThreshold { get; set; } = default;
-      public byte MaxIterationsWithImprovements { get; set; } = default;
+      public byte MaxIterationsWithoutImprovements { get; set; } = default;
       public byte MaximumDeadlockIterations { get; set; } = default;
       public ICollection<StageFlow> ChildrenFlows { get; set; } = default;
       #endregion

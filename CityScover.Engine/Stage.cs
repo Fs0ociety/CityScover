@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 23/10/2018
 //
 
 namespace CityScover.Engine
@@ -14,7 +14,7 @@ namespace CityScover.Engine
    public class Stage
    {
       #region Constructors
-      internal Stage()
+      public Stage()
       {
          Flow = new StageFlow();
       } 
