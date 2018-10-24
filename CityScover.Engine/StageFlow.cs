@@ -22,12 +22,12 @@ namespace CityScover.Engine
    public class StageFlow
    {
       #region Constructors
-      internal StageFlow()
+      public StageFlow()
          : this(AlgorithmType.None, runningCount: 1)
       {
       }
 
-      internal StageFlow(AlgorithmType algorithm, byte runningCount)
+      public StageFlow(AlgorithmType algorithm, byte runningCount)
       {
          if (runningCount == 0)
          {

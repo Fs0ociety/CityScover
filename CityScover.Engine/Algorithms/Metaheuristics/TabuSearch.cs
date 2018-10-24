@@ -126,8 +126,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          _neighborhood.TabuList = new List<TabuMove>();
          _innerAlgorithm.AcceptImprovementsOnly = false;
-         // Gestire nella configurazione la possibilità di invocare o meno un algoritmo di miglioramento dalla Local Search
-         //_innerAlgorithm.CanExecuteImprovmentAlgorithms = true / false;
          _innerAlgorithm.Provider = Provider;
       }
 

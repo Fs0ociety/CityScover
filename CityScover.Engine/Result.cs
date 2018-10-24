@@ -81,7 +81,6 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TabuSearch:
-            case AlgorithmType.VariableNeighborhoodSearch:
                result = AlgorithmFamily.MetaHeuristic;
                break;
 

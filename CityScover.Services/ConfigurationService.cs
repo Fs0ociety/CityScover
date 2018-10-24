@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/10/2018
+// File update: 24/10/2018
 //
 
 using CityScover.Commons;
@@ -55,6 +55,8 @@ namespace CityScover.Services
       #endregion
 
       #region Private methods
+
+      #region Display Configuration
       private void DisplayConfiguration(Configuration configuration)
       {
          WriteLine("\t============================================================");
@@ -118,6 +120,7 @@ namespace CityScover.Services
             solverService.Run(configuration);
          }
       }
+      #endregion
 
       #region Existing Configurations menu
       private void ShowAvailableConfigurationMenu()
@@ -162,6 +165,7 @@ namespace CityScover.Services
       }
       #endregion
 
+      #region Custom Configuration menu
       private void ShowCustomConfigurationMenu()
       {
          string choice = string.Empty;
@@ -534,9 +538,8 @@ namespace CityScover.Services
 
       private Stage GetStageSettings(int stageId)
       {
-         string choice = string.Empty;
-         bool canProceed = default;
          Stage stage = new Stage();
+         AlgorithmType algorithm = AlgorithmType.None;
          WriteLine($"\n-----> STAGE {stageId} SETTINGS <-----\n");
 
          if (stageId == 1)
@@ -544,46 +547,65 @@ namespace CityScover.Services
             WriteLine($"Set the Greedy algorithm of stage number {stageId}.\n");
             stage.Description = StageType.StageOne;
             stage.Category = AlgorithmFamily.Greedy;
-            AlgorithmType algorithm = GetGreedyAlgorithm();
+            algorithm = GetGreedyAlgorithm();
             stage.Flow.CurrentAlgorithm = algorithm;
-         }
-         else if (stageId == 2)
-         {
-            WriteLine($"Set the Local Search algorithm of stage number {stageId}.\n");
-            stage.Description = StageType.StageTwo;
-            stage.Category = AlgorithmFamily.LocalSearch;
-            stage.Flow.CurrentAlgorithm = GetLocalSearchAlgorithm();
-            if (stage.Flow.CurrentAlgorithm != AlgorithmType.None)
-            {
-               var (improvementThreshold, maxIterationsWithoutImprovements) = GetLocalSearchParameters();
-               stage.Flow.ImprovementThreshold = improvementThreshold;
-               stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
-               WriteLine($"Do you want to set an improvement algorithm for stage number {stageId}? [y/N]");
-               string response = ReadLine().Trim();
-               if (response == "y" || response == "Y")
-               {
-                  SetInnerAlgorithm(stageId);
-               }
-            }
-         }
-         else if (stageId == 3)
-         {
-            WriteLine($"Set the MetaHeuristic algorithm of stage number {stageId}.\n");
-            stage.Description = StageType.StageThree;
-            stage.Category = AlgorithmFamily.MetaHeuristic;
          }
          else
          {
-            // ...
+            if (stageId == 2)
+            {
+               WriteLine($"Set the Local Search algorithm of stage number {stageId}.\n");
+               stage.Description = StageType.StageTwo;
+               stage.Category = AlgorithmFamily.LocalSearch;
+               algorithm = GetLocalSearchAlgorithm();
+
+               if (algorithm != AlgorithmType.None)
+               {
+                  stage.Flow.CurrentAlgorithm = algorithm;
+                  WriteLine($"Do you want to set an improvement algorithm for stage number {stageId}? " +
+                     $"[y/N]: ");
+                  string response = ReadLine().Trim();
+
+                  if (response == "y" || response == "Y")
+                  {
+                     var (improvementThreshold, maxIterationsWithoutImprovements) = GetLocalSearchParameters();
+                     stage.Flow.ImprovementThreshold = improvementThreshold;
+                     stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
+                     AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
+                     byte runningCount = GetAlgorithmIterations();
+                  } 
+               }
+            }
+            else if (stageId == 3)
+            {
+               WriteLine($"Set the MetaHeuristic algorithm of stage number {stageId}.\n");
+               stage.Description = StageType.StageThree;
+               stage.Category = AlgorithmFamily.MetaHeuristic;
+               algorithm = GetMetaHeuristicAlgorithm();
+
+               if (algorithm != AlgorithmType.None)
+               {
+                  stage.Flow.CurrentAlgorithm = algorithm;
+                  var (maximumDeadlockIterations, canExecuteImprovements) = GetMetaHeuristicParameters();
+                  stage.Flow.MaximumDeadlockIterations = maximumDeadlockIterations;
+                  stage.Flow.CanExecuteImprovements = canExecuteImprovements;
+                  if (canExecuteImprovements)
+                  {
+                     AlgorithmType lsAlgorithm = GetLocalSearchAlgorithm();
+                     byte runningCount = GetAlgorithmIterations();
+                     //stage.Flow.ChildrenFlows.Add()
+                  } 
+               }
+            }
          }
 
          return stage;
       }
 
-      private static AlgorithmType GetGreedyAlgorithm()
+      private AlgorithmType GetGreedyAlgorithm()
       {
          string choice = string.Empty;
-         AlgorithmType algorithm = default;
+         AlgorithmType algorithm = AlgorithmType.None;
 
          WriteLine("<1> Nearest Neighbor");
          WriteLine("<2> Nearest Neighbor Knapsack");
@@ -605,13 +627,14 @@ namespace CityScover.Services
             default:
                break;
          }
+
          return algorithm;
       }
 
       private AlgorithmType GetLocalSearchAlgorithm()
       {
          string choice = string.Empty;
-         AlgorithmType algorithm = default;
+         AlgorithmType algorithm = AlgorithmType.None;
 
          WriteLine("<1> Two Opt");
          WriteLine("<2> Back\n");
@@ -625,6 +648,28 @@ namespace CityScover.Services
             default:
                break;
          }
+
+         return algorithm;
+      }
+
+      private AlgorithmType GetMetaHeuristicAlgorithm()
+      {
+         string choice = string.Empty;
+         AlgorithmType algorithm = AlgorithmType.None;
+
+         WriteLine("<1> Tabù Search");
+         WriteLine("<2> Back\n");
+         choice = ReadLine().Trim();
+
+         switch (choice)
+         {
+            case "1":
+               algorithm = AlgorithmType.TabuSearch;
+               break;
+            default:
+               break;
+         }
+
          return algorithm;
       }
 
@@ -655,17 +700,97 @@ namespace CityScover.Services
             }
             else
             {
-               WriteLine("Invalid parameters settings. Valid range: [1 - 255]\n");
+               WriteLine("Invalid parameters settings. " +
+                  "Insert a value between 1 and 255.\n");
             }
          } while (!canProceed);
 
          return (improvementThreshold, maxIterationsWithoutImprovements);
       }
 
-      private void SetInnerAlgorithm(int stageId)
+      private (byte, bool) GetMetaHeuristicParameters()
       {
-         // ... TODO ...
+         byte maximumDeadlockIterations = default;
+         bool canExecuteImprovements = default;
+         bool canProceed = default;
+
+         WriteLine("\n-----> TUNING PARAMETERS <-----\n");
+         do
+         {
+            Write("Set the \"Maximum deadlock iterations\" to stop the MetaHeuristic algorithm " +
+               "[Range: 1 - 255]: ");
+            string firstParam = ReadLine().Trim();
+            Write("Do you want MetaHeuristic algorithm can executes improvements? " +
+               "[y/N]: ");
+            string response = ReadLine().Trim();
+
+            canExecuteImprovements = response == "y" || response == "Y";
+            canProceed = byte.TryParse(firstParam, out byte firstParamValue) &&
+               firstParamValue > 0;
+
+            if (canProceed)
+            {
+               maximumDeadlockIterations = firstParamValue;
+            }
+            else
+            {
+               WriteLine("Invalid value for \"Maximum deadlock iterations\" parameter. " +
+                  "Insert a value between 1 and 255.\n");
+            }
+         } while (!canProceed);
+
+         return (maximumDeadlockIterations, canExecuteImprovements);
       }
+
+      private AlgorithmType GetImprovementAlgorithm()
+      {
+         string choice = string.Empty;
+         AlgorithmType algorithm = AlgorithmType.None;
+
+         WriteLine("<1> Lin Kernighan");
+         WriteLine("<2> Back\n");
+         choice = ReadLine().Trim();
+
+         switch (choice)
+         {
+            case "1":
+               algorithm = AlgorithmType.LinKernighan;
+               break;
+            default:
+               break;
+         }
+
+
+         return algorithm;
+      }
+
+      private byte GetAlgorithmIterations()
+      {
+         byte runningCount = default;
+         bool canProceed = default;
+
+         do
+         {
+            Write("Insert the \"Maximum number of iterations\" for the algorithm: ");
+            string value = ReadLine().Trim();
+            canProceed = byte.TryParse(value, out byte maxIterations) &&
+               maxIterations > 0;
+
+            if (canProceed)
+            {
+               runningCount = maxIterations;
+            }
+            else
+            {
+               WriteLine("Invalid value for \"Maximum number of iterations\" parameter. " +
+                  "Insert a value between 1 and 255.\n");
+            }
+         } while (!canProceed);
+
+         return runningCount;
+      }
+      #endregion
+
       #endregion
 
       #endregion
