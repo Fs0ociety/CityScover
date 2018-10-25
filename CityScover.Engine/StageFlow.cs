@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/10/2018
+// File update: 25/10/2018
 //
 
 using System;
@@ -48,7 +48,7 @@ namespace CityScover.Engine
       public byte ImprovementThreshold { get; set; } = default;
       public byte MaxIterationsWithoutImprovements { get; set; } = default;
       public byte MaximumDeadlockIterations { get; set; } = default;
-      public ICollection<StageFlow> ChildrenFlows { get; set; } = default;
+      public ICollection<StageFlow> ChildrenFlows { get; set; }
       #endregion
    }
 }

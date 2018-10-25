@@ -122,7 +122,7 @@ namespace CityScover.Services
       }
       #endregion
 
-      #region Existing Configurations menu
+      #region Menu available configurations
       private void ShowAvailableConfigurationMenu()
       {
          string configChoice = string.Empty;
@@ -165,7 +165,7 @@ namespace CityScover.Services
       }
       #endregion
 
-      #region Custom Configuration menu
+      #region Menu custom configuration
       private void ShowCustomConfigurationMenu()
       {
          string choice = string.Empty;
@@ -539,67 +539,107 @@ namespace CityScover.Services
       private Stage GetStageSettings(int stageId)
       {
          Stage stage = new Stage();
-         AlgorithmType algorithm = AlgorithmType.None;
          WriteLine($"\n-----> STAGE {stageId} SETTINGS <-----\n");
 
          if (stageId == 1)
          {
-            WriteLine($"Set the Greedy algorithm of stage number {stageId}.\n");
-            stage.Description = StageType.StageOne;
-            stage.Category = AlgorithmFamily.Greedy;
-            algorithm = GetGreedyAlgorithm();
-            stage.Flow.CurrentAlgorithm = algorithm;
+            SetFirstStage(stageId, stage);
          }
-         else
+         else if (stageId == 2)
          {
-            if (stageId == 2)
-            {
-               WriteLine($"Set the Local Search algorithm of stage number {stageId}.\n");
-               stage.Description = StageType.StageTwo;
-               stage.Category = AlgorithmFamily.LocalSearch;
-               algorithm = GetLocalSearchAlgorithm();
-
-               if (algorithm != AlgorithmType.None)
-               {
-                  stage.Flow.CurrentAlgorithm = algorithm;
-                  WriteLine($"Do you want to set an improvement algorithm for stage number {stageId}? " +
-                     $"[y/N]: ");
-                  string response = ReadLine().Trim();
-
-                  if (response == "y" || response == "Y")
-                  {
-                     var (improvementThreshold, maxIterationsWithoutImprovements) = GetLocalSearchParameters();
-                     stage.Flow.ImprovementThreshold = improvementThreshold;
-                     stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
-                     AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
-                     byte runningCount = GetAlgorithmIterations();
-                  } 
-               }
-            }
-            else if (stageId == 3)
-            {
-               WriteLine($"Set the MetaHeuristic algorithm of stage number {stageId}.\n");
-               stage.Description = StageType.StageThree;
-               stage.Category = AlgorithmFamily.MetaHeuristic;
-               algorithm = GetMetaHeuristicAlgorithm();
-
-               if (algorithm != AlgorithmType.None)
-               {
-                  stage.Flow.CurrentAlgorithm = algorithm;
-                  var (maximumDeadlockIterations, canExecuteImprovements) = GetMetaHeuristicParameters();
-                  stage.Flow.MaximumDeadlockIterations = maximumDeadlockIterations;
-                  stage.Flow.CanExecuteImprovements = canExecuteImprovements;
-                  if (canExecuteImprovements)
-                  {
-                     AlgorithmType lsAlgorithm = GetLocalSearchAlgorithm();
-                     byte runningCount = GetAlgorithmIterations();
-                     //stage.Flow.ChildrenFlows.Add()
-                  } 
-               }
-            }
+            SetSecondStage(stageId, stage);
+         }
+         else if (stageId == 3)
+         {
+            SetThirdStage(stageId, stage);
          }
 
          return stage;
+      }
+
+      private void SetFirstStage(int stageId, Stage stage)
+      {
+         AlgorithmType algorithm;
+         WriteLine($"Select the Greedy algorithm of stage number {stageId}.\n");
+         stage.Description = StageType.StageOne;
+         stage.Category = AlgorithmFamily.Greedy;
+         algorithm = GetGreedyAlgorithm();
+         stage.Flow.CurrentAlgorithm = algorithm;
+      }
+
+      private void SetSecondStage(int stageId, Stage stage)
+      {
+         AlgorithmType algorithm;
+         WriteLine($"Select a Local Search algorithm for stage {stageId}.\n");
+         stage.Description = StageType.StageTwo;
+         stage.Category = AlgorithmFamily.LocalSearch;
+         algorithm = GetLocalSearchAlgorithm();
+
+         if (algorithm != AlgorithmType.None)
+         {
+            stage.Flow.CurrentAlgorithm = algorithm;
+            WriteLine($"Do you want to set an improvement algorithm for stage {stageId}? [y/N]: ");
+            string response = ReadLine().Trim();
+
+            if (response == "y" || response == "Y")
+            {
+               WriteLine($"Select an improvement algorithm for stage {stageId}.\n");
+               AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
+
+               if (improvementAlgorithm != AlgorithmType.None)
+               {
+                  byte runningCount = GetAlgorithmIterations();
+                  var (maxIterationsWithoutImprovements, improvementThreshold) = GetLocalSearchParameters();
+                  stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+                  stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
+                  stage.Flow.ImprovementThreshold = improvementThreshold;
+               }
+               else
+               {
+                  ResetStage(stage);
+               }
+            }
+         }
+      }
+
+      private void SetThirdStage(int stageId, Stage stage)
+      {
+         AlgorithmType algorithm;
+         WriteLine($"Select a MetaHeuristic algorithm for stage {stageId}.\n");
+         stage.Description = StageType.StageThree;
+         stage.Category = AlgorithmFamily.MetaHeuristic;
+         algorithm = GetMetaHeuristicAlgorithm();
+
+         if (algorithm != AlgorithmType.None)
+         {
+            stage.Flow.CurrentAlgorithm = algorithm;
+            WriteLine($"Select a Local Search algorithm for stage {stageId}.\n");
+            AlgorithmType lsAlgorithm = GetLocalSearchAlgorithm();
+
+            if (lsAlgorithm != AlgorithmType.None)
+            {
+               byte runningCount = GetAlgorithmIterations();
+               var (maximumDeadlockIterations, canExecuteImprovements) = GetMetaHeuristicParameters();
+               stage.Flow.ChildrenFlows.Add(new StageFlow(lsAlgorithm, runningCount));
+               stage.Flow.MaximumDeadlockIterations = maximumDeadlockIterations;
+               stage.Flow.CanExecuteImprovements = canExecuteImprovements;
+
+               if (canExecuteImprovements)
+               {
+                  WriteLine($"Select an improvement algorithm for stage {stageId}.\n");
+                  AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
+                  if (improvementAlgorithm != AlgorithmType.None)
+                  {
+                     runningCount = GetAlgorithmIterations();
+                     stage.Flow.ChildrenFlows.First().ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+                  }
+                  else
+                  {
+                     ResetStage(stage);
+                  }
+               }
+            }
+         }
       }
 
       private AlgorithmType GetGreedyAlgorithm()
@@ -705,7 +745,7 @@ namespace CityScover.Services
             }
          } while (!canProceed);
 
-         return (improvementThreshold, maxIterationsWithoutImprovements);
+         return (maxIterationsWithoutImprovements, improvementThreshold);
       }
 
       private (byte, bool) GetMetaHeuristicParameters()
@@ -788,6 +828,19 @@ namespace CityScover.Services
          } while (!canProceed);
 
          return runningCount;
+      }
+
+      private void ResetStage(Stage stage)
+      {
+         stage.Category = AlgorithmFamily.None;
+         stage.Description = StageType.InvalidStage;
+         stage.Flow.CurrentAlgorithm = AlgorithmType.None;
+         stage.Flow.ChildrenFlows.Clear();
+         stage.Flow.CanExecuteImprovements = true;
+         stage.Flow.RunningCount = default;
+         stage.Flow.ImprovementThreshold = default;
+         stage.Flow.MaximumDeadlockIterations = default;
+         stage.Flow.MaxIterationsWithoutImprovements = default;
       }
       #endregion
 
