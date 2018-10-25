@@ -497,7 +497,7 @@ namespace CityScover.Services
          WriteLine("\n-----> TOUR DURATION <-----\n");
          do
          {
-            Write("Insert the duration of the tour in hours: " +
+            Write("Insert the duration of the tour. Valid format: [hh:mm OR h:m] " +
                "[Press \"Enter\" key to go back.]\n");
             tourDurationStr = ReadLine().Trim();
             if (tourDurationStr == string.Empty)
@@ -759,10 +759,10 @@ namespace CityScover.Services
          return algorithm;
       }
 
-      private (byte, byte) GetLocalSearchParameters()
+      private (byte, ushort) GetLocalSearchParameters()
       {
          byte maxIterationsWithoutImprovements = default;
-         byte improvementThreshold = default;
+         ushort improvementThreshold = default;
          bool canProceed = default;
 
          WriteLine("\n-----> TUNING PARAMETERS <-----\n");
@@ -776,7 +776,7 @@ namespace CityScover.Services
             string secondParam = ReadLine().Trim();
 
             canProceed = byte.TryParse(firstParam, out byte firstParamValue);
-            canProceed = byte.TryParse(secondParam, out byte secondParamValue);
+            canProceed = ushort.TryParse(secondParam, out ushort secondParamValue);
             canProceed |= firstParamValue > 0 && secondParamValue > 0;
 
             if (canProceed)

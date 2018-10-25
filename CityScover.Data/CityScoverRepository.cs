@@ -273,12 +273,21 @@ namespace CityScover.Data
       public static void LoadPoints(int pointsCount)
       {
          XmlDocument document = new XmlDocument();
+         if (_points.Count() > 0)
+         {
+            _points.Clear();
+         }
          InitializePoints(document, pointsCount);
       }
 
       public static void LoadRoutes(IEnumerable<InterestPoint> filteredPoints)
       {
          XmlDocument document = new XmlDocument();
+         if (_routes.Count() > 0)
+         {
+            _routes.Clear();
+         }
+
          InitializeRoutes(document, filteredPoints);
       }
       #endregion

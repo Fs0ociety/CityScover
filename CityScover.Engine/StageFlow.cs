@@ -45,7 +45,7 @@ namespace CityScover.Engine
       public AlgorithmType CurrentAlgorithm { get; set; } = default;
       public byte RunningCount { get; set; } = default;
       public bool CanExecuteImprovements { get; set; } = true;
-      public byte ImprovementThreshold { get; set; } = default;
+      public ushort ImprovementThreshold { get; set; } = default;
       public byte MaxIterationsWithoutImprovements { get; set; } = default;
       public byte MaximumDeadlockIterations { get; set; } = default;
       public ICollection<StageFlow> ChildrenFlows { get; set; }

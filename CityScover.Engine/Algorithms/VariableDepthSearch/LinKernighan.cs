@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/10/2018
+// File update: 25/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -49,23 +49,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       #region Private methods
       private IEnumerable<InterestPointWorker> GetClosestSNeighbors()
-      {         
-         //IEnumerable<InterestPointWorker> cityMapNeighbors = GetClosestNeighbors();
-         //ICollection<InterestPointWorker> sCandidates = new Collection<InterestPointWorker>();
-         //foreach (var node in cityMapNeighbors)
-         //{
-         //   if (!_currentSolutionGraph.ContainsNode(node.Entity.Id))
-         //   {
-         //      continue;
-         //   }
-
-         //   RouteWorker nodeEdge = _currentSolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
-         //   if (nodeEdge.Entity.PointTo.Id != _endPOI.Entity.Id)
-         //   {
-         //      sCandidates.Add(node);
-         //   }
-         //}
-
+      {
          return from neighbor in GetClosestNeighbors()
                 from edge in _currentSolutionGraph.GetEdges(neighbor.Entity.Id)
                 where edge.Entity.PointTo.Id != _endPOI.Entity.Id
@@ -133,52 +117,69 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          return potentialCandidates.OrderByDescending(node => node.Entity.Score.Value);
       }
 
-      private (CityMapGraph steamSet, CityMapGraph cycleSet) BuildSteamAndCycle(int sNodeId)
+      //private (CityMapGraph steamSet, CityMapGraph cycleSet) BuildSteamAndCycle(int sNodeId)
+      //{
+      //   CityMapGraph steamSet = new CityMapGraph();
+      //   CityMapGraph cycleSet = new CityMapGraph();
+
+      //   cycleSet.AddNodeFromGraph(_currentSolutionGraph, _endPOI.Entity.Id);
+      //   cycleSet.AddNodeFromGraph(_currentSolutionGraph, sNodeId);
+      //   cycleSet.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
+      //   _currentSolutionGraph.Edges.ToList().ForEach(
+      //      edge =>
+      //      {
+      //         if (edge.Entity.PointFrom.Id == _startPOI.Entity.Id || edge.Entity.PointTo.Id == _startPOI.Entity.Id)
+      //         {
+      //            steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
+      //            steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
+      //            steamSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
+      //         }
+      //         else
+      //         {
+      //            if (edge.Entity.PointFrom.Id != sNodeId)
+      //            {
+      //               cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
+      //               cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
+      //               cycleSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
+      //            }
+      //         }
+      //      });
+      //   return (steamSet, cycleSet);
+      //}
+
+      //private void BuildHamiltonianPath((CityMapGraph steamSet, CityMapGraph cycleSet) steamAndCycle, int sNodeId)
+      //{
+      //   steamAndCycle.steamSet.AddGraph(steamAndCycle.cycleSet, sNodeId);
+      //   _currentSolutionGraph = steamAndCycle.steamSet;
+
+      //   // Connetto il ciclo nell'unico modo possibile.
+      //   RouteWorker result = (from edge in _currentSolutionGraph.Edges
+      //                         where edge.Entity.PointFrom.Id != _startPOI.Entity.Id
+      //                         && _currentSolutionGraph.GetNodeGrade(edge.Entity.PointFrom.Id) == 2
+      //                         select edge).FirstOrDefault();
+      //   if (result == null)
+      //   {
+      //      throw new InvalidOperationException();
+      //   }
+
+      //   _currentSolutionGraph.AddEdge(result.Entity.PointFrom.Id, result.Entity.PointTo.Id, result);
+      //}
+
+      private void SwapNodes(int stopSwappingNodeId)
       {
-         CityMapGraph steamSet = new CityMapGraph();
-         CityMapGraph cycleSet = new CityMapGraph();
-
-         cycleSet.AddNodeFromGraph(_currentSolutionGraph, _endPOI.Entity.Id);
-         cycleSet.AddNodeFromGraph(_currentSolutionGraph, sNodeId);
-         cycleSet.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
-         _currentSolutionGraph.Edges.ToList().ForEach(
-            edge =>
-            {
-               if (edge.Entity.PointFrom.Id == _startPOI.Entity.Id || edge.Entity.PointTo.Id == _startPOI.Entity.Id)
-               {
-                  steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
-                  steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
-                  steamSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
-               }
-               else
-               {
-                  if (edge.Entity.PointFrom.Id != sNodeId)
-                  {
-                     cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
-                     cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
-                     cycleSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
-                  }
-               }
-            });
-         return (steamSet, cycleSet);
-      }
-
-      private void BuildHamiltonianPath((CityMapGraph steamSet, CityMapGraph cycleSet) steamAndCycle, int sNodeId)
-      {
-         steamAndCycle.steamSet.AddGraph(steamAndCycle.cycleSet, sNodeId);
-         _currentSolutionGraph = steamAndCycle.steamSet;
-
-         // Connetto il ciclo nell'unico modo possibile.
-         RouteWorker result = (from edge in _currentSolutionGraph.Edges
-                               where edge.Entity.PointFrom.Id != _startPOI.Entity.Id
-                               && _currentSolutionGraph.GetNodeGrade(edge.Entity.PointFrom.Id) == 2
-                               select edge).FirstOrDefault();
-         if (result == null)
+         int currentNodeId = _startPOI.Entity.Id;
+         while (currentNodeId != stopSwappingNodeId)
          {
-            throw new InvalidOperationException();
-         }
+            var currNodeAdjNode = _currentSolutionGraph.GetAdjacentNodes(currentNodeId).FirstOrDefault();
+            if (currNodeAdjNode == 0)
+            {
+               throw new InvalidOperationException();
+            }
 
-         _currentSolutionGraph.AddEdge(result.Entity.PointFrom.Id, result.Entity.PointTo.Id, result);
+            _currentSolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
+            _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
+            currentNodeId = currNodeAdjNode;
+         }
       }
       #endregion
 
@@ -252,22 +253,37 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          InterestPointWorker sNode = default;
          var sNodesCandidates = GetClosestSNeighbors();
-         foreach (var node in sNodesCandidates)
+         foreach (var sNodeCandidate in sNodesCandidates)
          {
-            RouteWorker fromEndNodeToSNodeEdge = _cityMapClone.GetEdge(_endPOI.Entity.Id, node.Entity.Id);
+            RouteWorker fromEndNodeToSNodeEdge = _cityMapClone.GetEdge(_endPOI.Entity.Id, sNodeCandidate.Entity.Id);
             if (!_executedMoves.Contains(fromEndNodeToSNodeEdge))
             {
-               sNode = node;
+               sNode = sNodeCandidate;
                _executedMoves.Add(fromEndNodeToSNodeEdge);
                break;
             }
          }
 
-         int sNodeId = sNode.Entity.Id;
-         var (steamSet, cycleSet) = BuildSteamAndCycle(sNodeId);
-         BuildHamiltonianPath((steamSet, cycleSet), sNodeId);
+         if (sNode == null)
+         {
+            return;
+         }
 
-         // TODO: serve la Deep copy?
+         int sNodeId = sNode.Entity.Id;
+
+         // Build Steam And Cycle.
+         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
+         
+         int junctionNodeId = BuildHamiltonianPath(sNodeId);
+
+         // Ricreo il ciclo nell'unico modo possibile dal nuovo cammino hamiltoniano.
+         // Un cazzo.. Il taccone della Nonato ancoraaa??
+         SwapNodes(_startPOI.Entity.Id);
+
+         // Poi ricreo il ciclo.
+         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _startPOI.Entity.Id, junctionNodeId
+            );
+         
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _currentSolutionGraph.DeepCopy()
@@ -280,6 +296,23 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             Provider.NotifyObservers(newSolution);
          }
          _executedSteps++;
+
+         // Local function per costruire un nuovo ciclo hamiltoniano.
+         // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè
+         // è il punto di partenza per la chiusura del ciclo.
+         int BuildHamiltonianPath(int sPOIId)
+         {
+            // Rimuovo l'unico arco di s. l'arco (j,s) per via della struttura Meriottesca è posseduto da j non da s.
+            RouteWorker sEdge = _currentSolutionGraph.GetEdges(sPOIId).FirstOrDefault();
+            if (sEdge == null)
+            {
+               throw new InvalidOperationException();
+            }
+
+            int sEdgePointToId = sEdge.Entity.PointTo.Id;
+            _currentSolutionGraph.RemoveEdge(sPOIId, sEdgePointToId);
+            return sEdgePointToId;
+         }
       }
 
       internal override bool StopConditions()
