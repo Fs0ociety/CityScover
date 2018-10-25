@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 25/10/2018
 //
 
 using CityScover.Commons;
@@ -35,7 +35,7 @@ namespace CityScover.Services
       }
       #endregion
 
-      #region ISolverService implementations
+      #region ISolverService implementation
       public async Task Run()
       {
          _tourConfigurations = RunningConfigs.Configurations;
@@ -48,10 +48,10 @@ namespace CityScover.Services
          }
       }
 
-      public void Run(Configuration configuration)
+      public async Task Run(Configuration configuration)
       {
          var solver = Solver.Instance;
-         Task.Run(() => solver.Execute(configuration));
+         await Task.Run(() => solver.Execute(configuration));
          //ReportConfiguration();
       }
 

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 24/10/2018
+// File update: 25/10/2018
 //
 
 using CityScover.Commons;
@@ -16,36 +16,23 @@ using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using static System.Console;
 
 namespace CityScover.Services
 {
-   /*
-    * Online sources
-    * 
-    * How to elegantly check if a number is within a range?
-    * https://stackoverflow.com/questions/3188672/how-to-elegantly-check-if-a-number-is-within-a-range
-    * 
-    * How do I identify if a string is a number?
-    * https://stackoverflow.com/questions/894263/how-do-i-identify-if-a-string-is-a-number
-    * 
-    * Procedura: determinare se una stringa rappresenta un valore numerico
-    * https://docs.microsoft.com/it-it/dotnet/csharp/programming-guide/strings/how-to-determine-whether-a-string-represents-a-numeric-value
-    * 
-    * Strip seconds from datetime
-    * https://stackoverflow.com/questions/31578289/strip-seconds-from-datetime
-    * 
-    * How to parse a string into a nullable int
-    * https://stackoverflow.com/questions/45030/how-to-parse-a-string-into-a-nullable-int
-    * 
-    * How to use int.TryParse with nullable int? [duplicate]
-    * https://stackoverflow.com/questions/3390750/how-to-use-int-tryparse-with-nullable-int/3390929
-    */
-
    public class ConfigurationService : Singleton<ConfigurationService>, IConfigurationService
    {
-      private readonly int _maxStagesCount = 3;
+      private readonly int _maxStagesCount;
+      private int? _problemSize = default;
+      private double? _walkingSpeed = default;
+      private DateTime? _arrivalTime = default;
+      private TimeSpan? _tourDuration = default;
+      private bool? _algorithmMonitoring = default;
+      private TourCategoryType _tourCategory = default;
+      private Collection<Stage> _stages = new Collection<Stage>();
 
       #region Constructors
       private ConfigurationService()
@@ -97,7 +84,12 @@ namespace CityScover.Services
             }
          }
          WriteLine("\t============================================================\n");
+      }
+      #endregion
 
+      #region Run configuration menu
+      private async Task RunConfigurationMenu(Configuration configuration)
+      {
          string choice = string.Empty;
          bool canProceed = default;
 
@@ -117,13 +109,13 @@ namespace CityScover.Services
          {
             WriteLine("Execution of configuration in progress...");
             ISolverService solverService = SolverService.Instance;
-            solverService.Run(configuration);
+            await solverService.Run(configuration);
          }
       }
       #endregion
 
       #region Menu available configurations
-      private void ShowAvailableConfigurationMenu()
+      private async Task ShowAvailableConfigurationMenu()
       {
          string configChoice = string.Empty;
          bool canProceed = default;
@@ -145,7 +137,7 @@ namespace CityScover.Services
                }
                WriteLine($"> Back [Press \"Enter\" key]\n");
                Write("Enter the configuration to display: ");
-               configChoice = ReadLine();
+               configChoice = ReadLine().Trim();
 
                if (configChoice == string.Empty)
                {
@@ -160,18 +152,20 @@ namespace CityScover.Services
                }
             } while (!canProceed);
 
-            DisplayConfiguration(Configurations.ElementAt(--choiceValue));
+            Configuration configuration = Configurations.ElementAt(--choiceValue);
+            DisplayConfiguration(configuration);
+            await RunConfigurationMenu(configuration);
          }
       }
       #endregion
 
-      #region Menu custom configuration
-      private void ShowCustomConfigurationMenu()
+      #region Menu custom configurations
+      private async Task ShowCustomConfigurationMenu()
       {
          string choice = string.Empty;
-         int choiceValue = default;
+         int option = default;
          bool canProceed = default;
-         bool settingsCompleted = default;
+         bool canCreateConfiguration = default;
          bool isExiting = false;
 
          WriteLine();
@@ -182,6 +176,12 @@ namespace CityScover.Services
 
          while (!isExiting)
          {
+            if (IsConfigurationSettingsCompleted())
+            {
+               canCreateConfiguration = true;
+               break;
+            }
+
             do
             {
                WriteLine("<1> Set Problem size");
@@ -194,8 +194,9 @@ namespace CityScover.Services
                WriteLine("<8> Back\n");
                Write("Select an option: ");
                choice = ReadLine().Trim();
-               canProceed = int.TryParse(choice, out choiceValue)
-                  && choiceValue >= 1 && choiceValue <= 8;
+
+               canProceed = int.TryParse(choice, out option)
+                  && option >= 1 && option <= 8;
 
                if (!canProceed)
                {
@@ -203,51 +204,86 @@ namespace CityScover.Services
                }
             } while (!canProceed);
 
-            object[] configurationParams = default;
-            /* TODO
-             * inserire i seguenti campi della configurazione come campi privati di classe 
-             * per la successiva creazione della configurazione
-             */
-            int? problemSize = default;
-            TourCategoryType tourCategory = default;
-            double? walkingSpeed = default;
-            DateTime? arrivalTime = default;
-            TimeSpan? tourDuration = default;
-            bool algorithmMonitoring = default;
-            Collection<Stage> stages = new Collection<Stage>();
-
-            switch (choiceValue)
-            {
-               case 1:
-                  problemSize = GetProblemSize();
-                  break;
-               case 2:
-                  tourCategory = GetTourCategory();
-                  break;
-               case 3:
-                  walkingSpeed = GetWalkingSpeed();
-                  break;
-               case 4:
-                  arrivalTime = GetArrivalTime();
-                  break;
-               case 5:
-                  tourDuration = GetTourDuration();
-                  break;
-               case 6:
-                  algorithmMonitoring = GetAlgorithmMonitoring();
-                  break;
-               case 7:
-                  stages = GetAlgorithmStages();
-                  break;
-               case 8:
-                  isExiting = true;
-                  break;
-               default:
-                  break;
-            }
-
-            // ... TODO ...
+            isExiting = SetConfigurationParameter(option);
          }
+
+         if (canCreateConfiguration)
+         {
+            WriteLine("\nCreation of new configuration in progress...!\n");
+            await Task.Delay(TimeSpan.FromSeconds(1))
+               .ConfigureAwait(continueOnCapturedContext: false);
+            Configuration config = CreateConfiguration();
+            Configurations.Add(config);
+            WriteLine("New custom configuration created successfully and added to available configurations!\n");
+
+            do
+            {
+               WriteLine("<1> Display new configuration settings.");
+               WriteLine("<2> Run the newly custom configuration.");
+               WriteLine("<3> Back.");
+               choice = ReadLine().Trim();
+
+               switch (choice)
+               {
+                  case "1":
+                     DisplayConfiguration(config);
+                     break;
+                  case "2":
+                     await RunConfigurationMenu(config);
+                     break;
+                  case "3":
+                     break;
+                  default:
+                     WriteLine("Selected invalid option. Enter an option between 1 and 3.\n");
+                     break;
+               } 
+            } while (choice != "3");
+         }
+      }
+
+      private bool IsConfigurationSettingsCompleted()
+      {
+         return _tourCategory != TourCategoryType.None &&
+               _problemSize.HasValue && _walkingSpeed.HasValue &&
+               _arrivalTime.HasValue && _tourDuration.HasValue &&
+               _algorithmMonitoring.HasValue && _stages.Count == _maxStagesCount;
+      }
+
+      private bool SetConfigurationParameter(int option)
+      {
+         bool isExiting = default;
+
+         switch (option)
+         {
+            case 1:
+               _problemSize = GetProblemSize();
+               break;
+            case 2:
+               _tourCategory = GetTourCategory();
+               break;
+            case 3:
+               _walkingSpeed = GetWalkingSpeed();
+               break;
+            case 4:
+               _arrivalTime = GetArrivalTime();
+               break;
+            case 5:
+               _tourDuration = GetTourDuration();
+               break;
+            case 6:
+               _algorithmMonitoring = GetAlgorithmMonitoring();
+               break;
+            case 7:
+               _stages = GetAlgorithmStages();
+               break;
+            case 8:
+               isExiting = true;
+               break;
+            default:
+               break;
+         }
+
+         return isExiting;
       }
 
       #region Problem Size menu
@@ -450,8 +486,11 @@ namespace CityScover.Services
       {
          string tourDurationStr = string.Empty;
          bool canProceed = default;
-         string format = "h\\:mm";
+         //string format = "h\\:mm";
+         //string format = "%h";
+         string[] formats = { "g", "G", "%h" };
          TimeSpan? tourDuration = default;
+         CultureInfo culture = CultureInfo.CurrentCulture;
 
          WriteLine("\n-----> TOUR DURATION <-----\n");
          do
@@ -464,12 +503,12 @@ namespace CityScover.Services
                break;
             }
 
-            canProceed = TimeSpan.TryParseExact(tourDurationStr, format, null, out var duration)
-               && duration.Hours >= 1;
+            canProceed = TimeSpan.TryParseExact(tourDurationStr, formats, culture, out var interval)
+               && interval.Hours >= 1;
 
             if (canProceed)
             {
-               tourDuration = duration;
+               tourDuration = interval;
             }
             else
             {
@@ -489,30 +528,35 @@ namespace CityScover.Services
       #endregion
 
       #region Algorithm Monitoring menu
-      private bool GetAlgorithmMonitoring()
+      private bool? GetAlgorithmMonitoring()
       {
          string choice = string.Empty;
          bool canProceed = default;
-         bool toMonitoring = default;
+         bool? toMonitoring = default;
 
          WriteLine("\n-----> ALGORITHM MONITORING <-----\n");
          do
          {
             WriteLine("Do you want to monitor algorithms's executions? [y/N]");
             choice = ReadLine().Trim();
-            canProceed = choice == "y" || choice == "Y" ||
-               choice == "n" || choice == "N";
 
-            if (canProceed)
+            if (choice == "y" || choice == "Y")
             {
                toMonitoring = true;
             }
+            else if (choice == "n" || choice == "N")
+            {
+               toMonitoring = false;
+            }
             else
             {
-               WriteLine("Invalid choice. Enter \"Y or y\" or \"N or n\"");
+               WriteLine("Invalid choice. Enter \"y | Y\" or \"n | N\"");
             }
+
+            canProceed = toMonitoring.HasValue;
          } while (!canProceed);
 
+         WriteLine($"Monitoring of the algorithms set to {toMonitoring}");
          return toMonitoring;
       }
       #endregion
@@ -851,7 +895,7 @@ namespace CityScover.Services
       #region IConfigurationService implementation
       public ICollection<Configuration> Configurations => RunningConfigs.Configurations;
 
-      public void ShowConfigurationsMenu()
+      public async Task ShowConfigurationsMenu()
       {
          WriteLine();
          WriteLine("*************************************************************************");
@@ -878,11 +922,11 @@ namespace CityScover.Services
                switch (choice)
                {
                   case "1":
-                     ShowAvailableConfigurationMenu();
+                     await ShowAvailableConfigurationMenu();
                      break;
 
                   case "2":
-                     ShowCustomConfigurationMenu();
+                     await ShowCustomConfigurationMenu();
                      break;
 
                   case "3":
@@ -903,9 +947,20 @@ namespace CityScover.Services
          }
       }
 
-      public Configuration CreateConfiguration(params object[] configParams)
+      public Configuration CreateConfiguration()
       {
-         throw new System.NotImplementedException();
+         return new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = _tourCategory,
+            PointsCount = _problemSize.Value,
+            StartingPointId = 1,
+            WalkingSpeed = _walkingSpeed.Value / 3.6,  // in m/s.
+            ArrivalTime = _arrivalTime.Value,
+            TourDuration = _tourDuration.Value,
+            AlgorithmMonitoring = _algorithmMonitoring.Value,
+            Stages = _stages
+         };
       }
       #endregion
    }

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 25/10/2018
 //
 
 using CityScover.Engine;
@@ -25,7 +25,7 @@ namespace CityScover.Services
       /// Invoke the Solver instance of CityScover.Engine to run the configuration passed as parameter.
       /// </summary>
       /// <param name="configuration">Configuration to execute.</param>
-      void Run(Configuration configuration);
+      Task Run(Configuration configuration);
 
       /// <summary>
       /// Invoke the Solver instance to display results at the end of Configuration's execution.

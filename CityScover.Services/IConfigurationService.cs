@@ -6,18 +6,19 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 25/10/2018
 //
 
 using CityScover.Engine;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CityScover.Services
 {
    public interface IConfigurationService
    {
       ICollection<Configuration> Configurations { get; }
-      void ShowConfigurationsMenu();
-      Configuration CreateConfiguration(params object[] configParams);
+      Task ShowConfigurationsMenu();
+      Configuration CreateConfiguration();
    }
 }

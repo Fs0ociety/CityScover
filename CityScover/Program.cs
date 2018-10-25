@@ -22,7 +22,7 @@ namespace CityScover
       {
          DisplayLogo();
          IConfigurationService configService = ConfigurationService.Instance;
-         configService.ShowConfigurationsMenu();
+         await configService.ShowConfigurationsMenu();
          //ISolverService solverService = SolverService.Instance;
          //await solverService.Run();
          WriteLine("Press any key to continue...");
