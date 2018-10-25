@@ -220,7 +220,8 @@ namespace CityScover.Services
             {
                WriteLine("<1> Display new configuration settings.");
                WriteLine("<2> Run the newly custom configuration.");
-               WriteLine("<3> Back.");
+               WriteLine("<3> Back.\n");
+               Write("Select an option: ");
                choice = ReadLine().Trim();
 
                switch (choice)
@@ -234,7 +235,8 @@ namespace CityScover.Services
                   case "3":
                      break;
                   default:
-                     WriteLine("Selected invalid option. Enter an option between 1 and 3.\n");
+                     WriteLine("Selected invalid option. " +
+                        "Enter an option between 1 and 3.\n");
                      break;
                } 
             } while (choice != "3");

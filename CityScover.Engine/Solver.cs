@@ -173,6 +173,25 @@ namespace CityScover.Engine
             await executionFunc.Invoke(algorithm);
          }
       }
+
+      private async Task ResetSolverState()
+      {
+         _solutionsQueue.CompleteAdding();
+         await Task.WhenAll(_solverTasks);
+         _solverTasks.Clear();
+         WorkingConfiguration = default;
+         Points = default;
+         Problem = default;
+         CityMapGraph = default;
+         CurrentStage = default;
+         BestSolution = default;
+         IsMonitoringEnabled = default;
+         ExecutionInternalFunc = default;
+         PreviousStageSolutionCost = default;
+         Results.Clear();
+         AlgorithmTasks.Clear();
+         ConstraintsToRelax.Clear();
+      }
       #endregion
 
       #region Internal methods
@@ -208,9 +227,7 @@ namespace CityScover.Engine
             await ExecuteConfiguration(ExecuteWithoutMonitoring);
          }
 
-         _solutionsQueue.CompleteAdding();
-         await Task.WhenAll(_solverTasks);
-         _solverTasks.Clear();
+         await ResetSolverState();
       }
       #endregion
    }
