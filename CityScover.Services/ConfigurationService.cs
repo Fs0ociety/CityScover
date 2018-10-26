@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/10/2018
+// File update: 26/10/2018
 //
 
 using CityScover.Commons;
@@ -413,11 +413,11 @@ namespace CityScover.Services
          WriteLine("\n-----> WALKING SPEED <-----\n");
          do
          {
-            Write("Set the \"walking speed\" of the tourist in km/h. Valid range is [1 - 8]. " +
+            Write("Set the \"walking speed\" of the tourist in km/h. Valid range is [1 - 6]. " +
                "[Press \"Enter\" key to go back.]: ");
             walkingSpeedStr = ReadLine().Trim();
             canProceed = double.TryParse(walkingSpeedStr, out var walkSpeed)
-               || walkSpeed >= 1 && walkSpeed <= 10;
+               || walkSpeed >= 1 && walkSpeed <= 6;
 
             if (walkingSpeedStr == string.Empty)
             {

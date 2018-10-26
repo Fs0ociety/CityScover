@@ -133,7 +133,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          _neighborhood.TabuList.ToList().ForEach(move => move.Expiration++);
          await _innerAlgorithm.Start();
-
+      
          bool isBetterThanPreviousBestSolution =
             Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
 
