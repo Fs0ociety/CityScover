@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 26/10/2018
 //
 
 using CityScover.Data;
@@ -14,6 +14,7 @@ using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,6 +35,10 @@ namespace CityScover.Engine
       /// <param name="configuration"></param>
       private void InitSolver(Configuration configuration)
       {
+         if (_solutionsQueue is null)
+         {
+            _solutionsQueue = new BlockingCollection<TOSolution>();
+         }
          WorkingConfiguration = configuration;
          ConstraintsToRelax.Add(2);
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
@@ -178,17 +183,19 @@ namespace CityScover.Engine
       {
          _solutionsQueue.CompleteAdding();
          await Task.WhenAll(_solverTasks);
-         _solverTasks.Clear();
-         WorkingConfiguration = default;
+         _solutionsQueue.Dispose();
+         _solutionsQueue = default;
          Points = default;
          Problem = default;
          CityMapGraph = default;
-         CurrentStage = default;
          BestSolution = default;
+         CurrentStage = default;
          IsMonitoringEnabled = default;
+         WorkingConfiguration = default;
          ExecutionInternalFunc = default;
          PreviousStageSolutionCost = default;
          Results.Clear();
+         _solverTasks.Clear();
          AlgorithmTasks.Clear();
          ConstraintsToRelax.Clear();
       }

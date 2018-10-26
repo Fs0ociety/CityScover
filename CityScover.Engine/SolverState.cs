@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/10/2018
+// File update: 26/10/2018
 //
 
 using CityScover.Commons;
@@ -100,7 +100,6 @@ namespace CityScover.Engine
       #region Overrides
       protected override void InitializeInstance()
       {
-         _solutionsQueue = new BlockingCollection<TOSolution>();         
          _solverTasks = new Collection<Task>();
          _algorithmTasks = new Dictionary<int, Task>();
          Results = new Collection<Result>();

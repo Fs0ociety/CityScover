@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/10/2018
+// File update: 26/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -85,6 +85,13 @@ namespace CityScover.Engine
          _timer = Stopwatch.StartNew();
          await Task.Run(() => algorithm.Start());
          RunningTime = _timer;
+      }
+      #endregion
+
+      #region Public methods
+      public void OnNextMessage(string message)
+      {
+         Console.WriteLine($"\n{nameof(ExecutionReporter)} received message: {message}\n");
       }
       #endregion
 

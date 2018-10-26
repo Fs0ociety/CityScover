@@ -3,12 +3,13 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 13/10/2018
+// File update: 26/10/2018
 //
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CityScover.Engine
 {
@@ -30,7 +31,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Public methods
-      public virtual void NotifyObservers(TOSolution solution)
+      internal void NotifyObservers(TOSolution solution)
       {
          foreach (var observer in _observers)
          {
@@ -38,7 +39,23 @@ namespace CityScover.Engine
          }
       }
 
-      public virtual void NotifyError(Exception exception)
+      internal void NotifyObservers(string message)
+      {
+         if (message is null)
+         {
+            NotifyError(new ArgumentNullException(nameof(message)));
+         }
+
+         var executionReporter = _observers.FirstOrDefault();
+         if (executionReporter is null)
+         {
+            NotifyError(new NullReferenceException());
+         }
+
+         ((ExecutionReporter)executionReporter).OnNextMessage(message);
+      }
+
+      internal void NotifyError(Exception exception)
       {
          foreach (var observer in _observers)
          {
@@ -46,7 +63,7 @@ namespace CityScover.Engine
          }
       }
 
-      public virtual void NotifyCompletion()
+      internal void NotifyCompletion()
       {
          foreach (var observer in _observers)
          {

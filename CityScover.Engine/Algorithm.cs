@@ -6,9 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/10/2018
+// File update: 26/10/2018
 //
 
+using CityScover.Engine.Algorithms;
 using System;
 using System.Threading.Tasks;
 
@@ -118,6 +119,12 @@ namespace CityScover.Engine
                   
          OnTerminating();
          OnTerminated();
+      }
+
+      internal void SendMessage(MessageCodes messageCode)
+      {
+         string message = AlgorithmMessages.GetMessage(messageCode);
+         Provider.NotifyObservers(message);
       }
       #endregion
 

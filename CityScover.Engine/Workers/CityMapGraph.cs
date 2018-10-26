@@ -62,51 +62,6 @@ namespace CityScover.Engine.Workers
       }
 
       /// <summary>
-      /// Collega il grafo passato come parametro al grafo d'istanza.
-      /// Notare che non fa una deep copy di tutto il grafo parametro, ma collega
-      /// solamente il nodo anchor del grafo parametro al grafo d'istanza mediante i nodi
-      /// adiacenti del grafo parametro.
-      /// In questa prima implementazione eventuali nodi scollegati del grafo parametro
-      /// rimangono scollegati.
-      /// </summary>
-      /// <param name="graph">Il grafo da collegare.</param>
-      /// <param name="anchorNode">Il nodo comune ai due grafi che fa da ancora.</param>
-      public void AddGraph(CityMapGraph graph, int anchorNode)
-      {
-         if (graph == null)
-         {
-            throw new ArgumentNullException();
-         }
-
-         if (!ContainsNode(anchorNode) ||
-             !graph.ContainsNode(anchorNode))
-         {
-            throw new InvalidOperationException();
-         }
-
-         BreadthFirstSearch(anchorNode,
-            (node, isVisited) => node.IsVisited = isVisited,
-            node => node.IsVisited,
-            null,
-            edge =>
-            {
-               int fromNode = edge.Entity.PointFrom.Id;
-               int toNode = edge.Entity.PointTo.Id;
-               if (!ContainsNode(fromNode))
-               {
-                  AddNode(fromNode, graph[fromNode]);
-               }
-
-               if (!ContainsNode(toNode))
-               {
-                  AddNode(toNode, graph[toNode]); 
-               }
-
-               AddEdge(fromNode, toNode, edge);
-            });
-      }
-
-      /// <summary>
       /// A deep copy of the current CityMapGraph object.
       /// </summary>
       /// <returns>A CityMapGraph object</returns>

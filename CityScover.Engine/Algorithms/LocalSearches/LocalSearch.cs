@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/10/2018
+// File update: 26/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -166,6 +166,7 @@ namespace CityScover.Engine.Algorithms
             bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
             if (isBetterThanCurrentBestSolution)
             {
+               SendMessage(MessageCodes.BestSolutionFound);
                _bestSolution = solution;
                _currentSolutionCost = solution.Cost;
 
