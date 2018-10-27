@@ -13,6 +13,7 @@ using CityScover.ADT.Graphs;
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace CityScover.Engine.Workers
@@ -77,16 +78,18 @@ namespace CityScover.Engine.Workers
       internal InterestPointWorker GetEndPoint()
       {
          int startNodeId = Solver.Instance.WorkingConfiguration.StartingPointId;
-         if (!ContainsNode(startNodeId))
+         InterestPointWorker endPoint = default;
+         foreach (var node in Nodes)
          {
-            throw new InvalidOperationException();
+            int adjNodeId = GetAdjacentNodes(node.Entity.Id).FirstOrDefault();
+            if (adjNodeId == 0 || adjNodeId == startNodeId)
+            {
+               endPoint = node;
+               break;
+            }
          }
 
-         return Nodes
-            .Where(node => node.Entity.Id.Equals(Edges
-            .Where(edge => edge.Entity.PointTo.Id == startNodeId)
-            .Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault()))
-            .FirstOrDefault();
+         return endPoint;
       }
 
       /// <summary>
@@ -117,7 +120,8 @@ namespace CityScover.Engine.Workers
       internal void CalculateTimes()
       {
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
-         DateTime currNodeArrivalTime = default;
+         DateTime currNodeTotalTime = Solver.Instance.WorkingConfiguration.ArrivalTime;
+         DateTime currNodeArrivalTime = currNodeTotalTime;
          TimeSpan currNodeWaitOpeningTime = default;
 
          BreadthFirstSearch(startPOIId,
@@ -125,23 +129,26 @@ namespace CityScover.Engine.Workers
             node => { return node.IsVisited; },
             node =>
             {
-               if (node.Entity.Id == startPOIId)
-               {
-                  return;
-               }
-
-               node.ArrivalTime = currNodeArrivalTime;
+               node.TotalTime = currNodeTotalTime;
                node.WaitOpeningTime = currNodeWaitOpeningTime;
             },
             edge =>
             {
-               double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed / 60.0;
-               TimeSpan timeWalk = TimeSpan.FromMinutes(edge.Weight() / averageSpeedWalk);
-               currNodeArrivalTime = currNodeArrivalTime.Add(timeWalk);
+               double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
+               TimeSpan timeWalk = TimeSpan.FromSeconds(edge.Weight() / averageSpeedWalk);
 
-               TimeSpan deltaOpeningTime = default;
-               InterestPoint destNodeEdge = edge.Entity.PointTo;
-               foreach (var time in destNodeEdge.OpeningTimes)
+               InterestPoint edgeDestNode = edge.Entity.PointTo;
+               TimeSpan visitTime = default;
+               if (edgeDestNode.TimeVisit.HasValue)
+               {
+                  visitTime = edgeDestNode.TimeVisit.Value;
+               }
+
+               currNodeArrivalTime = currNodeTotalTime.Add(timeWalk);
+               currNodeTotalTime = currNodeArrivalTime.Add(visitTime);
+               
+               Collection<TimeSpan> deltaOpeningTimes = new Collection<TimeSpan>();
+               foreach (var time in edgeDestNode.OpeningTimes)
                {
                   if (!time.OpeningTime.HasValue)
                   {
@@ -152,13 +159,18 @@ namespace CityScover.Engine.Workers
                   if (currNodeArrivalTime < openingTime)
                   {
                      TimeSpan currDeltaOpeningTime = openingTime.Subtract(currNodeArrivalTime);
-                     if (currDeltaOpeningTime < deltaOpeningTime)
-                     {
-                        deltaOpeningTime = currDeltaOpeningTime;
-                     }
+                     deltaOpeningTimes.Add(currDeltaOpeningTime);
                   }
                }
-               currNodeWaitOpeningTime = deltaOpeningTime;
+               if (deltaOpeningTimes.Count > 0)
+               {
+                  currNodeWaitOpeningTime = deltaOpeningTimes.Min();
+                  currNodeTotalTime = currNodeTotalTime.Add(currNodeWaitOpeningTime);
+               }
+               else
+               {
+                  currNodeWaitOpeningTime = default;
+               }
             });         
       }
       #endregion

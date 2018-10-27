@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/10/2018
+// File update: 27/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
 {
-   internal class LocalSearch : Algorithm
+   internal class LocalSearchTemplate : Algorithm
    {
       #region Private fields
       private int _previousSolutionCost;
@@ -32,16 +32,20 @@ namespace CityScover.Engine.Algorithms
       #endregion
 
       #region Constructors
-      internal LocalSearch(Neighborhood neighborhood)
+      internal LocalSearchTemplate(Neighborhood neighborhood)
          : this(neighborhood, provider: null)
       {
       }
 
-      public LocalSearch(Neighborhood neighborhood, AlgorithmTracker provider)
+      public LocalSearchTemplate(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
          _neighborhoodFacade = new NeighborhoodFacade(neighborhood);
       }
+      #endregion
+
+      #region Internal properties
+      internal bool CanExecuteImprovementAlgorithms { get; set; }
       #endregion
 
       #region Private methods
@@ -118,10 +122,6 @@ namespace CityScover.Engine.Algorithms
       }
       #endregion
 
-      #region Internal properties
-      internal bool CanExecuteImprovementAlgorithms { get; set; }
-      #endregion
-
       #region Overrides
       internal override void OnInitializing()
       {
@@ -148,6 +148,7 @@ namespace CityScover.Engine.Algorithms
 
          foreach (var neighborSolution in currentNeighborhood)
          {
+            neighborSolution.SolutionGraph.CalculateTimes();
             Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 

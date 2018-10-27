@@ -20,7 +20,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
    internal class TabuSearch : Algorithm
    {
       #region Private fields
-      private LocalSearch _innerAlgorithm;
+      private LocalSearchTemplate _innerAlgorithm;
       private TabuSearchNeighborhood _neighborhood;
       private TOSolution _bestSolution;
       private int _tenure;
@@ -67,7 +67,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             (problemSize + 4 - 1) / 4;
       }
 
-      private LocalSearch GetLocalSearchAlgorithm()
+      private LocalSearchTemplate GetLocalSearchAlgorithm()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
          if (childrenAlgorithms == null)
@@ -84,7 +84,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _neighborhood.NeighborhoodWorker = NeighborhoodFactory.CreateNeighborhood(flow.CurrentAlgorithm);
          Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm, _neighborhood);
 
-         if (algorithm is LocalSearch ls)
+         if (algorithm is LocalSearchTemplate ls)
          {
             _innerAlgorithm = ls;
             _maxIterations = flow.RunningCount;

@@ -94,7 +94,15 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          base.OnTerminating();
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost);
+         if (_addedNodes == 0)
+         {
+            // TODO: invocare secondo step.
+            //Task algorithmTask = Task.Run(() => );
+            //Task.WaitAll(algorithmTask);
+         }
+
+         bool isBetterThanCurrentBestSolution = 
+            Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost);
          if (isBetterThanCurrentBestSolution)
          {
             Solver.BestSolution = _currentSolution;
@@ -103,11 +111,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       internal override void OnTerminated()
       {
-         if (_addedNodes == 0)
-         {
-            // TODO: invocare secondo step.
-         }
-
          base.OnTerminated();
       }
 
@@ -140,7 +143,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override bool StopConditions()
       {
          InterestPointWorker endPOI = _currentSolutionGraph.GetEndPoint();
-         TimeSpan availableTime = _tMax.Subtract(endPOI.GetTotalTime());
+         TimeSpan availableTime = _tMax.Subtract(endPOI.TotalTime);
          bool isGreaterThanTmaxThreshold = availableTime > _tMaxThreshold;
          bool shouldStop = isGreaterThanTmaxThreshold || 
             _processingNodes.Count() == 0 || 

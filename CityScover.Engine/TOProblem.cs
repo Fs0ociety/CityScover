@@ -128,7 +128,7 @@ namespace CityScover.Engine
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
          foreach (var node in solutionGraph.TourPoints)
          {
-            DateTime totalNodeTime = node.GetTotalTime();
+            DateTime totalNodeTime = node.TotalTime;
             foreach (var time in node.Entity.OpeningTimes)
             {
                if ((!time.OpeningTime.HasValue && !time.ClosingTime.HasValue) ||

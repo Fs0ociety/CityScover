@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 27/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -32,6 +32,26 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Private methods
+      private DateTime GetTotalTime()
+      {
+         DateTime timeSpent = Solver.Instance.WorkingConfiguration.ArrivalTime;
+         InterestPointWorker startPOI = _currentSolutionGraph.GetStartPoint();
+         InterestPointWorker endPOI = _currentSolutionGraph.GetEndPoint();
+         TimeSpan endPOITotalTimeDuration = endPOI.TotalTime.Subtract(timeSpent);
+         timeSpent = timeSpent.Add(endPOITotalTimeDuration);
+
+         RouteWorker returnEdge = _cityMapClone.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
+         if (returnEdge == null)
+         {
+            throw new NullReferenceException(nameof(returnEdge));
+         }
+
+         double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
+         TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
+         timeSpent = timeSpent.Add(timeReturn);
+         return timeSpent;
+      }
+
       private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, TOSolution newSolution, in int edge2PointFromId)
       {
          int currentNodeId = currentEdge.Entity.PointTo.Id;
@@ -122,7 +142,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       {
          TOSolution newSolution = new TOSolution()
          {
-            SolutionGraph = _currentSolutionGraph.DeepCopy()
+            SolutionGraph = _currentSolutionGraph.DeepCopy(),
+            TimeSpent = GetTotalTime()
          };
 
          int currentEdgePointFromId = currentEdge.Entity.PointFrom.Id;

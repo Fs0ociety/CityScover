@@ -54,7 +54,7 @@ namespace CityScover.Engine
 
             case AlgorithmType.TwoOpt:
                neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
-               algorithm = new LocalSearch(neighborhood);
+               algorithm = new LocalSearchTemplate(neighborhood);
                break;
 
             case AlgorithmType.LinKernighan:
@@ -95,7 +95,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-               algorithm = new LocalSearch(neighborhood);
+               algorithm = new LocalSearchTemplate(neighborhood);
                break;
 
             default:
@@ -120,7 +120,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-               algorithm = new LocalSearch(neighborhood);
+               algorithm = new LocalSearchTemplate(neighborhood);
                break;
 
             default:

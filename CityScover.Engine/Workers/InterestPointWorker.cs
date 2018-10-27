@@ -19,7 +19,7 @@ namespace CityScover.Engine.Workers
       #region Private fields
       private InterestPoint _entity;
       private bool _isVisited;
-      private DateTime _arrivalTime;
+      private DateTime _totalTime;
       private TimeSpan _waitOpeningTime;
       #endregion
 
@@ -27,6 +27,7 @@ namespace CityScover.Engine.Workers
       internal InterestPointWorker(InterestPoint interestPoint)
       {
          _entity = interestPoint;
+         _totalTime = DateTime.Now.Date;
       }
       #endregion
 
@@ -49,14 +50,14 @@ namespace CityScover.Engine.Workers
          }
       }
 
-      internal DateTime ArrivalTime
+      internal DateTime TotalTime
       {
-         get => _arrivalTime;
+         get => _totalTime;
          set
          {
-            if (_arrivalTime != value)
+            if (_totalTime != value)
             {
-               _arrivalTime = value;
+               _totalTime = value;
             }
          }
       }
@@ -80,19 +81,6 @@ namespace CityScover.Engine.Workers
          InterestPointWorker copy = (InterestPointWorker)MemberwiseClone();
          copy.Entity = Entity.DeepCopy();
          return copy;
-      }
-   
-      internal DateTime GetTotalTime()
-      {
-         TimeSpan visitTime = default;
-         if (_entity.TimeVisit.HasValue)
-         {
-            visitTime = _entity.TimeVisit.Value;
-         }
-
-         return _arrivalTime
-            .Add(_waitOpeningTime)
-            .Add(visitTime);
       }
       #endregion
    }
