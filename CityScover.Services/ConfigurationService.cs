@@ -638,7 +638,7 @@ namespace CityScover.Services
                   var (maxIterationsWithoutImprovements, improvementThreshold) = GetLocalSearchParameters();
                   stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
                   stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
-                  stage.Flow.ImprovementThreshold = improvementThreshold;
+                  stage.Flow.LkImprovementThreshold = improvementThreshold;
                }
                else
                {
@@ -884,7 +884,7 @@ namespace CityScover.Services
          stage.Flow.ChildrenFlows.Clear();
          stage.Flow.CanExecuteImprovements = true;
          stage.Flow.RunningCount = default;
-         stage.Flow.ImprovementThreshold = default;
+         stage.Flow.LkImprovementThreshold = default;
          stage.Flow.MaximumDeadlockIterations = default;
          stage.Flow.MaxIterationsWithoutImprovements = default;
       }

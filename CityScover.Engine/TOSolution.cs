@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 27/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -60,6 +60,8 @@ namespace CityScover.Engine
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
       internal CityMapGraph SolutionGraph { get; set; } = new CityMapGraph();
+
+      internal bool IsValid => Penalty == 0;
       #endregion
    }
 }

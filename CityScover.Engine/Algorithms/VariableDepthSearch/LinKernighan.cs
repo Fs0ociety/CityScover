@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/10/2018
+// File update: 27/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -208,16 +208,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          _currentSolutionGraph = _currentSolution.SolutionGraph;
 
-         var startPOIId = Solver.WorkingConfiguration.StartingPointId;
-         _startPOI = _cityMapClone.Nodes
-            .Where(x => x.Entity.Id == startPOIId)
-            .FirstOrDefault();
+         _startPOI = _currentSolutionGraph.GetStartPoint();
+         _endPOI = _currentSolutionGraph.GetEndPoint();
 
-         _endPOI = _currentSolutionGraph.Nodes
-            .Where(node => node.Entity.Id.Equals(_currentSolutionGraph.Edges
-            .Where(edge => edge.Entity.PointTo.Id == startPOIId)
-            .Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault())).FirstOrDefault();
-         
          if (_startPOI == null || _endPOI == null)
          {
             throw new NullReferenceException();
@@ -296,6 +289,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             Provider.NotifyObservers(newSolution);
          }
          _executedSteps++;
+         _currentSolution = newSolution;
 
          // Local function per costruire un nuovo ciclo hamiltoniano.
          // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè

@@ -127,7 +127,7 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnInitializing();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
-         _improvementThreshold = Solver.CurrentStage.Flow.ImprovementThreshold;
+         _improvementThreshold = Solver.CurrentStage.Flow.LkImprovementThreshold;
          _maxIterationsWithoutImprovements = Solver.CurrentStage.Flow.MaxIterationsWithoutImprovements;
          CanExecuteImprovementAlgorithms = Solver.CurrentStage.Flow.CanExecuteImprovements;
          _bestSolution = Solver.BestSolution;

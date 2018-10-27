@@ -62,7 +62,7 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
-                     ImprovementThreshold = 2000,
+                     LkImprovementThreshold = 2000,
                      MaxIterationsWithoutImprovements = 2,
                      ChildrenFlows =
                      {
