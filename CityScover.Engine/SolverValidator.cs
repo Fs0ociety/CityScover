@@ -10,7 +10,6 @@
 //
 
 using CityScover.Commons;
-using System.Diagnostics;
 using System.Linq;
 
 namespace CityScover.Engine

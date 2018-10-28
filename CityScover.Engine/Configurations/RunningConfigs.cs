@@ -42,7 +42,7 @@ namespace CityScover.Engine.Configs
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
-            TourDuration = new TimeSpan(6, 0, 0),
+            TourDuration = new TimeSpan(10, 0, 0),
             AlgorithmMonitoring = true,
             Stages =
             {
@@ -52,7 +52,7 @@ namespace CityScover.Engine.Configs
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.CheapestInsertion
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor
                   }
                },
                new Stage()

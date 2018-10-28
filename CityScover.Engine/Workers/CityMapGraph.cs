@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/10/2018
+// File update: 28/10/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -129,6 +129,7 @@ namespace CityScover.Engine.Workers
             node => { return node.IsVisited; },
             node =>
             {
+               node.ArrivalTime = currNodeArrivalTime;
                node.TotalTime = currNodeTotalTime;
                node.WaitOpeningTime = currNodeWaitOpeningTime;
             },
@@ -150,16 +151,22 @@ namespace CityScover.Engine.Workers
                Collection<TimeSpan> deltaOpeningTimes = new Collection<TimeSpan>();
                foreach (var time in edgeDestNode.OpeningTimes)
                {
-                  if (!time.OpeningTime.HasValue)
+                  if (!time.OpeningTime.HasValue || !time.ClosingTime.HasValue)
                   {
                      continue;
                   }
 
                   DateTime openingTime = time.OpeningTime.Value;
+                  DateTime closingTime = time.ClosingTime.Value;
                   if (currNodeArrivalTime < openingTime)
                   {
                      TimeSpan currDeltaOpeningTime = openingTime.Subtract(currNodeArrivalTime);
                      deltaOpeningTimes.Add(currDeltaOpeningTime);
+                  }
+                  else if (currNodeArrivalTime > openingTime && currNodeArrivalTime < (closingTime - visitTime))
+                  {
+                     deltaOpeningTimes.Clear();
+                     break;
                   }
                }
                if (deltaOpeningTimes.Count > 0)

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/10/2018
+// File update: 28/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -123,19 +123,26 @@ namespace CityScover.Engine
       #region Constraints delegates
       private bool IsTimeWindowsConstraintSatisfied(TOSolution solution)
       {
-         bool satisfied = false;
+         bool satisfied = true;
          CityMapGraph solutionGraph = solution.SolutionGraph;
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
-         foreach (var node in solutionGraph.TourPoints)
+         IEnumerator<InterestPointWorker> processingNodes = solutionGraph.TourPoints.GetEnumerator();
+         while (satisfied && processingNodes.MoveNext())
          {
-            DateTime totalNodeTime = node.TotalTime;
+            InterestPointWorker node = processingNodes.Current;
+            TimeSpan visitTime = default;
+            if (node.Entity.TimeVisit.HasValue)
+            {
+               visitTime = node.Entity.TimeVisit.Value;
+            }
+
+            DateTime nodeTime = node.ArrivalTime + node.WaitOpeningTime;
             foreach (var time in node.Entity.OpeningTimes)
             {
-               if ((!time.OpeningTime.HasValue && !time.ClosingTime.HasValue) ||
-                   totalNodeTime >= time.OpeningTime.Value && totalNodeTime <= time.ClosingTime.Value)
+               if (time.ClosingTime.HasValue && nodeTime > (time.ClosingTime.Value - visitTime))
                {
-                  satisfied = true;
-                  break;
+                  satisfied = false;
+                  continue;
                }
             }
          }

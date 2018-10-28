@@ -53,7 +53,7 @@
       <Category id="1"/>
       <ThematicScore category="1" value="95"/>
       <OpeningTimes>
-        <OpeningTime from="7:30" to="12:30"/>
+        <OpeningTime from="07:30" to="12:30"/>
         <OpeningTime from="15:00" to="19:00"/>
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
