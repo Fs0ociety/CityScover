@@ -43,7 +43,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             }
 
             RouteWorker edge = _cityMapClone.GetEdge(interestPoint.Entity.Id, adjPOIId);
-            if (edge == null)
+            if (edge is null)
             {
                return;
             }

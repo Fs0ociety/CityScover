@@ -54,7 +54,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       {
          ICollection<TOSolution> neighborhood = default;
          var candidateEdges = _neighborhood.GetCandidates(solution);
-         if (candidateEdges == null)
+         if (candidateEdges is null)
          {
             return neighborhood;
          }

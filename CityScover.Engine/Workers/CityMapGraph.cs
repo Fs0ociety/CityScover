@@ -28,13 +28,13 @@ namespace CityScover.Engine.Workers
       #region Internal methods
       internal void AddRouteFromGraph(CityMapGraph source, int fromPOIKey, int toPOIKey)
       {
-         if (source == null)
+         if (source is null)
          {
             throw new ArgumentNullException();
          }
 
          RouteWorker edge = source.GetEdge(fromPOIKey, toPOIKey);
-         if (edge == null)
+         if (edge is null)
          {
             throw new InvalidOperationException();
          }
@@ -49,7 +49,7 @@ namespace CityScover.Engine.Workers
             return;
          }
 
-         if (source == null)
+         if (source is null)
          {
             throw new ArgumentNullException();
          }

@@ -44,7 +44,7 @@ namespace CityScover.Engine
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 
-         if (Problem == null)
+         if (Problem is null)
          {
             throw new NullReferenceException(nameof(Problem));
          }
@@ -171,7 +171,7 @@ namespace CityScover.Engine
          {
             CurrentStage = stage;
             Algorithm algorithm = GetAlgorithm(stage.Flow.CurrentAlgorithm);
-            if (algorithm == null)
+            if (algorithm is null)
             {
                throw new NullReferenceException(nameof(algorithm));
             }

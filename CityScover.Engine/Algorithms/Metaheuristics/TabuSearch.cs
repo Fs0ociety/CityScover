@@ -70,13 +70,13 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private LocalSearchTemplate GetLocalSearchAlgorithm()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms == null)
+         if (childrenAlgorithms is null)
          {
             return null;
          }
 
          var flow = childrenAlgorithms.FirstOrDefault();
-         if (flow == null)
+         if (flow is null)
          {
             return null;
          }
@@ -118,7 +118,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _tenure = CalculateTabuTenure(Solver.ProblemSize);
          _innerAlgorithm = GetLocalSearchAlgorithm();
 
-         if (_innerAlgorithm == null)
+         if (_innerAlgorithm is null)
          {
             throw new InvalidOperationException($"Bad configuration format: " +
                $"{nameof(Solver.WorkingConfiguration)}.");

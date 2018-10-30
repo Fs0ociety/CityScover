@@ -104,7 +104,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          timeSpent = timeSpent.Add(endPOITotalTimeDuration);
 
          RouteWorker returnEdge = _cityMapClone.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
-         if (returnEdge == null)
+         if (returnEdge is null)
          {
             throw new NullReferenceException(nameof(returnEdge));
          }
@@ -128,7 +128,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _timeSpent = DateTime.Now;
          _startingPoint = _cityMapClone.GetStartPoint();
 
-         if (_startingPoint == null)
+         if (_startingPoint is null)
          {
             throw new OperationCanceledException(
                $"{nameof(_startingPoint)} in {nameof(NearestNeighbor)}");

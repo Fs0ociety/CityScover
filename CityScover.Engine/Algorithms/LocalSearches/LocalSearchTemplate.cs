@@ -51,7 +51,7 @@ namespace CityScover.Engine.Algorithms
       #region Private methods
       private TOSolution GetBest(IEnumerable<TOSolution> neighborhood, TOSolution currentSolution, byte? maxImprovementsCount)
       {
-         if (neighborhood == null || currentSolution == null)
+         if (neighborhood is null || currentSolution is null)
          {
             throw new ArgumentNullException(nameof(neighborhood));
          }
@@ -84,13 +84,13 @@ namespace CityScover.Engine.Algorithms
       private Algorithm GetImprovementAlgorithm()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms == null)
+         if (childrenAlgorithms is null)
          {
             return null;
          }
 
          var flow = childrenAlgorithms.FirstOrDefault();
-         if (flow == null)
+         if (flow is null)
          {
             return null;
          }
@@ -110,7 +110,7 @@ namespace CityScover.Engine.Algorithms
       private async Task RunImprovementAlgorithm()
       {
          Algorithm improvementAlgorithm = GetImprovementAlgorithm();
-         if (improvementAlgorithm == null)
+         if (improvementAlgorithm is null)
          {
             throw new InvalidOperationException($"Bad configuration format: " +
                $"{nameof(Solver.WorkingConfiguration)}.");

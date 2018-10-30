@@ -44,7 +44,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             foreach (var neighborPointId in neighborPoints)
             {
                var processingEdge = _cityMapClone.GetEdge(currentPointId, neighborPointId);
-               if (processingEdge == null)
+               if (processingEdge is null)
                {
                   return null;
                }
@@ -91,7 +91,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       private bool HasToBeSettedCandidateNode(InterestPointWorker candidateNode, IEnumerable<InterestPointWorker> candidateNodes)
       {
-         return candidateNode == null || (candidateNode != null && candidateNodes.Any());
+         return candidateNode is null || (candidateNode != null && candidateNodes.Any());
       }
       #endregion
 
@@ -103,7 +103,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          int startingPointId = _startingPoint.Entity.Id;
          _tour.AddNode(startingPointId, _startingPoint);
          InterestPointWorker bestNeighbor = GetBestNeighbor(_startingPoint);
-         if (bestNeighbor == null)
+         if (bestNeighbor is null)
          {
             return;
          }
@@ -119,7 +119,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override async Task PerformStep()
       {
          InterestPointWorker candidateNode = GetCheapestBestNeighbor();
-         if (candidateNode == null)
+         if (candidateNode is null)
          {
             return;
          }

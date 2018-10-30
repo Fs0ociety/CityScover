@@ -96,7 +96,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             // Second local function: SetRandomCandidateId
             void SetRandomCandidateId(out int id)
             {
-               if (candidateNode == null)
+               if (candidateNode is null)
                {
                   id = node.Entity.Id;
                }
@@ -211,7 +211,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          _startPOI = _currentSolutionGraph.GetStartPoint();
          _endPOI = _currentSolutionGraph.GetEndPoint();
 
-         if (_startPOI == null || _endPOI == null)
+         if (_startPOI is null || _endPOI is null)
          {
             throw new NullReferenceException();
          }
@@ -257,7 +257,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             }
          }
 
-         if (sNode == null)
+         if (sNode is null)
          {
             return;
          }
@@ -298,7 +298,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          {
             // Rimuovo l'unico arco di s. l'arco (j,s) per via della struttura Meriottesca è posseduto da j non da s.
             RouteWorker sEdge = _currentSolutionGraph.GetEdges(sPOIId).FirstOrDefault();
-            if (sEdge == null)
+            if (sEdge is null)
             {
                throw new InvalidOperationException();
             }

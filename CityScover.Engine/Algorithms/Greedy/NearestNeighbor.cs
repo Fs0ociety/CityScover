@@ -37,7 +37,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
 
          RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, point.Entity.Id);
-         if (edge == null)
+         if (edge is null)
          {
             throw new NullReferenceException(nameof(edge));
          }
@@ -46,7 +46,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          timeWalk = TimeSpan.FromMinutes(edge.Weight() / averageSpeedWalk);
 
          RouteWorker returnEdge = _cityMapClone.GetEdge(point.Entity.Id, _startingPoint.Entity.Id);
-         if (returnEdge == null)
+         if (returnEdge is null)
          {
             throw new NullReferenceException(nameof(returnEdge));
          }
@@ -64,7 +64,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          var startingPointId = _startingPoint.Entity.Id;
          _tour.AddNode(startingPointId, _startingPoint);
          var neighborPOI = GetBestNeighbor(_startingPoint);
-         if (neighborPOI == null)
+         if (neighborPOI is null)
          {
             return;
          }
@@ -79,7 +79,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override async Task PerformStep()
       {
          var candidatePOI = GetBestNeighbor(_newStartPOI);
-         if (candidatePOI == null)
+         if (candidatePOI is null)
          {
             return;
          }

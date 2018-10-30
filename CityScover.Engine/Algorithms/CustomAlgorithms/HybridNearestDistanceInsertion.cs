@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 29/10/2018
+// File update: 30/10/2018
 //
 
 using CityScover.Engine.Workers;
@@ -21,7 +21,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
    internal class HybridNearestDistanceInsertion : Algorithm
    {
       #region Private fields
-      private HybridNearestDistanceUpdate _updateAlgorithm;
+      //private HybridNearestDistanceUpdate _updateAlgorithm;
       private int _addedNodesCount;
       #endregion
 
@@ -30,6 +30,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       protected InterestPointWorker _endPOI;
       protected DateTime _tMax;
       protected TimeSpan _tMaxThreshold;
+      protected TimeSpan _timeWalkThreshold;
       protected TOSolution _currentSolution;
       protected CityMapGraph _currentSolutionGraph;
       protected Queue<InterestPointWorker> _processingNodes;
@@ -56,7 +57,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          return cityMapGraphNodes.Except(currentSolutionNodes);
       }
 
-      private void AddPointsNotInCurrentTour() => 
+      private void AddPointsNotInCurrentTour() =>
          GetPointsNotInTour().ToList().ForEach(point => _processingNodes.Enqueue(point));
 
       private void TryInsertNode(InterestPointWorker point)
@@ -77,24 +78,59 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       private async Task TryUpdateTour()
       {
+         double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
+         
          // Insieme delle tuple contenenti le informazioni: (Tratta, Tempo di percorrenza).
-         Collection<(RouteWorker, TimeSpan)> removalCandidates = new Collection<(RouteWorker, TimeSpan)>();
-         Collection<InterestPointWorker> candidatesToAdd = new Collection<InterestPointWorker>();
+         Collection<(RouteWorker, TimeSpan)> removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
+
+         // Coda contenente i nodi appartenenti al tour corrente e candidati alla rimozione.
+         Queue<InterestPointWorker> removalNodesCandidates = new Queue<InterestPointWorker>();
 
          AddPointsNotInCurrentTour();
 
          foreach (var route in _currentSolutionGraph.Edges)
          {
-            /* 
-             * TODO
-             * 1. Calcolare il tempo di percorrenza a piedi del tratto corrente in minuti.
-             * 2. Verificare se tale tempo supera una soglia fissata a priori.
-             * 3. Se la condizione al punto 2 è verificata, aggiungere tale arco tra quelli candidati da rimuovere.
-             */
+            TimeSpan timeRouteWalk = TimeSpan.FromSeconds(route.Weight() / averageSpeedWalk);
+
+            if (timeRouteWalk > _timeWalkThreshold)
+            {
+               var removalEdgeCandidate = (route, timeRouteWalk);
+               removalEdgesCandidates.Add(removalEdgeCandidate);
+            }
          }
 
-         foreach (var edge in removalCandidates)
+         foreach (var (edge, tWalk) in removalEdgesCandidates)
          {
+            InterestPointWorker pointTo = _currentSolutionGraph.TourPoints
+               .Where(point => point.Entity.Id == edge.Entity.PointTo.Id)
+               .FirstOrDefault();
+
+            if (pointTo is null)
+            {
+               throw new NullReferenceException(nameof(pointTo));
+            }
+
+            removalNodesCandidates.Enqueue(pointTo);
+
+            InterestPointWorker pointFrom = _currentSolutionGraph.TourPoints
+               .Where(point => point.Entity.Id == edge.Entity.PointFrom.Id)
+               .FirstOrDefault();
+
+            foreach (var pNode in _processingNodes)
+            {
+               var candidateEdge = Solver.CityMapGraph.GetEdge(pointFrom.Entity.Id, pNode.Entity.Id);
+               if (candidateEdge is null)
+               {
+                  throw new NullReferenceException(nameof(candidateEdge));
+               }
+
+               TimeSpan timeRouteWalk = TimeSpan.FromSeconds(candidateEdge.Weight() / averageSpeedWalk);
+               if (timeRouteWalk < tWalk)
+               {
+                  // TODO
+               }
+            }
+
             /*
              * TODO
              * 
@@ -133,6 +169,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          TOSolution bestSolution = Solver.BestSolution;
          Solver.PreviousStageSolutionCost = bestSolution.Cost;
          _currentSolutionGraph = bestSolution.SolutionGraph.DeepCopy();
+         _timeWalkThreshold = new TimeSpan(0, 30, 0);
          _tMaxThreshold = Solver.CurrentStage.Flow.HndTmaxThreshold;
          _tMax = Solver.WorkingConfiguration.ArrivalTime.Add(Solver.WorkingConfiguration.TourDuration);
          _startPOI = _currentSolutionGraph.GetStartPoint();
@@ -181,7 +218,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (_addedNodesCount == 0)
          {
             Task updateTourTask = Task.Run(() => TryUpdateTour());
-            Task.WaitAll(updateTourTask);
+
+            try
+            {
+               updateTourTask.Wait();
+            }
+            catch (AggregateException ae)
+            {
+               OnError(ae.InnerException);
+            }
+
             //_updateAlgorithm = new HybridNearestDistanceUpdate(Provider);
             //Task algorithmTask = Task.Run(() => _updateAlgorithm.Start());
             //Task.WaitAll(algorithmTask);

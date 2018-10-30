@@ -82,7 +82,7 @@ namespace CityScover.Engine
       /// <returns> The Algorithm's instance to run. </returns>
       internal static Algorithm CreateAlgorithm(AlgorithmType currentAlgorithm, Neighborhood neighborhood)
       {
-         if (neighborhood == null)
+         if (neighborhood is null)
          {
             throw new ArgumentNullException(nameof(neighborhood));
          }

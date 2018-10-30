@@ -41,7 +41,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          timeSpent = timeSpent.Add(endPOITotalTimeDuration);
 
          RouteWorker returnEdge = _cityMapClone.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
-         if (returnEdge == null)
+         if (returnEdge is null)
          {
             throw new NullReferenceException(nameof(returnEdge));
          }
@@ -89,7 +89,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             {
                var candidateEdgesCurrentEdge = new Collection<RouteWorker>();
                var currentEdge = _currentSolutionGraph.GetEdge(fixedNodeId, neighbor);
-               if (currentEdge == null)
+               if (currentEdge is null)
                {
                   continue;
                }
@@ -106,7 +106,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                   foreach (var adjacentNodeId in nextNeighbors)
                   {
                      var procNodeAdjNodeEdge = _currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
-                     if (procNodeAdjNodeEdge == null)
+                     if (procNodeAdjNodeEdge is null)
                      {
                         continue;
                      }
