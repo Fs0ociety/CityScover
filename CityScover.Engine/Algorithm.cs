@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/10/2018
+// File update: 30/10/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -20,16 +20,11 @@ namespace CityScover.Engine
    /// </summary>
    internal abstract class Algorithm
    {
-      #region Private fields
-      private readonly AlgorithmType _currentAlgorithm;
+      #region Private members
+      private AlgorithmStatus _status;
+      private ushort _currentStep;
       private bool _acceptImprovementsOnly;
       private AlgorithmTracker _provider;
-      #endregion
-
-      #region Protected members
-      protected AlgorithmStatus _status;
-      protected ushort _currentStep;
-      protected Solver Solver => Solver.Instance;
       #endregion
 
       #region Constructors
@@ -40,16 +35,17 @@ namespace CityScover.Engine
 
       internal Algorithm(AlgorithmTracker provider, bool acceptImprovementsOnly = true)
       {
-         _currentAlgorithm = Solver.CurrentStage.Flow.CurrentAlgorithm;
+         CurrentAlgorithm = Solver.CurrentStage.Flow.CurrentAlgorithm;
          _acceptImprovementsOnly = acceptImprovementsOnly;
          _provider = provider;
       }
       #endregion
 
-      #region Internal properties
-      protected AlgorithmType CurrentAlgorithm => _currentAlgorithm;
+      #region Private Protected properties
+      private protected Solver Solver => Solver.Instance;
+      private protected AlgorithmType CurrentAlgorithm { get; set; }
 
-      protected ushort CurrentStep
+      private protected ushort CurrentStep
       {
          get => _currentStep;
          set
@@ -60,7 +56,7 @@ namespace CityScover.Engine
             }
          }
       }
-      internal AlgorithmStatus Status
+      private protected AlgorithmStatus Status
       {
          get => _status;
          private set
@@ -71,7 +67,9 @@ namespace CityScover.Engine
             }
          }
       }
+      #endregion
 
+      #region Internal properties
       internal bool AcceptImprovementsOnly
       {
          get => _acceptImprovementsOnly;
@@ -99,7 +97,7 @@ namespace CityScover.Engine
 
       #region Internal methods
       internal async Task Start()
-      {         
+      {
          OnInitializing();
 
          _status = AlgorithmStatus.Running;

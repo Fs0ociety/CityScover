@@ -139,7 +139,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override void OnError(Exception exception)
       {
-         _currentStep = default;
+         CurrentStep = default;
          TOSolution lastProducedSolution = _solutions.Last();
          Result resultError =
             new Result(lastProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Invalid);
@@ -168,7 +168,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override bool StopConditions()
       {
-         return _status == AlgorithmStatus.Error;
+         return Status == AlgorithmStatus.Error;
       }
       #endregion
    }

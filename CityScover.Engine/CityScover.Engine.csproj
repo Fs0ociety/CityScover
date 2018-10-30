@@ -52,7 +52,8 @@
     <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="Algorithms\AlgorithmMessages.cs" />
-    <Compile Include="Algorithms\CustomAlgorithms\HybridNearestDistance.cs" />
+    <Compile Include="Algorithms\CustomAlgorithms\HybridNearestDistanceInsertion.cs" />
+    <Compile Include="Algorithms\CustomAlgorithms\HybridNearestDistanceUpdate.cs" />
     <Compile Include="Algorithms\Greedy\CheapestInsertion.cs" />
     <Compile Include="Algorithms\Greedy\GreedyTemplate.cs" />
     <Compile Include="Algorithms\Greedy\NearestNeighbor.cs" />

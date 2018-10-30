@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/10/2018
+// File update: 29/10/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -218,7 +218,7 @@ namespace CityScover.Engine.Algorithms
       internal override bool StopConditions()
       {
          return _previousSolutionCost == _currentSolutionCost ||
-            _status == AlgorithmStatus.Error;
+            Status == AlgorithmStatus.Error;
       }
       #endregion
    }
