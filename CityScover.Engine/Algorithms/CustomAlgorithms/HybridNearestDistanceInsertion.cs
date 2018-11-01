@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 31/10/2018
+// File update: 01/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -76,33 +76,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _currentSolutionGraph.AddRouteFromGraph(Solver.CityMapGraph, _endPOI.Entity.Id, _startPOI.Entity.Id);
       }
 
-      /*
-       * IDEA 1
-       * 
-       * Per ogni nodo appartenente alla coda dei nodi non appartenenti al tour corrente (_processingNodes)
-       * effettuare i seguenti passaggi:
-       * 
-       * 1. Dal grafo completo calcolare il tempo di percorrenza dell'arco che va dal nodo PointFrom dell'arco corrente (edge),
-       * ad un nodo di quelli appartenenti alla coda _processingNodes (ovvero i nodi non appartenenti al tour corrente).
-       * 
-       * 2. Se il tempo di percorrenza appena calcolato relativo al nuovo arco, è inferiore al tempo di percorrenza dell'arco corrente,
-       * rimuovere dal tour il nodo PointTo dell'arco corrente e l'arco associato tra PointFrom e PointTo dal tour.
-       * 
-       * 3. Aggiungere il nuovo nodo della coda _processingNodes che si sta valutando al tour.
-       * 4. Aggiungere il nuovo arco al tour, che va dal nodo PointFrom dell'arco corrente al nuovo nodo appena aggiunto al Tour.
-       * 5. Ripetere il procedimento per il nodo successivo di _processingNodes.
-       * 
-       * ******************************************************************************************************
-       * NOTA:
-       * Invece che aggiungere direttamente il nuovo nodo della coda al tour, 
-       * usare una lista di potenziali nodi candidati da aggiungere al tour, i cui tempi 
-       * di percorrenza dei relativi archi precedentemente calcolati (vedi punto 1), 
-       * sono sicuramente inferiori rispetto al tempo di percorrenza dell'arco corrente che si sta esaminando.
-       * ******************************************************************************************************
-       * Al termine della scansione di tutti i nodi della coda _processingNodes, selezionare dall'insieme dei candidati da aggiungere
-       * la coppia (nodo-arco) il cui score del nodo è il maggiore fra tutti.
-       */
-
       private async Task TryUpdateTour()
       {
          double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
@@ -136,8 +109,10 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          foreach (var node in _processingNodes)
          {
+            int currentPointScore = int.MaxValue;
             InterestPointWorker currentPointFrom = default;
             InterestPointWorker tourPointToRemove = default;
+            RouteWorker ingoingEdge = default;
 
             foreach (var (edge, tWalk) in removalEdgesCandidates)
             {
@@ -160,51 +135,76 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
                if (tEdgeWalk < tWalk)
                {
-                  tourPointToRemove = _currentSolutionGraph.TourPoints
+                  InterestPointWorker currentPointTo = _currentSolutionGraph.TourPoints
                      .Where(point => point.Entity.Id == edge.Entity.PointTo.Id)
                      .FirstOrDefault();
 
-                  if (tourPointToRemove is null)
+                  if (currentPointTo is null)
                   {
-                     throw new NullReferenceException(nameof(tourPointToRemove));
+                     throw new NullReferenceException(nameof(currentPointTo));
                   }
-                  removalNodesCandidates.Add(tourPointToRemove);
+
+                  int pointToScore = currentPointTo.Entity.Score.Value;
+                  if (pointToScore < currentPointScore)
+                  {
+                     tourPointToRemove = currentPointTo;
+                     currentPointScore = pointToScore;
+                     ingoingEdge = edge;
+                  }
+
+                  //tourPointToRemove = _currentSolutionGraph.TourPoints
+                  //   .Where(point => point.Entity.Id == edge.Entity.PointTo.Id)
+                  //   .FirstOrDefault();
+
+                  //if (tourPointToRemove is null)
+                  //{
+                  //   throw new NullReferenceException(nameof(tourPointToRemove));
+                  //}
+                  //removalNodesCandidates.Add(tourPointToRemove);
                }
             }
 
-            if (removalNodesCandidates.Any())
+            if (tourPointToRemove is null)
             {
-               tourPointToRemove = removalNodesCandidates
-                  .OrderBy(candidate => candidate.Entity.Score.Value)
-                  .FirstOrDefault();
-
-               RouteWorker ingoingEdge = removalEdgesCandidates
-                  .Where(item => item.edge.Entity.PointTo.Id == tourPointToRemove.Entity.Id)
-                  .Select(item => item.edge).FirstOrDefault();
-
-               RouteWorker outgoingEdge = _currentSolutionGraph.Edges
-                  .Where(edge => edge.Entity.PointFrom.Id == tourPointToRemove.Entity.Id)
-                  .FirstOrDefault();
-
-               InterestPointWorker sourcePoint = _currentSolutionGraph.TourPoints
-                  .Where(point => point.Entity.Id == ingoingEdge.Entity.PointFrom.Id)
-                  .FirstOrDefault();
-
-               InterestPointWorker destPoint = _currentSolutionGraph.TourPoints
-                  .Where(point => point.Entity.Id == outgoingEdge.Entity.PointTo.Id)
-                  .FirstOrDefault();
-
-               // TODO
-               // 1. rimuovere i due archi dal tour tenendo da parte i rispettivi nodi PointFrom e PointTo da usare per ricollegare il grafo.
-               // 2. rimuovere il nodo tourPointToRemove dal tour
-               // 3. Aggiungere node al tour
-               // 4. Collegare i rispettivi archi
-               // 5. Costruisci la nuova Solution e inviala in coda da validare
-               // 6. Se è valida riparti con la nuova soluzione e prova ad aggiungere il nodo successivo prelevato dalla coda
-               // 7. Se non è valida, ripristina la situazione precedente con il nodo precedente rimosso dal tour.
-               // 8. Riparto dalla situazione con un nuovo candidato della coda dei nodi non appartenenti al tour. (_processingNodes)
-               await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+               continue;
             }
+
+            //if (removalNodesCandidates.Any())
+            //{
+            //   tourPointToRemove = removalNodesCandidates
+            //      .OrderBy(candidate => candidate.Entity.Score.Value)
+            //      .FirstOrDefault();
+
+            //   removalNodesCandidates.Clear();
+
+            //RouteWorker ingoingEdge = removalEdgesCandidates
+            //   .Where(item => item.edge.Entity.PointTo.Id == tourPointToRemove.Entity.Id)
+            //   .Select(item => item.edge).FirstOrDefault();
+
+            RouteWorker outgoingEdge = _currentSolutionGraph.Edges
+               .Where(edge => edge.Entity.PointFrom.Id == tourPointToRemove.Entity.Id)
+               .FirstOrDefault();
+
+            InterestPointWorker sourcePoint = _currentSolutionGraph.TourPoints
+               .Where(point => point.Entity.Id == ingoingEdge.Entity.PointFrom.Id)
+               .FirstOrDefault();
+
+            InterestPointWorker destPoint = _currentSolutionGraph.TourPoints
+               .Where(point => point.Entity.Id == outgoingEdge.Entity.PointTo.Id)
+               .FirstOrDefault();
+
+            // TODO
+            // 1. rimuovere i due archi dal tour tenendo da parte i rispettivi nodi PointFrom e PointTo da usare per ricollegare il grafo.
+            // 2. rimuovere il nodo tourPointToRemove dal tour
+            // 3. Aggiungere node al tour
+            // 4. Collegare i rispettivi archi
+            // 5. Costruisci la nuova Solution e inviala in coda da validare
+            // 6. Se è valida riparti con la nuova soluzione e prova ad aggiungere il nodo successivo prelevato dalla coda
+            // 7. Se non è valida, ripristina la situazione precedente con il nodo precedente rimosso dal tour.
+            // 8. Riparto dalla situazione con un nuovo candidato della coda dei nodi non appartenenti al tour. (_processingNodes)
+
+            await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+            //}
          }
       }
       #endregion
