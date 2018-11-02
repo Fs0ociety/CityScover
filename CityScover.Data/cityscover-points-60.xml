@@ -197,10 +197,61 @@
       <TimeVisit unit="min" duration="40"/>
     </PointOfInterest>
 
+    <!-- Nr. 17 -->
+    <!-- Chiesa di San Cristoforo alla Certosa -->
+    <PointOfInterest id="17" name="Chiesa di San Cristoforo alla Certosa">
+      <Coordinates latitude="44,8455007" longitude="11,6246242"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="07:00" to="19:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 18 -->
+    <!-- Via delle Volte -->
+    <PointOfInterest id="18" name="Via delle Volte">
+      <Coordinates latitude="44,8326525" longitude="11,6169381"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <!-- Aperto 24 ore su 24 -->
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 19 -->
+    <!-- Rotonda Foschini -->
+    <PointOfInterest id="19" name="Rotonda Foschini">
+      <Coordinates latitude="44,837505" longitude="11,6185529"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <!-- Aperto 24 ore su 24 -->
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 20 -->
+    <!-- Palazzo Municipale -->
+    <PointOfInterest id="20" name="Palazzo Municipale">
+      <Coordinates latitude="44,8359016" longitude="11,6168354"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:00" to="13:00"/>
+        <OpeningTime from="15:00" to="17:00" />
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+    
     <!-- Nr. 22 -->
     <!-- Monastero del Corpus Domini -->
     <PointOfInterest id="22" name="Monastero del Corpus Domini">
-      <Coordinates latitude="44,8318359" longitude="11,623786"/>
+      <Coordinates latitude="44,8318359" longitude="11,6237913"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
       <OpeningTimes>
@@ -209,23 +260,22 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-
-    <!---->
-    <!-- Punti d'interesse Gastronomici -->
-    <!---->
-
-    <!-- Nr. 31 -->
-    <!-- Il Don Giovanni -->
-    <PointOfInterest id="31" name="Il Don Giovanni">
-      <Coordinates latitude="44,838670" longitude="11,619772"/>
-      <Category id="2"/>
-      <ThematicScore category="2" value="90"/>
+    <!-- Nr. 24 -->
+    <!-- Chiesa di Santa Maria in Vado -->
+    <PointOfInterest id="24" name="Chiesa di Santa Maria in Vado">
+      <Coordinates latitude="44,8303002" longitude="11,6250018"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="12:30" to="14:30"/>
-        <OpeningTime from="19:30" to="22:30"/>
+        <OpeningTime from="08:00" to="12:15"/>
+        <OpeningTime from="16:00" to="19:00" />
       </OpeningTimes>
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
+    
+    <!---->
+    <!-- Punti d'interesse Gastronomici -->
+    <!---->
 
     <!-- Nr. 32 -->
     <!-- Makorè -->
@@ -278,39 +328,39 @@
     </PointOfInterest>
 
     <!-- Nr. 36 -->
-    <!-- I Piaceri di Lucrezia -->
-    <PointOfInterest id="36" name="I Piaceri di Lucrezia">
-      <Coordinates latitude="44,828753" longitude="11,624123"/>
+    <!-- Trattoria da Noemi -->
+    <PointOfInterest id="36" name="Trattoria da Noemi">
+      <Coordinates latitude="44,8330769" longitude="11,6189851"/>
       <Category id="2"/>
-      <ThematicScore category="2" value="85"/>
+      <ThematicScore category="2" value="70"/>
       <OpeningTimes>
-        <OpeningTime from="19:00" to="00:00"/>
+        <OpeningTime from="12:15" to="15:00"/>
+        <OpeningTime from="19:30" to="23:00"/>
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
+    <!-- Nr. 37 -->
+    <!-- Il Don Giovanni -->
+    <PointOfInterest id="37" name="Il Don Giovanni">
+      <Coordinates latitude="44,838670" longitude="11,619772"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="90"/>
+      <OpeningTimes>
+        <OpeningTime from="12:30" to="14:30"/>
+        <OpeningTime from="19:30" to="22:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+    
     <!-- Nr. 38 -->
-    <!-- Hostaria Savonarola -->
-    <PointOfInterest id="38" name="Hostaria Savonarola">
-      <Coordinates latitude="44,836824" longitude="11,619445"/>
+    <!-- L'Antico Giardino -->
+    <PointOfInterest id="38" name="L'Antico Giardino">
+      <Coordinates latitude="44,927789" longitude="11,511026"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <OpeningTime from="" to=""/>
-      </OpeningTimes>
-      <TimeVisit unit="min" duration="60"/>
-    </PointOfInterest>
-
-    <!-- Nr. 39 -->
-    <!-- Quel fantastico giovedì -->
-    <PointOfInterest id="39" name="Quel fantastico giovedì">
-      <Coordinates latitude="44,831354" longitude="11,619728"/>
-      <Category id="2"/>
-      <ThematicScore category="2" value="100"/>
-      <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <OpeningTime from="" to=""/>
+        <OpeningTime from="20:00" to="00:30"/>
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
@@ -353,7 +403,57 @@
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
+    
+    <!-- Nr. 44-->
+    <!-- Locanda 22 -->
+    <PointOfInterest id="44" name="Locanda 22">
+      <Coordinates latitude="44,8370152" longitude="11,6182631"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="95"/>
+      <OpeningTimes>
+        <OpeningTime from="12:00" to="15:00"/>
+        <OpeningTime from="19:00" to="00:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
 
+    <!-- Nr. 45 -->
+    <!-- Ristorante Max -->
+    <PointOfInterest id="45" name="Ristorante Max">
+      <Coordinates latitude="44,837525" longitude="11,6178658"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="80"/>
+      <OpeningTimes>
+        <OpeningTime from="18:00" to="02:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 46 -->
+    <!-- I Piaceri di Lucrezia -->
+    <PointOfInterest id="46" name="I Piaceri di Lucrezia">
+      <Coordinates latitude="44,828753" longitude="11,624123"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="85"/>
+      <OpeningTimes>
+        <OpeningTime from="19:00" to="00:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 47 -->
+    <!-- Osteria Degli Ulivi -->
+    <PointOfInterest id="47" name="Osteria Degli Ulivi">
+      <Coordinates latitude="44,8334787" longitude="11,6183261"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="90"/>
+      <OpeningTimes>
+        <OpeningTime from="12:15" to="14:30"/>
+        <OpeningTime from="19:15" to="22:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+    
     <!-- Nr. 49 -->
     <!-- Rifugio Degli Artisti -->
     <PointOfInterest id="49" name="Rifugio Degli Artisti">
@@ -366,6 +466,19 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
+    <!-- Nr. 50 -->
+    <!-- Hostaria Savonarola -->
+    <PointOfInterest id="50" name="Hostaria Savonarola">
+      <Coordinates latitude="44,836824" longitude="11,619445"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+    
     <!-- Nr. 51 -->
     <!-- Antica Osteria Delle Volte -->
     <PointOfInterest id="51" name="Antica Osteria Delle Volte">
@@ -404,7 +517,19 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-
+    <!-- Nr. 58 -->
+    <!-- Quel fantastico giovedì -->
+    <PointOfInterest id="58" name="Quel fantastico giovedì">
+      <Coordinates latitude="44,831354" longitude="11,619728"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+    
     <!---->
     <!-- Punti d'interesse Sportivi -->
     <!---->
