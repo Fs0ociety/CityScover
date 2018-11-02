@@ -1,0 +1,594 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <!-- Point of interests -->
+  <PointOfInterests>
+
+    <!-- Punto di partenza -->
+
+    <!-- Nr. 1 -->
+    <!-- Hotel Carlton -->
+    <PointOfInterest id="1" name="Hotel Carlton">
+      <Coordinates latitude="44,837767" longitude="11,615792"/>
+      <Category id=""/>
+      <ThematicScore category="" value=""/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <!-- Aperto 24 ore su 24 -->
+      </OpeningTimes>
+      <TimeVisit unit="" duration=""/>
+    </PointOfInterest>
+
+
+    <!---->
+    <!-- Punti d'interesse Storico-Culturali -->
+    <!---->
+
+    <!-- Nr. 2 -->
+    <!-- Castello Estense -->
+    <PointOfInterest id="2" name="Castello Estense">
+      <Coordinates latitude="44,837811" longitude="11,619572"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="17:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 3 -->
+    <!-- Palazzo dei Diamanti -->
+    <PointOfInterest id="3" name="Palazzo dei Diamanti">
+      <Coordinates latitude="44,842160" longitude="11,621223"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="80"/>
+      <OpeningTimes>
+        <OpeningTime from="09:00" to="19:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="50"/>
+    </PointOfInterest>
+
+    <!-- Nr. 4 -->
+    <!-- Cattedrale di San Giorgio -->
+    <PointOfInterest id="4" name="Cattedrale di San Giorgio">
+      <Coordinates latitude="44,835639" longitude="11,620273"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="7:30" to="12:30"/>
+        <OpeningTime from="15:00" to="19:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 5 -->
+    <!-- Palazzo Schifanoia -->
+    <PointOfInterest id="5" name="Museo Schifanoia">
+      <Coordinates latitude="44,830580" longitude="11,629071"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="95"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="18:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="30"/>
+    </PointOfInterest>
+
+    <!-- Nr. 6 -->
+    <!-- Palazzo Massari -->
+    <PointOfInterest id="6" name="Palazzo Massari">
+      <Coordinates latitude="44,842053" longitude="11,624683"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="75"/>
+      <OpeningTimes>
+        <OpeningTime from="10:30" to="17:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="30"/>
+    </PointOfInterest>
+
+    <!-- Nr. 7 -->
+    <!-- Piazza Ariostea -->
+    <PointOfInterest id="7" name="Piazza Ariostea">
+      <Coordinates latitude="44,8413142" longitude="11,6241956"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 9 -->
+    <!-- Museo della Cattedrale -->
+    <PointOfInterest id="9" name="Museo della Cattedrale">
+      <Coordinates latitude="44,8344424" longitude="11,6128774"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="13:00"/>
+        <OpeningTime from="15:00" to="18:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 10 -->
+    <!-- Palazzina di Marfisa d'Este -->
+    <PointOfInterest id="10" name="Palazzina di Marfisa d'Este">
+      <Coordinates latitude="44,8331" longitude="11,6276862"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="13:00"/>
+        <OpeningTime from="15:00" to="18:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 11 -->
+    <!-- Museo Civico di Storia Naturale -->
+    <PointOfInterest id="11" name="Museo Civico di Storia Naturale">
+      <Coordinates latitude="44,838107" longitude="11,622471"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:00" to="18:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="50"/>
+    </PointOfInterest>
+
+    <!-- Nr. 12 -->
+    <!-- Museo Archeologico Nazionale di Ferrara -->
+    <PointOfInterest id="12" name="Museo Archeologico Nazionale di Ferrara">
+      <Coordinates latitude="44,827133" longitude="11,627090"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="17:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="40"/>
+    </PointOfInterest>
+
+    <!-- Nr. 13 -->
+    <!-- Museo Nazionale dell'Ebraismo Italiano e della Shoah -->
+    <PointOfInterest id="13" name="Museo Nazionale dell'Ebraismo Italiano e della Shoah">
+      <Coordinates latitude="44,835606" longitude="11,613433"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="10:00" to="18:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="35"/>
+    </PointOfInterest>
+
+    <!-- Nr. 14-->
+    <!-- Corso Ercole I d'Este -->
+    <PointOfInterest id="14" name="Corso Ercole I d'Este">
+      <Coordinates latitude="44,8439315" longitude="11,6199775"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <!-- Aperto 24 ore su 24 -->
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 15 -->
+    <!-- Parco Pareschi -->
+    <PointOfInterest id="15" name="Parco Pareschi">
+      <Coordinates latitude="44,834137" longitude="11,627186"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="90"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <!-- Aperto 24 ore su 24 -->
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="20"/>
+    </PointOfInterest>
+
+    <!-- Nr. 16 -->
+    <!-- Museo del Risorgimento e della Resistenza -->
+    <PointOfInterest id="16" name="Museo del Risorgimento e della Resistenza">
+      <Coordinates latitude="44,841883" longitude="11,620823"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="80"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="13:00"/>
+        <OpeningTime from="15:00" to="18:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="40"/>
+    </PointOfInterest>
+
+    <!-- Nr. 22 -->
+    <!-- Monastero del Corpus Domini -->
+    <PointOfInterest id="22" name="Monastero del Corpus Domini">
+      <Coordinates latitude="44,8318359" longitude="11,623786"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="15:30" to="17:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+
+    <!---->
+    <!-- Punti d'interesse Gastronomici -->
+    <!---->
+
+    <!-- Nr. 31 -->
+    <!-- Il Don Giovanni -->
+    <PointOfInterest id="31" name="Il Don Giovanni">
+      <Coordinates latitude="44,838670" longitude="11,619772"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="90"/>
+      <OpeningTimes>
+        <OpeningTime from="12:30" to="14:30"/>
+        <OpeningTime from="19:30" to="22:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 32 -->
+    <!-- Makorè -->
+    <PointOfInterest id="32" name="Makorè">
+      <Coordinates latitude="44,837429" longitude="11,622981"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="80"/>
+      <OpeningTimes>
+        <OpeningTime from="12:30" to="14:15"/>
+        <OpeningTime from="20:00" to="22:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 33 -->
+    <!-- Fuori Porta -->
+    <PointOfInterest id="33" name="Fuori Porta">
+      <Coordinates latitude="44,832623" longitude="11,636595"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="75"/>
+      <OpeningTimes>
+        <OpeningTime from="07:30" to="00:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 34 -->
+    <!-- XI Comandamento -->
+    <PointOfInterest id="34" name="XI Comandamento">
+      <Coordinates latitude="44,832788" longitude="11,618828"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="65"/>
+      <OpeningTimes>
+        <OpeningTime from="17:00" to="01:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 35 -->
+    <!-- Osteria I Quattro Angeli -->
+    <PointOfInterest id="35" name="Osteria I Quattro Angeli">
+      <Coordinates latitude="44,837011" longitude="11,618615"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="70"/>
+      <OpeningTimes>
+        <OpeningTime from="12:00" to="15:00"/>
+        <OpeningTime from="19:00" to="00:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 36 -->
+    <!-- I Piaceri di Lucrezia -->
+    <PointOfInterest id="36" name="I Piaceri di Lucrezia">
+      <Coordinates latitude="44,828753" longitude="11,624123"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="85"/>
+      <OpeningTimes>
+        <OpeningTime from="19:00" to="00:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 38 -->
+    <!-- Hostaria Savonarola -->
+    <PointOfInterest id="38" name="Hostaria Savonarola">
+      <Coordinates latitude="44,836824" longitude="11,619445"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 39 -->
+    <!-- Quel fantastico giovedì -->
+    <PointOfInterest id="39" name="Quel fantastico giovedì">
+      <Coordinates latitude="44,831354" longitude="11,619728"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 40 -->
+    <!-- Il sorpasso -->
+    <PointOfInterest id="40" name="Il sorpasso">
+      <Coordinates latitude="44,831343" longitude="11,624296"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 41 -->
+    <!-- Orsucci da Armando -->
+    <PointOfInterest id="41" name="Orsucci da Armando">
+      <Coordinates latitude="44,831616" longitude="11,624158"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 42 -->
+    <!-- The Lab - Food to Feel -->
+    <PointOfInterest id="42" name="The Lab - Food to Feel">
+      <Coordinates latitude="44,835922" longitude="11,620162"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 49 -->
+    <!-- Rifugio Degli Artisti -->
+    <PointOfInterest id="49" name="Rifugio Degli Artisti">
+      <Coordinates latitude="44,7723155" longitude="11,3443391"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="19:30" to="22:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 51 -->
+    <!-- Antica Osteria Delle Volte -->
+    <PointOfInterest id="51" name="Antica Osteria Delle Volte">
+      <Coordinates latitude="44,8323482" longitude="11,6174861"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="70"/>
+      <OpeningTimes>
+        <OpeningTime from="12:30" to="15:00"/>
+        <OpeningTime from="19:30" to="23:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 53 -->
+    <!-- Cusina e Butega -->
+    <PointOfInterest id="53" name="Cusina e Butega">
+      <Coordinates latitude="44,8349425" longitude="11,6163628"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="90"/>
+      <OpeningTimes>
+        <OpeningTime from="11:00" to="15:00"/>
+        <OpeningTime from="18:00" to="23:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 55 -->
+    <!-- I Tri Scalin -->
+    <PointOfInterest id="55" name="I Tri Scalin">
+      <Coordinates latitude="44,8316203" longitude="11,6107881"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="11:00" to="22:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+
+    <!---->
+    <!-- Punti d'interesse Sportivi -->
+    <!---->
+
+    <!-- Nr. 75 -->
+    <!-- Centro Universitario Sportivo Di Ferrara (CUS) -->
+    <PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
+      <Coordinates latitude="44,853446" longitude="11,631099"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:00" to="23:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="90"/>
+    </PointOfInterest>
+
+    <!-- Nr. 76 -->
+    <!-- Centro Sportivo Italiano -->
+    <PointOfInterest id="76" name="Centro Sportivo Italiano">
+      <Coordinates latitude="44,833600" longitude="11,625474"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="55"/>
+      <OpeningTimes>
+        <OpeningTime from="10:00" to="13:00"/>
+        <OpeningTime from="16:30" to="19:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 77 -->
+    <!-- Centro Sportivo Tennis Club Ferrara -->
+    <PointOfInterest id="77" name="Centro Sportivo Tennis Club Ferrara">
+      <Coordinates latitude="44,849885" longitude="11,613846"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="75"/>
+      <OpeningTimes>
+        <OpeningTime from="09:00" to="00:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="15"/>
+    </PointOfInterest>
+
+    <!-- Nr. 78 -->
+    <!-- Paintball Ferrara -->
+    <PointOfInterest id="78" name="Paintball Ferrara">
+      <Coordinates latitude="44,837605" longitude="11,588271"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="65"/>
+      <OpeningTimes>
+        <OpeningTime from="10:00" to="23:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="90"/>
+    </PointOfInterest>
+
+    <!-- Nr. 79 -->
+    <!-- Cus Ferrara Golf -->
+    <PointOfInterest id="79" name="Cus Ferrara Golf">
+      <Coordinates latitude="44,853365" longitude="11,631588"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="88"/>
+      <OpeningTimes>
+        <OpeningTime from="08:00" to="20:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="30"/>
+    </PointOfInterest>
+
+    <!-- Nr. 80 -->
+    <!-- Cus Ferrara Rugby -->
+    <PointOfInterest id="80" name="Cus Ferrara Rugby">
+      <Coordinates latitude="44,853353" longitude="11,631583"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="73"/>
+      <OpeningTimes>
+        <OpeningTime from="08:00" to="20:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="20"/>
+    </PointOfInterest>
+
+    <!-- Nr. 81 -->
+    <!-- Ludovico Associazione Dilettantistica Sportiva -->
+    <PointOfInterest id="81" name="Ludovico Associazione Dilettantistica Sportiva">
+      <Coordinates latitude="44,844139" longitude="11,616941"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:00" to="23:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="10"/>
+    </PointOfInterest>
+
+    <!-- Nr. 82 -->
+    <!-- Centro Addestramento SPAL -->
+    <PointOfInterest id="82" name="Centro Addestramento SPAL">
+      <Coordinates latitude="44,8458471" longitude="11,650829"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="76"/>
+      <OpeningTimes>
+        <OpeningTime from="08:00" to="22:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="35"/>
+    </PointOfInterest>
+
+    <!-- Nr. 83 -->
+    <!-- La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale -->
+    <PointOfInterest id="83" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
+      <Coordinates latitude="44,835498" longitude="11,611455"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="60"/>
+      <OpeningTimes>
+        <OpeningTime from="07:30" to="11:30"/>
+        <OpeningTime from="13:00" to="21:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="30"/>
+    </PointOfInterest>
+
+    <!-- Nr. 84 -->
+    <!-- New Millenium -->
+    <PointOfInterest id="84" name="New Millenium">
+      <Coordinates latitude="44,832837" longitude="11,611851"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="50"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="21:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="15"/>
+    </PointOfInterest>
+
+    <!-- Nr. 85 -->
+    <!-- Centro Sportivo Polivalente Parco 1° maggio -->
+    <PointOfInterest id="85" name="Centro Sportivo Polivalente Parco 1° maggio">
+      <Coordinates latitude="44,8253869" longitude="11,608001"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="80"/>
+      <OpeningTimes>
+        <OpeningTime from="08:30" to="22:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="120"/>
+    </PointOfInterest>
+
+    <!-- Nr. 86 -->
+    <!-- Synergy Lab -->
+    <PointOfInterest id="86" name="Synergy Lab">
+      <Coordinates latitude="44,832601" longitude="11,633633"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="08:00" to="22:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="120"/>
+    </PointOfInterest>
+
+    <!-- Nr. 87 -->
+    <!-- Palestra Ginnastica Ferrara Ass. Sportiva Dilettantistica -->
+    <PointOfInterest id="87" name="Palestra Ginnastica Ferrara Ass. Sportiva Dilettantistica">
+      <Coordinates latitude="44,820665" longitude="11,592129"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="94"/>
+      <OpeningTimes>
+        <OpeningTime from="10:15" to="20:15"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 89 -->
+    <!-- Palestra & Piscina Doro -->
+    <PointOfInterest id="89" name="Palestra e Piscina Doro">
+      <Coordinates latitude="44,847822" longitude="11,600578"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="08:45" to="20:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="120"/>
+    </PointOfInterest>
+
+    <!-- Nr. 90 -->
+    <!-- Centro di Medicina dello Sport di Ferrara -->
+    <PointOfInterest id="90" name="Centro di Medicina dello Sport di Ferrara">
+      <Coordinates latitude="44,8498765" longitude="11,6098652"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="90"/>
+      <OpeningTimes>
+        <OpeningTime from="07:30" to="16:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+  </PointOfInterests>
+</root>
