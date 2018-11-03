@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 01/11/2018
+// File update: 03/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.CustomAlgorithms
 {
-   internal class HybridNearestDistanceInsertion : Algorithm
+   internal class HybridNearestDistance : Algorithm
    {
       #region Private fields
       private int _addedNodesCount;
@@ -34,12 +34,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Constructors
-      internal HybridNearestDistanceInsertion()
+      internal HybridNearestDistance()
          : this(null)
       {
       }
 
-      internal HybridNearestDistanceInsertion(AlgorithmTracker provider)
+      internal HybridNearestDistance(AlgorithmTracker provider)
          : base(provider)
       {
       }
@@ -48,10 +48,21 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #region Private methods
       private IEnumerable<InterestPointWorker> GetPointsNotInTour()
       {
-         IEnumerable<InterestPointWorker> cityMapGraphNodes = Solver.CityMapGraph.Nodes;
-         IEnumerable<InterestPointWorker> currentSolutionNodes = _currentSolutionGraph.Nodes;
+         IEnumerable<InterestPointWorker> cityMapGraphNodes = Solver.CityMapGraph.TourPoints;
+         IEnumerable<InterestPointWorker> currentSolutionNodes = _currentSolutionGraph.TourPoints;
+         Collection<InterestPointWorker> nodesNotInTour = new Collection<InterestPointWorker>();
 
-         return cityMapGraphNodes.Except(currentSolutionNodes);
+         var cityMapGraphNodeIds = cityMapGraphNodes.Select(point => point.Entity.Id);
+         var currentSolutionNodeIds = currentSolutionNodes.Select(point => point.Entity.Id);
+         var fiteredNodesId = cityMapGraphNodeIds.Except(currentSolutionNodeIds);
+
+         foreach (var nodeId in fiteredNodesId)
+         {
+            var node = cityMapGraphNodes.Where(point => point.Entity.Id == nodeId).FirstOrDefault();
+            nodesNotInTour.Add(node);
+         }
+
+         return nodesNotInTour;
       }
 
       private void AddPointsNotInCurrentTour() =>
@@ -92,141 +103,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
 
          return removalEdgesCandidates;
-      }
+      }      
 
-      private async Task TryUpdateTour_v1()
-      {
-         double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
-         var removalEdgesCandidates = CalculateMaximumEdgesTimeWalk(averageSpeedWalk);
-
-         if (!removalEdgesCandidates.Any())
-         {
-            return;
-         }
-         AddPointsNotInCurrentTour();
-         _processingNodes.OrderByDescending(point => point.Entity.Score.Value);
-      
-         InterestPointWorker tourPointToRemove = default;
-         InterestPointWorker predecessorPoint = default;
-         RouteWorker ingoingRoute = default;
-         int currentPointScore = int.MaxValue;
-         bool tourUpdated = default;
-
-         foreach (var node in _processingNodes)
-         {
-            if (tourUpdated)
-            {
-               // Need to recalculate the list of edges of new updated tour,
-               // because old edges have been removed from the tour.
-               //removalEdgesCandidates = CalculateMaximumEdgesTimeWalk(averageSpeedWalk);
-            }
-
-            foreach (var (edge, tWalk) in removalEdgesCandidates)
-            {
-               InterestPointWorker currentPointFrom = _currentSolutionGraph.TourPoints
-                  .Where(point => point.Entity.Id == edge.Entity.PointFrom.Id)
-                  .FirstOrDefault();
-               if (currentPointFrom is null)
-               {
-                  throw new NullReferenceException(nameof(currentPointFrom));
-               }
-
-               var newEdge = Solver.CityMapGraph.GetEdge(currentPointFrom.Entity.Id, node.Entity.Id);
-               if (newEdge is null)
-               {
-                  throw new NullReferenceException(nameof(newEdge));
-               }
-
-               // Tempo di percorrenza dell'arco in minuti.
-               double tWalkMinutes = (newEdge.Weight() / averageSpeedWalk) / 60.0;
-               TimeSpan tEdgeWalk = TimeSpan.FromMinutes(tWalkMinutes);
-
-               if (tEdgeWalk < tWalk)
-               {
-                  InterestPointWorker currentPointTo = _currentSolutionGraph.TourPoints
-                     .Where(point => point.Entity.Id == edge.Entity.PointTo.Id)
-                     .FirstOrDefault();
-                  if (currentPointTo is null)
-                  {
-                     throw new NullReferenceException(nameof(currentPointTo));
-                  }
-
-                  int pointToScore = currentPointTo.Entity.Score.Value;
-                  if (pointToScore < currentPointScore)
-                  {
-                     tourPointToRemove = currentPointTo;    // Nodo da rimuovere
-                     currentPointScore = pointToScore;
-                     predecessorPoint = currentPointFrom;   // Nodo predecessore al nodo da rimuovere
-                     ingoingRoute = edge;                   // Arco incidente sul nodo da rimuovere
-                  }
-               }
-            }
-
-            if (tourPointToRemove is null)
-            {
-               continue;
-            }
-
-            RouteWorker outgoingEdge = _currentSolutionGraph.Edges
-               .Where(edge => edge.Entity.PointFrom.Id == tourPointToRemove.Entity.Id)
-               .FirstOrDefault();
-            if (outgoingEdge is null)
-            {
-               throw new NullReferenceException(nameof(outgoingEdge));
-            }
-
-            InterestPointWorker successorPoint = _currentSolutionGraph.TourPoints
-               .Where(point => point.Entity.Id == outgoingEdge.Entity.PointTo.Id)
-               .FirstOrDefault();
-            if (successorPoint is null)
-            {
-               throw new NullReferenceException(nameof(successorPoint));
-            }
-
-            /*
-             * NOTA
-             * Prima di aggiungere il nuovo nodo al Tour, devo ulteriormente verificare che anche l'arco 
-             * che va dal nuovo nodo da aggiungere al tour verso il nodo successore del nodo da rimuovere 
-             * dal tour abbia un tempo di percorrenza inferiore rispetto al tempo di percorrenza dell'arco 
-             * che va dal nodo da rimuovere verso il suo nodo successore?
-             */
-
-            // Primo taglio: Apertura del tour.
-            _currentSolutionGraph.RemoveEdge(predecessorPoint.Entity.Id, tourPointToRemove.Entity.Id);
-            _currentSolutionGraph.RemoveEdge(tourPointToRemove.Entity.Id, successorPoint.Entity.Id);
-            _currentSolutionGraph.RemoveNode(tourPointToRemove.Entity.Id);
-
-            // Unione: chiusura del tour con il nuovo nodo.
-            _currentSolutionGraph.AddNode(node.Entity.Id, node);
-            _currentSolutionGraph.AddRouteFromGraph(Solver.CityMapGraph, predecessorPoint.Entity.Id, node.Entity.Id);
-            _currentSolutionGraph.AddRouteFromGraph(Solver.CityMapGraph, node.Entity.Id, successorPoint.Entity.Id);
-
-            _currentSolution = new TOSolution()
-            {
-               SolutionGraph = _currentSolutionGraph
-            };
-            tourUpdated = true;
-            Solver.EnqueueSolution(_currentSolution);
-            await Solver.AlgorithmTasks[_currentSolution.Id];
-
-            if (!_currentSolution.IsValid)
-            {
-               // Ripristino dello stato precedente del tour.
-               _currentSolutionGraph.RemoveEdge(predecessorPoint.Entity.Id, node.Entity.Id);
-               _currentSolutionGraph.RemoveEdge(node.Entity.Id, successorPoint.Entity.Id);
-               _currentSolutionGraph.RemoveNode(node.Entity.Id);
-
-               _currentSolutionGraph.AddNode(tourPointToRemove.Entity.Id, tourPointToRemove);
-               _currentSolutionGraph.AddRouteFromGraph(Solver.CityMapGraph, predecessorPoint.Entity.Id, tourPointToRemove.Entity.Id);
-               _currentSolutionGraph.AddRouteFromGraph(Solver.CityMapGraph, tourPointToRemove.Entity.Id, successorPoint.Entity.Id);
-
-               tourUpdated = false;
-            }
-            await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
-         }
-      }
-
-      private async Task TryUpdateTour_v2()
+      private async Task TryUpdateTour()
       {
          double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
          var removalEdgesCandidates = CalculateMaximumEdgesTimeWalk(averageSpeedWalk);
@@ -313,14 +192,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             {
                throw new NullReferenceException(nameof(successorPoint));
             }
-
-            /*
-             * NOTA
-             * Prima di aggiungere il nuovo nodo al Tour, devo ulteriormente verificare che anche l'arco 
-             * che va dal nuovo nodo da aggiungere al tour verso il nodo successore del nodo da rimuovere 
-             * dal tour abbia un tempo di percorrenza inferiore rispetto al tempo di percorrenza dell'arco 
-             * che va dal nodo da rimuovere verso il suo nodo successore?
-             */
 
             // Primo taglio: Apertura del tour.
             _currentSolutionGraph.RemoveEdge(predecessorPoint.Entity.Id, tourPointToRemove.Entity.Id);
@@ -419,7 +290,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          if (_addedNodesCount == 0)
          {
-            Task updateTourTask = Task.Run(() => TryUpdateTour_v2());
+            Task updateTourTask = Task.Run(() => TryUpdateTour());
 
             try
             {
@@ -434,17 +305,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _processingNodes.Clear();
          _processingNodes = null;
 
-         //bool isBetterThanCurrentBestSolution =
-         //   Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost);
-         //if (isBetterThanCurrentBestSolution)
-         //{
-         //   Solver.BestSolution = _currentSolution;
-         //}
+         bool isBetterThanCurrentBestSolution = 
+            Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost, true);
+         if (isBetterThanCurrentBestSolution)
+         {
+            Solver.BestSolution = _currentSolution;
+         }
 
          if (_isTourUpdated)
          {
-            Solver.BestSolution = _currentSolution;
-            Task algorithmTask = Task.Run(() => new HybridNearestDistanceInsertion().Start());
+            Task algorithmTask = Task.Run(() => new HybridNearestDistance().Start());
 
             try
             {

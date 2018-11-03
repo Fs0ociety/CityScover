@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 24/10/2018
+// File update: 03/11/2018
 //
 
 namespace CityScover.Engine
@@ -49,7 +49,12 @@ namespace CityScover.Engine
       /// <summary>
       /// TabuSearch algorithm enumerator.
       /// </summary>
-      TabuSearch = 6
+      TabuSearch = 6,
+
+      /// <summary>
+      /// HybridNearestDistance algorithm enumerator.
+      /// </summary>
+      HybridNearestDistance = 7
    }
    #endregion
 }

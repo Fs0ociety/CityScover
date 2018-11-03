@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/10/2018
+// File update: 03/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -24,9 +24,10 @@ namespace CityScover.Engine.Algorithms.Greedy
       protected double _averageSpeedWalk;
       protected CityMapGraph _cityMapClone;
       protected DateTime _timeSpent;
-      protected ICollection<TOSolution> _solutions;
-      protected CityMapGraph _tour;
       protected InterestPointWorker _startingPoint;
+      protected CityMapGraph _tour;
+      protected ICollection<TOSolution> _solutions;
+      protected IEnumerable<int> _processingNodes;
       #endregion
 
       #region Constructors
@@ -73,7 +74,8 @@ namespace CityScover.Engine.Algorithms.Greedy
          adjPOIIds.ToList().ForEach(adjPOIId =>
          {
             var adjNode = _cityMapClone[adjPOIId];
-            if (adjNode.IsVisited)
+
+            if (!_processingNodes.Contains(adjPOIId) || adjNode.IsVisited)
             {
                return;
             }
@@ -90,8 +92,7 @@ namespace CityScover.Engine.Algorithms.Greedy
                candidateNode = _cityMapClone[pointId];
             }
          });
-         // Caso particolare (gestito solo per irrobustire il codice): se ho 2 nodi del grafo, e
-         // il secondo è già stato visitato, io ritorno null come candidateNode.
+
          return candidateNode;
       }
 
@@ -122,18 +123,26 @@ namespace CityScover.Engine.Algorithms.Greedy
          base.OnInitializing();
 
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
+         int maxNodesToEvaluate = Solver.CurrentStage.Flow.MaximumNodesToEvaluate;
          _solutions = new Collection<TOSolution>();
          _tour = new CityMapGraph();
+         _processingNodes = Solver.CityMapGraph.Nodes.Select(node => node.Entity.Id);
+
+         if (maxNodesToEvaluate != default)
+         {
+            _processingNodes = Solver.CityMapGraph.Nodes
+               .Take(maxNodesToEvaluate)
+               .Select(node => node.Entity.Id);
+         }
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
-         _timeSpent = DateTime.Now;
          _startingPoint = _cityMapClone.GetStartPoint();
+         _timeSpent = DateTime.Now;
 
          if (_startingPoint is null)
          {
             throw new OperationCanceledException(
                $"{nameof(_startingPoint)} in {nameof(NearestNeighbor)}");
          }
-
          _startingPoint.IsVisited = true;
       }
 

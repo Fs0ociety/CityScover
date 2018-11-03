@@ -6,11 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/10/2018
+// File update: 03/11/2018
 //
 
 using CityScover.Engine.Workers;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.Greedy
@@ -116,7 +117,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override bool StopConditions()
       {
          return base.StopConditions() || 
-            _tour.NodeCount == _cityMapClone.NodeCount;
+            _tour.NodeCount == _processingNodes.Count();
       }
       #endregion
    }

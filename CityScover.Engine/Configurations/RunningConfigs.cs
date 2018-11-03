@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/10/2018
+// File update: 03/11/2018
 //
 
 using CityScover.Entities;
@@ -38,7 +38,7 @@ namespace CityScover.Engine.Configs
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsCount = 15,    // Problem size
+            PointsCount = 30,    // Problem size
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -52,22 +52,32 @@ namespace CityScover.Engine.Configs
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.NearestNeighbor
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     MaximumNodesToEvaluate = 5
                   }
                },
+               //new Stage()
+               //{
+               //   Description = StageType.StageTwo,
+               //   Category = AlgorithmFamily.LocalSearch,
+               //   Flow =
+               //   {
+               //      CurrentAlgorithm = AlgorithmType.TwoOpt,
+               //      LkImprovementThreshold = 2000,
+               //      MaxIterationsWithoutImprovements = 2,
+               //      ChildrenFlows =
+               //      {
+               //         new StageFlow(AlgorithmType.LinKernighan, runningCount: 1)
+               //      }
+               //   }
+               //},
                new Stage()
                {
                   Description = StageType.StageTwo,
-                  Category = AlgorithmFamily.LocalSearch,
+                  Category = AlgorithmFamily.Improvement,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.TwoOpt,
-                     LkImprovementThreshold = 2000,
-                     MaxIterationsWithoutImprovements = 2,
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1)
-                     }
+                     CurrentAlgorithm = AlgorithmType.HybridNearestDistance
                   }
                },
                new Stage()

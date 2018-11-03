@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 03/11/2018
 //
 
 using System;
@@ -50,11 +50,16 @@ namespace CityScover.Engine
       /// <param name="firstSolutionCost">Costo prima soluzione</param>
       /// <param name="secondSolutionCost">Costo seconda soluzione</param>
       /// <returns>Il confronto da fare.</returns>
-      internal bool CompareSolutionsCost(int firstSolutionCost, int secondSolutionCost)
+      internal bool CompareSolutionsCost(int firstSolutionCost, int secondSolutionCost, bool shouldConsiderComparingEquality = false)
       {
-         return IsMinimizing
-            ? firstSolutionCost < secondSolutionCost
-            : firstSolutionCost > secondSolutionCost;
+         return IsMinimizing ? 
+            (shouldConsiderComparingEquality ? 
+            firstSolutionCost <= secondSolutionCost : 
+            firstSolutionCost < secondSolutionCost)
+            
+            : (shouldConsiderComparingEquality ? 
+            firstSolutionCost >= secondSolutionCost : 
+            firstSolutionCost > secondSolutionCost);
       }
       #endregion
    }

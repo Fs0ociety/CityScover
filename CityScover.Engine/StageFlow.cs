@@ -49,6 +49,8 @@ namespace CityScover.Engine
       /// <summary> Maximum iterations for an algorithm. </summary>
       public byte RunningCount { get; set; } = default;
 
+      public int MaximumNodesToEvaluate { get; set; } = default;
+
       /// <summary> Flag that states if an algorithm can execute an improvement logic. </summary>
       public bool CanExecuteImprovements { get; set; } = true;
 
