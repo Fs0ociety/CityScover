@@ -98,13 +98,11 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       protected DateTime GetTotalTime()
       {
-         DateTime timeSpent = Solver.Instance.WorkingConfiguration.ArrivalTime;
          InterestPointWorker startPOI = _tour.GetStartPoint();
          InterestPointWorker endPOI = _tour.GetEndPoint();
-         TimeSpan endPOITotalTimeDuration = endPOI.TotalTime.Subtract(timeSpent);
-         timeSpent = timeSpent.Add(endPOITotalTimeDuration);
+         DateTime endPOITotalTime = endPOI.TotalTime;
 
-         RouteWorker returnEdge = _cityMapClone.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
+         RouteWorker returnEdge = Solver.CityMapGraph.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
          if (returnEdge is null)
          {
             throw new NullReferenceException(nameof(returnEdge));
@@ -112,7 +110,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
          TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
-         timeSpent = timeSpent.Add(timeReturn);
+         DateTime timeSpent = endPOITotalTime.Add(timeReturn);
          return timeSpent;
       }
       #endregion

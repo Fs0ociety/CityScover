@@ -89,11 +89,11 @@
     <PointOfInterest id="7" name="Piazza Ariostea">
       <Coordinates latitude="44,8413142" longitude="11,6241956"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="95"/>
       <OpeningTimes>
         <OpeningTime from="" to=""/>
       </OpeningTimes>
-      <TimeVisit unit="min" duration="45"/>
+      <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
     <!-- Nr. 9 -->
@@ -127,7 +127,7 @@
     <PointOfInterest id="14" name="Corso Ercole I d'Este">
       <Coordinates latitude="44,8439315" longitude="11,6199775"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="98"/>
       <OpeningTimes>
         <OpeningTime from="" to=""/>
         <!-- Aperto 24 ore su 24 -->
@@ -140,7 +140,7 @@
     <PointOfInterest id="22" name="Monastero del Corpus Domini">
       <Coordinates latitude="44,8318359" longitude="11,623786"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="85"/>
       <OpeningTimes>
         <OpeningTime from="15:30" to="17:30" />
       </OpeningTimes>

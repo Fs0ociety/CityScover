@@ -127,6 +127,7 @@ namespace CityScover.Engine
          CityMapGraph solutionGraph = solution.SolutionGraph;
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
          IEnumerator<InterestPointWorker> processingNodes = solutionGraph.TourPoints.GetEnumerator();
+
          while (satisfied && processingNodes.MoveNext())
          {
             InterestPointWorker node = processingNodes.Current;

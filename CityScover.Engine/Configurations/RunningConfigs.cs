@@ -77,7 +77,8 @@ namespace CityScover.Engine.Configs
                   Category = AlgorithmFamily.Improvement,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.HybridNearestDistance
+                     CurrentAlgorithm = AlgorithmType.HybridNearestDistance,
+                     HndTmaxThreshold = new TimeSpan(1, 0, 0)
                   }
                },
                new Stage()

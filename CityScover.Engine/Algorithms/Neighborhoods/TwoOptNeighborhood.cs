@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/10/2018
+// File update: 03/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -21,7 +21,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    {
       #region Private fields
       private CityMapGraph _cityMapClone;
-      private CityMapGraph _currentSolutionGraph;
+      private CityMapGraph _tour;
       #endregion
 
       #region Constructors
@@ -34,11 +34,9 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Private methods
       private DateTime GetTotalTime()
       {
-         DateTime timeSpent = Solver.Instance.WorkingConfiguration.ArrivalTime;
-         InterestPointWorker startPOI = _currentSolutionGraph.GetStartPoint();
-         InterestPointWorker endPOI = _currentSolutionGraph.GetEndPoint();
-         TimeSpan endPOITotalTimeDuration = endPOI.TotalTime.Subtract(timeSpent);
-         timeSpent = timeSpent.Add(endPOITotalTimeDuration);
+         InterestPointWorker startPOI = _tour.GetStartPoint();
+         InterestPointWorker endPOI = _tour.GetEndPoint();
+         DateTime endPOITotalTime = endPOI.TotalTime;
 
          RouteWorker returnEdge = _cityMapClone.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
          if (returnEdge is null)
@@ -48,7 +46,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
          TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
-         timeSpent = timeSpent.Add(timeReturn);
+         DateTime timeSpent = endPOITotalTime.Add(timeReturn);
          return timeSpent;
       }
 
@@ -76,19 +74,19 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Internal methods
       internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution)
       {
-         _currentSolutionGraph = solution.SolutionGraph.DeepCopy();
-         var currentSolutionPoints = _currentSolutionGraph.Nodes;
+         _tour = solution.SolutionGraph.DeepCopy();
+         var currentSolutionPoints = _tour.Nodes;
          var candidateEdges = new Dictionary<RouteWorker, IEnumerable<RouteWorker>>();
 
          foreach (var node in currentSolutionPoints)
          {
             int fixedNodeId = node.Entity.Id;
-            var itemNeighbors = _currentSolutionGraph.GetAdjacentNodes(fixedNodeId);
+            var itemNeighbors = _tour.GetAdjacentNodes(fixedNodeId);
 
             foreach (var neighbor in itemNeighbors)
             {
                var candidateEdgesCurrentEdge = new Collection<RouteWorker>();
-               var currentEdge = _currentSolutionGraph.GetEdge(fixedNodeId, neighbor);
+               var currentEdge = _tour.GetEdge(fixedNodeId, neighbor);
                if (currentEdge is null)
                {
                   continue;
@@ -101,17 +99,17 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
                while (processingNodeId != fixedNodeId)
                {
-                  var nextNeighbors = _currentSolutionGraph.GetAdjacentNodes(processingNodeId);
+                  var nextNeighbors = _tour.GetAdjacentNodes(processingNodeId);
 
                   foreach (var adjacentNodeId in nextNeighbors)
                   {
-                     var procNodeAdjNodeEdge = _currentSolutionGraph.GetEdge(processingNodeId, adjacentNodeId);
+                     var procNodeAdjNodeEdge = _tour.GetEdge(processingNodeId, adjacentNodeId);
                      if (procNodeAdjNodeEdge is null)
                      {
                         continue;
                      }
 
-                     if (!_currentSolutionGraph.AreAdjacentEdges(
+                     if (!_tour.AreAdjacentEdges(
                            currentEdge.Entity.PointFrom.Id,
                            currentEdge.Entity.PointTo.Id,
                            procNodeAdjNodeEdge.Entity.PointFrom.Id,
@@ -142,7 +140,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       {
          TOSolution newSolution = new TOSolution()
          {
-            SolutionGraph = _currentSolutionGraph.DeepCopy(),
+            SolutionGraph = _tour.DeepCopy(),
             TimeSpent = GetTotalTime()
          };
 

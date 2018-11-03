@@ -50,14 +50,14 @@ namespace CityScover.Engine
       /// <param name="firstSolutionCost">Costo prima soluzione</param>
       /// <param name="secondSolutionCost">Costo seconda soluzione</param>
       /// <returns>Il confronto da fare.</returns>
-      internal bool CompareSolutionsCost(int firstSolutionCost, int secondSolutionCost, bool shouldConsiderComparingEquality = false)
+      internal bool CompareSolutionsCost(int firstSolutionCost, int secondSolutionCost, bool considerEqualityComparison = false)
       {
          return IsMinimizing ? 
-            (shouldConsiderComparingEquality ? 
+            (considerEqualityComparison ? 
             firstSolutionCost <= secondSolutionCost : 
             firstSolutionCost < secondSolutionCost)
             
-            : (shouldConsiderComparingEquality ? 
+            : (considerEqualityComparison ? 
             firstSolutionCost >= secondSolutionCost : 
             firstSolutionCost > secondSolutionCost);
       }

@@ -11,6 +11,7 @@
 
 using CityScover.Engine.Algorithms;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -155,6 +156,7 @@ namespace CityScover.Engine
          _status = AlgorithmStatus.Error;
          if (Solver.IsMonitoringEnabled)
          {
+            Debug.WriteLine(exception.StackTrace);
             _provider.NotifyError(exception);
          }
       }
