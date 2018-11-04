@@ -6,11 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/11/2018
+// File update: 04/11/2018
 //
 
 using CityScover.Engine.Workers;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,35 +25,35 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
-      private (TimeSpan, TimeSpan, TimeSpan) CalculateTimesByNextPoint(InterestPointWorker point)
-      {
-         TimeSpan timeVisit = default;
-         TimeSpan timeWalk = default;
-         TimeSpan timeReturn = default;
+      //private (TimeSpan, TimeSpan, TimeSpan) CalculateTimesByNextPoint(InterestPointWorker point)
+      //{
+      //   TimeSpan timeVisit = default;
+      //   TimeSpan timeWalk = default;
+      //   TimeSpan timeReturn = default;
 
-         if (point.Entity.TimeVisit.HasValue)
-         {
-            timeVisit = point.Entity.TimeVisit.Value;
-         }
+      //   if (point.Entity.TimeVisit.HasValue)
+      //   {
+      //      timeVisit = point.Entity.TimeVisit.Value;
+      //   }
 
-         RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, point.Entity.Id);
-         if (edge is null)
-         {
-            throw new NullReferenceException(nameof(edge));
-         }
+      //   RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, point.Entity.Id);
+      //   if (edge is null)
+      //   {
+      //      throw new NullReferenceException(nameof(edge));
+      //   }
 
-         double averageSpeedWalk = _averageSpeedWalk / 60.0;
-         timeWalk = TimeSpan.FromMinutes(edge.Weight() / averageSpeedWalk);
+      //   double averageSpeedWalk = _averageSpeedWalk / 60.0;
+      //   timeWalk = TimeSpan.FromMinutes(edge.Weight() / averageSpeedWalk);
 
-         RouteWorker returnEdge = _cityMapClone.GetEdge(point.Entity.Id, _startingPoint.Entity.Id);
-         if (returnEdge is null)
-         {
-            throw new NullReferenceException(nameof(returnEdge));
-         }
-         timeReturn = TimeSpan.FromMinutes(returnEdge.Weight() / averageSpeedWalk);
+      //   RouteWorker returnEdge = _cityMapClone.GetEdge(point.Entity.Id, _startingPoint.Entity.Id);
+      //   if (returnEdge is null)
+      //   {
+      //      throw new NullReferenceException(nameof(returnEdge));
+      //   }
+      //   timeReturn = TimeSpan.FromMinutes(returnEdge.Weight() / averageSpeedWalk);
 
-         return (timeVisit, timeWalk, timeReturn);
-      }
+      //   return (timeVisit, timeWalk, timeReturn);
+      //}
       #endregion
 
       #region Overrides

@@ -6,12 +6,11 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/10/2018
+// File update: 04/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -124,7 +123,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
-         _neighborhood.TabuList = new List<TabuMove>();
+         //_neighborhood.TabuList = new List<TabuMove>();
          _innerAlgorithm.AcceptImprovementsOnly = false;
          _innerAlgorithm.Provider = Provider;
       }
