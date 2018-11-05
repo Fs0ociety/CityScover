@@ -39,6 +39,7 @@ namespace CityScover.Engine
          {
             _solutionsQueue = new BlockingCollection<TOSolution>();
          }
+
          WorkingConfiguration = configuration;
          //ConstraintsToRelax.Add(2);
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
@@ -55,7 +56,7 @@ namespace CityScover.Engine
       /// </summary>
       private void InitializeTour()
       {
-         CityScoverRepository.LoadPoints(WorkingConfiguration.PointsCount);
+         CityScoverRepository.LoadPoints(WorkingConfiguration.PointsFilename);
 
          // Filtering points by tour category.
          Points = from point in CityScoverRepository.Points

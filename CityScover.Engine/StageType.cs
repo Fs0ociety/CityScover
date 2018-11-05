@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 05/11/2018
 //
 
 namespace CityScover.Engine
@@ -36,6 +36,6 @@ namespace CityScover.Engine
       /// <summary>
       /// Stage for Improvement algorithms.
       /// </summary>
-      Improvement
+      StageImprovement
    }
 }

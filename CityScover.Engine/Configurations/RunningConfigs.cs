@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/11/2018
+// File update: 05/11/2018
 //
 
 using CityScover.Entities;
@@ -34,11 +34,11 @@ namespace CityScover.Engine.Configs
       private static void CreateConfigurations()
       {
          #region Configuration 1
-         _configurations.Add(new Configuration()
+         Configuration c1 = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsCount = 30,    // Problem size
+            PointsFilename = @"Tests.cityscover-points-30.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -48,7 +48,7 @@ namespace CityScover.Engine.Configs
             {
                new Stage()
                {
-                  Description = StageType.StageOne,
+                  Description = StageType.StageImprovement,
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
@@ -97,7 +97,7 @@ namespace CityScover.Engine.Configs
                   }
                }
             }
-         });
+         };
          #endregion
 
          #region Configuration 2
@@ -476,6 +476,8 @@ namespace CityScover.Engine.Configs
          //   }
          //});
          #endregion
+
+         _configurations.Add(c1);
       }
       #endregion
 

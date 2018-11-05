@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 24/09/2018
+// File update: 05/11/2018
 //
 
 using CityScover.Entities;
@@ -41,7 +41,8 @@ namespace CityScover.Data
       private static void InitializeMeasureUnits()
       {
          XmlDocument document = new XmlDocument();
-         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream("CityScover.Data.cityscover-measures.xml"));
+         document.Load(typeof(CityScoverRepository).Assembly
+            .GetManifestResourceStream("CityScover.Data.cityscover-measures.xml"));
 
          foreach (XmlNode node in document.GetElementsByTagName("measureunits"))
          {
@@ -61,10 +62,10 @@ namespace CityScover.Data
          }
       }
 
-      private static void InitializePoints(XmlDocument document, int pointsCount)
+      private static void InitializePoints(XmlDocument document, string filename)
       {
-         document.Load(typeof(CityScoverRepository).Assembly.GetManifestResourceStream(
-            "CityScover.Data.cityscover-points-" + pointsCount + ".xml"));
+         document.Load(typeof(CityScoverRepository).Assembly
+            .GetManifestResourceStream("CityScover.Data." + filename));
 
          foreach (XmlNode node in document.GetElementsByTagName("PointOfInterests"))
          {
@@ -78,8 +79,6 @@ namespace CityScover.Data
                string pointId = childNode.Attributes["id"].Value;
                string pointName = childNode.Attributes["name"].Value;
                int intPointId = int.Parse(pointId);
-
-               // Create a new entity of InterestPoint
                var pointBuilder = InterestPointBuilder.NewBuilder(intPointId, pointName);
 
                foreach (XmlNode nestedChild in childNode.ChildNodes)
@@ -270,24 +269,30 @@ namespace CityScover.Data
       #endregion
 
       #region Public static methods
-      public static void LoadPoints(int pointsCount)
+      public static void LoadPoints(string filename)
       {
+         if (string.IsNullOrEmpty(filename))
+         {
+            throw new ArgumentNullException(nameof(filename));
+         }
+
          XmlDocument document = new XmlDocument();
-         if (_points.Count() > 0)
+
+         if (_points.Any())
          {
             _points.Clear();
          }
-         InitializePoints(document, pointsCount);
+         InitializePoints(document, filename);
       }
 
       public static void LoadRoutes(IEnumerable<InterestPoint> filteredPoints)
       {
          XmlDocument document = new XmlDocument();
-         if (_routes.Count() > 0)
+
+         if (_routes.Any())
          {
             _routes.Clear();
          }
-
          InitializeRoutes(document, filteredPoints);
       }
       #endregion

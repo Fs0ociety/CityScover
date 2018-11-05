@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 29/10/2018
+// File update: 05/11/2018
 //
 
 using CityScover.Commons;
@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Console;
 
@@ -50,7 +51,7 @@ namespace CityScover.Services
          WriteLine("\t GENERAL CONFIGURATION INFORMATIONS\n");
          WriteLine($"\t Tour category:          \"{configuration.TourCategory}\"");
          WriteLine($"\t Starting point:         \"{configuration.StartingPointId} (Hotel Carlton)\"");
-         WriteLine($"\t Problem size:           \"{configuration.PointsCount} points of interest\"");
+         WriteLine($"\t Problem size:           \"{_problemSize?.ToString() ?? Regex.Match(configuration.PointsFilename, @"\d+").Value} points of interest\"");
          WriteLine($"\t Tourist walking speed:  \"{configuration.WalkingSpeed * 3.6} Km/h\"");
          WriteLine($"\t Arrival time:           \"{configuration.ArrivalTime.ToString("g")}\"");
          WriteLine($"\t Tour duration:          \"{configuration.TourDuration.Hours} hours\"");
@@ -60,47 +61,59 @@ namespace CityScover.Services
 
          foreach (var stage in configuration.Stages)
          {
-            WriteLine($"\t     Description:         \"{stage.Description}\"");
+            string stageDescription = string.Empty;
+            string description = stage.Description.ToString();
+            stageDescription = description.Substring(0, 5);
+            stageDescription += " " + description.Substring(5);
+
+            WriteLine($"\t     [{stageDescription.ToUpper()}]\n");
             WriteLine($"\t     Algorithm family:    \"{stage.Category}\"");
-            WriteLine($"\t     Current algorithm:   \"{stage.Flow.CurrentAlgorithm}\"");
-            WriteLine($"\t     Max iterations:      \"{stage.Flow.RunningCount}\"");
-            WriteLine($"\t     Deadlock condition:  \"{stage.Flow.MaximumDeadlockIterations}\"");
-            if (!stage.Flow.ChildrenFlows.Any())
-            {
-               WriteLine("\t    --------------------------------------------------------");
-            }
-            else
-            {
-               WriteLine($"\n\t     \"{stage.Flow.CurrentAlgorithm} inner algorithms\"");
-               foreach (var childrenFlow in stage.Flow.ChildrenFlows)
-               {
-                  WriteLine("\t     {");
-                  WriteLine($"\t        Current algorithm:   \"{childrenFlow.CurrentAlgorithm}\"");
-                  WriteLine($"\t        Max iterations:      \"{childrenFlow.RunningCount}\"");
-                  WriteLine($"\t        Deadlock condition:  \"{childrenFlow.MaximumDeadlockIterations}\"");
-                  WriteLine("\t     }");
 
-                  if (!childrenFlow.ChildrenFlows.Any())
-                  {
-                     WriteLine("\t    --------------------------------------------------------");
-                  }
-                  else
-                  {
-                     WriteLine($"\n\t        \"{childrenFlow.CurrentAlgorithm} inner algorithms\"");
-                     foreach (var nestedChildren in childrenFlow.ChildrenFlows)
-                     {
-                        WriteLine("\t        {");
-                        WriteLine($"\t           Current algorithm:   \"{nestedChildren.CurrentAlgorithm}\"");
-                        WriteLine($"\t           Max iterations:      \"{nestedChildren.RunningCount}\"");
-                        WriteLine("\t        }");
-                        WriteLine("\t    --------------------------------------------------------");
-
-                     }
-                  }
-               }
-            }
+            DisplayStageFlow(stage.Flow);
+            WriteLine("\t    --------------------------------------------------------\n");
          }
          WriteLine("\t============================================================\n");
+      }
+
+      private void DisplayStageFlow(StageFlow flow, string tabulator = "\t")
+      {
+         WriteLine($"{tabulator}     Current algorithm:   \"{flow.CurrentAlgorithm}\"");
+         WriteLine($"{tabulator}     Max iterations:      \"{flow.RunningCount}\"");
+
+         if (flow.MaximumNodesToEvaluate != default)
+         {
+            WriteLine($"{tabulator}     Maximum nodes to consider:  \"{flow.MaximumNodesToEvaluate}\"");
+         }
+         if (flow.CanExecuteImprovements != default)
+         {
+            WriteLine($"{tabulator}     Can {flow.CurrentAlgorithm} executes improvements:  \"{flow.CanExecuteImprovements}\"");
+         }
+         if (flow.LkImprovementThreshold != default)
+         {
+            WriteLine($"{tabulator}     Lin Kernighan improvement threshold:  \"{flow.LkImprovementThreshold}\"");
+         }
+         if (flow.MaxIterationsWithoutImprovements != default)
+         {
+            WriteLine($"{tabulator}     Maximum iterations without improvement:  \"{flow.MaxIterationsWithoutImprovements}\"");
+         }
+         if (flow.MaximumDeadlockIterations != default)
+         {
+            WriteLine($"{tabulator}     Deadlock condition:  \"{flow.MaximumDeadlockIterations}\"");
+         }
+         if (flow.HndTmaxThreshold != default)
+         {
+            WriteLine($"{tabulator}     TMax threshold:  \"" +
+               $"{flow.HndTmaxThreshold.Hours + ((flow.HndTmaxThreshold.Hours == 1) ? " hour" : " hours")} and " +
+               $"{flow.HndTmaxThreshold.Minutes} minutes.\"");
+         }
+
+         if (flow.ChildrenFlows.Any())
+         {
+            WriteLine($"\n{tabulator}     \"{flow.CurrentAlgorithm} inner algorithms\"");
+            WriteLine($"{tabulator}     " + "{");
+            DisplayStageFlow(flow.ChildrenFlows.FirstOrDefault(), "\t    ");
+            WriteLine($"{tabulator}     " + "}");
+         }
       }
       #endregion
 
@@ -257,7 +270,7 @@ namespace CityScover.Services
                      WriteLine("Selected invalid option. " +
                         "Enter an option between 1 and 3.\n");
                      break;
-               } 
+               }
             } while (choice != "3");
          }
       }
@@ -495,7 +508,7 @@ namespace CityScover.Services
 
          if (arrivalTime.HasValue)
          {
-            WriteLine($"\n\"Arrival\" time at the Hotel set at: {arrivalTime}\n");
+            WriteLine($"\n\"Arrival time\" at the Hotel set at: {arrivalTime}\n");
          }
 
          return arrivalTime;
@@ -585,7 +598,7 @@ namespace CityScover.Services
       {
          Collection<Stage> stages = new Collection<Stage>();
          WriteLine("\n********** { STAGES'S CONFIGURATION } **********\n");
-      
+
          for (int stageCount = 1; stageCount <= _maxStagesCount; ++stageCount)
          {
             Stage stage = GetStageSettings(stageCount);
@@ -648,7 +661,7 @@ namespace CityScover.Services
                WriteLine($"Do you want to set an improvement algorithm for stage {stageId}? [y/N]: ");
                response = ReadLine().Trim();
 
-               canProceed = response == "y" || response == "Y" || 
+               canProceed = response == "y" || response == "Y" ||
                   response == "n" || response == "N";
 
                if (!canProceed)
@@ -900,11 +913,11 @@ namespace CityScover.Services
          {
             Write("Do you want MetaHeuristic algorithm can executes improvements? [y/N]: ");
             response = ReadLine().Trim();
-         
-            canProceed = response == "y" || response == "Y" || 
+
+            canProceed = response == "y" || response == "Y" ||
                response == "n" || response == "N";
 
-            if(!canProceed)
+            if (!canProceed)
             {
                WriteLine("Entered invalid string. Insert only \"y|Y\" or \"n|N\".\n");
             }
@@ -1021,7 +1034,7 @@ namespace CityScover.Services
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = _tourCategory,
-            PointsCount = _problemSize.Value,
+            PointsFilename = @"cityscover-points-" + _problemSize.Value,
             StartingPointId = 1,
             WalkingSpeed = _walkingSpeed.Value / 3.6,  // in m/s.
             ArrivalTime = _arrivalTime.Value,

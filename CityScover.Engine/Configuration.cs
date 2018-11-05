@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/10/2018
+// File update: 05/11/2018
 //
 
 using CityScover.Entities;
@@ -31,7 +31,7 @@ namespace CityScover.Engine
       #region Properties
       public TourCategoryType TourCategory { get; set; }
       public int StartingPointId { get; set; }
-      public int PointsCount { get; set; }
+      public string PointsFilename { get; set; }
       public double WalkingSpeed { get; set; }
       public DateTime ArrivalTime { get; set; }
       public TimeSpan TourDuration { get; set; }
