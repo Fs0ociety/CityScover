@@ -148,7 +148,7 @@ namespace CityScover.Engine.Algorithms
 
          foreach (var neighborSolution in currentNeighborhood)
          {
-            neighborSolution.SolutionGraph.CalculateTimes();
+            //neighborSolution.SolutionGraph.CalculateTimes();
             Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 

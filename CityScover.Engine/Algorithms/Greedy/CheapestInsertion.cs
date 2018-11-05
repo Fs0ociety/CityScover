@@ -129,12 +129,12 @@ namespace CityScover.Engine.Algorithms.Greedy
          _tour.AddRouteFromGraph(_cityMapClone, candidateNode.Entity.Id, _endPoint.Entity.Id);
          _tour.RemoveEdge(_newStartingPoint.Entity.Id, _endPoint.Entity.Id);
          _newStartingPoint = candidateNode;
-         _tour.CalculateTimes();
+         //_tour.CalculateTimes();
 
          TOSolution newSolution = new TOSolution()
          {
-            SolutionGraph = _tour,
-            TimeSpent = GetTotalTime()
+            SolutionGraph = _tour
+            //TimeSpent = GetTotalTime()
          };
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);

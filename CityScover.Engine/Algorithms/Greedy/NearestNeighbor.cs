@@ -89,12 +89,12 @@ namespace CityScover.Engine.Algorithms.Greedy
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
          _newStartPOI = candidatePOI;
-         _tour.CalculateTimes();
+         //_tour.CalculateTimes();
 
          TOSolution newSolution = new TOSolution()
          {
-            SolutionGraph = _tour,
-            TimeSpent = GetTotalTime()
+            SolutionGraph = _tour
+            //TimeSpent = GetTotalTime()
          };
 
          _solutions.Add(newSolution);

@@ -288,13 +288,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          TryAddNode(point, _endPOI.Entity.Id, _startPOI.Entity.Id);
          _previousEndPOIKey = _endPOI.Entity.Id;
          _endPOI = _tour.GetEndPoint();
-         _tour.CalculateTimes();
+         //_tour.CalculateTimes();
          _addedNodesCount++;
 
          _currentSolution = new TOSolution()
          {
-            SolutionGraph = _tour,
-            TimeSpent = GetTotalTime()
+            SolutionGraph = _tour
+            //TimeSpent = GetTotalTime()
          };
 
          Solver.EnqueueSolution(_currentSolution);

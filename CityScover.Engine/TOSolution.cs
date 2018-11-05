@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/10/2018
+// File update: 04/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -19,6 +19,7 @@ namespace CityScover.Engine
    {
       #region Private fields
       private static int _sequenceId;
+      private CityMapGraph _solutionGraph;
       #endregion
 
       #region Constructors
@@ -48,7 +49,7 @@ namespace CityScover.Engine
       /// <summary>
       /// Property used from SolverValidator to check the TMax constraint.
       /// </summary>
-      internal DateTime TimeSpent { get; set; }
+      internal DateTime TimeSpent { get; private set; }
 
       /// <summary>
       /// Property used from SolverValidator for analysis of problem's constraints.
@@ -59,9 +60,43 @@ namespace CityScover.Engine
       /// <summary>
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
-      internal CityMapGraph SolutionGraph { get; set; } = new CityMapGraph();
+      internal CityMapGraph SolutionGraph {
+         get
+         {
+            return _solutionGraph;
+         }
+         set
+         {
+            _solutionGraph = value;
+            if (_solutionGraph != null)
+            {
+               _solutionGraph.CalculateTimes();
+               TimeSpent = CalculateTotalTime();
+            }
+         }
+      }
 
       internal bool IsValid => Penalty == 0;
+      #endregion
+
+      #region Private methods
+      private DateTime CalculateTotalTime()
+      {
+         InterestPointWorker startPOI = _solutionGraph.GetStartPoint();
+         InterestPointWorker endPOI = _solutionGraph.GetEndPoint();
+         DateTime endPOITotalTime = endPOI.TotalTime;
+
+         RouteWorker returnEdge = Solver.Instance.CityMapGraph.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
+         if (returnEdge is null)
+         {
+            throw new NullReferenceException(nameof(returnEdge));
+         }
+
+         double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
+         TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
+         DateTime timeSpent = endPOITotalTime.Add(timeReturn);
+         return timeSpent;
+      } 
       #endregion
    }
 }

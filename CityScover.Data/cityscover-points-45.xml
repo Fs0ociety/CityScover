@@ -214,19 +214,6 @@
     <!-- Punti d'interesse Gastronomici -->
     <!---->
 
-    <!-- Nr. 31 -->
-    <!-- Il Don Giovanni -->
-    <PointOfInterest id="31" name="Il Don Giovanni">
-      <Coordinates latitude="44,838670" longitude="11,619772"/>
-      <Category id="2"/>
-      <ThematicScore category="2" value="90"/>
-      <OpeningTimes>
-        <OpeningTime from="12:30" to="14:30"/>
-        <OpeningTime from="19:30" to="22:30"/>
-      </OpeningTimes>
-      <TimeVisit unit="min" duration="45"/>
-    </PointOfInterest>
-
     <!-- Nr. 32 -->
     <!-- Makorè -->
     <PointOfInterest id="32" name="Makorè">
@@ -278,41 +265,29 @@
     </PointOfInterest>
 
     <!-- Nr. 36 -->
-    <!-- I Piaceri di Lucrezia -->
-    <PointOfInterest id="36" name="I Piaceri di Lucrezia">
-      <Coordinates latitude="44,828753" longitude="11,624123"/>
+    <!-- Trattoria da Noemi -->
+    <PointOfInterest id="36" name="Trattoria da Noemi">
+      <Coordinates latitude="44,8330769" longitude="11,6189851"/>
       <Category id="2"/>
-      <ThematicScore category="2" value="85"/>
+      <ThematicScore category="2" value="70"/>
       <OpeningTimes>
-        <OpeningTime from="19:00" to="00:00"/>
+        <OpeningTime from="12:15" to="15:00"/>
+        <OpeningTime from="19:30" to="23:00"/>
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
-
-    <!-- Nr. 38 -->
-    <!-- Hostaria Savonarola -->
-    <PointOfInterest id="38" name="Hostaria Savonarola">
-      <Coordinates latitude="44,836824" longitude="11,619445"/>
+    
+    <!-- Nr. 37 -->
+    <!-- Il Don Giovanni -->
+    <PointOfInterest id="37" name="Il Don Giovanni">
+      <Coordinates latitude="44,838670" longitude="11,619772"/>
       <Category id="2"/>
-      <ThematicScore category="2" value="100"/>
+      <ThematicScore category="2" value="90"/>
       <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <OpeningTime from="" to=""/>
+        <OpeningTime from="12:30" to="14:30"/>
+        <OpeningTime from="19:30" to="22:30"/>
       </OpeningTimes>
-      <TimeVisit unit="min" duration="60"/>
-    </PointOfInterest>
-
-    <!-- Nr. 39 -->
-    <!-- Quel fantastico giovedì -->
-    <PointOfInterest id="39" name="Quel fantastico giovedì">
-      <Coordinates latitude="44,831354" longitude="11,619728"/>
-      <Category id="2"/>
-      <ThematicScore category="2" value="100"/>
-      <OpeningTimes>
-        <OpeningTime from="" to=""/>
-        <OpeningTime from="" to=""/>
-      </OpeningTimes>
-      <TimeVisit unit="min" duration="60"/>
+      <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
     <!-- Nr. 40 -->
@@ -340,7 +315,7 @@
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
-
+    
     <!-- Nr. 42 -->
     <!-- The Lab - Food to Feel -->
     <PointOfInterest id="42" name="The Lab - Food to Feel">
@@ -354,6 +329,18 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
+    <!-- Nr. 46 -->
+    <!-- I Piaceri di Lucrezia -->
+    <PointOfInterest id="46" name="I Piaceri di Lucrezia">
+      <Coordinates latitude="44,828753" longitude="11,624123"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="85"/>
+      <OpeningTimes>
+        <OpeningTime from="19:00" to="00:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+    
     <!-- Nr. 49 -->
     <!-- Rifugio Degli Artisti -->
     <PointOfInterest id="49" name="Rifugio Degli Artisti">
@@ -362,6 +349,19 @@
       <ThematicScore category="2" value="100"/>
       <OpeningTimes>
         <OpeningTime from="19:30" to="22:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+
+    <!-- Nr. 50 -->
+    <!-- Hostaria Savonarola -->
+    <PointOfInterest id="50" name="Hostaria Savonarola">
+      <Coordinates latitude="44,836824" longitude="11,619445"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
       </OpeningTimes>
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
@@ -404,7 +404,19 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-
+    <!-- Nr. 58 -->
+    <!-- Quel fantastico giovedì -->
+    <PointOfInterest id="58" name="Quel fantastico giovedì">
+      <Coordinates latitude="44,831354" longitude="11,619728"/>
+      <Category id="2"/>
+      <ThematicScore category="2" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>
+        <OpeningTime from="" to=""/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="60"/>
+    </PointOfInterest>
+    
     <!---->
     <!-- Punti d'interesse Sportivi -->
     <!---->

@@ -89,27 +89,28 @@ namespace CityScover.Engine
          var totalScoreNodes = (from node in solutionNodes
                                 select node.Entity.Score.Value).Sum();
 
-         int totalScoreEdges = default;
-         solutionNodes.ToList().ForEach(node =>
-         {
-            var edges = solution.SolutionGraph.GetEdges(node.Entity.Id);
-            try
-            {
-               var edge = edges.FirstOrDefault();
-               if (edge != null)
-               {
-                  totalScoreEdges += checked((int)edge.Weight());
-               }
-            }
-            catch (OverflowException ex)
-            {
-               // PROVVISORIO
-               Debug.WriteLine(
-                  $"Objective Function exception during conversion double to int {ex.Message}");
-            }
-         });
+         //int totalScoreEdges = default;
+         //solutionNodes.ToList().ForEach(node =>
+         //{
+         //   var edges = solution.SolutionGraph.GetEdges(node.Entity.Id);
+         //   try
+         //   {
+         //      var edge = edges.FirstOrDefault();
+         //      if (edge != null)
+         //      {
+         //         totalScoreEdges += checked((int)edge.Weight());
+         //      }
+         //   }
+         //   catch (OverflowException ex)
+         //   {
+         //      // PROVVISORIO
+         //      Debug.WriteLine(
+         //         $"Objective Function exception during conversion double to int {ex.Message}");
+         //   }
+         //});
 
-         return totalScoreNodes + totalScoreEdges;
+         //return totalScoreNodes + totalScoreEdges;
+         return totalScoreNodes;
       }
       #endregion
 
