@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 04/11/2018
 //
 
 using CityScover.Engine.Algorithms.Metaheuristics;
@@ -27,6 +27,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Constructors
       internal TabuSearchNeighborhood()
       {
+         _tabuList = new List<TabuMove>();
       }
    
       internal TabuSearchNeighborhood(Neighborhood neighborhood, IList<TabuMove> tabuList)
@@ -47,8 +48,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal IList<TabuMove> TabuList
       {
          get => _tabuList;
-         set => _tabuList = value ?? 
-            throw new ArgumentNullException($"{nameof(value)} can not be null");
+         //set => _tabuList = value ?? 
+         //   throw new ArgumentNullException($"{nameof(value)} can not be null");
       }
       #endregion
 
@@ -58,9 +59,9 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
       internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
-         TabuMove forbiddenMove = _tabuList.
-            Where(move => move.FirstEdge == currentEdge && move.SecondEdge == candidateEdge).
-            FirstOrDefault();
+         TabuMove forbiddenMove = _tabuList
+            .Where(move => move.FirstEdge == currentEdge && move.SecondEdge == candidateEdge)
+            .FirstOrDefault();
 
          if (forbiddenMove != null)
          {

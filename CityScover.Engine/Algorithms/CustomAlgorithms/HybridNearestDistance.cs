@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/11/2018
+// File update: 04/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -111,6 +111,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             {
                continue;
             }
+
             double tWalkMinutes = (route.Weight() / averageSpeedWalk) / 60.0;
             TimeSpan timeRouteWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
@@ -132,8 +133,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             return;
          }
-         AddPointsNotInTour();
 
+         AddPointsNotInTour();
          InterestPointWorker tourPointToRemove = default;
          InterestPointWorker predecessorPoint = default;
          RouteWorker ingoingRoute = default;
@@ -146,6 +147,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             {
                break;
             }
+
             InterestPointWorker candidateNode = _processingNodes.Dequeue();
 
             foreach (var (edge, tWalk) in removalEdgesCandidates)
@@ -158,7 +160,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                   throw new NullReferenceException(nameof(currentPointFrom));
                }
 
-               var newEdge = Solver.CityMapGraph.GetEdge(currentPointFrom.Entity.Id, candidateNode.Entity.Id);
+               var newEdge = Solver.CityMapGraph
+                  .GetEdge(currentPointFrom.Entity.Id, candidateNode.Entity.Id);
                if (newEdge is null)
                {
                   throw new NullReferenceException(nameof(newEdge));
@@ -179,10 +182,15 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                   int pointToScore = currentPointTo.Entity.Score.Value;
                   if (pointToScore < currentPointScore)
                   {
-                     tourPointToRemove = currentPointTo;    // Nodo da rimuovere
+                     tourPointToRemove = currentPointTo;
                      currentPointScore = pointToScore;
-                     predecessorPoint = currentPointFrom;   // Nodo predecessore al nodo da rimuovere
-                     ingoingRoute = edge;                   // Arco incidente sul nodo da rimuovere
+                     predecessorPoint = currentPointFrom;
+                     ingoingRoute = edge;
+                  }
+                  else if (pointToScore == currentPointScore)
+                  {
+                     tourPointToRemove = (new Random().Next(2) == 0) 
+                        ? tourPointToRemove : currentPointTo;
                   }
                }
             }
@@ -208,7 +216,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                throw new NullReferenceException(nameof(successorPoint));
             }
 
-            UpdateTourInternal(tourPointToRemove, candidateNode, predecessorPoint.Entity.Id, successorPoint.Entity.Id);
+            UpdateTourInternal(tourPointToRemove, candidateNode, 
+               predecessorPoint.Entity.Id, successorPoint.Entity.Id);
 
             _currentSolution = new TOSolution()
             {
@@ -221,7 +230,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             if (!_currentSolution.IsValid)
             {
-               UndoUpdateTourInternal(tourPointToRemove, candidateNode.Entity.Id, predecessorPoint.Entity.Id, successorPoint.Entity.Id);
+               UndoUpdateTourInternal(tourPointToRemove, candidateNode.Entity.Id, 
+                  predecessorPoint.Entity.Id, successorPoint.Entity.Id);
                tourUpdated = false;
             }
          }
@@ -332,13 +342,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             {
                OnError(ae.InnerException);
             }
+            finally
+            {
+               _processingNodes.Clear();
+               _processingNodes = null;
+            }
          }
-         _processingNodes.Clear();
-         _processingNodes = null;
 
          bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
-            _currentSolution.Cost, 
-            Solver.BestSolution.Cost, 
+            _currentSolution.Cost,
+            Solver.BestSolution.Cost,
             considerEqualityComparison: true);
 
          if (isBetterThanCurrentBestSolution)

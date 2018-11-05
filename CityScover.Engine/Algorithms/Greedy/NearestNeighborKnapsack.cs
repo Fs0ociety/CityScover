@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 04/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -30,7 +30,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          var adjPOIIds = _cityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
 
-         var tempNodes = new Collection<(int, double)>();
+         var tempNodes = new Collection<(int NodeKey, double Ratio)>();
          adjPOIIds.ToList().ForEach(adjPOIId => AddWeightedNode(adjPOIId));
 
          // First local function: AddWeightedNode
@@ -53,8 +53,8 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
 
          var tempNodesSorted = from node in tempNodes
-                               orderby node.Item2 descending
-                               select node.Item1;
+                               orderby node.Ratio descending
+                               select node.NodeKey;
 
          InterestPointWorker candidateNode = default;
          int candidateNodeId = tempNodesSorted.FirstOrDefault();
@@ -62,6 +62,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          {
             candidateNode = _cityMapClone[candidateNodeId];
          }
+
          return candidateNode;
       }
    }
