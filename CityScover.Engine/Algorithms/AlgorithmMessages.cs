@@ -23,7 +23,8 @@ namespace CityScover.Engine.Algorithms
          _algorithmMessages = new Dictionary<MessageCodes, string>()
          {
             [MessageCodes.None] = string.Empty,
-            [MessageCodes.BestSolutionFound] = "Best solution found"
+            [MessageCodes.BestSolutionFound] = "Best solution found",
+            [MessageCodes.NewSolutionComponentAdded] = "{0} point added to solution"
          };
       }
       #endregion
@@ -45,5 +46,6 @@ namespace CityScover.Engine.Algorithms
    {
       None = 0,
       BestSolutionFound = 1,
+      NewSolutionComponentAdded = 2
    }
 }

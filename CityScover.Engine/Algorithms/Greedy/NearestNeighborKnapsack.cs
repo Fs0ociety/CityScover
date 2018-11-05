@@ -6,10 +6,11 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/11/2018
+// File update: 05/11/2018
 //
 
 using CityScover.Engine.Workers;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -42,13 +43,15 @@ namespace CityScover.Engine.Algorithms.Greedy
                return;
             }
 
+            int deltaScore = Math.Abs(node.Entity.Score.Value - interestPoint.Entity.Score.Value);
             RouteWorker edge = _cityMapClone.GetEdge(interestPoint.Entity.Id, adjPOIId);
             if (edge is null)
             {
                return;
             }
             
-            var value = node.Entity.Score.Value / edge.Weight.Invoke();
+            //var value = node.Entity.Score.Value / edge.Weight.Invoke();
+            var value = deltaScore / edge.Weight.Invoke();
             tempNodes.Add((adjPOIId, value));
          }
 

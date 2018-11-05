@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Cityscover-test-nearestnbor-5.xml
+  File di dati per il test del corretto funzionamento
+  dell'algoritmo Nearest Neighbor, con funzione di Best classica.
+  
+  Work set di 5 nodi (+ hotel), tutti riguardanti il tema Storico Culturale.
+  Nodi coinvolti nel dettaglio in breve:
+    
+  P1 - Hotel Carlton (punto di partenza)
+  P2 - Castello Estense
+  P3 - Palazzo Diamanti
+  P4 - Cattedrale di S. Giorgio
+  P5 - Museo Schifanoia
+  P9 - Museo della Cattedrale
+  
+  Vincoli attivi:
+  CS1 - Vincolo del tempo massimo del Tour (Tmax).
+  
+  Tempi di visita: 45 min tutti i nodi.
+  
+  File update: 05/11/2018
+-->
+<root>
+  <!-- Point of interests -->
+  <PointOfInterests>
+    
+    <!-- Punto di partenza -->
+    
+    <!-- Nr. 1 -->
+    <!-- Hotel Carlton -->
+    <PointOfInterest id="1" name="Hotel Carlton">
+      <Coordinates latitude="44,837767" longitude="11,615792"/>
+      <Category id=""/>
+      <ThematicScore category="" value=""/>
+      <OpeningTimes>
+        <OpeningTime from="" to=""/>  <!-- Aperto 24 ore su 24 -->
+      </OpeningTimes>
+      <TimeVisit unit="" duration=""/>
+    </PointOfInterest>
+
+    
+    <!---->
+    <!-- Punti d'interesse Storico-Culturali -->
+    <!---->
+    
+    <!-- Nr. 2 -->
+    <!-- Castello Estense -->
+    <PointOfInterest id="2" name="Castello Estense">
+      <Coordinates latitude="44,837811" longitude="11,619572"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="30"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="17:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 3 -->
+    <!-- Palazzo dei Diamanti -->
+    <PointOfInterest id="3" name="Palazzo dei Diamanti">
+      <Coordinates latitude="44,842160" longitude="11,621223"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="50"/>
+      <OpeningTimes>
+        <OpeningTime from="09:00" to="19:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 4 -->
+    <!-- Cattedrale di San Giorgio -->
+    <PointOfInterest id="4" name="Cattedrale di San Giorgio">
+      <Coordinates latitude="44,835639" longitude="11,620273"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="70"/>
+      <OpeningTimes>
+        <OpeningTime from="07:30" to="12:30"/>
+        <OpeningTime from="15:00" to="19:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 5 -->
+    <!-- Palazzo Schifanoia -->
+    <PointOfInterest id="5" name="Museo Schifanoia">
+      <Coordinates latitude="44,830580" longitude="11,629071"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="100"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="18:00"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+
+    <!-- Nr. 9 -->
+    <!-- Museo della Cattedrale -->
+    <PointOfInterest id="9" name="Museo della Cattedrale">
+      <Coordinates latitude="44,8344424" longitude="11,6128774"/>
+      <Category id="1"/>
+      <ThematicScore category="1" value="90"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="13:00"/>
+        <OpeningTime from="15:00" to="18:00" />
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="45"/>
+    </PointOfInterest>
+  </PointOfInterests>
+</root>

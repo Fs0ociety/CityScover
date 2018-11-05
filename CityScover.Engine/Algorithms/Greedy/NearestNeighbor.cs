@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/11/2018
+// File update: 05/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -86,6 +86,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          candidatePOI.IsVisited = true;
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
+         //SendMessage(MessageCodes.NewSolutionComponentAdded);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
          _newStartPOI = candidatePOI;
          //_tour.CalculateTimes();

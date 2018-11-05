@@ -41,7 +41,7 @@ namespace CityScover.Engine
          }
 
          WorkingConfiguration = configuration;
-         //ConstraintsToRelax.Add(2);
+         ConstraintsToRelax.Add(2);
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 

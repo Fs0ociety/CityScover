@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 28/10/2018
+// File update: 05/11/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -148,6 +148,13 @@ namespace CityScover.Engine.Workers
                currNodeArrivalTime = currNodeTotalTime.Add(timeWalk);
                currNodeTotalTime = currNodeArrivalTime.Add(visitTime);
                
+               // Se il vincolo delle Time Windows è rilassato, NON devo calcolare
+               // il waitOpeningTime.. Però così con il 2 è cablato..
+               if (Solver.Instance.ConstraintsToRelax.Contains(2))
+               {
+                  return;
+               }
+
                Collection<TimeSpan> deltaOpeningTimes = new Collection<TimeSpan>();
                foreach (var time in edgeDestNode.OpeningTimes)
                {
