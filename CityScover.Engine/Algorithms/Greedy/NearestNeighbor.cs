@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 06/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -86,7 +86,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          candidatePOI.IsVisited = true;
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
-         //SendMessage(MessageCodes.NewSolutionComponentAdded);
+         SendMessage(MessageCodes.NewSolutionComponentAdded, candidatePOI.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
          _newStartPOI = candidatePOI;
          //_tour.CalculateTimes();
@@ -94,7 +94,6 @@ namespace CityScover.Engine.Algorithms.Greedy
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _tour
-            //TimeSpent = GetTotalTime()
          };
 
          _solutions.Add(newSolution);

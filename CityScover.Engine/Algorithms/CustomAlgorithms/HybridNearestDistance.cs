@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/11/2018
+// File update: 06/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -48,24 +48,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Private methods
-      private DateTime GetTotalTime()
-      {
-         InterestPointWorker startPOI = _tour.GetStartPoint();
-         InterestPointWorker endPOI = _tour.GetEndPoint();
-         DateTime endPOITotalTime = endPOI.TotalTime;
-
-         RouteWorker returnEdge = Solver.CityMapGraph.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
-         if (returnEdge is null)
-         {
-            throw new NullReferenceException(nameof(returnEdge));
-         }
-
-         double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
-         TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
-         DateTime timeSpent = endPOITotalTime.Add(timeReturn);
-         return timeSpent;
-      }
-
       private void AddPointsNotInTour()
       {
          IEnumerable<InterestPointWorker> currentSolutionNodes = _tour.Nodes;
@@ -298,13 +280,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          TryAddNode(point, _endPOI.Entity.Id, _startPOI.Entity.Id);
          _previousEndPOIKey = _endPOI.Entity.Id;
          _endPOI = _tour.GetEndPoint();
-         //_tour.CalculateTimes();
          _addedNodesCount++;
 
          _currentSolution = new TOSolution()
          {
             SolutionGraph = _tour
-            //TimeSpent = GetTotalTime()
          };
 
          Solver.EnqueueSolution(_currentSolution);
