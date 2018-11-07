@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 06/11/2018
+// File update: 07/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -20,41 +20,7 @@ namespace CityScover.Engine.Algorithms.Greedy
    /// </summary>
    internal class NearestNeighbor : GreedyTemplate
    {
-      #region Private fields
       private InterestPointWorker _newStartPOI;
-      #endregion
-
-      #region Private methods
-      //private (TimeSpan, TimeSpan, TimeSpan) CalculateTimesByNextPoint(InterestPointWorker point)
-      //{
-      //   TimeSpan timeVisit = default;
-      //   TimeSpan timeWalk = default;
-      //   TimeSpan timeReturn = default;
-
-      //   if (point.Entity.TimeVisit.HasValue)
-      //   {
-      //      timeVisit = point.Entity.TimeVisit.Value;
-      //   }
-
-      //   RouteWorker edge = _cityMapClone.GetEdge(_newStartPOI.Entity.Id, point.Entity.Id);
-      //   if (edge is null)
-      //   {
-      //      throw new NullReferenceException(nameof(edge));
-      //   }
-
-      //   double averageSpeedWalk = _averageSpeedWalk / 60.0;
-      //   timeWalk = TimeSpan.FromMinutes(edge.Weight() / averageSpeedWalk);
-
-      //   RouteWorker returnEdge = _cityMapClone.GetEdge(point.Entity.Id, _startingPoint.Entity.Id);
-      //   if (returnEdge is null)
-      //   {
-      //      throw new NullReferenceException(nameof(returnEdge));
-      //   }
-      //   timeReturn = TimeSpan.FromMinutes(returnEdge.Weight() / averageSpeedWalk);
-
-      //   return (timeVisit, timeWalk, timeReturn);
-      //}
-      #endregion
 
       #region Overrides
       internal override void OnInitializing()
@@ -86,10 +52,9 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          candidatePOI.IsVisited = true;
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
-         SendMessage(MessageCodes.NewSolutionComponentAdded, candidatePOI.Entity.Id);
+         SendMessage(MessageCodes.NNPointAdded, candidatePOI.Entity.Name);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
          _newStartPOI = candidatePOI;
-         //_tour.CalculateTimes();
 
          TOSolution newSolution = new TOSolution()
          {

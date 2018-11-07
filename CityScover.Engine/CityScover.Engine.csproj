@@ -51,7 +51,7 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
-    <Compile Include="Algorithms\AlgorithmMessages.cs" />
+    <Compile Include="MessagesRepository.cs" />
     <Compile Include="Algorithms\CustomAlgorithms\HybridNearestDistance.cs" />
     <Compile Include="Algorithms\Greedy\CheapestInsertion.cs" />
     <Compile Include="Algorithms\Greedy\GreedyTemplate.cs" />

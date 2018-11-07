@@ -69,7 +69,8 @@ namespace CityScover.Engine
       #region Public methods
       public void OnNextMessage(string message)
       {
-         Console.WriteLine($"\n{nameof(ExecutionReporter)} received message: {message}\n");
+         //Console.WriteLine($"\n{nameof(ExecutionReporter)} received message: {message}\n");
+         Console.WriteLine($"\n{message}\n");
       }
       #endregion
 
@@ -77,7 +78,16 @@ namespace CityScover.Engine
       public void OnNext(TOSolution solution)
       {
          Task taskToAwait = Solver.AlgorithmTasks[solution.Id];
-         Task.WaitAll(taskToAwait);
+
+         try
+         {
+            taskToAwait.Wait();
+         }
+         catch (AggregateException ae)
+         {
+            OnError(ae);
+         }
+         DisplaySolutionGraph(solution);
          Console.WriteLine($"{nameof(ExecutionReporter)} " +
             $"- Solution received: {solution.Id}, COST: {solution.Cost} PENALTY: {solution.Penalty}");
       }
@@ -94,7 +104,8 @@ namespace CityScover.Engine
          _timer.Stop();
          
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
-         Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
+
+         Console.WriteLine($"{message}. The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
          AlgorithmFamily resultFamily = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);

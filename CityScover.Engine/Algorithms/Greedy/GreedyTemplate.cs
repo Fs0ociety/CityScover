@@ -154,6 +154,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          validResult.ResultFamily = AlgorithmFamily.Greedy;
          Solver.Results.Add(validResult);
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
+         SendMessage(MessageCodes.GreedyFinish);
          base.OnTerminated();
       }
 

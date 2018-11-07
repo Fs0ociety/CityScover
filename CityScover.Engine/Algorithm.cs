@@ -122,7 +122,7 @@ namespace CityScover.Engine
 
       internal void SendMessage(MessageCodes messageCode, params object[] paramsList)
       {
-         string message = AlgorithmMessages.GetMessage(messageCode, paramsList);
+         string message = MessagesRepository.GetMessage(messageCode, paramsList);
          Provider.NotifyObservers(message);
       }
       #endregion
@@ -137,6 +137,7 @@ namespace CityScover.Engine
       {
          _status = AlgorithmStatus.Initializing;
       }
+
       internal virtual void OnTerminating()
       {
          _status = AlgorithmStatus.Terminating;

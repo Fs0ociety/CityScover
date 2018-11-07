@@ -71,13 +71,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          // First local function: SetBestCandidate
          void SetBestCandidate(int nodeKey)
          {
-
             InterestPointWorker candidateNode = default;
             var node = _cityMapClone[nodeKey];
-            //if (node.IsVisited)
-            //{
-            //   return;
-            //}
 
             var deltaScore = Math.Abs(node.Entity.Score.Value -
                _endPOI.Entity.Score.Value);
@@ -184,19 +179,10 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #endregion
 
       #region Overrides
-      internal override void OnError(Exception exception)
-      {
-         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
-         Result resultError =
-            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
-         resultError.ResultFamily = AlgorithmFamily.Improvement;
-         Solver.Results.Add(resultError);
-         base.OnError(exception);
-      }
-
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         SendMessage(MessageCodes.LKStarting);
 
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
@@ -218,28 +204,6 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          // Tolgo l'arco (j,i).
          _currentSolutionGraph.RemoveEdge(_endPOI.Entity.Id, _startPOI.Entity.Id);
-      }
-
-      internal override void OnTerminated()
-      {
-         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
-         Result validResult =
-            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
-         validResult.ResultFamily = AlgorithmFamily.Improvement;
-         Solver.Results.Add(validResult);
-         _cityMapClone = null;
-         base.OnTerminated();
-      }
-
-      internal override void OnTerminating()
-      {
-         base.OnTerminating();
-
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, CurrentBestSolution.Cost);
-         if (isBetterThanCurrentBestSolution)
-         {
-            CurrentBestSolution = _currentSolution;            
-         }
       }
 
       internal override async Task PerformStep()
@@ -266,7 +230,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          // Build Steam And Cycle.
          _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
-         
+
          int junctionNodeId = BuildHamiltonianPath(sNodeId);
 
          // Ricreo il ciclo nell'unico modo possibile dal nuovo cammino hamiltoniano.
@@ -274,9 +238,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          SwapNodes(_startPOI.Entity.Id);
 
          // Poi ricreo il ciclo.
-         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _startPOI.Entity.Id, junctionNodeId
-            );
-         
+         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _startPOI.Entity.Id, junctionNodeId);
+
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _currentSolutionGraph.DeepCopy()
@@ -290,6 +253,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          }
          _executedSteps++;
          _currentSolution = newSolution;
+         SendMessage(MessageCodes.LKHStepIncreased, _executedSteps, MaxSteps);
 
          // Local function per costruire un nuovo ciclo hamiltoniano.
          // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè
@@ -307,6 +271,37 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             _currentSolutionGraph.RemoveEdge(sPOIId, sEdgePointToId);
             return sEdgePointToId;
          }
+      }
+
+      internal override void OnError(Exception exception)
+      {
+         Result resultError =
+            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
+         resultError.ResultFamily = AlgorithmFamily.Improvement;
+         Solver.Results.Add(resultError);
+         base.OnError(exception);
+      }
+
+      internal override void OnTerminating()
+      {
+         base.OnTerminating();
+
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, CurrentBestSolution.Cost);
+         if (isBetterThanCurrentBestSolution)
+         {
+            CurrentBestSolution = _currentSolution;
+            SendMessage(MessageCodes.LKBestFound, _currentSolution.Cost);
+         }
+      }
+
+      internal override void OnTerminated()
+      {
+         Result validResult =
+            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
+         validResult.ResultFamily = AlgorithmFamily.Improvement;
+         Solver.Results.Add(validResult);
+         _cityMapClone = null;
+         base.OnTerminated();
       }
 
       internal override bool StopConditions()
