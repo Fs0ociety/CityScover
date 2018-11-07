@@ -93,7 +93,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          TOSolution newSolution = new TOSolution()
          {
-            SolutionGraph = _tour
+            SolutionGraph = _tour.DeepCopy()
          };
 
          _solutions.Add(newSolution);

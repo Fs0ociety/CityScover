@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 07/11/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -187,6 +187,26 @@ namespace CityScover.Engine.Workers
                }
             });         
       }
+      #endregion
+
+      #region Overrides
+      public override string ToString()
+      {
+         string result = String.Empty;
+         int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
+         BreadthFirstSearch(startPOIId,
+            (node, isVisited) => node.IsVisited = isVisited,
+            (node) => { return node.IsVisited; },
+            node => result += $"({node.Entity.Name})",
+            edge =>
+            {
+               if (edge.Entity.PointTo.Id != startPOIId)
+               {
+                  result += $" --> ";
+               }
+            });
+         return result;
+      } 
       #endregion
    }
 }
