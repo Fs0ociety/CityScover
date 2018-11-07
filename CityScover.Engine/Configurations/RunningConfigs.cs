@@ -48,7 +48,7 @@ namespace CityScover.Engine.Configs
             {
                new Stage()
                {
-                  Description = StageType.StageImprovement,
+                  Description = StageType.StageOne,
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {

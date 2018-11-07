@@ -148,7 +148,6 @@ namespace CityScover.Engine.Algorithms
 
          foreach (var neighborSolution in currentNeighborhood)
          {
-            //neighborSolution.SolutionGraph.CalculateTimes();
             Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 
@@ -167,7 +166,7 @@ namespace CityScover.Engine.Algorithms
             bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
             if (isBetterThanCurrentBestSolution)
             {
-               SendMessage(MessageCodes.BestSolutionFound);
+               SendMessage(MessageCodes.LSBestFound, solution.Cost, _bestSolution.Cost);
                _bestSolution = solution;
                _currentSolutionCost = solution.Cost;
 
@@ -191,7 +190,6 @@ namespace CityScover.Engine.Algorithms
 
       internal override void OnError(Exception exception)
       {
-         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
          Result resultError =
             new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
          resultError.ResultFamily = AlgorithmFamily.LocalSearch;
@@ -203,11 +201,11 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnTerminating();
          Solver.BestSolution = _bestSolution;
+         SendMessage(MessageCodes.LSFinish, _currentSolutionCost);
       }
 
       internal override void OnTerminated()
       {
-         // Da gestire timeSpent (probabilmente con metodo che somma i tempi di tutti i nodi).
          Result validResult =
             new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
          validResult.ResultFamily = AlgorithmFamily.LocalSearch;

@@ -297,6 +297,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             _addedNodesCount--;
             _endPOI = _tour.GetEndPoint();
          }
+         //SendMessage(MessageCodes.)
       }
 
       internal override void OnError(Exception exception)
