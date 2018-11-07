@@ -32,7 +32,7 @@ namespace CityScover.Engine.Algorithms
             [MessageCodes.LKHStepIncreased] = "Step {0} of {1} with no improvement.",
             [MessageCodes.LKStarting] = "Max iterations with no improvements reached. Lin Kernighan starting...",
             [MessageCodes.LKBestFound] = "Best solution found with cost: ({0}).",
-            [MessageCodes.OnCompletedHeader] = "Solution computed for stage \"{0}\" is "
+            [MessageCodes.OnCompletedHeader] = "Solutions produced for stage \"{0}\" are:"
          };
       }
       #endregion

@@ -68,9 +68,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          int nodeKeyToAdd = nodeToAdd.Entity.Id;
 
+         _tour.RemoveEdge(fromNodeKey, toNodeKey);
          _tour.AddNode(nodeKeyToAdd, nodeToAdd);
          _tour.AddRouteFromGraph(Solver.CityMapGraph, fromNodeKey, nodeKeyToAdd);
-         _tour.RemoveEdge(fromNodeKey, toNodeKey);
          _tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, toNodeKey);
       }
 

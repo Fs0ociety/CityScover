@@ -32,24 +32,6 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Private methods
-      //private DateTime GetTotalTime()
-      //{
-      //   InterestPointWorker startPOI = _tour.GetStartPoint();
-      //   InterestPointWorker endPOI = _tour.GetEndPoint();
-      //   DateTime endPOITotalTime = endPOI.TotalTime;
-
-      //   RouteWorker returnEdge = _cityMapClone.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
-      //   if (returnEdge is null)
-      //   {
-      //      throw new NullReferenceException(nameof(returnEdge));
-      //   }
-
-      //   double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
-      //   TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
-      //   DateTime timeSpent = endPOITotalTime.Add(timeReturn);
-      //   return timeSpent;
-      //}
-
       private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, CityMapGraph newSolutionGraph, in int edge2PointFromId)
       {
          int currentNodeId = currentEdge.Entity.PointTo.Id;

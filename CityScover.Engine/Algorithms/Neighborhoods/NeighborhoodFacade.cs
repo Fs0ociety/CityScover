@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 07/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -21,12 +21,14 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    {
       #region Private fields
       private Neighborhood _neighborhood;
+      private LocalSearchTemplate _algorithm;
       #endregion
 
       #region Constructors
-      internal NeighborhoodFacade(Neighborhood neighborhood)
+      internal NeighborhoodFacade(Neighborhood neighborhood, LocalSearchTemplate algorithm)
       {
          _neighborhood = neighborhood ?? throw new ArgumentNullException(nameof(neighborhood));
+         _algorithm = algorithm;
       }
       #endregion
 
@@ -42,6 +44,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                TOSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
                if (newSolution != null)
                {
+                  //_algorithm.SendMessage();
                   neighborhood.Add(newSolution);
                }
             }

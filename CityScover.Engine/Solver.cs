@@ -9,6 +9,7 @@
 // File update: 26/10/2018
 //
 
+using CityScover.Commons;
 using CityScover.Data;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Workers;
@@ -41,7 +42,7 @@ namespace CityScover.Engine
          }
 
          WorkingConfiguration = configuration;
-         ConstraintsToRelax.Add(2);
+         //ConstraintsToRelax.Add(Utils.TimeWindowsConstraintDesc);
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 

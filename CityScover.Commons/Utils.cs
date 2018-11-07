@@ -1,10 +1,24 @@
-﻿namespace CityScover.Commons
+﻿//
+// CityScover
+// Version 1.0
+//
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 07/11/2018
+//
+
+namespace CityScover.Commons
 {
    /// <summary>
    /// Utility class available for all CityScover projects.
    /// </summary>
    public static class Utils
    {
+      public const string TMaxConstraintDesc = "TMax";
+      public const string TimeWindowsConstraintDesc = "Time Windows";
+
       /// <summary>
       /// Analogo al metodo di estensione ufficiale di Microsoft contenuto nel namespace System.Linq
       /// </summary>
@@ -31,22 +45,22 @@
       //   return result;
       //}
 
-      public static int? ToNullableInt(this string s)
-      {
-         if (int.TryParse(s, out int i))
-         {
-            return i;
-         }
-         return null;
-      }
+      //public static int? ToNullableInt(this string s)
+      //{
+      //   if (int.TryParse(s, out int i))
+      //   {
+      //      return i;
+      //   }
+      //   return null;
+      //}
 
-      public static double? ToNullableDouble(this string s)
-      {
-         if (double.TryParse(s, out double i))
-         {
-            return i;
-         }
-         return null;
-      }
+      //public static double? ToNullableDouble(this string s)
+      //{
+      //   if (double.TryParse(s, out double i))
+      //   {
+      //      return i;
+      //   }
+      //   return null;
+      //}
    }
 }

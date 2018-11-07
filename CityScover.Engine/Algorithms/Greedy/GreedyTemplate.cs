@@ -148,6 +148,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _cityMapClone = null;
          TOSolution bestProducedSolution = _solutions.Last();
 
+         SendMessage(MessageCodes.OnCompletedHeader, Solver.CurrentStage.Description);
          _solutions.ToList().ForEach(solution => Console.WriteLine(solution.SolutionGraph.ToString()));
          Result validResult =
             new Result(bestProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Valid);

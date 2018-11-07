@@ -40,7 +40,7 @@ namespace CityScover.Engine.Algorithms
       public LocalSearchTemplate(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
-         _neighborhoodFacade = new NeighborhoodFacade(neighborhood);
+         _neighborhoodFacade = new NeighborhoodFacade(neighborhood, this);
       }
       #endregion
 

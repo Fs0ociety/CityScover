@@ -88,7 +88,7 @@ namespace CityScover.Engine
          {
             OnError(ae);
          }
-         Console.WriteLine(solution.SolutionGraph.ToString());
+
          Console.WriteLine($"{nameof(ExecutionReporter)} " +
             $"- Solution received: {solution.Id}, COST: {solution.Cost} PENALTY: {solution.Penalty}");
       }
@@ -106,8 +106,7 @@ namespace CityScover.Engine
          
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
 
-         string message = MessagesRepository.GetMessage(MessageCodes.OnCompletedHeader);
-         Console.WriteLine($"{message}. The algorithm: {algorithmDescription} performed in " +
+         Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
          AlgorithmFamily resultFamily = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);

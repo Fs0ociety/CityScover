@@ -39,11 +39,14 @@ namespace CityScover.Engine.Algorithms.Greedy
          var neighborPOIId = neighborPOI.Entity.Id;
          _tour.AddNode(neighborPOIId, neighborPOI);
          _tour.AddRouteFromGraph(_cityMapClone, startingPointId, neighborPOIId);
+         _tour.AddRouteFromGraph(_cityMapClone, neighborPOIId, startingPointId);
          _newStartPOI = neighborPOI;
       }
 
       internal override async Task PerformStep()
       {
+         _tour.RemoveEdge(_newStartPOI.Entity.Id, _startingPoint.Entity.Id);
+
          var candidatePOI = GetBestNeighbor(_newStartPOI);
          if (candidatePOI is null)
          {
@@ -54,6 +57,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
          SendMessage(MessageCodes.NNPointAdded, candidatePOI.Entity.Name);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
+         _tour.AddRouteFromGraph(_cityMapClone, candidatePOI.Entity.Id, _startingPoint.Entity.Id);
          _newStartPOI = candidatePOI;
 
          TOSolution newSolution = new TOSolution()
@@ -75,7 +79,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, _startingPoint.Entity.Id);
       }
 
       internal override bool StopConditions()
