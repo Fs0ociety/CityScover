@@ -10,6 +10,7 @@
 //
 
 using CityScover.ADT.Graphs;
+using CityScover.Commons;
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
@@ -150,7 +151,7 @@ namespace CityScover.Engine.Workers
                
                // Se il vincolo delle Time Windows è rilassato, NON devo calcolare
                // il waitOpeningTime.. Però così con il 2 è cablato..
-               if (Solver.Instance.ConstraintsToRelax.Contains(2))
+               if (Solver.Instance.ConstraintsToRelax.Contains(Utils.TimeWindowsConstraintDesc))
                {
                   return;
                }

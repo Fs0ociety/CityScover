@@ -6,9 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 07/11/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
@@ -39,9 +40,9 @@ namespace CityScover.Engine
          IsMinimizing = false;
 
          Constraints.Add(
-            new KeyValuePair<byte, Func<TOSolution, bool>>(1, IsTMaxConstraintSatisfied));
+            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TMaxConstraintDesc, IsTMaxConstraintSatisfied));
          Constraints.Add(
-            new KeyValuePair<byte, Func<TOSolution, bool>>(2, IsTimeWindowsConstraintSatisfied));
+            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TimeWindowsConstraintDesc, IsTimeWindowsConstraintSatisfied));
       }
       #endregion
 

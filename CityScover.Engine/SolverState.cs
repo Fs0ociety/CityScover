@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/10/2018
+// File update: 07/11/2018
 //
 
 using CityScover.Commons;
@@ -94,7 +94,7 @@ namespace CityScover.Engine
       
       internal ICollection<Result> Results { get; private set; }
 
-      internal ICollection<byte> ConstraintsToRelax { get; private set; }
+      internal ICollection<string> ConstraintsToRelax { get; private set; }
       #endregion
 
       #region Overrides
@@ -103,7 +103,7 @@ namespace CityScover.Engine
          _solverTasks = new Collection<Task>();
          _algorithmTasks = new Dictionary<int, Task>();
          Results = new Collection<Result>();
-         ConstraintsToRelax = new Collection<byte>();
+         ConstraintsToRelax = new Collection<string>();
       }
       #endregion
    }

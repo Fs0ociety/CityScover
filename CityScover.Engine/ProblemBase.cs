@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/11/2018
+// File update: 07/11/2018
 //
 
 using System;
@@ -23,7 +23,7 @@ namespace CityScover.Engine
       #region Constructors
       internal ProblemBase()
       {
-         Constraints = new Collection<KeyValuePair<byte, Func<TOSolution, bool>>>();
+         Constraints = new Collection<KeyValuePair<string, Func<TOSolution, bool>>>();
       }
       #endregion
 
@@ -37,7 +37,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal properties
-      internal ICollection<KeyValuePair<byte, Func<TOSolution, bool>>> Constraints { get; }
+      internal ICollection<KeyValuePair<string, Func<TOSolution, bool>>> Constraints { get; }
       internal bool IsMinimizing { get; set; } = true;
       #endregion
 

@@ -56,31 +56,31 @@ namespace CityScover.Engine.Configs
                      MaximumNodesToEvaluate = 6
                   }
                },
-               //new Stage()
-               //{
-               //   Description = StageType.StageTwo,
-               //   Category = AlgorithmFamily.LocalSearch,
-               //   Flow =
-               //   {
-               //      CurrentAlgorithm = AlgorithmType.TwoOpt,
-               //      LkImprovementThreshold = 2000,
-               //      MaxIterationsWithoutImprovements = 2,
-               //      ChildrenFlows =
-               //      {
-               //         new StageFlow(AlgorithmType.LinKernighan, runningCount: 1)
-               //      }
-               //   }
-               //},
                new Stage()
                {
                   Description = StageType.StageTwo,
-                  Category = AlgorithmFamily.Improvement,
+                  Category = AlgorithmFamily.LocalSearch,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.HybridNearestDistance,
-                     HndTmaxThreshold = new TimeSpan(1, 0, 0)
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     LkImprovementThreshold = 2000,
+                     MaxIterationsWithoutImprovements = 2,
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1)
+                     }
                   }
                },
+               //new Stage()
+               //{
+               //   Description = StageType.StageTwo,
+               //   Category = AlgorithmFamily.Improvement,
+               //   Flow =
+               //   {
+               //      CurrentAlgorithm = AlgorithmType.HybridNearestDistance,
+               //      HndTmaxThreshold = new TimeSpan(1, 0, 0)
+               //   }
+               //},
                new Stage()
                {
                   Description = StageType.StageThree,

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/11/2018
+// File update: 07/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -55,7 +55,7 @@ namespace CityScover.Engine
       /// Property used from SolverValidator for analysis of problem's constraints.
       /// Contains the results of validation of constraints.
       /// </summary>
-      internal IDictionary<byte, bool> ProblemConstraints { get; set; } = new Dictionary<byte, bool>();
+      internal IDictionary<string, bool> ProblemConstraints { get; set; } = new Dictionary<string, bool>();
 
       /// <summary>
       /// This is the internal structure formed by nodes and edges of Solution.
