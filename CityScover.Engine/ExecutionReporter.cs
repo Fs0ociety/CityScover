@@ -9,6 +9,7 @@
 // File update: 26/10/2018
 //
 
+using CityScover.Engine.Algorithms;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -87,7 +88,7 @@ namespace CityScover.Engine
          {
             OnError(ae);
          }
-         DisplaySolutionGraph(solution);
+         Console.WriteLine(solution.SolutionGraph.ToString());
          Console.WriteLine($"{nameof(ExecutionReporter)} " +
             $"- Solution received: {solution.Id}, COST: {solution.Cost} PENALTY: {solution.Penalty}");
       }
@@ -105,6 +106,7 @@ namespace CityScover.Engine
          
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
 
+         string message = MessagesRepository.GetMessage(MessageCodes.OnCompletedHeader);
          Console.WriteLine($"{message}. The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
