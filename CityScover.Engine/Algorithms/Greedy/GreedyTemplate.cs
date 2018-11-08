@@ -141,11 +141,11 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          int maxNodesToEvaluate = Solver.CurrentStage.Flow.MaximumNodesToEvaluate;
          _solutions = new Collection<TOSolution>();
          _tour = new CityMapGraph();
+         _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _processingNodes = Solver.CityMapGraph.Nodes.Select(node => node.Entity.Id);
 
          if (maxNodesToEvaluate != default)
@@ -154,15 +154,15 @@ namespace CityScover.Engine.Algorithms.Greedy
                .Take(maxNodesToEvaluate)
                .Select(node => node.Entity.Id);
          }
-         _cityMapClone = Solver.CityMapGraph.DeepCopy();
-         _startingPoint = _cityMapClone.GetStartPoint();
-         _timeSpent = DateTime.Now;
 
+         _startingPoint = _cityMapClone.GetStartPoint();
          if (_startingPoint is null)
          {
             throw new OperationCanceledException(
                $"{nameof(_startingPoint)} in {nameof(NearestNeighbor)}");
          }
+
+         _timeSpent = DateTime.Now;
          _startingPoint.IsVisited = true;
       }
 

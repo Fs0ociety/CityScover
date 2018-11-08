@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/11/2018
+// File update: 08/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -29,6 +29,12 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
+      private bool HasToBeSettedCandidateNode(InterestPointWorker candidateNode, IEnumerable<InterestPointWorker> candidateNodes)
+      {
+         return candidateNode is null ||
+            (candidateNode != null && candidateNodes.Any());
+      }
+   
       private InterestPointWorker GetCheapestBestNeighbor()
       {
          int bestScore = default;
@@ -57,7 +63,9 @@ namespace CityScover.Engine.Algorithms.Greedy
                {
                   int nodeId = node.Entity.Id;
                   int nodeScore = node.Entity.Score.Value;
-                  bool canCompareCosts = !_tour.ContainsNode(nodeId) && nodeId != neighborPointId && !node.IsVisited;
+                  bool canCompareCosts = !_tour.ContainsNode(nodeId) && 
+                     nodeId != neighborPointId && 
+                     !node.IsVisited;
 
                   if (canCompareCosts)
                   {
@@ -88,18 +96,12 @@ namespace CityScover.Engine.Algorithms.Greedy
       
          return candidateNode;
       }
-
-      private bool HasToBeSettedCandidateNode(InterestPointWorker candidateNode, IEnumerable<InterestPointWorker> candidateNodes)
-      {
-         return candidateNode is null || (candidateNode != null && candidateNodes.Any());
-      }
       #endregion
 
       #region Overrides
       internal override void OnInitializing()
       {
          base.OnInitializing();
-
          int startingPointId = _startingPoint.Entity.Id;
          _tour.AddNode(startingPointId, _startingPoint);
          InterestPointWorker bestNeighbor = GetBestNeighbor(_startingPoint);
@@ -111,7 +113,11 @@ namespace CityScover.Engine.Algorithms.Greedy
          int bestNeighborId = bestNeighbor.Entity.Id;
          _tour.AddNode(bestNeighborId, bestNeighbor);
          bestNeighbor.IsVisited = true;
+         
+         // Edge (i, j)
          _tour.AddRouteFromGraph(_cityMapClone, startingPointId, bestNeighborId);
+         // Edge (j, i)
+         _tour.AddRouteFromGraph(_cityMapClone, bestNeighborId, startingPointId);
          _newStartingPoint = _startingPoint;
          _endPoint = bestNeighbor;
       }
@@ -125,16 +131,15 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
 
          _tour.AddNode(candidateNode.Entity.Id, candidateNode);
+         SendMessage(MessageCodes.GreedyNodeAdded, candidateNode.Entity.Name);
+         _tour.RemoveEdge(_newStartingPoint.Entity.Id, _endPoint.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartingPoint.Entity.Id, candidateNode.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, candidateNode.Entity.Id, _endPoint.Entity.Id);
-         _tour.RemoveEdge(_newStartingPoint.Entity.Id, _endPoint.Entity.Id);
          _newStartingPoint = candidateNode;
-         //_tour.CalculateTimes();
 
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _tour
-            //TimeSpent = GetTotalTime()
          };
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
@@ -150,7 +155,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         _tour.AddRouteFromGraph(_cityMapClone, _endPoint.Entity.Id, _startingPoint.Entity.Id);
+         //_tour.AddRouteFromGraph(_cityMapClone, _endPoint.Entity.Id, _startingPoint.Entity.Id);
       }
 
       internal override bool StopConditions()

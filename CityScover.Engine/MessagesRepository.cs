@@ -23,8 +23,8 @@ namespace CityScover.Engine.Algorithms
          _algorithmMessages = new Dictionary<MessageCodes, string>()
          {
             [MessageCodes.None] = string.Empty,
+            [MessageCodes.GreedyNodeAdded] = "Point of interest \"{0}\" added to solution.",
             [MessageCodes.GreedyFinish] = "Greedy algorithm finished successfully.",
-            [MessageCodes.NNPointAdded] = "Point of interest \"{0}\" added to solution.",
             [MessageCodes.CustomAlgNodeAdded] = "Point of interest \"{0}\" added successfully to the Tour.",
             [MessageCodes.CustomAlgNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
             [MessageCodes.LSBestFound] = "Best solution found with cost: ({0}). Previous solution cost: ({1}).",
@@ -54,7 +54,7 @@ namespace CityScover.Engine.Algorithms
    {
       None = 0,
       GreedyFinish = 1,
-      NNPointAdded = 2,
+      GreedyNodeAdded = 2,
       CustomAlgNodeAdded = 3,
       CustomAlgNodeRemoved = 4,
       LSBestFound = 5,

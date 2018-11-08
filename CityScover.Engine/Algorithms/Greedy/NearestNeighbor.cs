@@ -26,7 +26,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-
          var startingPointId = _startingPoint.Entity.Id;
          _tour.AddNode(startingPointId, _startingPoint);
          var neighborPOI = GetBestNeighbor(_startingPoint);
@@ -55,7 +54,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          candidatePOI.IsVisited = true;
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
-         SendMessage(MessageCodes.NNPointAdded, candidatePOI.Entity.Name);
+         SendMessage(MessageCodes.GreedyNodeAdded, candidatePOI.Entity.Name);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, candidatePOI.Entity.Id, _startingPoint.Entity.Id);
          _newStartPOI = candidatePOI;
