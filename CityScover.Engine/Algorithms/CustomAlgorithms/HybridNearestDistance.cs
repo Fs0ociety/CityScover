@@ -151,6 +151,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
                double tWalkMinutes = (newEdge.Weight() / averageSpeedWalk) / 60.0;
                TimeSpan tEdgeWalk = TimeSpan.FromMinutes(tWalkMinutes);
+
                if (tEdgeWalk < tWalk)
                {
                   InterestPointWorker currentPointTo = _tour.Nodes
@@ -205,6 +206,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             {
                SolutionGraph = _tour
             };
+
             tourUpdated = true;
             Solver.EnqueueSolution(_currentSolution);
             await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
@@ -287,6 +289,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SolutionGraph = _tour
          };
 
+         SendMessage(MessageCodes.CustomAlgNodeAdded, point.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
          await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
@@ -296,8 +299,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             UndoAdditionPoint(point.Entity.Id, _previousEndPOIKey, _startPOI.Entity.Id);
             _addedNodesCount--;
             _endPOI = _tour.GetEndPoint();
+            SendMessage(MessageCodes.CustomAlgNodeRemoved, point.Entity.Name);
          }
-         //SendMessage(MessageCodes.)
       }
 
       internal override void OnError(Exception exception)

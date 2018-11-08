@@ -96,7 +96,7 @@ namespace CityScover.Engine
       public void OnError(Exception error)
       {
          _timer.Stop();
-         Console.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred!\n");
+         Console.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred: {error.Message}\n");
          throw error;
       }
 
@@ -109,7 +109,7 @@ namespace CityScover.Engine
          Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
             $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
-         AlgorithmFamily resultFamily = Result.GetAlgorithmFamilyByType(Solver.CurrentStage.Flow.CurrentAlgorithm);
+         AlgorithmFamily resultFamily = Result.GetAlgorithmFamily(Solver.CurrentStage.Flow.CurrentAlgorithm);
          Result algorithmResult = Solver.Results.Where(result => result.ResultFamily == resultFamily).FirstOrDefault();
          if (algorithmResult != null)
          {

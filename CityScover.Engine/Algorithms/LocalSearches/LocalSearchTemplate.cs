@@ -6,9 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 29/10/2018
+// File update: 08/11/2018
 //
 
+using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
@@ -81,44 +82,96 @@ namespace CityScover.Engine.Algorithms
          return bestSolution;
       }
 
-      private Algorithm GetImprovementAlgorithm()
+      #region Old methods (TO DELETE)
+      //private Algorithm GetImprovementAlgorithm()
+      //{
+      //   var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
+      //   if (childrenAlgorithms is null)
+      //   {
+      //      return null;
+      //   }
+
+      //   var flow = childrenAlgorithms.FirstOrDefault();
+      //   if (flow is null)
+      //   {
+      //      return null;
+      //   }
+
+      //   Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm);
+
+      //   if (algorithm is LinKernighan lk)
+      //   {
+      //      lk.MaxSteps = flow.RunningCount;
+      //      lk.CurrentBestSolution = _bestSolution;
+      //   }
+
+      //   algorithm.Provider = Provider;
+      //   return algorithm;
+      //}
+
+      //private async Task RunImprovementAlgorithm()
+      //{
+      //   Algorithm improvementAlgorithm = GetImprovementAlgorithm();
+      //   if (improvementAlgorithm is null)
+      //   {
+      //      throw new InvalidOperationException($"Bad configuration format: " +
+      //         $"{nameof(Solver.WorkingConfiguration)}.");
+      //   }
+
+      //   await Task.Run(() => improvementAlgorithm.Start());
+      //   _shouldRunImprovementAlgorithm = false;
+      //   _iterationsWithoutImprovement = 0;
+      //}
+      #endregion
+
+      private IEnumerable<Algorithm> GetImprovementAlgorithms()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
          if (childrenAlgorithms is null)
          {
-            return null;
+            yield return null;
          }
 
-         var flow = childrenAlgorithms.FirstOrDefault();
-         if (flow is null)
+         Algorithm algorithm = default;
+         foreach (var children in childrenAlgorithms)
          {
-            return null;
+            algorithm = Solver.GetAlgorithm(children.CurrentAlgorithm);
+
+            if (algorithm is LinKernighan lk)
+            {
+               lk.MaxSteps = children.RunningCount;
+               lk.CurrentBestSolution = _bestSolution;
+            }
+            else if (algorithm is HybridNearestDistance hnd)
+            {
+               // TODO
+               // ...
+            }
+
+            algorithm.Provider = Provider;
+            yield return algorithm;
          }
-
-         Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm);
-
-         if (algorithm is LinKernighan lk)
-         {
-            lk.MaxSteps = flow.RunningCount;
-            lk.CurrentBestSolution = _bestSolution;
-         }
-
-         algorithm.Provider = Provider;
-         return algorithm;
       }
 
-      private async Task RunImprovementAlgorithm()
+      private async Task RunImprovementAlgorithms()
       {
-         Algorithm improvementAlgorithm = GetImprovementAlgorithm();
-         if (improvementAlgorithm is null)
+         foreach (var algorithm in GetImprovementAlgorithms())
          {
-            throw new InvalidOperationException($"Bad configuration format: " +
-               $"{nameof(Solver.WorkingConfiguration)}.");
-         }
+            if (algorithm is null)
+            {
+               throw new InvalidOperationException($"Bad configuration format: " +
+                  $"{nameof(Solver.WorkingConfiguration)}.");
+            }
 
-         await Task.Run(() => improvementAlgorithm.Start());
-         _shouldRunImprovementAlgorithm = false;
-         _iterationsWithoutImprovement = 0;
+            await Task.Run(() => algorithm.Start());
+            _shouldRunImprovementAlgorithm = false;
+            _iterationsWithoutImprovement = 0;
+
+            // Verificare se necessario eseguire i successivi algoritmi dello StageFlow presenti tra i ChildrenFlows.
+            // Usare un if-break per questo scopo sotto questo commento, dopo la terminazione dell'algoritmo.
+            // Senza questo if verrebbero eseguiti a prescindere in sequenza tutti gli algoritmi presenti tra i ChildrenFlows, 
+            // anche se non fosse necessario avviare i successivi.
+         }
       }
       #endregion
 
@@ -141,7 +194,7 @@ namespace CityScover.Engine.Algorithms
       {
          if (CanExecuteImprovementAlgorithms && _shouldRunImprovementAlgorithm)
          {
-            await RunImprovementAlgorithm();
+            await RunImprovementAlgorithms();
          }
 
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);
@@ -177,7 +230,7 @@ namespace CityScover.Engine.Algorithms
                   {
                      _iterationsWithoutImprovement++;
                      _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-                  } 
+                  }
                }
             }
          }

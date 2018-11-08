@@ -53,7 +53,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #region Private methods
       private int CalculateTabuTenure(int problemSize)
       {
-         #region Code for testing...
+         #region Code for debug...
          //int start = (problemSize + 8 - 1) / 8;
          //int end = (problemSize + 4 - 1) / 4;
 

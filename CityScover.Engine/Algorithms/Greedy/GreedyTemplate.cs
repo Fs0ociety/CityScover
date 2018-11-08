@@ -6,9 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 08/11/2018
 //
 
+using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
@@ -31,12 +32,12 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Constructors
-      internal GreedyTemplate() 
+      internal GreedyTemplate()
          : this(null)
       {
       }
 
-      internal GreedyTemplate(AlgorithmTracker provider) 
+      internal GreedyTemplate(AlgorithmTracker provider)
          : base(provider)
       {
       }
@@ -54,6 +55,45 @@ namespace CityScover.Engine.Algorithms.Greedy
             id = (new Random().Next(2) != 0)
                ? candidateNode.Entity.Id
                : adjNode.Entity.Id;
+         }
+      }
+
+      private IEnumerable<Algorithm> GetImprovementAlgorithms()
+      {
+         var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
+         if (childrenAlgorithms is null)
+         {
+            yield return null;
+         }
+
+         Algorithm algorithm = default;
+         foreach (var children in childrenAlgorithms)
+         {
+            if (children.CurrentAlgorithm != Solver.CurrentStage.Flow.CurrentAlgorithm)
+            {
+               Solver.CurrentStage.Flow.CurrentAlgorithm = children.CurrentAlgorithm;
+            }
+            algorithm = Solver.GetAlgorithm(children.CurrentAlgorithm);
+
+            // TODO: Verificare il tipo di algoritmo restituito per eventuali impostazioni di parametri
+            // [vedere metodo GetImprovementAlgorithms() nella classe LocalSearchTemplate.cs]
+
+            algorithm.Provider = Provider;
+            yield return algorithm;
+         }
+      }
+
+      private async Task RunImprovementAlgorithms()
+      {
+         foreach (var algorithm in GetImprovementAlgorithms())
+         {
+            if (algorithm is null)
+            {
+               throw new InvalidOperationException($"Bad configuration format: " +
+                  $"{nameof(Solver.WorkingConfiguration)}.");
+            }
+
+            await Task.Run(() => algorithm.Start());
          }
       }
       #endregion
@@ -149,7 +189,11 @@ namespace CityScover.Engine.Algorithms.Greedy
          TOSolution bestProducedSolution = _solutions.Last();
 
          SendMessage(MessageCodes.OnCompletedHeader, Solver.CurrentStage.Description);
-         _solutions.ToList().ForEach(solution => Console.WriteLine(solution.SolutionGraph.ToString()));
+         _solutions.ToList().ForEach(solution =>
+         {
+            Console.WriteLine(solution.SolutionGraph.ToString());
+         });
+
          Result validResult =
             new Result(bestProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Valid);
          validResult.ResultFamily = AlgorithmFamily.Greedy;
@@ -157,6 +201,20 @@ namespace CityScover.Engine.Algorithms.Greedy
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          SendMessage(MessageCodes.GreedyFinish);
          base.OnTerminated();
+
+         Task improvementTask = Task.Run(() => RunImprovementAlgorithms());
+         try
+         {
+            improvementTask.Wait();
+         }
+         catch (AggregateException ae)
+         {
+            OnError(ae.InnerException);
+         }
+         finally
+         {
+            // TODO...
+         }
       }
 
       internal override bool StopConditions()

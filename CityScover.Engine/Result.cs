@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/10/2018
+// File update: 08/11/2018
 //
 
 using System;
@@ -60,7 +60,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Static methods
-      internal static AlgorithmFamily GetAlgorithmFamilyByType(AlgorithmType algorithm)
+      internal static AlgorithmFamily GetAlgorithmFamily(AlgorithmType algorithm)
       {
          AlgorithmFamily result = default; 
 
@@ -77,6 +77,7 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.LinKernighan:
+            case AlgorithmType.HybridNearestDistance:
                result = AlgorithmFamily.Improvement;
                break;
 
@@ -88,6 +89,7 @@ namespace CityScover.Engine
                result = AlgorithmFamily.None;
                break;            
          }
+
          return result;
       }
       #endregion

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/11/2018
+// File update: 08/11/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -22,8 +22,8 @@ namespace CityScover.Engine.Workers
    internal sealed class CityMapGraph : Graph<int, InterestPointWorker, RouteWorker>
    {
       #region Internal properties
-      internal IEnumerable<InterestPointWorker> TourPoints => 
-         Nodes.Where(node => node.Entity.Id != Solver.Instance.WorkingConfiguration.StartingPointId);      
+      internal IEnumerable<InterestPointWorker> TourPoints => Nodes
+         .Where(node => node.Entity.Id != Solver.Instance.WorkingConfiguration.StartingPointId);      
       #endregion
 
       #region Internal methods
@@ -137,7 +137,7 @@ namespace CityScover.Engine.Workers
             edge =>
             {
                double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
-               TimeSpan timeWalk = TimeSpan.FromSeconds(edge.Weight() / averageSpeedWalk);
+               TimeSpan timeWalk = TimeSpan.FromSeconds(edge.Weight.Invoke() / averageSpeedWalk);
 
                InterestPoint edgeDestNode = edge.Entity.PointTo;
                TimeSpan visitTime = default;
@@ -195,6 +195,7 @@ namespace CityScover.Engine.Workers
       {
          string result = String.Empty;
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
+
          BreadthFirstSearch(startPOIId,
             (node, isVisited) => node.IsVisited = isVisited,
             (node) => { return node.IsVisited; },
@@ -206,6 +207,7 @@ namespace CityScover.Engine.Workers
                   result += $" --> ";
                }
             });
+
          return result;
       } 
       #endregion
