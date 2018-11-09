@@ -16,8 +16,8 @@ namespace CityScover.Commons
    /// </summary>
    public static class Utils
    {
-      public const string TMaxConstraintDesc = "TMax";
-      public const string TimeWindowsConstraintDesc = "Time Windows";
+      public const string TMaxConstraint = "TMax";
+      public const string TimeWindowsConstraint = "Time Windows";
 
       /// <summary>
       /// Analogo al metodo di estensione ufficiale di Microsoft contenuto nel namespace System.Linq

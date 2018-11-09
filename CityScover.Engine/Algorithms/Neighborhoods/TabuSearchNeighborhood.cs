@@ -48,8 +48,6 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal IList<TabuMove> TabuList
       {
          get => _tabuList;
-         //set => _tabuList = value ?? 
-         //   throw new ArgumentNullException($"{nameof(value)} can not be null");
       }
       #endregion
 

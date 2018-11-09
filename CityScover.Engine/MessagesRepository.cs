@@ -45,7 +45,8 @@ namespace CityScover.Engine.Algorithms
             [MessageCodes.EXREPExceptionOccurred] = "{0}: Exception occurred: {1}.",
             [MessageCodes.EXREPTimeFormat] = "{0} Hours, {1} Minutes, {2} Seconds.",
             [MessageCodes.ViolatedConstraints] = "Violated Constraints detail",
-            [MessageCodes.ViolatedConstraint] = "{0} = violated"
+            [MessageCodes.ViolatedConstraint] = "{0} = violated",
+            [MessageCodes.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\"."
          };
       }
       #endregion
@@ -88,6 +89,7 @@ namespace CityScover.Engine.Algorithms
       EXREPExceptionOccurred = 20,
       EXREPTimeFormat = 21,
       ViolatedConstraints = 22,
-      ViolatedConstraint = 23
+      ViolatedConstraint = 23,
+      SolverGraphCreationError = 24
    }
 }

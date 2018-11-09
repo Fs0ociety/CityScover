@@ -114,7 +114,7 @@ namespace CityScover.Engine.Configs
             TourDuration = new TimeSpan(10, 0, 0),
             RelaxedConstraints =
             {
-               Utils.TimeWindowsConstraintDesc
+               Utils.TimeWindowsConstraint
             },
             AlgorithmMonitoring = true,
             Stages =
@@ -145,7 +145,7 @@ namespace CityScover.Engine.Configs
             TourDuration = new TimeSpan(10, 0, 0),
             RelaxedConstraints =
             {
-               Utils.TimeWindowsConstraintDesc
+               Utils.TimeWindowsConstraint
             },
             AlgorithmMonitoring = true,
             Stages =

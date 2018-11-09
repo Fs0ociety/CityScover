@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/11/2018
+// File update: 09/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -88,12 +88,15 @@ namespace CityScover.Engine
       #region Internal methods
       internal string ViolatedConstraintsToString()
       {
-         string message = MessagesRepository.GetMessage(MessageCodes.ViolatedConstraints) + "\n";
+         string message = MessagesRepository
+            .GetMessage(MessageCodes.ViolatedConstraints) + "\n";
+
          foreach (var constraint in ProblemConstraints)
          {
             if (!constraint.Value)
             {
-               message += MessagesRepository.GetMessage(MessageCodes.ViolatedConstraint, constraint.Key) + "\n";
+               message += MessagesRepository
+                  .GetMessage(MessageCodes.ViolatedConstraint, constraint.Key) + "\n";
             }
          }
          return message;

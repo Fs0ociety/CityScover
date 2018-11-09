@@ -40,9 +40,9 @@ namespace CityScover.Engine
          IsMinimizing = false;
 
          Constraints.Add(
-            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TMaxConstraintDesc, IsTMaxConstraintSatisfied));
+            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TMaxConstraint, IsTMaxConstraintSatisfied));
          Constraints.Add(
-            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TimeWindowsConstraintDesc, IsTimeWindowsConstraintSatisfied));
+            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TimeWindowsConstraint, IsTimeWindowsConstraintSatisfied));
       }
       #endregion
 

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 09/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -54,16 +54,16 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private int CalculateTabuTenure(int problemSize)
       {
          #region Code for debug...
-         //int start = (problemSize + 8 - 1) / 8;
-         //int end = (problemSize + 4 - 1) / 4;
+         //int start = (problemSize + 4 - 1) / 4;
+         //int end = (problemSize + 2 - 1) / 2;
 
          //_tenure = new Random().Next(2) == 0 ? start : end;
          //return _tenure;
          #endregion
 
          return new Random().Next(2) == 0 ?
-            (problemSize + 8 - 1) / 8 :
-            (problemSize + 4 - 1) / 4;
+            (problemSize + 4 - 1) / 4 :
+            (problemSize + 2 - 1) / 2;
       }
 
       private LocalSearchTemplate GetLocalSearchAlgorithm()

@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 05/11/2018
+// File update: 09/11/2018
 //
 
 using CityScover.Entities;
@@ -275,24 +275,27 @@ namespace CityScover.Data
          {
             throw new ArgumentNullException(nameof(filename));
          }
-
-         XmlDocument document = new XmlDocument();
-
          if (_points.Any())
          {
             _points.Clear();
          }
+
+         XmlDocument document = new XmlDocument();
          InitializePoints(document, filename);
       }
 
       public static void LoadRoutes(IEnumerable<InterestPoint> filteredPoints)
       {
-         XmlDocument document = new XmlDocument();
-
+         if (!filteredPoints.Any())
+         {
+            return;
+         }
          if (_routes.Any())
          {
             _routes.Clear();
          }
+
+         XmlDocument document = new XmlDocument();
          InitializeRoutes(document, filteredPoints);
       }
       #endregion

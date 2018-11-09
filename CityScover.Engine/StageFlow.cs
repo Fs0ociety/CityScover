@@ -73,6 +73,8 @@ namespace CityScover.Engine
       /// <summary> Hybrid Nearest Distance algorithm's threshold for Tmax constraint. </summary>
       public TimeSpan HndTmaxThreshold { get; set; } = default;
 
+      //public IDictionary<string, object> Parameters { get; set; }
+
       public ICollection<StageFlow> ChildrenFlows { get; set; }
       #endregion
    }

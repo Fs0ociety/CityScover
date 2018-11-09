@@ -9,14 +9,13 @@
 // File update: 08/11/2018
 //
 
-using CityScover.Commons;
 using CityScover.Data;
+using CityScover.Engine.Algorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +31,8 @@ namespace CityScover.Engine
    {
       #region Private methods
       /// <summary>
-      /// Initialize the working configuration and it creates the Problem.
+      /// Creates the problem contained in the configuration 
+      /// and initializes the working configuration.
       /// </summary>
       /// <param name="configuration"></param>
       private void InitSolver(Configuration configuration)
@@ -42,20 +42,14 @@ namespace CityScover.Engine
             _solutionsQueue = new BlockingCollection<TOSolution>();
          }
 
-         WorkingConfiguration = configuration;
-
          foreach (string relaxedConstraint in configuration.RelaxedConstraints)
          {
             ConstraintsToRelax.Add(relaxedConstraint);
          }
 
+         WorkingConfiguration = configuration;
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
-
-         if (Problem is null)
-         {
-            throw new NullReferenceException(nameof(Problem));
-         }
       }
 
       /// <summary>
@@ -85,6 +79,13 @@ namespace CityScover.Engine
          foreach (var route in routes)
          {
             cityGraph.AddEdge(route.PointFrom.Id, route.PointTo.Id, new RouteWorker(route));
+         }
+
+         if (cityGraph.NodeCount == 0)
+         {
+            string message = MessagesRepository
+               .GetMessage(MessageCodes.SolverGraphCreationError, nameof(InitializeTour));
+            throw new Exception(message);
          }
 
          CityMapGraph = cityGraph;
@@ -228,7 +229,15 @@ namespace CityScover.Engine
       public async Task Execute(Configuration configuration)
       {
          InitSolver(configuration);
-         InitializeTour();
+         try
+         {
+            InitializeTour();
+         }
+         catch (Exception ex)
+         {
+            Console.WriteLine(ex.Message);
+            return;
+         }
          _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
 
          if (IsMonitoringEnabled)

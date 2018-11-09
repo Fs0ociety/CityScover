@@ -149,7 +149,7 @@ namespace CityScover.Engine.Workers
                currNodeArrivalTime = currNodeTotalTime.Add(timeWalk);
                currNodeTotalTime = currNodeArrivalTime.Add(visitTime);
                
-               if (Solver.Instance.ConstraintsToRelax.Contains(Utils.TimeWindowsConstraintDesc))
+               if (Solver.Instance.ConstraintsToRelax.Contains(Utils.TimeWindowsConstraint))
                {
                   return;
                }

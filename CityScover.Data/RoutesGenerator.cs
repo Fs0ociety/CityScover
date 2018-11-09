@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 24/09/2018
+// File update: 09/11/2018
 //
 
 using CityScover.Entities;
@@ -32,7 +32,12 @@ namespace CityScover.Data
       #region Public static methods
       public static void GenerateRoutes(IEnumerable<InterestPoint> points, int pointsCount)
       {
-         _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + "cityscover-routes-" + pointsCount + ".xml";
+         if (pointsCount == 0)
+         {
+            return;
+         }
+         _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + 
+            "cityscover-routes-" + pointsCount + ".xml";
 
          if (File.Exists(_filename))
          {
