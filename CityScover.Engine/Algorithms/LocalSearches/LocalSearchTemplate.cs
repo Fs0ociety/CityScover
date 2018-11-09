@@ -14,7 +14,6 @@ using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
@@ -179,6 +178,11 @@ namespace CityScover.Engine.Algorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         if (Solver.IsMonitoringEnabled)
+         {
+            SendMessage(MessageCodes.StageStart, Solver.CurrentStage.Description);
+         }
+
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          _improvementThreshold = Solver.CurrentStage.Flow.LkImprovementThreshold;
          _maxIterationsWithoutImprovements = Solver.CurrentStage.Flow.MaxIterationsWithoutImprovements;
@@ -201,6 +205,8 @@ namespace CityScover.Engine.Algorithms
 
          foreach (var neighborSolution in currentNeighborhood)
          {
+            SendMessage(MessageCodes.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep + 1);
+            SendMessage(neighborSolution.Description);
             Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
 
@@ -212,6 +218,8 @@ namespace CityScover.Engine.Algorithms
          }
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
+         SendMessage(MessageCodes.LSNeighborhoodBest, solution.Id, solution.Cost);
+
          _previousSolutionCost = _currentSolutionCost;
 
          if (AcceptImprovementsOnly)

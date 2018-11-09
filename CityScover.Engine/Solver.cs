@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/10/2018
+// File update: 08/11/2018
 //
 
 using CityScover.Commons;
@@ -16,6 +16,7 @@ using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -42,7 +43,12 @@ namespace CityScover.Engine
          }
 
          WorkingConfiguration = configuration;
-         //ConstraintsToRelax.Add(Utils.TimeWindowsConstraintDesc);
+
+         foreach (string relaxedConstraint in configuration.RelaxedConstraints)
+         {
+            ConstraintsToRelax.Add(relaxedConstraint);
+         }
+
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);
 

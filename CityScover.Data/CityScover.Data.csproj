@@ -76,7 +76,9 @@
   <ItemGroup>
     <EmbeddedResource Include="cityscover-points-60.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Test\cityscover-test-nnknapsack-5.xml" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Test\cityscover-test-nearestnbor-5.xml" />
   </ItemGroup>

@@ -54,7 +54,6 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          candidatePOI.IsVisited = true;
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
-         SendMessage(MessageCodes.GreedyNodeAdded, candidatePOI.Entity.Name);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, candidatePOI.Entity.Id, _startingPoint.Entity.Id);
          _newStartPOI = candidatePOI;
@@ -64,6 +63,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             SolutionGraph = _tour.DeepCopy()
          };
 
+         SendMessage(MessageCodes.GreedyNodeAdded, candidatePOI.Entity.Name, newSolution.Id);
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
          await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);

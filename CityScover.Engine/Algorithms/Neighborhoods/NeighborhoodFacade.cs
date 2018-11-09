@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/11/2018
+// File update: 09/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -44,7 +44,11 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                TOSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
                if (newSolution != null)
                {
-                  //_algorithm.SendMessage();
+                  string message = MessagesRepository.GetMessage(MessageCodes.LSNewNeighborhoodMoveDetails,
+                     newSolution.Id,
+                     $"({currentEdge.Entity.PointFrom.Id},{currentEdge.Entity.PointTo.Id})",
+                     $"({candidateEdge.Entity.PointFrom.Id},{candidateEdge.Entity.PointTo.Id})");
+                  newSolution.Description = message;
                   neighborhood.Add(newSolution);
                }
             }
@@ -55,6 +59,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Internal methods
       internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution)
       {
+         _algorithm.SendMessage(MessageCodes.LSNewNeighborhood, _algorithm.CurrentStep + 1);
          ICollection<TOSolution> neighborhood = default;
          var candidateEdges = _neighborhood.GetCandidates(solution);
          if (candidateEdges is null)

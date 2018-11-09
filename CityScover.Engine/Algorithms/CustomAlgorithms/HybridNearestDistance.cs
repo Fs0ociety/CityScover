@@ -255,6 +255,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         if (Solver.IsMonitoringEnabled)
+         {
+            SendMessage(MessageCodes.CustomAlgStart);
+         }
+
          _processingNodes = new Queue<InterestPointWorker>();
          TOSolution bestSolution = Solver.BestSolution;
          Solver.PreviousStageSolutionCost = bestSolution.Cost;

@@ -9,7 +9,6 @@
 // File update: 08/11/2018
 //
 
-using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
@@ -141,6 +140,10 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         if (Solver.IsMonitoringEnabled)
+         {
+            SendMessage(MessageCodes.StageStart, Solver.CurrentStage.Description);
+         }
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          int maxNodesToEvaluate = Solver.CurrentStage.Flow.MaximumNodesToEvaluate;
          _solutions = new Collection<TOSolution>();

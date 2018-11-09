@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/10/2018
+// File update: 08/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -89,14 +89,27 @@ namespace CityScover.Engine
             OnError(ae);
          }
 
-         Console.WriteLine($"{nameof(ExecutionReporter)} " +
-            $"- Solution received: {solution.Id}, COST: {solution.Cost} PENALTY: {solution.Penalty}");
+         string message = string.Empty;
+         if (solution.IsValid)
+         {
+            message = MessagesRepository.GetMessage(MessageCodes.EXREPSolutionReceived, solution.Id, solution.Cost);
+         }
+         else
+         {
+            message = MessagesRepository.GetMessage(MessageCodes.EXREPSolutionReceivedWithPenalty, solution.Id, solution.Cost, solution.Penalty);
+            message += "\n" + solution.ViolatedConstraintsToString();
+         }
+
+         Console.WriteLine(message);
+         //Console.WriteLine($"{nameof(ExecutionReporter)} " +
+         //   $"- Solution received: {solution.Id}, COST: {solution.Cost} PENALTY: {solution.Penalty}");
       }
    
       public void OnError(Exception error)
       {
          _timer.Stop();
-         Console.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred: {error.Message}\n");
+         Console.WriteLine(MessagesRepository.GetMessage(MessageCodes.EXREPExceptionOccurred, error.Message));
+         //Console.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred: {error.Message}\n");
          throw error;
       }
 
@@ -105,9 +118,11 @@ namespace CityScover.Engine
          _timer.Stop();
          
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
-
-         Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
-            $"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
+         TimeSpan elapsedTime = _timer.Elapsed;
+         string elapsedTimeMsg = MessagesRepository.GetMessage(MessageCodes.EXREPTimeFormat, elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds);
+         Console.WriteLine(MessagesRepository.GetMessage(MessageCodes.EXREPAlgorithmPerformance, algorithmDescription, elapsedTimeMsg));
+         //Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
+            //$"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 
          AlgorithmFamily resultFamily = Result.GetAlgorithmFamily(Solver.CurrentStage.Flow.CurrentAlgorithm);
          Result algorithmResult = Solver.Results.Where(result => result.ResultFamily == resultFamily).FirstOrDefault();

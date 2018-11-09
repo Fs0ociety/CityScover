@@ -9,6 +9,7 @@
 // File update: 07/11/2018
 //
 
+using CityScover.Engine.Algorithms;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,11 @@ namespace CityScover.Engine
       internal IDictionary<string, bool> ProblemConstraints { get; set; } = new Dictionary<string, bool>();
 
       /// <summary>
+      /// Property used to assign a significative description for this solution.
+      /// </summary>
+      internal string Description { get; set; }
+
+      /// <summary>
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
       internal CityMapGraph SolutionGraph {
@@ -77,6 +83,21 @@ namespace CityScover.Engine
       }
 
       internal bool IsValid => Penalty == 0;
+      #endregion
+
+      #region Internal methods
+      internal string ViolatedConstraintsToString()
+      {
+         string message = MessagesRepository.GetMessage(MessageCodes.ViolatedConstraints) + "\n";
+         foreach (var constraint in ProblemConstraints)
+         {
+            if (!constraint.Value)
+            {
+               message += MessagesRepository.GetMessage(MessageCodes.ViolatedConstraint, constraint.Key) + "\n";
+            }
+         }
+         return message;
+      } 
       #endregion
 
       #region Private methods

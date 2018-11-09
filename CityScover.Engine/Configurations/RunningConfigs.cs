@@ -9,6 +9,7 @@
 // File update: 08/11/2018
 //
 
+using CityScover.Commons;
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace CityScover.Engine.Configs
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(10, 0, 0),
-            AlgorithmMonitoring = true,
+            AlgorithmMonitoring = true,            
             Stages =
             {
                new Stage()
@@ -101,6 +102,67 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
+         #region Configuration for Test 1
+         Configuration c2Test = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"Test.cityscover-test-nearestnbor-5.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(10, 0, 0),
+            RelaxedConstraints =
+            {
+               Utils.TimeWindowsConstraintDesc
+            },
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     MaximumNodesToEvaluate = 6
+                  }
+               }
+            }
+         };
+         #endregion
+
+         #region Configuration for Test 2
+         Configuration c3Test = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"Test.cityscover-test-nnknapsack-5.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(10, 0, 0),
+            RelaxedConstraints =
+            {
+               Utils.TimeWindowsConstraintDesc
+            },
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighborKnapsack,
+                     MaximumNodesToEvaluate = 6
+                  }
+               }
+            }
+         };
+         #endregion
          _configurations.Add(c1Test);
       }
       #endregion

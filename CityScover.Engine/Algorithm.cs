@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 06/11/2018
+// File update: 08/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -46,17 +46,6 @@ namespace CityScover.Engine
       private protected Solver Solver => Solver.Instance;
       private protected AlgorithmType CurrentAlgorithm { get; set; }
 
-      private protected ushort CurrentStep
-      {
-         get => _currentStep;
-         set
-         {
-            if (_currentStep != value)
-            {
-               _currentStep = value;
-            }
-         }
-      }
       private protected AlgorithmStatus Status
       {
          get => _status;
@@ -71,6 +60,18 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal properties
+      internal ushort CurrentStep
+      {
+         get => _currentStep;
+         private protected set
+         {
+            if (_currentStep != value)
+            {
+               _currentStep = value;
+            }
+         }
+      }
+
       internal bool AcceptImprovementsOnly
       {
          get => _acceptImprovementsOnly;
@@ -123,6 +124,11 @@ namespace CityScover.Engine
       internal void SendMessage(MessageCodes messageCode, params object[] paramsList)
       {
          string message = MessagesRepository.GetMessage(messageCode, paramsList);
+         SendMessage(message);
+      }
+
+      internal void SendMessage(string message)
+      {
          Provider.NotifyObservers(message);
       }
       #endregion

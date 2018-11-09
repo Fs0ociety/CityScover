@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 08/11/2018
 //
 
 using CityScover.Entities;
@@ -25,6 +25,7 @@ namespace CityScover.Engine
       public Configuration()
       {
          Stages = new Collection<Stage>();
+         RelaxedConstraints = new Collection<string>();
       }
       #endregion
 
@@ -37,7 +38,8 @@ namespace CityScover.Engine
       public TimeSpan TourDuration { get; set; }
       public ProblemFamily CurrentProblem { get; set; }
       public bool AlgorithmMonitoring { get; set; }
-      public ICollection<Stage> Stages { get; set; }      
+      public ICollection<Stage> Stages { get; set; }
+      public ICollection<string> RelaxedConstraints { get; set; }
       #endregion
    }
 }

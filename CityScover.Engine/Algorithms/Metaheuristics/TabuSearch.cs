@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/11/2018
+// File update: 08/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -113,6 +113,11 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         if (Solver.IsMonitoringEnabled)
+         {
+            SendMessage(MessageCodes.StageStart, Solver.CurrentStage.Description);
+         }
+
          _bestSolution = Solver.BestSolution;
          _tenure = CalculateTabuTenure(Solver.ProblemSize);
          _innerAlgorithm = GetLocalSearchAlgorithm();
