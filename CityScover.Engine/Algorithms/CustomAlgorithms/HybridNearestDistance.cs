@@ -9,6 +9,7 @@
 // File update: 06/11/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
@@ -209,7 +210,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             tourUpdated = true;
             Solver.EnqueueSolution(_currentSolution);
-            await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+            await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
             await Solver.AlgorithmTasks[_currentSolution.Id];
 
             if (!_currentSolution.IsValid)
@@ -296,7 +297,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          SendMessage(MessageCode.CustomAlgNodeAdded, point.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
-         await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
 
          if (!_currentSolution.IsValid)

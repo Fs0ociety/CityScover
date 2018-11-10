@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 10/11/2018
 //
 
 using System.Collections.Generic;
@@ -64,32 +64,34 @@ namespace CityScover.Engine.Algorithms
       #endregion
    }
 
-   internal enum MessageCode
-   {
-      None = 0,
-      StageStart = 1,
-      GreedyFinish = 2,
-      GreedyNodeAdded = 3,
-      CustomAlgStart = 4,
-      CustomAlgNodeAdded = 5,
-      CustomAlgNodeRemoved = 6,
-      LSNewNeighborhood = 7,
-      LSNewNeighborhoodMove = 8,
-      LSNewNeighborhoodMoveDetails = 9,
-      LSNeighborhoodBest = 10,
-      LSBestFound = 11,
-      LSFinish = 12,
-      LKHStepIncreased = 13,
-      LKStarting = 14,
-      LKBestFound = 15,
-      OnCompletedHeader = 16,
-      EXREPSolutionReceived = 17,
-      EXREPSolutionReceivedWithPenalty = 18,
-      EXREPAlgorithmPerformance = 19,
-      EXREPExceptionOccurred = 20,
-      EXREPTimeFormat = 21,
-      ViolatedConstraints = 22,
-      ViolatedConstraint = 23,
-      SolverGraphCreationError = 24
-   }
+    #region MessageCode enumeration
+    internal enum MessageCode
+    {
+        None = 0,
+        StageStart = 1,
+        GreedyFinish = 2,
+        GreedyNodeAdded = 3,
+        CustomAlgStart = 4,
+        CustomAlgNodeAdded = 5,
+        CustomAlgNodeRemoved = 6,
+        LSNewNeighborhood = 7,
+        LSNewNeighborhoodMove = 8,
+        LSNewNeighborhoodMoveDetails = 9,
+        LSNeighborhoodBest = 10,
+        LSBestFound = 11,
+        LSFinish = 12,
+        LKHStepIncreased = 13,
+        LKStarting = 14,
+        LKBestFound = 15,
+        OnCompletedHeader = 16,
+        EXREPSolutionReceived = 17,
+        EXREPSolutionReceivedWithPenalty = 18,
+        EXREPAlgorithmPerformance = 19,
+        EXREPExceptionOccurred = 20,
+        EXREPTimeFormat = 21,
+        ViolatedConstraints = 22,
+        ViolatedConstraint = 23,
+        SolverGraphCreationError = 24
+    }
+    #endregion
 }

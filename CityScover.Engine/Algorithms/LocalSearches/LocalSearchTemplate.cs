@@ -9,6 +9,7 @@
 // File update: 08/11/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
@@ -208,7 +209,7 @@ namespace CityScover.Engine.Algorithms
             SendMessage(MessageCode.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep + 1);
             SendMessage(neighborSolution.Description);
             Solver.EnqueueSolution(neighborSolution);
-            await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+            await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
 
             if (Solver.IsMonitoringEnabled)
             {

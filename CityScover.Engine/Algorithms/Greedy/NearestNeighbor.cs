@@ -6,9 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/11/2018
+// File update: 10/11/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Workers;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,8 @@ namespace CityScover.Engine.Algorithms.Greedy
    /// </summary>
    internal class NearestNeighbor : GreedyTemplate
    {
-      private InterestPointWorker _newStartPOI;
+      //private InterestPointWorker _newStartPOI;
+      private int _previousCandidateId;
 
       #region Overrides
       internal override void OnInitializing()
@@ -39,25 +41,26 @@ namespace CityScover.Engine.Algorithms.Greedy
          _tour.AddNode(neighborPOIId, neighborPOI);
          _tour.AddRouteFromGraph(_cityMapClone, startingPointId, neighborPOIId);
          _tour.AddRouteFromGraph(_cityMapClone, neighborPOIId, startingPointId);
-         _newStartPOI = neighborPOI;
+         _previousCandidateId = neighborPOI.Entity.Id;
       }
 
       internal override async Task PerformStep()
       {
-         _tour.RemoveEdge(_newStartPOI.Entity.Id, _startingPoint.Entity.Id);
+         _tour.RemoveEdge(_previousCandidateId, _startingPoint.Entity.Id);
+         InterestPointWorker newStartPOI = _cityMapClone[_processingNodes.Dequeue()];
 
-         var candidatePOI = GetBestNeighbor(_newStartPOI);
+         var candidatePOI = GetBestNeighbor(newStartPOI);
          if (candidatePOI is null)
          {
+            _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, _startingPoint.Entity.Id);
             return;
          }
-
+         
          candidatePOI.IsVisited = true;
          _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
-         _tour.AddRouteFromGraph(_cityMapClone, _newStartPOI.Entity.Id, candidatePOI.Entity.Id);
+         _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, candidatePOI.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, candidatePOI.Entity.Id, _startingPoint.Entity.Id);
-         _newStartPOI = candidatePOI;
-
+         
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _tour.DeepCopy()
@@ -66,7 +69,20 @@ namespace CityScover.Engine.Algorithms.Greedy
          SendMessage(MessageCode.GreedyNodeAdded, candidatePOI.Entity.Name, newSolution.Id);
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
-         await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+         await Solver.AlgorithmTasks[newSolution.Id];
+
+         if (!newSolution.IsValid)
+         {
+            _tour.RemoveEdge(_previousCandidateId, candidatePOI.Entity.Id);
+            _tour.RemoveEdge(candidatePOI.Entity.Id, _startingPoint.Entity.Id);
+            _tour.RemoveNode(candidatePOI.Entity.Id);
+            _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, _startingPoint.Entity.Id);            
+         }
+         else
+         {
+            _previousCandidateId = candidatePOI.Entity.Id;
+         }
 
          // Notify observers.
          if (Solver.IsMonitoringEnabled)
@@ -75,15 +91,9 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
       }
 
-      internal override void OnTerminating()
-      {
-         base.OnTerminating();
-      }
-
       internal override bool StopConditions()
       {
-         return base.StopConditions() || 
-            _tour.NodeCount == _processingNodes.Count();
+         return base.StopConditions() || !_processingNodes.Any();
       }
       #endregion
    }

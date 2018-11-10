@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 10/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -27,7 +27,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       protected InterestPointWorker _startingPoint;
       protected CityMapGraph _tour;
       protected ICollection<TOSolution> _solutions;
-      protected IEnumerable<int> _processingNodes;
+      protected Queue<int> _processingNodes;
       #endregion
 
       #region Constructors
@@ -113,10 +113,9 @@ namespace CityScover.Engine.Algorithms.Greedy
          adjPOIIds.ToList().ForEach(adjPOIId =>
          {
             var adjNode = _cityMapClone[adjPOIId];
-
-            if (!_processingNodes.Contains(adjPOIId) || adjNode.IsVisited)
+            if (adjNode.IsVisited)
             {
-               return;
+                return;
             }
 
             var deltaScore = Math.Abs(adjNode.Entity.Score.Value - interestPoint.Entity.Score.Value);
@@ -145,17 +144,23 @@ namespace CityScover.Engine.Algorithms.Greedy
             SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
          }
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
-         int maxNodesToEvaluate = Solver.CurrentStage.Flow.MaximumNodesToEvaluate;
+         int maxNodesToAdd = Solver.CurrentStage.Flow.MaximumNodesToEvaluate;
          _solutions = new Collection<TOSolution>();
+         _processingNodes = new Queue<int>();
          _tour = new CityMapGraph();
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
-         _processingNodes = Solver.CityMapGraph.Nodes.Select(node => node.Entity.Id);
+         Solver.CityMapGraph.TourPoints
+            .Select(node => node.Entity.Id)
+            .ToList()
+            .ForEach(nodeId => _processingNodes.Enqueue(nodeId));
 
-         if (maxNodesToEvaluate != default)
+         if (maxNodesToAdd != default)
          {
-            _processingNodes = Solver.CityMapGraph.Nodes
-               .Take(maxNodesToEvaluate)
-               .Select(node => node.Entity.Id);
+            _processingNodes.Clear();
+            Solver.CityMapGraph.TourPoints
+               .Take(maxNodesToAdd)
+               .Select(node => node.Entity.Id).ToList()
+               .ForEach(nodeId => _processingNodes.Enqueue(nodeId));
          }
 
          _startingPoint = _cityMapClone.GetStartPoint();

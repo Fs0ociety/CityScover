@@ -9,6 +9,7 @@
 // File update: 27/10/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
@@ -245,7 +246,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             SolutionGraph = _currentSolutionGraph.DeepCopy()
          };
          Solver.EnqueueSolution(newSolution);
-         await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
 
          if (Solver.IsMonitoringEnabled)
          {
