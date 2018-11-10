@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 10/11/2018
 //
 
 using System;
@@ -64,6 +64,11 @@ namespace CityScover.Engine
       #endregion
 
       #region Static methods
+      internal static Result Create(params object[] paramsList)
+      {
+         throw new NotImplementedException(nameof(Create));
+      }
+
       internal static AlgorithmFamily GetAlgorithmFamily(AlgorithmType algorithm)
       {
          AlgorithmFamily result = default; 
