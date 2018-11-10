@@ -51,8 +51,8 @@ namespace CityScover.Engine
       /// Divisor used to calculate the real tabu tenure parameter in Tabu Search algorithm.
       /// The formula to calculate the tabu tenure is (N / TabuTenureFactor), where N 
       /// is the problem size.
-      /// TabuTenureFactor = Best range in [2 - 4] for 2-Opt moves.
-      /// TabuTenureFactor = Best range [8 - 16] for 3-Opt moves.
+      /// Best range for this parameter is in range [2 - 4] for 2-Opt moves 
+      /// and [8 - 16] for 3-Opt moves.
       /// </summary>
       TabuTenureFactor
    }

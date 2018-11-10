@@ -34,6 +34,10 @@ namespace CityScover.Engine
          _timeSpent = time;
          _validity = validity;
       }
+
+      internal Result(Validity validity = Validity.None, params object[] paramsList)
+      {
+      }
       #endregion
 
       #region Enumerations

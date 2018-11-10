@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 10/11/2018
 //
 
 using CityScover.Commons;
@@ -102,7 +102,7 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
-         #region Test - Configuration 2
+         #region Test - Configuration 1 (AlgorithmParameters)
          Configuration c1Testv2 = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
@@ -132,6 +132,7 @@ namespace CityScover.Engine.Configs
                         {
                            AlgorithmParameters =
                            {
+                              [ParameterCodes.CanDoImprovements] = true,
                               [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0)
                            }
                         }
@@ -175,7 +176,7 @@ namespace CityScover.Engine.Configs
                      {
                         [ParameterCodes.CanDoImprovements] = false,
                         [ParameterCodes.MaxDeadlockIterations] = 2,
-                        [ParameterCodes.TabuTenureFactor] = 2   // Divisor of N where N is the problem size.
+                        [ParameterCodes.TabuTenureFactor] = 2
                      },
                      ChildrenFlows =
                      {
