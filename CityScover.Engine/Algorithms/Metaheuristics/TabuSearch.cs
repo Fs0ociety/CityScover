@@ -51,7 +51,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #endregion
 
       #region Private methods
-      private int CalculateTabuTenure(int problemSize)
+      private int CalculateTabuTenure(int problemSize, int factor)
       {
          #region Code for debug...
          //int start = (problemSize + 4 - 1) / 4;
@@ -61,9 +61,11 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          //return _tenure;
          #endregion
 
-         return new Random().Next(2) == 0 ?
-            (problemSize + 4 - 1) / 4 :
-            (problemSize + 2 - 1) / 2;
+         //return new Random().Next(2) == 0 ?
+         //   (problemSize + 4 - 1) / 4 :
+         //   (problemSize + 2 - 1) / 2;
+
+         return (problemSize + factor - 1) / factor;
       }
 
       private LocalSearchTemplate GetLocalSearchAlgorithm()
@@ -115,11 +117,19 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          base.OnInitializing();
          if (Solver.IsMonitoringEnabled)
          {
-            SendMessage(MessageCodes.StageStart, Solver.CurrentStage.Description);
+            SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
          }
 
-         _bestSolution = Solver.BestSolution;
-         _tenure = CalculateTabuTenure(Solver.ProblemSize);
+         var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
+         int tabuTenureFactor = algorithmParams[ParameterCodes.TabuTenureFactor];
+
+         if (tabuTenureFactor == 0)
+         {
+            throw new InvalidOperationException($"Bad configuration format: " +
+               $"{nameof(ParameterCodes.TabuTenureFactor)}.");
+         }
+
+         _tenure = CalculateTabuTenure(Solver.ProblemSize, tabuTenureFactor);
          _innerAlgorithm = GetLocalSearchAlgorithm();
 
          if (_innerAlgorithm is null)
@@ -131,13 +141,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          //_neighborhood.TabuList = new List<TabuMove>();
          _innerAlgorithm.AcceptImprovementsOnly = false;
          _innerAlgorithm.Provider = Provider;
+         _bestSolution = Solver.BestSolution;
       }
 
       internal override async Task PerformStep()
       {
          _neighborhood.TabuList.ToList().ForEach(move => move.Expiration++);
          await _innerAlgorithm.Start();
-      
+
          bool isBetterThanPreviousBestSolution =
             Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
 
@@ -168,7 +179,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       internal override bool StopConditions()
       {
-         bool shouldStop = _currentIteration == _maxIterations 
+         bool shouldStop = _currentIteration == _maxIterations
             || Status == AlgorithmStatus.Error;
 
          if (_maxDeadlockIterations > 0)

@@ -131,7 +131,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
 
          _tour.AddNode(candidateNode.Entity.Id, candidateNode);
-         SendMessage(MessageCodes.GreedyNodeAdded, candidateNode.Entity.Name);
+         SendMessage(MessageCode.GreedyNodeAdded, candidateNode.Entity.Name);
          _tour.RemoveEdge(_newStartingPoint.Entity.Id, _endPoint.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, _newStartingPoint.Entity.Id, candidateNode.Entity.Id);
          _tour.AddRouteFromGraph(_cityMapClone, candidateNode.Entity.Id, _endPoint.Entity.Id);

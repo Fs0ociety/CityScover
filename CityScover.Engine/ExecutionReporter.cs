@@ -92,11 +92,11 @@ namespace CityScover.Engine
          string message = string.Empty;
          if (solution.IsValid)
          {
-            message = MessagesRepository.GetMessage(MessageCodes.EXREPSolutionReceived, solution.Id, solution.Cost);
+            message = MessagesRepository.GetMessage(MessageCode.EXREPSolutionReceived, solution.Id, solution.Cost);
          }
          else
          {
-            message = MessagesRepository.GetMessage(MessageCodes.EXREPSolutionReceivedWithPenalty, solution.Id, solution.Cost, solution.Penalty);
+            message = MessagesRepository.GetMessage(MessageCode.EXREPSolutionReceivedWithPenalty, solution.Id, solution.Cost, solution.Penalty);
             message += "\n" + solution.ViolatedConstraintsToString();
          }
 
@@ -108,7 +108,7 @@ namespace CityScover.Engine
       public void OnError(Exception error)
       {
          _timer.Stop();
-         Console.WriteLine(MessagesRepository.GetMessage(MessageCodes.EXREPExceptionOccurred, error.Message));
+         Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPExceptionOccurred, error.Message));
          //Console.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred: {error.Message}\n");
          throw error;
       }
@@ -119,8 +119,8 @@ namespace CityScover.Engine
          
          string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
          TimeSpan elapsedTime = _timer.Elapsed;
-         string elapsedTimeMsg = MessagesRepository.GetMessage(MessageCodes.EXREPTimeFormat, elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds);
-         Console.WriteLine(MessagesRepository.GetMessage(MessageCodes.EXREPAlgorithmPerformance, algorithmDescription, elapsedTimeMsg));
+         string elapsedTimeMsg = MessagesRepository.GetMessage(MessageCode.EXREPTimeFormat, elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds);
+         Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPAlgorithmPerformance, algorithmDescription, elapsedTimeMsg));
          //Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
             //$"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
 

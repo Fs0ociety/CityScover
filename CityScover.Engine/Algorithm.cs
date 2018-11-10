@@ -121,7 +121,7 @@ namespace CityScover.Engine
          OnTerminated();
       }
 
-      internal void SendMessage(MessageCodes messageCode, params object[] paramsList)
+      internal void SendMessage(MessageCode messageCode, params object[] paramsList)
       {
          string message = MessagesRepository.GetMessage(messageCode, paramsList);
          SendMessage(message);

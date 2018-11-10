@@ -180,7 +180,7 @@ namespace CityScover.Engine.Algorithms
          base.OnInitializing();
          if (Solver.IsMonitoringEnabled)
          {
-            SendMessage(MessageCodes.StageStart, Solver.CurrentStage.Description);
+            SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
          }
 
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
@@ -205,7 +205,7 @@ namespace CityScover.Engine.Algorithms
 
          foreach (var neighborSolution in currentNeighborhood)
          {
-            SendMessage(MessageCodes.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep + 1);
+            SendMessage(MessageCode.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep + 1);
             SendMessage(neighborSolution.Description);
             Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
@@ -218,7 +218,7 @@ namespace CityScover.Engine.Algorithms
          }
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
-         SendMessage(MessageCodes.LSNeighborhoodBest, solution.Id, solution.Cost);
+         SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
 
          _previousSolutionCost = _currentSolutionCost;
 
@@ -227,7 +227,7 @@ namespace CityScover.Engine.Algorithms
             bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
             if (isBetterThanCurrentBestSolution)
             {
-               SendMessage(MessageCodes.LSBestFound, solution.Cost, _bestSolution.Cost);
+               SendMessage(MessageCode.LSBestFound, solution.Cost, _bestSolution.Cost);
                _bestSolution = solution;
                _currentSolutionCost = solution.Cost;
 
@@ -262,7 +262,7 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnTerminating();
          Solver.BestSolution = _bestSolution;
-         SendMessage(MessageCodes.LSFinish, _currentSolutionCost);
+         SendMessage(MessageCode.LSFinish, _currentSolutionCost);
       }
 
       internal override void OnTerminated()

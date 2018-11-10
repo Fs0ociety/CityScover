@@ -142,7 +142,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          base.OnInitializing();
          if (Solver.IsMonitoringEnabled)
          {
-            SendMessage(MessageCodes.StageStart, Solver.CurrentStage.Description);
+            SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
          }
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          int maxNodesToEvaluate = Solver.CurrentStage.Flow.MaximumNodesToEvaluate;
@@ -191,7 +191,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _cityMapClone = null;
          TOSolution bestProducedSolution = _solutions.Last();
 
-         SendMessage(MessageCodes.OnCompletedHeader, Solver.CurrentStage.Description);
+         SendMessage(MessageCode.OnCompletedHeader, Solver.CurrentStage.Description);
          _solutions.ToList().ForEach(solution =>
          {
             Console.WriteLine(solution.SolutionGraph.ToString());
@@ -202,7 +202,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          validResult.ResultFamily = AlgorithmFamily.Greedy;
          Solver.Results.Add(validResult);
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
-         SendMessage(MessageCodes.GreedyFinish);
+         SendMessage(MessageCode.GreedyFinish);
          base.OnTerminated();
 
          Task improvementTask = Task.Run(() => RunImprovementAlgorithms());

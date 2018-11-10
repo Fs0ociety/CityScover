@@ -2,12 +2,16 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 03/10/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 09/11/2018
 //
 
 namespace CityScover.Entities
 {
+   #region TourCategoryType enumeration
    public enum TourCategoryType
    {
       /// <summary>
@@ -30,4 +34,5 @@ namespace CityScover.Entities
       /// </summary>
       Sport = 3
    }
+   #endregion
 }

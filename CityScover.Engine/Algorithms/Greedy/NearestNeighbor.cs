@@ -63,7 +63,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             SolutionGraph = _tour.DeepCopy()
          };
 
-         SendMessage(MessageCodes.GreedyNodeAdded, candidatePOI.Entity.Name, newSolution.Id);
+         SendMessage(MessageCode.GreedyNodeAdded, candidatePOI.Entity.Name, newSolution.Id);
          _solutions.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
          await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);

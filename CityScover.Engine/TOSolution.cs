@@ -89,14 +89,14 @@ namespace CityScover.Engine
       internal string ViolatedConstraintsToString()
       {
          string message = MessagesRepository
-            .GetMessage(MessageCodes.ViolatedConstraints) + "\n";
+            .GetMessage(MessageCode.ViolatedConstraints) + "\n";
 
          foreach (var constraint in ProblemConstraints)
          {
             if (!constraint.Value)
             {
                message += MessagesRepository
-                  .GetMessage(MessageCodes.ViolatedConstraint, constraint.Key) + "\n";
+                  .GetMessage(MessageCode.ViolatedConstraint, constraint.Key) + "\n";
             }
          }
          return message;

@@ -84,7 +84,7 @@ namespace CityScover.Engine
          if (cityGraph.NodeCount == 0)
          {
             string message = MessagesRepository
-               .GetMessage(MessageCodes.SolverGraphCreationError, nameof(InitializeTour));
+               .GetMessage(MessageCode.SolverGraphCreationError, nameof(InitializeTour));
             throw new Exception(message);
          }
 

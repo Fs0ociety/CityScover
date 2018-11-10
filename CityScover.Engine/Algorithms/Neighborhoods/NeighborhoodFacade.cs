@@ -44,7 +44,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                TOSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
                if (newSolution != null)
                {
-                  string message = MessagesRepository.GetMessage(MessageCodes.LSNewNeighborhoodMoveDetails,
+                  string message = MessagesRepository.GetMessage(MessageCode.LSNewNeighborhoodMoveDetails,
                      newSolution.Id,
                      $"({currentEdge.Entity.PointFrom.Id},{currentEdge.Entity.PointTo.Id})",
                      $"({candidateEdge.Entity.PointFrom.Id},{candidateEdge.Entity.PointTo.Id})");
@@ -59,7 +59,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Internal methods
       internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution)
       {
-         _algorithm.SendMessage(MessageCodes.LSNewNeighborhood, _algorithm.CurrentStep + 1);
+         _algorithm.SendMessage(MessageCode.LSNewNeighborhood, _algorithm.CurrentStep + 1);
          ICollection<TOSolution> neighborhood = default;
          var candidateEdges = _neighborhood.GetCandidates(solution);
          if (candidateEdges is null)

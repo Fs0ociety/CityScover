@@ -6,12 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 09/11/2018
 //
 
 namespace CityScover.Engine
 {
-   #region Enumerations
+   #region AlgorithmFamily enumeration
    public enum AlgorithmFamily
    {
       /// <summary>

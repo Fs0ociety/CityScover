@@ -44,7 +44,7 @@ namespace CityScover.Engine.Configs
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
             TourDuration = new TimeSpan(10, 0, 0),
-            AlgorithmMonitoring = true,            
+            AlgorithmMonitoring = true,
             Stages =
             {
                new Stage()
@@ -92,6 +92,91 @@ namespace CityScover.Engine.Configs
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
                      MaximumDeadlockIterations = 2,
                      CanExecuteImprovements = false,
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.TwoOpt, runningCount: 3)
+                     }
+                  }
+               }
+            }
+         };
+         #endregion
+
+         #region Test - Configuration 2
+         Configuration c1Testv2 = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"cityscover-points-30.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(10, 0, 0),
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0)
+                           }
+                        }
+                     }
+                  }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageTwo,
+                  Category = AlgorithmFamily.LocalSearch,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.LKImprovementThreshold] = 2000,
+                        [ParameterCodes.MaxIterationsWithNoImprovements] = 2,
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1),
+                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0)
+                           }
+                        }
+                     }
+                  }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageThree,
+                  Category = AlgorithmFamily.MetaHeuristic,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.TabuSearch,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = false,
+                        [ParameterCodes.MaxDeadlockIterations] = 2,
+                        [ParameterCodes.TabuTenureFactor] = 2   // Divisor of N where N is the problem size.
+                     },
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.TwoOpt, runningCount: 3)
@@ -163,6 +248,7 @@ namespace CityScover.Engine.Configs
             }
          };
          #endregion
+
          _configurations.Add(c1Test);
       }
       #endregion

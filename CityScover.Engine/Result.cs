@@ -57,6 +57,10 @@ namespace CityScover.Engine
          get => _runningTime;
          set => _runningTime = value;
       }
+
+      public int Count => throw new NotImplementedException();
+
+      public bool IsReadOnly => throw new NotImplementedException();
       #endregion
 
       #region Static methods

@@ -257,7 +257,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          base.OnInitializing();
          if (Solver.IsMonitoringEnabled)
          {
-            SendMessage(MessageCodes.CustomAlgStart);
+            SendMessage(MessageCode.CustomAlgStart);
          }
 
          _processingNodes = new Queue<InterestPointWorker>();
@@ -294,7 +294,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SolutionGraph = _tour
          };
 
-         SendMessage(MessageCodes.CustomAlgNodeAdded, point.Entity.Name);
+         SendMessage(MessageCode.CustomAlgNodeAdded, point.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
          await Task.Delay(250).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
@@ -304,7 +304,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             UndoAdditionPoint(point.Entity.Id, _previousEndPOIKey, _startPOI.Entity.Id);
             _addedNodesCount--;
             _endPOI = _tour.GetEndPoint();
-            SendMessage(MessageCodes.CustomAlgNodeRemoved, point.Entity.Name);
+            SendMessage(MessageCode.CustomAlgNodeRemoved, point.Entity.Name);
          }
       }
 

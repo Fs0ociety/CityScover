@@ -2,8 +2,11 @@
 // CityScover
 // Version 1.0
 //
-// Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 18/08/2018
+// @authors
+// Andrea Ritondale
+// Andrea Mingardo
+// 
+// File update: 09/11/2018
 //
 
 using System;

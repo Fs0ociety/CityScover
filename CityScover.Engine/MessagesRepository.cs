@@ -15,44 +15,44 @@ namespace CityScover.Engine.Algorithms
 {
    internal static class MessagesRepository
    {
-      private static IDictionary<MessageCodes, string> _algorithmMessages;
+      private static IDictionary<MessageCode, string> _algorithmMessages;
 
       #region Static constructors
       static MessagesRepository()
       {
-         _algorithmMessages = new Dictionary<MessageCodes, string>()
+         _algorithmMessages = new Dictionary<MessageCode, string>()
          {
-            [MessageCodes.None] = string.Empty,
-            [MessageCodes.StageStart] = "Starting Stage {0}...",
-            [MessageCodes.GreedyNodeAdded] = "Point of interest \"{0}\" added to solution {1}.",
-            [MessageCodes.GreedyFinish] = "Greedy algorithm finished successfully.",
-            [MessageCodes.CustomAlgStart] = "Starting Hybrid Nearest Distance improvement algorithm...",
-            [MessageCodes.CustomAlgNodeAdded] = "Point of interest \"{0}\" added successfully to the Tour.",
-            [MessageCodes.CustomAlgNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
-            [MessageCodes.LSNewNeighborhood] = "Generating new neighborhood {0}.",
-            [MessageCodes.LSNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
-            [MessageCodes.LSNewNeighborhoodMoveDetails] = "New solution {0} details: changed edge {1} with edge {2}.",
-            [MessageCodes.LSNeighborhoodBest] = "The best move for this neighborhood is: {0} with cost: {1}.",
-            [MessageCodes.LSBestFound] = "Best solution found with cost: ({0}). Previous solution cost: ({1}).",
-            [MessageCodes.LSFinish] = "Stop condition occurred with solution cost: ({0})",
-            [MessageCodes.LKHStepIncreased] = "Step {0} of {1} with no improvement.",
-            [MessageCodes.LKStarting] = "Max iterations with no improvements reached. Lin Kernighan starting...",
-            [MessageCodes.LKBestFound] = "Best solution found with cost: ({0}).",
-            [MessageCodes.OnCompletedHeader] = "Solutions produced for stage \"{0}\" are:",
-            [MessageCodes.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
-            [MessageCodes.EXREPSolutionReceivedWithPenalty] = "Solution {0} has been marked with cost: {1} and penalty: {2}",
-            [MessageCodes.EXREPAlgorithmPerformance] = "The algorithm {0} performed in {1}.",
-            [MessageCodes.EXREPExceptionOccurred] = "{0}: Exception occurred: {1}.",
-            [MessageCodes.EXREPTimeFormat] = "{0} Hours, {1} Minutes, {2} Seconds.",
-            [MessageCodes.ViolatedConstraints] = "Violated Constraints detail",
-            [MessageCodes.ViolatedConstraint] = "{0} = violated",
-            [MessageCodes.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\"."
+            [MessageCode.None] = string.Empty,
+            [MessageCode.StageStart] = "Starting Stage {0}...",
+            [MessageCode.GreedyNodeAdded] = "Point of interest \"{0}\" added to solution {1}.",
+            [MessageCode.GreedyFinish] = "Greedy algorithm finished successfully.",
+            [MessageCode.CustomAlgStart] = "Starting Hybrid Nearest Distance improvement algorithm...",
+            [MessageCode.CustomAlgNodeAdded] = "Point of interest \"{0}\" added successfully to the Tour.",
+            [MessageCode.CustomAlgNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
+            [MessageCode.LSNewNeighborhood] = "Generating new neighborhood {0}.",
+            [MessageCode.LSNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
+            [MessageCode.LSNewNeighborhoodMoveDetails] = "New solution {0} details: changed edge {1} with edge {2}.",
+            [MessageCode.LSNeighborhoodBest] = "The best move for this neighborhood is: {0} with cost: {1}.",
+            [MessageCode.LSBestFound] = "Best solution found with cost: ({0}). Previous solution cost: ({1}).",
+            [MessageCode.LSFinish] = "Stop condition occurred with solution cost: ({0})",
+            [MessageCode.LKHStepIncreased] = "Step {0} of {1} with no improvement.",
+            [MessageCode.LKStarting] = "Max iterations with no improvements reached. Lin Kernighan starting...",
+            [MessageCode.LKBestFound] = "Best solution found with cost: ({0}).",
+            [MessageCode.OnCompletedHeader] = "Solutions produced for stage \"{0}\" are:",
+            [MessageCode.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
+            [MessageCode.EXREPSolutionReceivedWithPenalty] = "Solution {0} has been marked with cost: {1} and penalty: {2}",
+            [MessageCode.EXREPAlgorithmPerformance] = "The algorithm {0} performed in {1}.",
+            [MessageCode.EXREPExceptionOccurred] = "{0}: Exception occurred: {1}.",
+            [MessageCode.EXREPTimeFormat] = "{0} Hours, {1} Minutes, {2} Seconds.",
+            [MessageCode.ViolatedConstraints] = "Violated Constraints detail",
+            [MessageCode.ViolatedConstraint] = "{0} = violated",
+            [MessageCode.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\"."
          };
       }
       #endregion
 
       #region Internal methods
-      internal static string GetMessage(MessageCodes code, params object[] messageList)
+      internal static string GetMessage(MessageCode code, params object[] messageList)
       {
          if (!_algorithmMessages.ContainsKey(code))
          {
@@ -64,7 +64,7 @@ namespace CityScover.Engine.Algorithms
       #endregion
    }
 
-   internal enum MessageCodes
+   internal enum MessageCode
    {
       None = 0,
       StageStart = 1,

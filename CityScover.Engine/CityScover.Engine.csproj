@@ -63,6 +63,7 @@
     <Compile Include="Algorithms\Neighborhoods\TabuSearchNeighborhood.cs" />
     <Compile Include="Algorithms\Neighborhoods\NeighborhoodFacade.cs" />
     <Compile Include="NeighborhoodFactory.cs" />
+    <Compile Include="ParameterCodeType.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Algorithms\LocalSearches\LocalSearchTemplate.cs" />
     <Compile Include="Algorithms\VariableDepthSearch\LinKernighan.cs" />

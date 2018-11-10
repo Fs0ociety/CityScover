@@ -182,7 +182,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         SendMessage(MessageCodes.LKStarting);
+         SendMessage(MessageCode.LKStarting);
 
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
@@ -253,7 +253,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          }
          _executedSteps++;
          _currentSolution = newSolution;
-         SendMessage(MessageCodes.LKHStepIncreased, _executedSteps, MaxSteps);
+         SendMessage(MessageCode.LKHStepIncreased, _executedSteps, MaxSteps);
 
          // Local function per costruire un nuovo ciclo hamiltoniano.
          // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè
@@ -290,7 +290,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          if (isBetterThanCurrentBestSolution)
          {
             CurrentBestSolution = _currentSolution;
-            SendMessage(MessageCodes.LKBestFound, _currentSolution.Cost);
+            SendMessage(MessageCode.LKBestFound, _currentSolution.Cost);
          }
       }
 

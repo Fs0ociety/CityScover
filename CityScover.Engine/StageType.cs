@@ -6,11 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 09/11/2018
 //
 
 namespace CityScover.Engine
 {
+   #region StageType enumeration
    public enum StageType
    {
       /// <summary>
@@ -38,4 +39,5 @@ namespace CityScover.Engine
       /// </summary>
       StageImprovement
    }
+   #endregion
 }
