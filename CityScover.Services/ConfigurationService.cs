@@ -69,52 +69,52 @@ namespace CityScover.Services
             WriteLine($"\t     [{stageDescription.ToUpper()}]\n");
             WriteLine($"\t     Algorithm family:    \"{stage.Category}\"");
 
-            DisplayStageFlow(stage.Flow);
+            //DisplayStageFlow(stage.Flow);
             WriteLine("\t    --------------------------------------------------------\n");
          }
          WriteLine("\t============================================================\n");
       }
 
-      private void DisplayStageFlow(StageFlow flow, string tabulator = "\t")
-      {
-         WriteLine($"{tabulator}     Current algorithm:   \"{flow.CurrentAlgorithm}\"");
-         WriteLine($"{tabulator}     Max iterations:      \"{flow.RunningCount}\"");
+      //private void DisplayStageFlow(StageFlow flow, string tabulator = "\t")
+      //{
+      //   WriteLine($"{tabulator}     Current algorithm:   \"{flow.CurrentAlgorithm}\"");
+      //   WriteLine($"{tabulator}     Max iterations:      \"{flow.RunningCount}\"");
 
-         if (flow.MaximumNodesToEvaluate != default)
-         {
-            WriteLine($"{tabulator}     Maximum nodes to consider:  \"{flow.MaximumNodesToEvaluate}\"");
-         }
-         if (flow.CanExecuteImprovements != default)
-         {
-            WriteLine($"{tabulator}     Can {flow.CurrentAlgorithm} executes improvements:  \"{flow.CanExecuteImprovements}\"");
-         }
-         if (flow.LkImprovementThreshold != default)
-         {
-            WriteLine($"{tabulator}     Lin Kernighan improvement threshold:  \"{flow.LkImprovementThreshold}\"");
-         }
-         if (flow.MaxIterationsWithoutImprovements != default)
-         {
-            WriteLine($"{tabulator}     Maximum iterations without improvement:  \"{flow.MaxIterationsWithoutImprovements}\"");
-         }
-         if (flow.MaximumDeadlockIterations != default)
-         {
-            WriteLine($"{tabulator}     Deadlock condition:  \"{flow.MaximumDeadlockIterations}\"");
-         }
-         if (flow.HndTmaxThreshold != default)
-         {
-            WriteLine($"{tabulator}     TMax threshold:  \"" +
-               $"{flow.HndTmaxThreshold.Hours + ((flow.HndTmaxThreshold.Hours == 1) ? " hour" : " hours")} and " +
-               $"{flow.HndTmaxThreshold.Minutes} minutes.\"");
-         }
+      //   if (flow.MaximumNodesToEvaluate != default)
+      //   {
+      //      WriteLine($"{tabulator}     Maximum nodes to consider:  \"{flow.MaximumNodesToEvaluate}\"");
+      //   }
+      //   if (flow.CanExecuteImprovements != default)
+      //   {
+      //      WriteLine($"{tabulator}     Can {flow.CurrentAlgorithm} executes improvements:  \"{flow.CanExecuteImprovements}\"");
+      //   }
+      //   if (flow.LkImprovementThreshold != default)
+      //   {
+      //      WriteLine($"{tabulator}     Lin Kernighan improvement threshold:  \"{flow.LkImprovementThreshold}\"");
+      //   }
+      //   if (flow.MaxIterationsWithoutImprovements != default)
+      //   {
+      //      WriteLine($"{tabulator}     Maximum iterations without improvement:  \"{flow.MaxIterationsWithoutImprovements}\"");
+      //   }
+      //   if (flow.MaximumDeadlockIterations != default)
+      //   {
+      //      WriteLine($"{tabulator}     Deadlock condition:  \"{flow.MaximumDeadlockIterations}\"");
+      //   }
+      //   if (flow.HndTmaxThreshold != default)
+      //   {
+      //      WriteLine($"{tabulator}     TMax threshold:  \"" +
+      //         $"{flow.HndTmaxThreshold.Hours + ((flow.HndTmaxThreshold.Hours == 1) ? " hour" : " hours")} and " +
+      //         $"{flow.HndTmaxThreshold.Minutes} minutes.\"");
+      //   }
 
-         if (flow.ChildrenFlows.Any())
-         {
-            WriteLine($"\n{tabulator}     \"{flow.CurrentAlgorithm} inner algorithms\"");
-            WriteLine($"{tabulator}     " + "{");
-            DisplayStageFlow(flow.ChildrenFlows.FirstOrDefault(), "\t    ");
-            WriteLine($"{tabulator}     " + "}");
-         }
-      }
+      //   if (flow.ChildrenFlows.Any())
+      //   {
+      //      WriteLine($"\n{tabulator}     \"{flow.CurrentAlgorithm} inner algorithms\"");
+      //      WriteLine($"{tabulator}     " + "{");
+      //      DisplayStageFlow(flow.ChildrenFlows.FirstOrDefault(), "\t    ");
+      //      WriteLine($"{tabulator}     " + "}");
+      //   }
+      //}
       #endregion
 
       #region Run configuration menu
@@ -680,12 +680,12 @@ namespace CityScover.Services
                   byte runningCount = GetAlgorithmIterations();
                   var (maxIterationsWithoutImprovements, improvementThreshold) = GetLocalSearchParameters(runningCount);
                   stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
-                  stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
-                  stage.Flow.LkImprovementThreshold = improvementThreshold;
+                  //stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
+                  //stage.Flow.LkImprovementThreshold = improvementThreshold;
                }
                else
                {
-                  ResetStage(stage);
+                  //ResetStage(stage);
                }
             }
          }
@@ -710,8 +710,8 @@ namespace CityScover.Services
                byte runningCount = GetAlgorithmIterations();
                var (maximumDeadlockIterations, canExecuteImprovements) = GetMetaHeuristicParameters(runningCount);
                stage.Flow.ChildrenFlows.Add(new StageFlow(lsAlgorithm, runningCount));
-               stage.Flow.MaximumDeadlockIterations = maximumDeadlockIterations;
-               stage.Flow.CanExecuteImprovements = canExecuteImprovements;
+               //stage.Flow.MaximumDeadlockIterations = maximumDeadlockIterations;
+               //stage.Flow.CanExecuteImprovements = canExecuteImprovements;
 
                if (canExecuteImprovements)
                {
@@ -724,7 +724,7 @@ namespace CityScover.Services
                   }
                   else
                   {
-                     ResetStage(stage);
+                     //ResetStage(stage);
                   }
                }
             }
@@ -956,18 +956,18 @@ namespace CityScover.Services
          return runningCount;
       }
 
-      private void ResetStage(Stage stage)
-      {
-         stage.Category = AlgorithmFamily.None;
-         stage.Description = StageType.InvalidStage;
-         stage.Flow.CurrentAlgorithm = AlgorithmType.None;
-         stage.Flow.ChildrenFlows.Clear();
-         stage.Flow.CanExecuteImprovements = true;
-         stage.Flow.RunningCount = default;
-         stage.Flow.LkImprovementThreshold = default;
-         stage.Flow.MaximumDeadlockIterations = default;
-         stage.Flow.MaxIterationsWithoutImprovements = default;
-      }
+      //private void ResetStage(Stage stage)
+      //{
+      //   stage.Category = AlgorithmFamily.None;
+      //   stage.Description = StageType.InvalidStage;
+      //   stage.Flow.CurrentAlgorithm = AlgorithmType.None;
+      //   stage.Flow.ChildrenFlows.Clear();
+      //   stage.Flow.CanExecuteImprovements = true;
+      //   stage.Flow.RunningCount = default;
+      //   stage.Flow.LkImprovementThreshold = default;
+      //   stage.Flow.MaximumDeadlockIterations = default;
+      //   stage.Flow.MaxIterationsWithoutImprovements = default;
+      //}
       #endregion
       #endregion
 

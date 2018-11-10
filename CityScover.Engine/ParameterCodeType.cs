@@ -48,6 +48,11 @@ namespace CityScover.Engine
       HNDTmaxThreshold,
 
       /// <summary>
+      /// Hybrid Nearest Distance algorithm's threshold for time walk.
+      /// </summary>
+      HNDTimeWalkThreshold,
+
+      /// <summary>
       /// Divisor used to calculate the real tabu tenure parameter in Tabu Search algorithm.
       /// The formula to calculate the tabu tenure is (N / TabuTenureFactor), where N 
       /// is the problem size.

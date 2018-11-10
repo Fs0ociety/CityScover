@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/11/2018
+// File update: 10/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -89,7 +89,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          {
             _innerAlgorithm = ls;
             _maxIterations = flow.RunningCount;
-            _maxDeadlockIterations = flow.MaximumDeadlockIterations;
+            _maxDeadlockIterations = flow.AlgorithmParameters[ParameterCodes.MaxDeadlockIterations];
          }
 
          return _innerAlgorithm;

@@ -143,12 +143,14 @@ namespace CityScover.Engine.Algorithms.Greedy
          {
             SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
          }
-         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
-         int maxNodesToAdd = Solver.CurrentStage.Flow.MaximumNodesToEvaluate;
+         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;         
+         var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
+         int maxNodesToAdd = algorithmParams[ParameterCodes.GreedyMaxNodesToAdd];
          _solutions = new Collection<TOSolution>();
          _processingNodes = new Queue<int>();
          _tour = new CityMapGraph();
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
+
          Solver.CityMapGraph.TourPoints
             .Select(node => node.Entity.Id)
             .ToList()
@@ -178,10 +180,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          CurrentStep = default;
          TOSolution lastProducedSolution = _solutions.Last();
-         Result resultError =
-            new Result(lastProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Invalid);
-         resultError.ResultFamily = AlgorithmFamily.Greedy;
-         Solver.Results.Add(resultError);
          base.OnError(exception);
       }
 
@@ -202,10 +200,6 @@ namespace CityScover.Engine.Algorithms.Greedy
             Console.WriteLine(solution.SolutionGraph.ToString());
          });
 
-         Result validResult =
-            new Result(bestProducedSolution, CurrentAlgorithm, _timeSpent, Result.Validity.Valid);
-         validResult.ResultFamily = AlgorithmFamily.Greedy;
-         Solver.Results.Add(validResult);
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          SendMessage(MessageCode.GreedyFinish);
          base.OnTerminated();

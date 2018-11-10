@@ -90,6 +90,7 @@ namespace CityScover.Engine
          }
 
          string message = string.Empty;
+         string errMessage = string.Empty;
          if (solution.IsValid)
          {
             message = MessagesRepository.GetMessage(MessageCode.EXREPSolutionReceived, solution.Id, solution.Cost);
@@ -97,19 +98,19 @@ namespace CityScover.Engine
          else
          {
             message = MessagesRepository.GetMessage(MessageCode.EXREPSolutionReceivedWithPenalty, solution.Id, solution.Cost, solution.Penalty);
-            message += "\n" + solution.ViolatedConstraintsToString();
+            errMessage = solution.ViolatedConstraintsToString();
          }
 
          Console.WriteLine(message);
-         //Console.WriteLine($"{nameof(ExecutionReporter)} " +
-         //   $"- Solution received: {solution.Id}, COST: {solution.Cost} PENALTY: {solution.Penalty}");
+         Console.ForegroundColor = ConsoleColor.Red;
+         Console.WriteLine(errMessage);
+         Console.ForegroundColor = ConsoleColor.White;
       }
    
       public void OnError(Exception error)
       {
          _timer.Stop();
          Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPExceptionOccurred, error.Message));
-         //Console.WriteLine($"{nameof(ExecutionReporter)}: Exception occurred: {error.Message}\n");
          throw error;
       }
 

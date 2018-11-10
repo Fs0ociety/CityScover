@@ -54,74 +54,6 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
-                     MaximumNodesToEvaluate = 6,
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
-                        {
-                           HndTmaxThreshold = new TimeSpan(1, 0, 0)
-                        }
-                     }
-                  }
-               },
-               new Stage()
-               {
-                  Description = StageType.StageTwo,
-                  Category = AlgorithmFamily.LocalSearch,
-                  Flow =
-                  {
-                     CurrentAlgorithm = AlgorithmType.TwoOpt,
-                     LkImprovementThreshold = 2000,
-                     MaxIterationsWithoutImprovements = 2,
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1),
-                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
-                        {
-                           HndTmaxThreshold = new TimeSpan(1, 0, 0)
-                        }
-                     }
-                  }
-               },
-               new Stage()
-               {
-                  Description = StageType.StageThree,
-                  Category = AlgorithmFamily.MetaHeuristic,
-                  Flow =
-                  {
-                     CurrentAlgorithm = AlgorithmType.TabuSearch,
-                     MaximumDeadlockIterations = 2,
-                     CanExecuteImprovements = false,
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.TwoOpt, runningCount: 3)
-                     }
-                  }
-               }
-            }
-         };
-         #endregion
-
-         #region Test - Configuration 1 (AlgorithmParameters)
-         Configuration c1Testv2 = new Configuration()
-         {
-            CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsFilename = @"cityscover-points-30.xml",
-            StartingPointId = 1,
-            WalkingSpeed = 3.0 / 3.6,  // in m/s.
-            ArrivalTime = DateTime.Now.Date.AddHours(9),
-            TourDuration = new TimeSpan(10, 0, 0),
-            AlgorithmMonitoring = true,
-            Stages =
-            {
-               new Stage()
-               {
-                  Description = StageType.StageOne,
-                  Category = AlgorithmFamily.Greedy,
-                  Flow =
-                  {
-                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
                         [ParameterCodes.GreedyMaxNodesToAdd] = 6
@@ -159,6 +91,7 @@ namespace CityScover.Engine.Configs
                         {
                            AlgorithmParameters =
                            {
+                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
                               [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0)
                            }
                         }
@@ -212,7 +145,10 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
-                     MaximumNodesToEvaluate = 6
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                     }
                   }
                }
             }
@@ -243,14 +179,17 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighborKnapsack,
-                     MaximumNodesToEvaluate = 6
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                     }
                   }
                }
             }
          };
          #endregion
 
-         _configurations.Add(c2Test);
+         _configurations.Add(c1Test);
       }
       #endregion
 

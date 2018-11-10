@@ -1,4 +1,5 @@
-﻿//
+﻿
+//
 // CityScover
 // Version 1.0
 //
@@ -6,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 10/11/2018
 //
 
 using CityScover.Commons;
@@ -24,10 +25,10 @@ namespace CityScover.Engine.Algorithms
       #region Private fields
       private int _previousSolutionCost;
       private int _currentSolutionCost;
-      private byte _iterationsWithoutImprovement;
+      private int _iterationsWithoutImprovement;
       private bool _shouldRunImprovementAlgorithm;
-      private ushort _improvementThreshold;
-      private byte _maxIterationsWithoutImprovements;
+      private int _improvementThreshold;
+      private int _maxIterationsWithoutImprovements;
       private TOSolution _bestSolution;
       private NeighborhoodFacade _neighborhoodFacade;
       #endregion
@@ -46,7 +47,7 @@ namespace CityScover.Engine.Algorithms
       #endregion
 
       #region Internal properties
-      internal bool CanExecuteImprovementAlgorithms { get; set; }
+      internal bool CanDoImprovements { get; set; }
       #endregion
 
       #region Private methods
@@ -184,12 +185,14 @@ namespace CityScover.Engine.Algorithms
             SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
          }
 
-         Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
-         _improvementThreshold = Solver.CurrentStage.Flow.LkImprovementThreshold;
-         _maxIterationsWithoutImprovements = Solver.CurrentStage.Flow.MaxIterationsWithoutImprovements;
-         CanExecuteImprovementAlgorithms = Solver.CurrentStage.Flow.CanExecuteImprovements;
+         Solver.PreviousStageSolutionCost = Solver.BestSolution.CostAndPenalty;
+         var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
+         CanDoImprovements = algorithmParams[ParameterCodes.CanDoImprovements];
+         _improvementThreshold = algorithmParams[ParameterCodes.LKImprovementThreshold];
+         _maxIterationsWithoutImprovements = algorithmParams[ParameterCodes.MaxIterationsWithNoImprovements];
          _bestSolution = Solver.BestSolution;
-         _currentSolutionCost = _bestSolution.Cost;
+         SendMessage(MessageCode.LSStartSolution, _bestSolution.Id, _bestSolution.CostAndPenalty);
+         _currentSolutionCost = _bestSolution.CostAndPenalty;
          _previousSolutionCost = default;
          _iterationsWithoutImprovement = default;
          _shouldRunImprovementAlgorithm = default;
@@ -197,7 +200,7 @@ namespace CityScover.Engine.Algorithms
 
       internal override async Task PerformStep()
       {
-         if (CanExecuteImprovementAlgorithms && _shouldRunImprovementAlgorithm)
+         if (CanDoImprovements && _shouldRunImprovementAlgorithm)
          {
             await RunImprovementAlgorithms();
          }
@@ -219,20 +222,22 @@ namespace CityScover.Engine.Algorithms
          }
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
+         Console.ForegroundColor = ConsoleColor.Green;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
+         Console.ForegroundColor = ConsoleColor.White;
 
          _previousSolutionCost = _currentSolutionCost;
 
          if (AcceptImprovementsOnly)
          {
-            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
+            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.CostAndPenalty, _bestSolution.CostAndPenalty);
             if (isBetterThanCurrentBestSolution)
             {
-               SendMessage(MessageCode.LSBestFound, solution.Cost, _bestSolution.Cost);
+               SendMessage(MessageCode.LSBestFound, solution.CostAndPenalty, _bestSolution.CostAndPenalty);
                _bestSolution = solution;
-               _currentSolutionCost = solution.Cost;
+               _currentSolutionCost = solution.CostAndPenalty;
 
-               if (CanExecuteImprovementAlgorithms)
+               if (CanDoImprovements)
                {
                   var delta = _currentSolutionCost - _previousSolutionCost;
                   if (delta < _improvementThreshold)
@@ -246,17 +251,8 @@ namespace CityScover.Engine.Algorithms
          else
          {
             _bestSolution = solution;
-            _currentSolutionCost = solution.Cost;
+            _currentSolutionCost = solution.CostAndPenalty;
          }
-      }
-
-      internal override void OnError(Exception exception)
-      {
-         Result resultError =
-            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
-         resultError.ResultFamily = AlgorithmFamily.LocalSearch;
-         Solver.Results.Add(resultError);
-         base.OnError(exception);
       }
 
       internal override void OnTerminating()
@@ -264,15 +260,6 @@ namespace CityScover.Engine.Algorithms
          base.OnTerminating();
          Solver.BestSolution = _bestSolution;
          SendMessage(MessageCode.LSFinish, _currentSolutionCost);
-      }
-
-      internal override void OnTerminated()
-      {
-         Result validResult =
-            new Result(_bestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
-         validResult.ResultFamily = AlgorithmFamily.LocalSearch;
-         Solver.Results.Add(validResult);
-         base.OnTerminated();
       }
 
       internal override bool StopConditions()

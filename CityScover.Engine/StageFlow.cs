@@ -10,6 +10,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -51,21 +52,7 @@ namespace CityScover.Engine
       /// Maximum iterations for an algorithm.
       /// </summary>
       public byte RunningCount { get; set; } = default;
-
-      public int MaximumNodesToEvaluate { get; set; } = default;
-
-      public bool CanExecuteImprovements { get; set; } = true;
-
-      public ushort LkImprovementThreshold { get; set; } = default;
-
-      public byte MaxIterationsWithoutImprovements { get; set; } = default;
-
-      public byte MaximumDeadlockIterations { get; set; } = default;
-
-      public TimeSpan HndTmaxThreshold { get; set; } = default;
-
       public IDictionary<ParameterCodes, dynamic> AlgorithmParameters { get; set; }
-
       public ICollection<StageFlow> ChildrenFlows { get; set; }
       #endregion
    }

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 10/11/2018
 //
 
 using CityScover.Commons;
@@ -151,12 +151,6 @@ namespace CityScover.Engine.Algorithms.Greedy
          {
             Provider.NotifyObservers(newSolution);
          }
-      }
-
-      internal override void OnTerminating()
-      {
-         base.OnTerminating();
-         //_tour.AddRouteFromGraph(_cityMapClone, _endPoint.Entity.Id, _startingPoint.Entity.Id);
       }
 
       internal override bool StopConditions()

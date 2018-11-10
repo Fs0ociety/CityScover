@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/11/2018
+// File update: 10/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -46,6 +46,11 @@ namespace CityScover.Engine
       /// Property used from SolverEvaluator to set a Penalty for the Solution.
       /// </summary>
       internal int Penalty { get; set; }
+
+      /// <summary>
+      /// Returns the sum of cost and penalty.
+      /// </summary>
+      internal int CostAndPenalty => Cost + Penalty;
       
       /// <summary>
       /// Property used from SolverValidator to check the TMax constraint.
@@ -89,7 +94,7 @@ namespace CityScover.Engine
       internal string ViolatedConstraintsToString()
       {
          string message = MessagesRepository
-            .GetMessage(MessageCode.ViolatedConstraints) + "\n";
+            .GetMessage(MessageCode.ViolatedConstraints) + ":\n";
 
          foreach (var constraint in ProblemConstraints)
          {
