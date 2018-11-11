@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 11/11/2018
 //
 
 using CityScover.Commons;
@@ -21,7 +21,6 @@ namespace CityScover.Engine.Algorithms.Greedy
    /// </summary>
    internal class NearestNeighbor : GreedyTemplate
    {
-      //private InterestPointWorker _newStartPOI;
       private int _previousCandidateId;
 
       #region Overrides
@@ -77,7 +76,8 @@ namespace CityScover.Engine.Algorithms.Greedy
             _tour.RemoveEdge(_previousCandidateId, candidatePOI.Entity.Id);
             _tour.RemoveEdge(candidatePOI.Entity.Id, _startingPoint.Entity.Id);
             _tour.RemoveNode(candidatePOI.Entity.Id);
-            _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, _startingPoint.Entity.Id);            
+            _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, _startingPoint.Entity.Id);
+            SendMessage(MessageCode.GreedyNodeRemoved, candidatePOI.Entity.Name);
          }
          else
          {
