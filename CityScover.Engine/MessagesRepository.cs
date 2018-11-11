@@ -24,6 +24,7 @@ namespace CityScover.Engine.Algorithms
          {
             [MessageCode.None] = string.Empty,
             [MessageCode.GreedyNodeAdded] = "Point of interest \"{0}\" added to solution {1}.",
+            [MessageCode.GreedyNodeRemoved] = "Point of interest \"{0}\" removed from tour.",
             [MessageCode.GreedyFinish] = "Greedy algorithm finished successfully.",
             [MessageCode.CustomAlgStart] = "Starting Hybrid Nearest Distance improvement algorithm...",
             [MessageCode.CustomAlgNodeAdded] = "Point of interest \"{0}\" added successfully to the Tour.",
@@ -72,6 +73,7 @@ namespace CityScover.Engine.Algorithms
         None,
         GreedyFinish,
         GreedyNodeAdded,
+        GreedyNodeRemoved,
         CustomAlgStart,
         CustomAlgNodeAdded,
         CustomAlgNodeRemoved,
