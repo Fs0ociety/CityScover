@@ -115,13 +115,9 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         if (Solver.IsMonitoringEnabled)
-         {
-            SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
-         }
-
-         var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         int tabuTenureFactor = algorithmParams[ParameterCodes.TabuTenureFactor];
+         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
+         //int tabuTenureFactor = algorithmParams[ParameterCodes.TabuTenureFactor];
+         int tabuTenureFactor = Parameters[ParameterCodes.TabuTenureFactor];
 
          if (tabuTenureFactor == 0)
          {

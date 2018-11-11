@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 11/11/2018
 //
 
 using System.Collections.Generic;
@@ -23,7 +23,6 @@ namespace CityScover.Engine.Algorithms
          _algorithmMessages = new Dictionary<MessageCode, string>()
          {
             [MessageCode.None] = string.Empty,
-            [MessageCode.StageStart] = "Starting Stage {0}...",
             [MessageCode.GreedyNodeAdded] = "Point of interest \"{0}\" added to solution {1}.",
             [MessageCode.GreedyFinish] = "Greedy algorithm finished successfully.",
             [MessageCode.CustomAlgStart] = "Starting Hybrid Nearest Distance improvement algorithm...",
@@ -47,6 +46,8 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.EXREPTimeFormat] = "{0} Hours, {1} Minutes, {2} Seconds.",
             [MessageCode.ViolatedConstraints] = "Violated Constraints detail",
             [MessageCode.ViolatedConstraint] = "{0} --> VIOLATED! ",
+            [MessageCode.SolverStageStart] = "Starting Stage \"{0}\"...",
+            [MessageCode.SolverStageEnd] = "Stage \"{0}\" completed.",
             [MessageCode.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\"."
          };
       }
@@ -68,32 +69,33 @@ namespace CityScover.Engine.Algorithms
     #region MessageCode enumeration
     internal enum MessageCode
     {
-        None = 0,
-        StageStart = 1,
-        GreedyFinish = 2,
-        GreedyNodeAdded = 3,
-        CustomAlgStart = 4,
-        CustomAlgNodeAdded = 5,
-        CustomAlgNodeRemoved = 6,
-        LSStartSolution = 7,
-        LSNewNeighborhood = 8,
-        LSNewNeighborhoodMove = 9,
-        LSNewNeighborhoodMoveDetails = 10,
-        LSNeighborhoodBest = 11,
-        LSBestFound = 12,
-        LSFinish = 13,
-        LKHStepIncreased = 14,
-        LKStarting = 15,
-        LKBestFound = 16,
-        OnCompletedHeader = 17,
-        EXREPSolutionReceived = 18,
-        EXREPSolutionReceivedWithPenalty = 19,
-        EXREPAlgorithmPerformance = 20,
-        EXREPExceptionOccurred = 21,
-        EXREPTimeFormat = 22,
-        ViolatedConstraints = 23,
-        ViolatedConstraint = 24,
-        SolverGraphCreationError = 25
+        None,
+        GreedyFinish,
+        GreedyNodeAdded,
+        CustomAlgStart,
+        CustomAlgNodeAdded,
+        CustomAlgNodeRemoved,
+        LSStartSolution,
+        LSNewNeighborhood,
+        LSNewNeighborhoodMove,
+        LSNewNeighborhoodMoveDetails,
+        LSNeighborhoodBest,
+        LSBestFound,
+        LSFinish,
+        LKHStepIncreased,
+        LKStarting,
+        LKBestFound,
+        OnCompletedHeader,
+        EXREPSolutionReceived,
+        EXREPSolutionReceivedWithPenalty,
+        EXREPAlgorithmPerformance,
+        EXREPExceptionOccurred,
+        EXREPTimeFormat,
+        ViolatedConstraints,
+        ViolatedConstraint,
+        SolverStageStart,
+        SolverStageEnd,
+        SolverGraphCreationError
     }
     #endregion
 }

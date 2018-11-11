@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 11/11/2018
 //
 
 using CityScover.Data;
@@ -179,12 +179,15 @@ namespace CityScover.Engine
          foreach (Stage stage in WorkingConfiguration.Stages)
          {
             CurrentStage = stage;
+            Console.WriteLine(MessagesRepository.GetMessage(MessageCode.SolverStageStart, CurrentStage.Description));
             Algorithm algorithm = GetAlgorithm(stage.Flow.CurrentAlgorithm);
             if (algorithm is null)
             {
                throw new NullReferenceException(nameof(algorithm));
             }
+            algorithm.Parameters = stage.Flow.AlgorithmParameters;
             await executionFunc.Invoke(algorithm);
+            Console.WriteLine(MessagesRepository.GetMessage(MessageCode.SolverStageEnd, CurrentStage.Description));
          }
       }
 

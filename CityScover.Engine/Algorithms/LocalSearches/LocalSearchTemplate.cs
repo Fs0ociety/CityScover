@@ -7,13 +7,11 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 11/11/2018
 //
 
 using CityScover.Commons;
-using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
-using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -83,48 +81,6 @@ namespace CityScover.Engine.Algorithms
          return bestSolution;
       }
 
-      #region Old methods (TO DELETE)
-      //private Algorithm GetImprovementAlgorithm()
-      //{
-      //   var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-      //   if (childrenAlgorithms is null)
-      //   {
-      //      return null;
-      //   }
-
-      //   var flow = childrenAlgorithms.FirstOrDefault();
-      //   if (flow is null)
-      //   {
-      //      return null;
-      //   }
-
-      //   Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm);
-
-      //   if (algorithm is LinKernighan lk)
-      //   {
-      //      lk.MaxSteps = flow.RunningCount;
-      //      lk.CurrentBestSolution = _bestSolution;
-      //   }
-
-      //   algorithm.Provider = Provider;
-      //   return algorithm;
-      //}
-
-      //private async Task RunImprovementAlgorithm()
-      //{
-      //   Algorithm improvementAlgorithm = GetImprovementAlgorithm();
-      //   if (improvementAlgorithm is null)
-      //   {
-      //      throw new InvalidOperationException($"Bad configuration format: " +
-      //         $"{nameof(Solver.WorkingConfiguration)}.");
-      //   }
-
-      //   await Task.Run(() => improvementAlgorithm.Start());
-      //   _shouldRunImprovementAlgorithm = false;
-      //   _iterationsWithoutImprovement = 0;
-      //}
-      #endregion
-
       private IEnumerable<Algorithm> GetImprovementAlgorithms()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
@@ -138,17 +94,22 @@ namespace CityScover.Engine.Algorithms
          {
             algorithm = Solver.GetAlgorithm(children.CurrentAlgorithm);
 
-            if (algorithm is LinKernighan lk)
-            {
-               lk.MaxSteps = children.RunningCount;
-               lk.CurrentBestSolution = _bestSolution;
-            }
-            else if (algorithm is HybridNearestDistance hnd)
-            {
-               // TODO
-               // ...
-            }
+            //if (algorithm is LinKernighan lk)
+            //{
+            //   lk.MaxSteps = children.RunningCount;
+            //   lk.CurrentBestSolution = _bestSolution;
+            //}
+            //else if (algorithm is HybridNearestDistance hnd)
+            //{
+            //   // TODO
+            //   // ...
+            //}
 
+            if (algorithm is null)
+            {
+               throw new NullReferenceException(nameof(algorithm));
+            }
+            algorithm.Parameters = children.AlgorithmParameters;
             algorithm.Provider = Provider;
             yield return algorithm;
          }
@@ -180,16 +141,15 @@ namespace CityScover.Engine.Algorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         if (Solver.IsMonitoringEnabled)
-         {
-            SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
-         }
-
          Solver.PreviousStageSolutionCost = Solver.BestSolution.CostAndPenalty;
-         var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         CanDoImprovements = algorithmParams[ParameterCodes.CanDoImprovements];
-         _improvementThreshold = algorithmParams[ParameterCodes.LKImprovementThreshold];
-         _maxIterationsWithoutImprovements = algorithmParams[ParameterCodes.MaxIterationsWithNoImprovements];
+         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
+         //CanDoImprovements = algorithmParams[ParameterCodes.CanDoImprovements];
+         //_improvementThreshold = algorithmParams[ParameterCodes.LKImprovementThreshold];
+         //_maxIterationsWithoutImprovements = algorithmParams[ParameterCodes.MaxIterationsWithNoImprovements];
+         CanDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
+         _improvementThreshold = Parameters[ParameterCodes.LKImprovementThreshold];
+         _maxIterationsWithoutImprovements = Parameters[ParameterCodes.MaxIterationsWithNoImprovements];
+
          _bestSolution = Solver.BestSolution;
          SendMessage(MessageCode.LSStartSolution, _bestSolution.Id, _bestSolution.CostAndPenalty);
          _currentSolutionCost = _bestSolution.CostAndPenalty;

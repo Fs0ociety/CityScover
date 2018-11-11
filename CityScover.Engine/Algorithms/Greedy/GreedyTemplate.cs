@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 11/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -66,13 +66,18 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
 
          Algorithm algorithm = default;
-         foreach (var children in childrenAlgorithms)
+         foreach (var child in childrenAlgorithms)
          {
-            if (children.CurrentAlgorithm != Solver.CurrentStage.Flow.CurrentAlgorithm)
+            if (child.CurrentAlgorithm != Solver.CurrentStage.Flow.CurrentAlgorithm)
             {
-               Solver.CurrentStage.Flow.CurrentAlgorithm = children.CurrentAlgorithm;
+               Solver.CurrentStage.Flow.CurrentAlgorithm = child.CurrentAlgorithm;
             }
-            algorithm = Solver.GetAlgorithm(children.CurrentAlgorithm);
+            algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
+            if (algorithm is null)
+            {
+               throw new NullReferenceException(nameof(algorithm));
+            }
+            algorithm.Parameters = child.AlgorithmParameters;
 
             // TODO: Verificare il tipo di algoritmo restituito per eventuali impostazioni di parametri
             // [vedere metodo GetImprovementAlgorithms() nella classe LocalSearchTemplate.cs]
@@ -139,13 +144,10 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         if (Solver.IsMonitoringEnabled)
-         {
-            SendMessage(MessageCode.StageStart, Solver.CurrentStage.Description);
-         }
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;         
-         var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         int maxNodesToAdd = algorithmParams[ParameterCodes.GreedyMaxNodesToAdd];
+         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
+         //int maxNodesToAdd = algorithmParams[ParameterCodes.GreedyMaxNodesToAdd];
+         int maxNodesToAdd = Parameters[ParameterCodes.GreedyMaxNodesToAdd];
          _solutions = new Collection<TOSolution>();
          _processingNodes = new Queue<int>();
          _tour = new CityMapGraph();

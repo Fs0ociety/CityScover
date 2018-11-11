@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 06/11/2018
+// File update: 11/11/2018
 //
 
 using CityScover.Commons;
@@ -266,9 +266,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          Solver.PreviousStageSolutionCost = bestSolution.Cost;
          _tour = bestSolution.SolutionGraph.DeepCopy();
 
-         var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         _timeWalkThreshold = algorithmParams[ParameterCodes.HNDTimeWalkThreshold];
-         _tMaxThreshold = algorithmParams[ParameterCodes.HNDTmaxThreshold];
+         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
+         //_timeWalkThreshold = algorithmParams[ParameterCodes.HNDTimeWalkThreshold];
+         //_tMaxThreshold = algorithmParams[ParameterCodes.HNDTmaxThreshold];
+
+         _timeWalkThreshold = Parameters[ParameterCodes.HNDTimeWalkThreshold];
+         _tMaxThreshold = Parameters[ParameterCodes.HNDTmaxThreshold];
 
          _tMax = Solver.WorkingConfiguration.ArrivalTime
             .Add(Solver.WorkingConfiguration.TourDuration);

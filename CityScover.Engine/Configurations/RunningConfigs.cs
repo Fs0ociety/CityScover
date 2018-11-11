@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 11/11/2018
 //
 
 using CityScover.Commons;
@@ -65,7 +65,8 @@ namespace CityScover.Engine.Configs
                            AlgorithmParameters =
                            {
                               [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0)
+                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
                            }
                         }
                      }
@@ -92,7 +93,8 @@ namespace CityScover.Engine.Configs
                            AlgorithmParameters =
                            {
                               [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
-                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0)
+                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
                            }
                         }
                      }
@@ -189,7 +191,81 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
-         _configurations.Add(c1Test);
+         #region Configuration for Test 3
+         Configuration c4Test = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"Test.cityscover-test-nearestnbor-5.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(10, 0, 0),
+            RelaxedConstraints =
+            {
+               Utils.TimeWindowsConstraint
+            },
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.CanDoImprovements] = true,
+                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                           }
+                        }
+                     }
+                  }
+               }
+               //new Stage()
+               //{
+               //   Description = StageType.StageTwo,
+               //   Category = AlgorithmFamily.LocalSearch,
+               //   Flow =
+               //   {
+               //      CurrentAlgorithm = AlgorithmType.TwoOpt,
+               //      AlgorithmParameters =
+               //      {
+               //         [ParameterCodes.CanDoImprovements] = true,
+               //         [ParameterCodes.LKImprovementThreshold] = 2000,
+               //         [ParameterCodes.MaxIterationsWithNoImprovements] = 2,
+               //      },
+               //      ChildrenFlows =
+               //      {
+               //         new StageFlow(AlgorithmType.LinKernighan, runningCount: 1),
+               //         new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+               //         {
+               //            AlgorithmParameters =
+               //            {
+               //               [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
+               //               [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+               //               [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
+               //            }
+               //         }
+               //      }
+               //   }
+               //},
+            }
+         };
+         #endregion
+
+         _configurations.Add(c4Test);
       }
       #endregion
 
