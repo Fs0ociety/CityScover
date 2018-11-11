@@ -142,10 +142,6 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnInitializing();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.CostAndPenalty;
-         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         //CanDoImprovements = algorithmParams[ParameterCodes.CanDoImprovements];
-         //_improvementThreshold = algorithmParams[ParameterCodes.LKImprovementThreshold];
-         //_maxIterationsWithoutImprovements = algorithmParams[ParameterCodes.MaxIterationsWithNoImprovements];
          CanDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
          _improvementThreshold = Parameters[ParameterCodes.LKImprovementThreshold];
          _maxIterationsWithoutImprovements = Parameters[ParameterCodes.MaxIterationsWithNoImprovements];

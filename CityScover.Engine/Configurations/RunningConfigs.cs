@@ -57,19 +57,19 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.GreedyMaxNodesToAdd] = 6
-                     },
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
-                        {
-                           AlgorithmParameters =
-                           {
-                              [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                           }
-                        }
                      }
+                     //ChildrenFlows =
+                     //{
+                     //   new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                     //   {
+                     //      AlgorithmParameters =
+                     //      {
+                     //         [ParameterCodes.CanDoImprovements] = true,
+                     //         [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+                     //         [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                     //      }
+                     //   }
+                     //}
                   }
                },
                new Stage()
@@ -83,20 +83,20 @@ namespace CityScover.Engine.Configs
                      {
                         [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.LKImprovementThreshold] = 2000,
-                        [ParameterCodes.MaxIterationsWithNoImprovements] = 2,
+                        [ParameterCodes.MaxIterationsWithNoImprovements] = 2
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1),
-                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
-                        {
-                           AlgorithmParameters =
-                           {
-                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
-                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                           }
-                        }
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1)
+                        //new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                        //{
+                        //   AlgorithmParameters =
+                        //   {
+                        //      [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
+                        //      [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+                        //      [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                        //   }
+                        //}
                      }
                   }
                },
@@ -116,6 +116,14 @@ namespace CityScover.Engine.Configs
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.TwoOpt, runningCount: 3)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.CanDoImprovements] = false,
+                              [ParameterCodes.LKImprovementThreshold] = 2000,
+                              [ParameterCodes.MaxIterationsWithNoImprovements] = 2
+                           }
+                        }
                      }
                   }
                }
@@ -232,40 +240,40 @@ namespace CityScover.Engine.Configs
                         }
                      }
                   }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageTwo,
+                  Category = AlgorithmFamily.LocalSearch,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.LKImprovementThreshold] = 2000,
+                        [ParameterCodes.MaxIterationsWithNoImprovements] = 2,
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1),
+                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
+                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                           }
+                        }
+                     }
+                  }
                }
-               //new Stage()
-               //{
-               //   Description = StageType.StageTwo,
-               //   Category = AlgorithmFamily.LocalSearch,
-               //   Flow =
-               //   {
-               //      CurrentAlgorithm = AlgorithmType.TwoOpt,
-               //      AlgorithmParameters =
-               //      {
-               //         [ParameterCodes.CanDoImprovements] = true,
-               //         [ParameterCodes.LKImprovementThreshold] = 2000,
-               //         [ParameterCodes.MaxIterationsWithNoImprovements] = 2,
-               //      },
-               //      ChildrenFlows =
-               //      {
-               //         new StageFlow(AlgorithmType.LinKernighan, runningCount: 1),
-               //         new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
-               //         {
-               //            AlgorithmParameters =
-               //            {
-               //               [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
-               //               [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
-               //               [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
-               //            }
-               //         }
-               //      }
-               //   }
-               //},
             }
          };
          #endregion
 
-         _configurations.Add(c4Test);
+         _configurations.Add(c1Test);
       }
       #endregion
 

@@ -84,12 +84,17 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          _neighborhood.NeighborhoodWorker = NeighborhoodFactory.CreateNeighborhood(flow.CurrentAlgorithm);
          Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm, _neighborhood);
-
+         
          if (algorithm is LocalSearchTemplate ls)
          {
+            algorithm.Parameters = flow.AlgorithmParameters;
             _innerAlgorithm = ls;
             _maxIterations = flow.RunningCount;
-            _maxDeadlockIterations = flow.AlgorithmParameters[ParameterCodes.MaxDeadlockIterations];
+            _maxDeadlockIterations = Parameters[ParameterCodes.MaxDeadlockIterations];
+         }
+         else
+         {
+            throw new NullReferenceException(nameof(algorithm));
          }
 
          return _innerAlgorithm;
@@ -115,8 +120,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         //int tabuTenureFactor = algorithmParams[ParameterCodes.TabuTenureFactor];
          int tabuTenureFactor = Parameters[ParameterCodes.TabuTenureFactor];
 
          if (tabuTenureFactor == 0)

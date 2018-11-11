@@ -145,8 +145,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnInitializing();
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;         
-         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         //int maxNodesToAdd = algorithmParams[ParameterCodes.GreedyMaxNodesToAdd];
          int maxNodesToAdd = Parameters[ParameterCodes.GreedyMaxNodesToAdd];
          _solutions = new Collection<TOSolution>();
          _processingNodes = new Queue<int>();

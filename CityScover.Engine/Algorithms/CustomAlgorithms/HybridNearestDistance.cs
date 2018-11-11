@@ -345,14 +345,17 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             }
          }
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
+         if (_currentSolution != null && Solver.BestSolution != null)
+         {
+            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
             _currentSolution.Cost,
             Solver.BestSolution.Cost,
             considerEqualityComparison: true);
 
-         if (isBetterThanCurrentBestSolution)
-         {
-            Solver.BestSolution = _currentSolution;
+            if (isBetterThanCurrentBestSolution)
+            {
+               Solver.BestSolution = _currentSolution;
+            }
          }
 
          if (_isTourUpdated)
