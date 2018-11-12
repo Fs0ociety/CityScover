@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/11/2018
+// File update: 12/11/2018
 //
 
 using System.Collections.Generic;
@@ -27,8 +27,10 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.GreedyNodeRemoved] = "Point of interest \"{0}\" removed from tour.",
             [MessageCode.GreedyFinish] = "Greedy algorithm finished successfully.",
             [MessageCode.CustomAlgStart] = "Starting Hybrid Nearest Distance improvement algorithm...",
-            [MessageCode.CustomAlgNodeAdded] = "Point of interest \"{0}\" added successfully to the Tour.",
-            [MessageCode.CustomAlgNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
+            [MessageCode.HNDNewNodeAdded] = "Point of interest \"{0}\" added successfully to the Tour.",
+            [MessageCode.HNDNewNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
+            [MessageCode.HNDTourUpdated] = "Point of interest \"{0}\" replaced with point of interest \"{1}\".",
+            [MessageCode.HNDTourRestored] = "Point of interest \"{0}\" removed. Tour restored with \"{1}\".",
             [MessageCode.LSStartSolution] = "Starting with solution {0} with total cost {1}.",
             [MessageCode.LSResumeSolution] = "Resume Local Search with solution {0} with total cost {1}.",
             [MessageCode.LSNewNeighborhood] = "Generating new neighborhood {0}.",
@@ -71,41 +73,43 @@ namespace CityScover.Engine.Algorithms
       #endregion
    }
 
-    #region MessageCode enumeration
-    internal enum MessageCode
-    {
-        None,
-        GreedyFinish,
-        GreedyNodeAdded,
-        GreedyNodeRemoved,
-        CustomAlgStart,
-        CustomAlgNodeAdded,
-        CustomAlgNodeRemoved,
-        LSStartSolution,
-        LSResumeSolution,
-        LSNewNeighborhood,
-        LSNewNeighborhoodMove,
-        LSNewNeighborhoodMoveDetails,
-        LSNeighborhoodBest,
-        LSBestFound,
-        LSFinish,
-        LKStartSolution,
-        LKHStepIncreased,
-        LKStarting,
-        LKBestFound,
-        LKInvariateSolution,
-        LKFinish,
-        OnCompletedHeader,
-        EXREPSolutionReceived,
-        EXREPSolutionReceivedWithPenalty,
-        EXREPAlgorithmPerformance,
-        EXREPExceptionOccurred,
-        EXREPTimeFormat,
-        ViolatedConstraints,
-        ViolatedConstraint,
-        SolverStageStart,
-        SolverStageEnd,
-        SolverGraphCreationError
-    }
-    #endregion
+   #region MessageCode enumeration
+   internal enum MessageCode
+   {
+      None,
+      GreedyFinish,
+      GreedyNodeAdded,
+      GreedyNodeRemoved,
+      CustomAlgStart,
+      HNDNewNodeAdded,
+      HNDNewNodeRemoved,
+      HNDTourUpdated,
+      HNDTourRestored,
+      LSStartSolution,
+      LSResumeSolution,
+      LSNewNeighborhood,
+      LSNewNeighborhoodMove,
+      LSNewNeighborhoodMoveDetails,
+      LSNeighborhoodBest,
+      LSBestFound,
+      LSFinish,
+      LKStartSolution,
+      LKHStepIncreased,
+      LKStarting,
+      LKBestFound,
+      LKInvariateSolution,
+      LKFinish,
+      OnCompletedHeader,
+      EXREPSolutionReceived,
+      EXREPSolutionReceivedWithPenalty,
+      EXREPAlgorithmPerformance,
+      EXREPExceptionOccurred,
+      EXREPTimeFormat,
+      ViolatedConstraints,
+      ViolatedConstraint,
+      SolverStageStart,
+      SolverStageEnd,
+      SolverGraphCreationError,
+   }
+   #endregion
 }

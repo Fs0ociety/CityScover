@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 08/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -104,7 +104,7 @@ namespace CityScover.Engine
          Console.WriteLine(message);
          Console.ForegroundColor = ConsoleColor.Red;
          Console.WriteLine(errMessage);
-         Console.ForegroundColor = ConsoleColor.White;
+         Console.ForegroundColor = ConsoleColor.Gray;
       }
    
       public void OnError(Exception error)

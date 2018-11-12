@@ -57,19 +57,19 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.CanDoImprovements] = true,
+                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                           }
+                        }
                      }
-                     //ChildrenFlows =
-                     //{
-                     //   new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
-                     //   {
-                     //      AlgorithmParameters =
-                     //      {
-                     //         [ParameterCodes.CanDoImprovements] = true,
-                     //         [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
-                     //         [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                     //      }
-                     //   }
-                     //}
                   }
                },
                new Stage()

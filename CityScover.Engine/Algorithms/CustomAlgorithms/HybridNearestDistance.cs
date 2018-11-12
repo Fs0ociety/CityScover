@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Commons;
@@ -85,17 +85,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       private IEnumerable<(RouteWorker edge, TimeSpan tWalk)> CalculateMaximumEdgesTimeWalk(double averageSpeedWalk)
       {
-         // Insieme delle tuple contenenti le informazioni: (Tratta, Tempo di percorrenza).
+         // Set of tuples containing infos: (Route, Travel time)
          Collection<(RouteWorker, TimeSpan)> removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
 
-         foreach (var route in _tour.Edges)
-         {
-            if (route.Entity.PointTo.Id == _startPOI.Entity.Id)
-            {
-               continue;
-            }
+         var centralTourRoutes = _tour.Edges
+            .Where(edge => edge.Entity.PointFrom.Id != _startPOI.Entity.Id && 
+                           edge.Entity.PointTo.Id != _startPOI.Entity.Id);
 
-            double tWalkMinutes = (route.Weight() / averageSpeedWalk) / 60.0;
+         foreach (var route in centralTourRoutes)
+         {
+            double tWalkMinutes = (route.Weight.Invoke() / averageSpeedWalk) / 60.0;
             TimeSpan timeRouteWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
             if (timeRouteWalk > _timeWalkThreshold)
@@ -104,14 +103,34 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                removalEdgesCandidates.Add(removalEdgeCandidate);
             }
          }
+
          return removalEdgesCandidates;
+
+         #region Old version (RANDOM BUG)
+         //foreach (var route in _tour.Edges)
+         //{
+         //   if (route.Entity.PointTo.Id == _startPOI.Entity.Id)
+         //   {
+         //      continue;
+         //   }
+
+         //   double tWalkMinutes = (route.Weight.Invoke() / averageSpeedWalk) / 60.0;
+         //   TimeSpan timeRouteWalk = TimeSpan.FromMinutes(tWalkMinutes);
+
+         //   if (timeRouteWalk > _timeWalkThreshold)
+         //   {
+         //      var removalEdgeCandidate = (route, timeRouteWalk);
+         //      removalEdgesCandidates.Add(removalEdgeCandidate);
+         //   }
+         //}
+         //return removalEdgesCandidates; 
+         #endregion
       }
 
       private async Task TryUpdateTour()
       {
          double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
          var removalEdgesCandidates = CalculateMaximumEdgesTimeWalk(averageSpeedWalk);
-
          if (!removalEdgesCandidates.Any())
          {
             return;
@@ -130,7 +149,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             {
                break;
             }
-
+         
             InterestPointWorker candidateNode = _processingNodes.Dequeue();
 
             foreach (var (edge, tWalk) in removalEdgesCandidates)
@@ -150,12 +169,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                   throw new NullReferenceException(nameof(newEdge));
                }
 
-               double tWalkMinutes = (newEdge.Weight() / averageSpeedWalk) / 60.0;
+               double tWalkMinutes = (newEdge.Weight.Invoke() / averageSpeedWalk) / 60.0;
                TimeSpan tEdgeWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
                if (tEdgeWalk < tWalk)
                {
-                  InterestPointWorker currentPointTo = _tour.Nodes
+                  InterestPointWorker currentPointTo = _tour.TourPoints
                      .Where(point => point.Entity.Id == edge.Entity.PointTo.Id)
                      .FirstOrDefault();
                   if (currentPointTo is null)
@@ -192,7 +211,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                throw new NullReferenceException(nameof(outgoingEdge));
             }
 
-            InterestPointWorker successorPoint = _tour.Nodes
+            InterestPointWorker successorPoint = _tour.TourPoints
                .Where(point => point.Entity.Id == outgoingEdge.Entity.PointTo.Id)
                .FirstOrDefault();
             if (successorPoint is null)
@@ -209,6 +228,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             };
 
             tourUpdated = true;
+            SendMessage(MessageCode.HNDTourUpdated, 
+               tourPointToRemove.Entity.Name, candidateNode.Entity.Name);
             Solver.EnqueueSolution(_currentSolution);
             await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
             await Solver.AlgorithmTasks[_currentSolution.Id];
@@ -218,13 +239,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                UndoUpdateTourInternal(tourPointToRemove, candidateNode.Entity.Id, 
                   predecessorPoint.Entity.Id, successorPoint.Entity.Id);
                tourUpdated = false;
+               SendMessage(MessageCode.HNDTourRestored, 
+                  candidateNode.Entity.Name, tourPointToRemove.Entity.Name);
             }
          }
 
          _isTourUpdated = tourUpdated;
       }
 
-      private void UpdateTourInternal(InterestPointWorker nodeToRemove, InterestPointWorker nodeToAdd, int predecessorNodeKey, int successorNodeKey)
+      private void UpdateTourInternal(InterestPointWorker nodeToRemove, InterestPointWorker nodeToAdd, 
+         int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToRemove = nodeToRemove.Entity.Id;
          int nodeKeyToAdd = nodeToAdd.Entity.Id;
@@ -238,7 +262,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, successorNodeKey);
       }
 
-      private void UndoUpdateTourInternal(InterestPointWorker nodeToRestore, int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
+      private void UndoUpdateTourInternal(InterestPointWorker nodeToRestore, int nodeKeyToRemove, 
+         int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToRestore = nodeToRestore.Entity.Id;
 
@@ -260,27 +285,21 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             SendMessage(MessageCode.CustomAlgStart);
          }
-
          _processingNodes = new Queue<InterestPointWorker>();
          TOSolution bestSolution = Solver.BestSolution;
          Solver.PreviousStageSolutionCost = bestSolution.Cost;
+
          _tour = bestSolution.SolutionGraph.DeepCopy();
-
-         //var algorithmParams = Solver.CurrentStage.Flow.AlgorithmParameters;
-         //_timeWalkThreshold = algorithmParams[ParameterCodes.HNDTimeWalkThreshold];
-         //_tMaxThreshold = algorithmParams[ParameterCodes.HNDTmaxThreshold];
-
          _timeWalkThreshold = Parameters[ParameterCodes.HNDTimeWalkThreshold];
          _tMaxThreshold = Parameters[ParameterCodes.HNDTmaxThreshold];
-
          _tMax = Solver.WorkingConfiguration.ArrivalTime
             .Add(Solver.WorkingConfiguration.TourDuration);
          _tMaxThresholdTime = _tMax - _tMaxThreshold;
-
-         _startPOI = _tour.GetStartPoint() ??
-            throw new NullReferenceException(nameof(_startPOI));
-         _endPOI = _tour.GetEndPoint() ??
-            throw new NullReferenceException(nameof(_endPOI));
+      
+         _startPOI = _tour.GetStartPoint() ?? throw 
+            new NullReferenceException(nameof(_startPOI));
+         _endPOI = _tour.GetEndPoint() ?? throw 
+            new NullReferenceException(nameof(_endPOI));
 
          AddPointsNotInTour();
          _addedNodesCount = default;
@@ -301,7 +320,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SolutionGraph = _tour
          };
 
-         SendMessage(MessageCode.CustomAlgNodeAdded, point.Entity.Name);
+         SendMessage(MessageCode.HNDNewNodeAdded, point.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
@@ -311,7 +330,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             UndoAdditionPoint(point.Entity.Id, _previousEndPOIKey, _startPOI.Entity.Id);
             _addedNodesCount--;
             _endPOI = _tour.GetEndPoint();
-            SendMessage(MessageCode.CustomAlgNodeRemoved, point.Entity.Name);
+            SendMessage(MessageCode.HNDNewNodeRemoved, point.Entity.Name);
          }
       }
 
@@ -329,7 +348,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (_addedNodesCount == 0)
          {
             Task updateTourTask = Task.Run(() => TryUpdateTour());
-
             try
             {
                updateTourTask.Wait();
@@ -361,7 +379,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (_isTourUpdated)
          {
             Task algorithmTask = Task.Run(() => new HybridNearestDistance().Start());
-
             try
             {
                algorithmTask.Wait();
@@ -373,16 +390,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
       }
 
-      internal override void OnTerminated()
-      {
-         base.OnTerminated();
-      }
-
       internal override bool StopConditions()
       {
          bool isGreaterThanTmaxThreshold = _endPOI.TotalTime > _tMaxThresholdTime;
-         bool shouldStop = isGreaterThanTmaxThreshold ||
-            !_processingNodes.Any() ||
+
+         bool shouldStop = isGreaterThanTmaxThreshold || !_processingNodes.Any() || 
             Status == AlgorithmStatus.Error;
 
          return shouldStop;
