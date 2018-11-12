@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -18,6 +18,19 @@ namespace CityScover.Engine.Algorithms.Greedy
 {
    internal class NearestNeighborKnapsack : NearestNeighbor
    {
+      #region Constructors
+      internal NearestNeighborKnapsack()
+         : this(provider: null)
+      {
+      }
+
+      internal NearestNeighborKnapsack(AlgorithmTracker provider)
+         : base(provider)
+      {
+         Type = AlgorithmType.NearestNeighborKnapsack;
+      }
+      #endregion
+
       /// <summary>
       /// This implementation is the knapsack style Best Closest Neighbor variant.
       /// Firstly it gets neighbors of point of interest passed by argument.

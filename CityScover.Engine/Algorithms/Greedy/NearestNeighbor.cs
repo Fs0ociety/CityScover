@@ -23,6 +23,19 @@ namespace CityScover.Engine.Algorithms.Greedy
    {
       private int _previousCandidateId;
 
+      #region Constructors
+      internal NearestNeighbor()
+         : this(provider: null)
+      {
+      }
+
+      internal NearestNeighbor(AlgorithmTracker provider)
+         : base(provider)
+      {
+         Type = AlgorithmType.NearestNeighbor;
+      }
+      #endregion
+
       #region Overrides
       internal override void OnInitializing()
       {

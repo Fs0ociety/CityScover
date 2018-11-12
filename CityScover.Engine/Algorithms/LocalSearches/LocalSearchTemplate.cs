@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Commons;
@@ -41,6 +41,7 @@ namespace CityScover.Engine.Algorithms
       public LocalSearchTemplate(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)
       {
+         Type = neighborhood.Type;
          _neighborhoodFacade = new NeighborhoodFacade(neighborhood, this);
       }
       #endregion
@@ -126,7 +127,9 @@ namespace CityScover.Engine.Algorithms
                   $"{nameof(Solver.WorkingConfiguration)}.");
             }
 
+            Solver.CurrentAlgorithm = algorithm.Type;
             await Task.Run(() => algorithm.Start());
+            Solver.CurrentAlgorithm = Type;
             _bestSolution = Solver.BestSolution;
             _shouldRunImprovementAlgorithm = false;
             _iterationsWithoutImprovement = 0;

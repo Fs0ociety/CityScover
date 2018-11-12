@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Data;
@@ -185,8 +185,10 @@ namespace CityScover.Engine
             {
                throw new NullReferenceException(nameof(algorithm));
             }
+            CurrentAlgorithm = algorithm.Type;
             algorithm.Parameters = stage.Flow.AlgorithmParameters;
             await executionFunc.Invoke(algorithm);
+            CurrentStageExecutionTime = default;
             Console.WriteLine(MessagesRepository.GetMessage(MessageCode.SolverStageEnd, CurrentStage.Description));
          }
       }
@@ -206,6 +208,8 @@ namespace CityScover.Engine
          WorkingConfiguration = default;
          ExecutionInternalFunc = default;
          PreviousStageSolutionCost = default;
+         CurrentStageExecutionTime = default;
+         CurrentAlgorithm = AlgorithmType.None;
          Results.Clear();
          _solverTasks.Clear();
          AlgorithmTasks.Clear();

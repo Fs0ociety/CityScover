@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -32,7 +32,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       #region Constructors
       internal GreedyTemplate()
-         : this(null)
+         : this(provider: null)
       {
       }
 
@@ -68,17 +68,17 @@ namespace CityScover.Engine.Algorithms.Greedy
          Algorithm algorithm = default;
          foreach (var child in childrenAlgorithms)
          {
-            if (child.CurrentAlgorithm != Solver.CurrentStage.Flow.CurrentAlgorithm)
-            {
-               Solver.CurrentStage.Flow.CurrentAlgorithm = child.CurrentAlgorithm;
-            }
+            //if (child.CurrentAlgorithm != Solver.CurrentStage.Flow.CurrentAlgorithm)
+            //{
+            //   Solver.CurrentStage.Flow.CurrentAlgorithm = child.CurrentAlgorithm;
+            //}
             algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
             if (algorithm is null)
             {
                throw new NullReferenceException(nameof(algorithm));
             }
+            
             algorithm.Parameters = child.AlgorithmParameters;
-
             // TODO: Verificare il tipo di algoritmo restituito per eventuali impostazioni di parametri
             // [vedere metodo GetImprovementAlgorithms() nella classe LocalSearchTemplate.cs]
 
@@ -97,7 +97,9 @@ namespace CityScover.Engine.Algorithms.Greedy
                   $"{nameof(Solver.WorkingConfiguration)}.");
             }
 
+            Solver.CurrentAlgorithm = algorithm.Type;
             await Task.Run(() => algorithm.Start());
+            Solver.CurrentAlgorithm = Type;
          }
       }
       #endregion

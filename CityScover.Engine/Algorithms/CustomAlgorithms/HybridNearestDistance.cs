@@ -38,13 +38,14 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       #region Constructors
       internal HybridNearestDistance()
-         : this(null)
+         : this(provider: null)
       {
       }
 
       internal HybridNearestDistance(AlgorithmTracker provider)
          : base(provider)
       {
+         Type = AlgorithmType.HybridNearestDistance;
       }
       #endregion
 
@@ -105,26 +106,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
 
          return removalEdgesCandidates;
-
-         #region Old version (RANDOM BUG)
-         //foreach (var route in _tour.Edges)
-         //{
-         //   if (route.Entity.PointTo.Id == _startPOI.Entity.Id)
-         //   {
-         //      continue;
-         //   }
-
-         //   double tWalkMinutes = (route.Weight.Invoke() / averageSpeedWalk) / 60.0;
-         //   TimeSpan timeRouteWalk = TimeSpan.FromMinutes(tWalkMinutes);
-
-         //   if (timeRouteWalk > _timeWalkThreshold)
-         //   {
-         //      var removalEdgeCandidate = (route, timeRouteWalk);
-         //      removalEdgesCandidates.Add(removalEdgeCandidate);
-         //   }
-         //}
-         //return removalEdgesCandidates; 
-         #endregion
       }
 
       private async Task TryUpdateTour()

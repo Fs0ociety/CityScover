@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Commons;
@@ -65,6 +65,14 @@ namespace CityScover.Engine
       /// Current stage in execution.
       /// </summary>
       internal Stage CurrentStage { get; private set; }
+      /// <summary>
+      /// The running time of the stage in execution.
+      /// </summary>
+      internal TimeSpan CurrentStageExecutionTime { get; set; }
+      /// <summary>
+      /// Current algorithm in execution.
+      /// </summary>
+      internal AlgorithmType CurrentAlgorithm { get; set; }
 
       /// <summary>
       /// Points of interest filtered from the graph of the city.

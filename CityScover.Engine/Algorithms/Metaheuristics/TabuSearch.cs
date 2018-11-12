@@ -38,6 +38,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal TabuSearch(Neighborhood neighborhood)
          : this(neighborhood, null)
       {
+         Type = AlgorithmType.TabuSearch;
       }
 
       internal TabuSearch(Neighborhood neighborhood, AlgorithmTracker provider)
@@ -96,7 +97,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          {
             throw new NullReferenceException(nameof(algorithm));
          }
-
          return _innerAlgorithm;
       }
 
@@ -146,7 +146,9 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override async Task PerformStep()
       {
          _neighborhood.TabuList.ToList().ForEach(move => move.Expiration++);
+         Solver.CurrentAlgorithm = _innerAlgorithm.Type;
          await _innerAlgorithm.Start();
+         Solver.CurrentAlgorithm = Type;
 
          bool isBetterThanPreviousBestSolution =
             Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);

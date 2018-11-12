@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -16,6 +16,10 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal abstract class Neighborhood
    {
+      #region Internal properties
+      internal AlgorithmType Type { get; private protected set; }
+      #endregion
+
       #region Internal abstract methods
       /// <summary>
       /// Returns a map formed with a edge and a list of candidates edges.

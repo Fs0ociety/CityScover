@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -23,6 +23,8 @@ namespace CityScover.Engine
    internal abstract class Algorithm
    {
       #region Private members
+      //private Stopwatch _timer;
+      private DateTime _startingTime;
       private AlgorithmStatus _status;
       private ushort _currentStep;
       private bool _acceptImprovementsOnly;
@@ -37,7 +39,7 @@ namespace CityScover.Engine
 
       internal Algorithm(AlgorithmTracker provider, bool acceptImprovementsOnly = true)
       {
-         CurrentAlgorithm = Solver.CurrentStage.Flow.CurrentAlgorithm;
+         //CurrentAlgorithm = Solver.CurrentStage.Flow.CurrentAlgorithm;
          _acceptImprovementsOnly = acceptImprovementsOnly;
          _provider = provider;
       }
@@ -45,7 +47,7 @@ namespace CityScover.Engine
 
       #region Private Protected properties
       private protected Solver Solver => Solver.Instance;
-      private protected AlgorithmType CurrentAlgorithm { get; set; }
+      //private protected AlgorithmType CurrentAlgorithm { get; set; }
 
       private protected AlgorithmStatus Status
       {
@@ -97,6 +99,8 @@ namespace CityScover.Engine
          }
       }
 
+      internal AlgorithmType Type { get; private protected set; }
+
       internal IDictionary<ParameterCodes, dynamic> Parameters { get; set; }
       #endregion
 
@@ -145,6 +149,8 @@ namespace CityScover.Engine
       internal virtual void OnInitializing()
       {
          _status = AlgorithmStatus.Initializing;
+         //_timer = Stopwatch.StartNew();
+         _startingTime = DateTime.Now;
       }
 
       internal virtual void OnTerminating()
@@ -155,6 +161,9 @@ namespace CityScover.Engine
       internal virtual void OnTerminated()
       {
          _status = AlgorithmStatus.Terminated;
+         //_timer.Stop();
+         //Solver.CurrentStageExecutionTime = Solver.CurrentStageExecutionTime.Add(_timer.Elapsed);
+         Solver.CurrentStageExecutionTime = Solver.CurrentStageExecutionTime.Add(DateTime.Now - _startingTime);
          if (Solver.IsMonitoringEnabled)
          {
             _provider.NotifyCompletion();
@@ -164,6 +173,7 @@ namespace CityScover.Engine
       internal virtual void OnError(Exception exception)
       {
          _status = AlgorithmStatus.Error;
+         //_timer.Stop();
          if (Solver.IsMonitoringEnabled)
          {
             Debug.WriteLine(exception.StackTrace);

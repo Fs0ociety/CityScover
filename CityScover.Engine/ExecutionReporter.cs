@@ -11,8 +11,6 @@
 
 using CityScover.Engine.Algorithms;
 using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -26,7 +24,7 @@ namespace CityScover.Engine
    {
       #region Private fields
       private IDisposable _unsubscriber;
-      private Stopwatch _timer;
+      //private Stopwatch _timer;
       #endregion
 
       #region Constructors
@@ -38,7 +36,9 @@ namespace CityScover.Engine
       #region Internal properties
       internal Solver Solver => Solver.Instance;
 
-      public Stopwatch RunningTime { get; set; }
+      //public Stopwatch RunningTime { get; set; }
+
+      public TimeSpan ExecutionTime { get; set; }
       #endregion
 
       #region Internal methods
@@ -61,9 +61,9 @@ namespace CityScover.Engine
       /// <returns></returns>
       internal async Task Run(Algorithm algorithm)
       {
-         _timer = Stopwatch.StartNew();
-         await Task.Run(() => algorithm.Start());
-         RunningTime = _timer;
+         //_timer = Stopwatch.StartNew();
+         await Task.Run(() => algorithm.Start());         
+         //RunningTime = _timer;
       }
       #endregion
 
@@ -109,28 +109,20 @@ namespace CityScover.Engine
    
       public void OnError(Exception error)
       {
-         _timer.Stop();
+         //_timer.Stop();
          Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPExceptionOccurred, error.Message));
          throw error;
       }
 
       public void OnCompleted()
       {
-         _timer.Stop();
+         //_timer.Stop();
          
-         string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
-         TimeSpan elapsedTime = _timer.Elapsed;
+         //string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
+         //TimeSpan elapsedTime = _timer.Elapsed;
+         TimeSpan elapsedTime = Solver.CurrentStageExecutionTime;
          string elapsedTimeMsg = MessagesRepository.GetMessage(MessageCode.EXREPTimeFormat, elapsedTime.Hours, elapsedTime.Minutes, elapsedTime.Seconds);
-         Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPAlgorithmPerformance, algorithmDescription, elapsedTimeMsg));
-         //Console.WriteLine($"The algorithm: {algorithmDescription} performed in " +
-            //$"{TimeSpan.FromMilliseconds(_timer.ElapsedMilliseconds)}.\n");
-
-         AlgorithmFamily resultFamily = Result.GetAlgorithmFamily(Solver.CurrentStage.Flow.CurrentAlgorithm);
-         Result algorithmResult = Solver.Results.Where(result => result.ResultFamily == resultFamily).FirstOrDefault();
-         if (algorithmResult != null)
-         {
-            algorithmResult.RunningTime = _timer;
-         }
+         Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPAlgorithmPerformance, Solver.CurrentAlgorithm.ToString(), elapsedTimeMsg));
       }
       #endregion
    }

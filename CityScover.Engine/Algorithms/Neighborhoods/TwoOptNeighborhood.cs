@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/11/2018
+// File update: 12/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -27,6 +27,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Constructors
       internal TwoOptNeighborhood()
       {
+         Type = AlgorithmType.TwoOpt;
          _cityMapClone = Solver.Instance.CityMapGraph.DeepCopy();
       }
       #endregion
