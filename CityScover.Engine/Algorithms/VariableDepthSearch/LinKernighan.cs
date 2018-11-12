@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/10/2018
+// File update: 11/11/2018
 //
 
 using CityScover.Commons;
@@ -183,7 +183,11 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKStarting);
+         Console.ForegroundColor = ConsoleColor.White;
+
+         SendMessage(MessageCode.LKStartSolution, CurrentBestSolution.Id, CurrentBestSolution.CostAndPenalty);
 
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
@@ -254,7 +258,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          }
          _executedSteps++;
          _currentSolution = newSolution;
+         Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKHStepIncreased, _executedSteps, MaxSteps);
+         Console.ForegroundColor = ConsoleColor.White;
 
          // Local function per costruire un nuovo ciclo hamiltoniano.
          // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè
@@ -274,34 +280,27 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          }
       }
 
-      internal override void OnError(Exception exception)
-      {
-         Result resultError =
-            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Invalid);
-         resultError.ResultFamily = AlgorithmFamily.Improvement;
-         Solver.Results.Add(resultError);
-         base.OnError(exception);
-      }
-
       internal override void OnTerminating()
       {
          base.OnTerminating();
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, CurrentBestSolution.Cost);
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.CostAndPenalty, CurrentBestSolution.CostAndPenalty);
          if (isBetterThanCurrentBestSolution)
          {
             CurrentBestSolution = _currentSolution;
-            SendMessage(MessageCode.LKBestFound, _currentSolution.Cost);
+            SendMessage(MessageCode.LKBestFound, _currentSolution.CostAndPenalty);
          }
+         else
+         {
+            SendMessage(MessageCode.LKInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.CostAndPenalty);
+         }
+         Solver.BestSolution = CurrentBestSolution;
       }
 
       internal override void OnTerminated()
       {
-         Result validResult =
-            new Result(CurrentBestSolution, CurrentAlgorithm, null, Result.Validity.Valid);
-         validResult.ResultFamily = AlgorithmFamily.Improvement;
-         Solver.Results.Add(validResult);
          _cityMapClone = null;
+         SendMessage(MessageCode.LKFinish);
          base.OnTerminated();
       }
 

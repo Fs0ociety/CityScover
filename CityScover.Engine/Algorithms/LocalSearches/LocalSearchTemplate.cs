@@ -12,6 +12,7 @@
 
 using CityScover.Commons;
 using CityScover.Engine.Algorithms.Neighborhoods;
+using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -90,15 +91,15 @@ namespace CityScover.Engine.Algorithms
          }
 
          Algorithm algorithm = default;
-         foreach (var children in childrenAlgorithms)
+         foreach (var child in childrenAlgorithms)
          {
-            algorithm = Solver.GetAlgorithm(children.CurrentAlgorithm);
+            algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
 
-            //if (algorithm is LinKernighan lk)
-            //{
-            //   lk.MaxSteps = children.RunningCount;
-            //   lk.CurrentBestSolution = _bestSolution;
-            //}
+            if (algorithm is LinKernighan lk)
+            {
+               lk.MaxSteps = child.RunningCount;
+               lk.CurrentBestSolution = _bestSolution;
+            }
             //else if (algorithm is HybridNearestDistance hnd)
             //{
             //   // TODO
@@ -109,7 +110,7 @@ namespace CityScover.Engine.Algorithms
             {
                throw new NullReferenceException(nameof(algorithm));
             }
-            algorithm.Parameters = children.AlgorithmParameters;
+            algorithm.Parameters = child.AlgorithmParameters;
             algorithm.Provider = Provider;
             yield return algorithm;
          }
@@ -126,6 +127,7 @@ namespace CityScover.Engine.Algorithms
             }
 
             await Task.Run(() => algorithm.Start());
+            _bestSolution = Solver.BestSolution;
             _shouldRunImprovementAlgorithm = false;
             _iterationsWithoutImprovement = 0;
 
@@ -159,6 +161,7 @@ namespace CityScover.Engine.Algorithms
          if (CanDoImprovements && _shouldRunImprovementAlgorithm)
          {
             await RunImprovementAlgorithms();
+            SendMessage(MessageCode.LSResumeSolution, _bestSolution.Id, _bestSolution.CostAndPenalty);
          }
 
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);
@@ -179,7 +182,7 @@ namespace CityScover.Engine.Algorithms
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
          Console.ForegroundColor = ConsoleColor.Green;
-         SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
+         SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.CostAndPenalty);
          Console.ForegroundColor = ConsoleColor.White;
 
          _previousSolutionCost = _currentSolutionCost;
