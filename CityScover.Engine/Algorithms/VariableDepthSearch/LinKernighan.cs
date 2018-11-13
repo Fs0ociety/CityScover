@@ -188,7 +188,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          SendMessage(MessageCode.LKStarting);
          Console.ForegroundColor = ConsoleColor.Gray;
 
-         SendMessage(MessageCode.LKStartSolution, CurrentBestSolution.Id, CurrentBestSolution.CostAndPenalty);
+         SendMessage(MessageCode.LKStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
 
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
@@ -285,15 +285,15 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          base.OnTerminating();
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.CostAndPenalty, CurrentBestSolution.CostAndPenalty);
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, CurrentBestSolution.Cost);
          if (isBetterThanCurrentBestSolution)
          {
             CurrentBestSolution = _currentSolution;
-            SendMessage(MessageCode.LKBestFound, _currentSolution.CostAndPenalty);
+            SendMessage(MessageCode.LKBestFound, _currentSolution.Cost);
          }
          else
          {
-            SendMessage(MessageCode.LKInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.CostAndPenalty);
+            SendMessage(MessageCode.LKInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
          Solver.BestSolution = CurrentBestSolution;
       }

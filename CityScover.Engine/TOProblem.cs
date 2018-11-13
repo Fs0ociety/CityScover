@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/11/2018
+// File update: 13/11/2018
 //
 
 using CityScover.Commons;
@@ -20,7 +20,7 @@ namespace CityScover.Engine
    internal class TOProblem : ProblemBase
    {
       #region Constants
-      private const int PenaltyAmount = 100;
+      private const int PenaltyAmount = -200;
       #endregion
 
       #region Private fields

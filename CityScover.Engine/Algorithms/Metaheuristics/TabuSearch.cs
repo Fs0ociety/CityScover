@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 13/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -153,9 +153,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override async Task PerformStep()
       {
          _neighborhood.TabuList.ToList().ForEach(move => move.Expiration++);
-         //Solver.CurrentAlgorithm = _innerAlgorithm.Type;
-         //await _innerAlgorithm.Start();
-         //Solver.CurrentAlgorithm = Type;
          await RunLocalSearch();
 
          bool isBetterThanPreviousBestSolution =

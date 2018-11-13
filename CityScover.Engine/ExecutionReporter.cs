@@ -97,7 +97,7 @@ namespace CityScover.Engine
          }
          else
          {
-            message = MessagesRepository.GetMessage(MessageCode.EXREPSolutionReceivedWithPenalty, solution.Id, solution.Cost, solution.Penalty);
+            message = MessagesRepository.GetMessage(MessageCode.EXREPSolutionReceivedWithPenalty, solution.Id, solution.Cost, Math.Abs(solution.Penalty));
             errMessage = solution.ViolatedConstraintsToString();
          }
 

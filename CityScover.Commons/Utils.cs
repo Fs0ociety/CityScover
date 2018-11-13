@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/11/2018
+// File update: 13/11/2018
 //
 
 
@@ -17,7 +17,7 @@ namespace CityScover.Commons
    /// </summary>
    public static class Utils
    {
-      public const int DelayTask = 250;
+      public const int DelayTask = 500;
       public const string TMaxConstraint = "TMax";
       public const string TimeWindowsConstraint = "Time Windows";
 

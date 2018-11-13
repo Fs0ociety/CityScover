@@ -51,7 +51,7 @@ namespace CityScover.Engine
       /// <summary>
       /// Returns the sum of cost and penalty.
       /// </summary>
-      internal int CostAndPenalty => Cost + Penalty;
+      //internal int CostAndPenalty => Cost + Penalty;
       
       /// <summary>
       /// Property used from SolverValidator to check the TMax constraint.
