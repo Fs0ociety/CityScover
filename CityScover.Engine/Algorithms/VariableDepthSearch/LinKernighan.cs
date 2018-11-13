@@ -186,7 +186,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          base.OnInitializing();
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKStarting);
-         Console.ForegroundColor = ConsoleColor.White;
+         Console.ForegroundColor = ConsoleColor.Gray;
 
          SendMessage(MessageCode.LKStartSolution, CurrentBestSolution.Id, CurrentBestSolution.CostAndPenalty);
 
@@ -261,7 +261,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          _currentSolution = newSolution;
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKHStepIncreased, _executedSteps, MaxSteps);
-         Console.ForegroundColor = ConsoleColor.White;
+         Console.ForegroundColor = ConsoleColor.Gray;
 
          // Local function per costruire un nuovo ciclo hamiltoniano.
          // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè

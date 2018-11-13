@@ -186,7 +186,7 @@ namespace CityScover.Engine.Algorithms
          var solution = GetBest(currentNeighborhood, _bestSolution, null);
          Console.ForegroundColor = ConsoleColor.Green;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.CostAndPenalty);
-         Console.ForegroundColor = ConsoleColor.White;
+         Console.ForegroundColor = ConsoleColor.Gray;
 
          _previousSolutionCost = _currentSolutionCost;
 

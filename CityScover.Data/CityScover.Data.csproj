@@ -82,5 +82,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Test\cityscover-test-nearestnbor-5.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="cityscover-points-75.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
