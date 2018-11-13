@@ -17,7 +17,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    internal abstract class Neighborhood
    {
       #region Internal properties
-      internal AlgorithmType Type { get; private protected set; }
+      internal AlgorithmType Type { get; set; }
       #endregion
 
       #region Internal abstract methods

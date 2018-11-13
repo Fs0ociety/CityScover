@@ -322,7 +322,7 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
-         _configurations.Add(c5Test);
+         _configurations.Add(c1Test);
       }
       #endregion
 

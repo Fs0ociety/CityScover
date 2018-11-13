@@ -29,8 +29,9 @@ namespace CityScover.Engine
                neighborhood = new TwoOptNeighborhood();
                break;
 
+            // In realtà sarebbe da creare il tipo per l'intorno TabuSearchTwoOpt...
             case AlgorithmType.TabuSearch:
-               neighborhood = new TabuSearchNeighborhood();
+               neighborhood = new TabuSearchNeighborhood(new TwoOptNeighborhood());
                break;
 
             // Add new Algorithm types here for new Neighborhoods ...
