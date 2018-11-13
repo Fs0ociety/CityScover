@@ -128,7 +128,7 @@ namespace CityScover.Engine
          message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
 
          TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;
-         message += $"\n{MessagesRepository.GetMessage(MessageCode.CMGraphTotalTime, tourDuration.Hours, tourDuration.Minutes)}";
+         message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
          return message;
       }
       #endregion

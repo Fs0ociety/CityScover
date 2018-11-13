@@ -273,7 +273,7 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
-         _configurations.Add(c1Test);
+         _configurations.Add(c2Test);
       }
       #endregion
 

@@ -225,6 +225,7 @@ namespace CityScover.Engine.Algorithms
       {
          base.OnTerminating();
          Solver.BestSolution = _bestSolution;
+         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
          SendMessage(MessageCode.LSFinish, _currentSolutionCost);
       }
 
