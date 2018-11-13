@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 13/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -26,7 +26,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       protected DateTime _timeSpent;
       protected InterestPointWorker _startingPoint;
       protected CityMapGraph _tour;
-      protected ICollection<TOSolution> _solutions;
+      protected ICollection<TOSolution> _solutionsHistory;
       protected Queue<int> _processingNodes;
       #endregion
 
@@ -148,7 +148,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          base.OnInitializing();
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;         
          int maxNodesToAdd = Parameters[ParameterCodes.GreedyMaxNodesToAdd];
-         _solutions = new Collection<TOSolution>();
+         _solutionsHistory = new Collection<TOSolution>();
          _processingNodes = new Queue<int>();
          _tour = new CityMapGraph();
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
@@ -181,26 +181,22 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnError(Exception exception)
       {
          CurrentStep = default;
-         TOSolution lastProducedSolution = _solutions.Last();
+         TOSolution lastProducedSolution = _solutionsHistory.Last();
          base.OnError(exception);
       }
 
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         Solver.BestSolution = _solutions.Last();
+         Solver.BestSolution = _solutionsHistory.Last();
       }
 
       internal override void OnTerminated()
       {
          _cityMapClone = null;
-         TOSolution bestProducedSolution = _solutions.Last();
+         TOSolution bestProducedSolution = _solutionsHistory.Last();
 
-         SendMessage(MessageCode.OnCompletedHeader, Solver.CurrentStage.Description);
-         _solutions.ToList().ForEach(solution =>
-         {
-            Console.WriteLine(solution.SolutionGraph.ToString());
-         });
+         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
 
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          SendMessage(MessageCode.GreedyFinish);

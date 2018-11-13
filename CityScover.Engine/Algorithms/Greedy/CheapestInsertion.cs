@@ -197,7 +197,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          };
 
          SendMessage(MessageCode.GreedyNodeAdded, candidateNode.Entity.Name);
-         _solutions.Add(newSolution);
+         _solutionsHistory.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[newSolution.Id];

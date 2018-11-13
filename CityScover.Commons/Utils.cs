@@ -9,6 +9,7 @@
 // File update: 07/11/2018
 //
 
+
 namespace CityScover.Commons
 {
    /// <summary>

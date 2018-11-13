@@ -45,7 +45,7 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.LKBestFound] = "Best solution found with total cost: ({0}).",
             [MessageCode.LKInvariateSolution] = "A better solution of current best (id: {0} , total cost: {1}), hasn't found. Terminating...",
             [MessageCode.LKFinish] = "Lin Kernighan algorithm finished successfully.",
-            [MessageCode.OnCompletedHeader] = "Solutions produced for stage \"{0}\" are:",
+            [MessageCode.ALCompletionSummary] = "Execution summary:",
             [MessageCode.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
             [MessageCode.EXREPSolutionReceivedWithPenalty] = "Solution {0} has been marked with cost: {1} and penalty: {2}",
             [MessageCode.EXREPAlgorithmPerformance] = "The algorithm {0} performed in {1}.",
@@ -55,7 +55,11 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.ViolatedConstraint] = "{0} --> VIOLATED! ",
             [MessageCode.SolverStageStart] = "Starting Stage \"{0}\"...",
             [MessageCode.SolverStageEnd] = "Stage \"{0}\" completed.",
-            [MessageCode.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\"."
+            [MessageCode.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\".",
+            [MessageCode.TOSolutionCollectionId] = "Solution {0}:",
+            [MessageCode.CMGraphNodeToString] = "{0} at {1}",
+            [MessageCode.TOSolutionFinalTour] = "The final best tour is solution {0}:\n{1}",
+            [MessageCode.TOSolutionTotalTimeAndValidity] = "Tour time: {0} hours and {1} minutes. Admissible: {2}."
          };
       }
       #endregion
@@ -99,7 +103,7 @@ namespace CityScover.Engine.Algorithms
       LKBestFound,
       LKInvariateSolution,
       LKFinish,
-      OnCompletedHeader,
+      ALCompletionSummary,
       EXREPSolutionReceived,
       EXREPSolutionReceivedWithPenalty,
       EXREPAlgorithmPerformance,
@@ -110,6 +114,10 @@ namespace CityScover.Engine.Algorithms
       SolverStageStart,
       SolverStageEnd,
       SolverGraphCreationError,
+      TOSolutionCollectionId,
+      CMGraphNodeToString,
+      TOSolutionFinalTour,
+      TOSolutionTotalTimeAndValidity
    }
    #endregion
 }
