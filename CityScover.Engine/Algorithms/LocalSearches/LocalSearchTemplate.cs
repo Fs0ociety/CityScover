@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 13/11/2018
 //
 
 using CityScover.Commons;
@@ -15,6 +15,7 @@ using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms
@@ -30,6 +31,7 @@ namespace CityScover.Engine.Algorithms
       private int _maxIterationsWithoutImprovements;
       private TOSolution _bestSolution;
       private NeighborhoodFacade _neighborhoodFacade;
+      private ICollection<TOSolution> _solutionsHistory;
       #endregion
 
       #region Constructors
@@ -146,6 +148,7 @@ namespace CityScover.Engine.Algorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         _solutionsHistory = new Collection<TOSolution>();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.CostAndPenalty;
          CanDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
          _improvementThreshold = Parameters[ParameterCodes.LKImprovementThreshold];
@@ -197,6 +200,7 @@ namespace CityScover.Engine.Algorithms
             {
                SendMessage(MessageCode.LSBestFound, solution.CostAndPenalty, _bestSolution.CostAndPenalty);
                _bestSolution = solution;
+               _solutionsHistory.Add(solution);
                _currentSolutionCost = solution.CostAndPenalty;
 
                if (CanDoImprovements)

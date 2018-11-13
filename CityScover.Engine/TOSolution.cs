@@ -6,13 +6,14 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 13/11/2018
 //
 
 using CityScover.Engine.Algorithms;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CityScover.Engine
 {
@@ -105,7 +106,31 @@ namespace CityScover.Engine
             }
          }
          return message;
-      } 
+      }
+      #endregion
+
+      #region Internal static methods
+      internal static string SolutionCollectionToString(IEnumerable<TOSolution> solutions)
+      {
+         string message = string.Empty;
+         if (solutions is null || !solutions.Any())
+         {
+            return message;
+         }
+
+         message += $"{MessagesRepository.GetMessage(MessageCode.ALCompletionSummary)}\n";
+
+         solutions.ToList().ForEach(solution =>
+         {
+            message += $"{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.ToString()}\n";
+         });
+         TOSolution bestSolution = solutions.Last();
+         message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
+
+         TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;
+         message += $"\n{MessagesRepository.GetMessage(MessageCode.CMGraphTotalTime, tourDuration.Hours, tourDuration.Minutes)}";
+         return message;
+      }
       #endregion
 
       #region Private methods
@@ -125,7 +150,7 @@ namespace CityScover.Engine
          TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
          DateTime timeSpent = endPOITotalTime.Add(timeReturn);
          return timeSpent;
-      } 
+      }
       #endregion
    }
 }

@@ -6,11 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/11/2018
+// File update: 13/11/2018
 //
 
 using CityScover.ADT.Graphs;
 using CityScover.Commons;
+using CityScover.Engine.Algorithms;
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
@@ -193,11 +194,14 @@ namespace CityScover.Engine.Workers
       {
          string result = String.Empty;
          int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
-
          BreadthFirstSearch(startPOIId,
             (node, isVisited) => node.IsVisited = isVisited,
             (node) => { return node.IsVisited; },
-            node => result += $"({node.Entity.Name})",
+            node => {
+               string message = MessagesRepository.GetMessage(MessageCode.CMGraphNodeToString, node.Entity.Name, node.ArrivalTime.ToString("HH:mm"));
+               //result += $"({node.Entity.Name})";
+               result += $"({message})";
+            },
             edge =>
             {
                if (edge.Entity.PointTo.Id != startPOIId)

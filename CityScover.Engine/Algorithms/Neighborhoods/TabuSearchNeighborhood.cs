@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/11/2018
+// File update: 13/11/2018
 //
 
 using CityScover.Engine.Algorithms.Metaheuristics;
@@ -32,6 +32,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    
       internal TabuSearchNeighborhood(Neighborhood neighborhood, IList<TabuMove> tabuList)
       {
+         Type = neighborhood.Type;
          _neighborhoodWorker = neighborhood ?? throw new ArgumentNullException();
          _tabuList = tabuList;
       }
