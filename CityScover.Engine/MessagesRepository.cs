@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 14/11/2018
 //
 
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.LSNewNeighborhood] = "Generating new neighborhood {0}.",
             [MessageCode.LSNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
             [MessageCode.LSNewNeighborhoodMoveDetails] = "New solution {0} details: changed edge {1} with edge {2}.",
-            [MessageCode.LSNeighborhoodBest] = "The best move for this neighborhood is: {0} with total cost: {1}.",
+            [MessageCode.LSNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with total cost: {1}.",
             [MessageCode.LSBestFound] = "Best solution found with total cost: ({0}). Previous solution total cost: ({1}).",
             [MessageCode.LSInvariateSolution] = "A better solution of current best (id: {0} , total cost: {1}), hasn't found. Terminating...",
             [MessageCode.LSFinish] = "Stop condition occurred with solution cost: ({0})",
@@ -55,11 +55,11 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.ViolatedConstraints] = "Violated Constraints detail",
             [MessageCode.ViolatedConstraint] = "{0} --> VIOLATED! ",
             [MessageCode.SolverStageStart] = "Starting Stage \"{0}\"...",
-            [MessageCode.SolverStageEnd] = "Stage \"{0}\" completed.",
+            [MessageCode.SolverStageEnd] = "Stage \"{0}\" completed.\n",
             [MessageCode.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\".",
             [MessageCode.TOSolutionCollectionId] = "Solution {0}:",
             [MessageCode.CMGraphNodeToString] = "{0} at {1}",
-            [MessageCode.TOSolutionFinalTour] = "The final best tour is solution {0}:\n{1}",
+            [MessageCode.TOSolutionFinalTour] = "The final best tour is solution \"{0}\":\n{1}",
             [MessageCode.TOSolutionTotalTimeAndValidity] = "Tour time: {0} hours and {1} minutes. Admissible: {2}."
          };
       }
