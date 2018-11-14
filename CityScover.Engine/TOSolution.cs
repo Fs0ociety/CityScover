@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/11/2018
+// File update: 14/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -128,7 +128,7 @@ namespace CityScover.Engine
          message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
 
          TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;
-         message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
+         message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, bestSolution.Cost, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
          return message;
       }
       #endregion
