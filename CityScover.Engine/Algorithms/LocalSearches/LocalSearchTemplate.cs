@@ -11,6 +11,7 @@
 //
 
 using CityScover.Commons;
+using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
@@ -100,14 +101,14 @@ namespace CityScover.Engine.Algorithms
 
             if (algorithm is LinKernighan lk)
             {
+               algorithm = lk;
                lk.MaxSteps = child.RunningCount;
                lk.CurrentBestSolution = _bestSolution;
             }
-            //else if (algorithm is HybridNearestDistance hnd)
-            //{
-            //   // TODO
-            //   // ...
-            //}
+            else if (algorithm is HybridNearestDistance hnd)
+            {
+               algorithm = hnd;
+            }
 
             if (algorithm is null)
             {
@@ -115,6 +116,7 @@ namespace CityScover.Engine.Algorithms
             }
             algorithm.Parameters = child.AlgorithmParameters;
             algorithm.Provider = Provider;
+         
             yield return algorithm;
          }
       }
