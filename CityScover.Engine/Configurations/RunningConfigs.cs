@@ -309,12 +309,17 @@ namespace CityScover.Engine.Configs
                   Category = AlgorithmFamily.LocalSearch,
                   Flow =
                   {
+                     RunningCount = 3,
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.LKImprovementThreshold] = 2000,
                         [ParameterCodes.MaxIterationsWithNoImprovements] = 1
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 2)
                      }
                   }
                },
@@ -322,7 +327,7 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
-         _configurations.Add(c1Test);
+         _configurations.Add(c5Test);
       }
       #endregion
 

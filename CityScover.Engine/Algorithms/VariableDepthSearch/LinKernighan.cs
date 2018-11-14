@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 14/11/2018
 //
 
 using CityScover.Commons;
@@ -113,54 +113,6 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          return potentialCandidates.OrderByDescending(node => node.Entity.Score.Value);
       }
-
-      //private (CityMapGraph steamSet, CityMapGraph cycleSet) BuildSteamAndCycle(int sNodeId)
-      //{
-      //   CityMapGraph steamSet = new CityMapGraph();
-      //   CityMapGraph cycleSet = new CityMapGraph();
-
-      //   cycleSet.AddNodeFromGraph(_currentSolutionGraph, _endPOI.Entity.Id);
-      //   cycleSet.AddNodeFromGraph(_currentSolutionGraph, sNodeId);
-      //   cycleSet.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
-      //   _currentSolutionGraph.Edges.ToList().ForEach(
-      //      edge =>
-      //      {
-      //         if (edge.Entity.PointFrom.Id == _startPOI.Entity.Id || edge.Entity.PointTo.Id == _startPOI.Entity.Id)
-      //         {
-      //            steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
-      //            steamSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
-      //            steamSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
-      //         }
-      //         else
-      //         {
-      //            if (edge.Entity.PointFrom.Id != sNodeId)
-      //            {
-      //               cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id);
-      //               cycleSet.AddNodeFromGraph(_currentSolutionGraph, edge.Entity.PointTo.Id);
-      //               cycleSet.AddRouteFromGraph(_currentSolutionGraph, edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
-      //            }
-      //         }
-      //      });
-      //   return (steamSet, cycleSet);
-      //}
-
-      //private void BuildHamiltonianPath((CityMapGraph steamSet, CityMapGraph cycleSet) steamAndCycle, int sNodeId)
-      //{
-      //   steamAndCycle.steamSet.AddGraph(steamAndCycle.cycleSet, sNodeId);
-      //   _currentSolutionGraph = steamAndCycle.steamSet;
-
-      //   // Connetto il ciclo nell'unico modo possibile.
-      //   RouteWorker result = (from edge in _currentSolutionGraph.Edges
-      //                         where edge.Entity.PointFrom.Id != _startPOI.Entity.Id
-      //                         && _currentSolutionGraph.GetNodeGrade(edge.Entity.PointFrom.Id) == 2
-      //                         select edge).FirstOrDefault();
-      //   if (result == null)
-      //   {
-      //      throw new InvalidOperationException();
-      //   }
-
-      //   _currentSolutionGraph.AddEdge(result.Entity.PointFrom.Id, result.Entity.PointTo.Id, result);
-      //}
 
       private void SwapNodes(int stopSwappingNodeId)
       {
