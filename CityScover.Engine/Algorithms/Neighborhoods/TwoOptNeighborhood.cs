@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 14/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -20,7 +20,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    internal class TwoOptNeighborhood : Neighborhood
    {
       #region Private fields
-      private CityMapGraph _cityMapClone;
+      private readonly CityMapGraph _cityMapClone;
       private CityMapGraph _tour;
       #endregion
 
@@ -33,7 +33,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Private methods
-      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, CityMapGraph newSolutionGraph, in int edge2PointFromId)
+      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, 
+         CityMapGraph newSolutionGraph, in int edge2PointFromId)
       {
          int currentNodeId = currentEdge.Entity.PointTo.Id;
 

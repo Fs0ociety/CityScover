@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/11/2018
+// File update: 14/11/2018
 //
 
 using CityScover.Commons;
@@ -82,43 +82,12 @@ namespace CityScover.Engine
       /// <returns>
       /// An Evaluation Object.
       /// </returns>
-      private int CalculateCost(TOSolution solution)
-      {
-         var solutionNodes = solution.SolutionGraph.Nodes;
-
-         var totalScoreNodes = (from node in solutionNodes
-                                select node.Entity.Score.Value).Sum();
-
-         //int totalScoreEdges = default;
-         //solutionNodes.ToList().ForEach(node =>
-         //{
-         //   var edges = solution.SolutionGraph.GetEdges(node.Entity.Id);
-         //   try
-         //   {
-         //      var edge = edges.FirstOrDefault();
-         //      if (edge != null)
-         //      {
-         //         totalScoreEdges += checked((int)edge.Weight());
-         //      }
-         //   }
-         //   catch (OverflowException ex)
-         //   {
-         //      // PROVVISORIO
-         //      Debug.WriteLine(
-         //         $"Objective Function exception during conversion double to int {ex.Message}");
-         //   }
-         //});
-
-         //return totalScoreNodes + totalScoreEdges;
-         return totalScoreNodes;
-      }
+      private int CalculateCost(TOSolution solution) => 
+         solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
       #endregion
 
       #region Penalty Function delegates
-      private int CalculatePenalty(TOSolution solution)
-      {
-         return PenaltyAmount;
-      }
+      private int CalculatePenalty(TOSolution solution) => PenaltyAmount;
       #endregion
 
       #region Constraints delegates

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 14/11/2018
 //
 
 using CityScover.Commons;
@@ -38,17 +38,16 @@ namespace CityScover.Engine
          solution.Cost = objectiveFunc.Invoke(solution);
 
          // Get the violated constraints to invoke the PenaltyFunc delegate.
-         var violatedConstraints = (from constraint in solution.ProblemConstraints
-                                    where constraint.Value == false
-                                    select constraint);
+         var violatedConstraints = solution.ProblemConstraints
+            .Where(constraint => constraint.Value == false);
 
          var penaltyFunc = Solver.Problem.PenaltyFunc;
 
          foreach (var constraint in violatedConstraints)
          {
-            var penalty = penaltyFunc.Invoke(solution);
+            int penalty = penaltyFunc.Invoke(solution);
             solution.Cost += penalty;
-            solution.Penalty = penalty;
+            solution.Penalty = penalty < 0 ? -penalty : penalty;
          }
       }
       #endregion

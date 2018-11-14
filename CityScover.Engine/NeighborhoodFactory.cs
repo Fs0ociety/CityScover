@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/10/2018
+// File update: 14/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -29,9 +29,8 @@ namespace CityScover.Engine
                neighborhood = new TwoOptNeighborhood();
                break;
 
-            // In realtà sarebbe da creare il tipo per l'intorno TabuSearchTwoOpt...
             case AlgorithmType.TabuSearch:
-               neighborhood = new TabuSearchNeighborhood(new TwoOptNeighborhood());
+               neighborhood = new TabuSearchNeighborhood();
                break;
 
             // Add new Algorithm types here for new Neighborhoods ...

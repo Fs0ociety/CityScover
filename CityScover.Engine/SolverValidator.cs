@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 14/11/2018
 //
 
 using CityScover.Commons;
@@ -38,9 +38,9 @@ namespace CityScover.Engine
 
          // Get the constraints delegates to be invoked.
          var checkingConstraints = from problemConstraint in problemConstraints
-                                   where !(from relaxedConstraintId in Solver.ConstraintsToRelax
-                                           where relaxedConstraintId.Equals(problemConstraint.Key)
-                                           select relaxedConstraintId).Any() && problemConstraint.Value != null
+                                   where !(from relaxedConstraint in Solver.ConstraintsToRelax
+                                           where relaxedConstraint.Equals(problemConstraint.Key)
+                                           select relaxedConstraint).Any() && problemConstraint.Value != null
                                    select problemConstraint;
 
          foreach (var constraint in checkingConstraints)

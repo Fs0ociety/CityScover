@@ -84,14 +84,13 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          }
 
          _neighborhood.NeighborhoodWorker = NeighborhoodFactory.CreateNeighborhood(flow.CurrentAlgorithm);
-         Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm, _neighborhood);
+         _neighborhood.Type = _neighborhood.NeighborhoodWorker.Type;
+         Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm, _neighborhood.NeighborhoodWorker);
          
          if (algorithm is LocalSearchTemplate ls)
          {
             algorithm.Parameters = flow.AlgorithmParameters;
             _innerAlgorithm = ls;
-            _maxIterations = flow.RunningCount;
-            _maxDeadlockIterations = Parameters[ParameterCodes.MaxDeadlockIterations];
          }
          else
          {
@@ -127,6 +126,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         _maxIterations = Solver.CurrentStage.Flow.RunningCount;
+         _maxDeadlockIterations = Parameters[ParameterCodes.MaxDeadlockIterations];
          int tabuTenureFactor = Parameters[ParameterCodes.TabuTenureFactor];
 
          if (tabuTenureFactor == 0)
@@ -144,7 +145,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
-         //_neighborhood.TabuList = new List<TabuMove>();
          _innerAlgorithm.AcceptImprovementsOnly = false;
          _innerAlgorithm.Provider = Provider;
          _bestSolution = Solver.BestSolution;

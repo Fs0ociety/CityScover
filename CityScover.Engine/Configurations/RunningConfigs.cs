@@ -107,19 +107,19 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
+                     RunningCount = 3,
                      AlgorithmParameters =
                      {
-                        [ParameterCodes.CanDoImprovements] = false,
                         [ParameterCodes.MaxDeadlockIterations] = 2,
                         [ParameterCodes.TabuTenureFactor] = 2
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.TwoOpt, runningCount: 3)
+                        new StageFlow(AlgorithmType.TwoOpt)
                         {
                            AlgorithmParameters =
                            {
-                              [ParameterCodes.CanDoImprovements] = false,
+                              [ParameterCodes.CanDoImprovements] = true,
                               [ParameterCodes.LKImprovementThreshold] = 2000,
                               [ParameterCodes.MaxIterationsWithNoImprovements] = 2
                            }

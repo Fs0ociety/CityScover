@@ -25,6 +25,11 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Constructors
+      internal TabuSearchNeighborhood()
+      {
+         _tabuList = new List<TabuMove>();
+      }
+
       internal TabuSearchNeighborhood(Neighborhood neighborhood)
          : this(neighborhood, new List<TabuMove>())
       {

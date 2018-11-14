@@ -22,18 +22,13 @@ namespace CityScover.Engine
    public class StageFlow
    {
       #region Constructors
-      public StageFlow() : this(AlgorithmType.None, runningCount: 1)
+      public StageFlow() 
+         : this(AlgorithmType.None, runningCount: 1)
       {
       }
 
-      public StageFlow(AlgorithmType algorithm, byte runningCount)
+      public StageFlow(AlgorithmType algorithm, byte runningCount = 1)
       {
-         if (runningCount == 0)
-         {
-            throw new ArgumentException($"Bad configuration format: " +
-               $"{nameof(runningCount)} parameter must be greater than 0.");
-         }
-
          CurrentAlgorithm = algorithm;
          RunningCount = runningCount;
          AlgorithmParameters = new Dictionary<ParameterCodes, dynamic>();
