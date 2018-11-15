@@ -56,9 +56,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="cityscover-points.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="cityscover-points-15.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="cityscover-points-75.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="cityscover-points-90.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
