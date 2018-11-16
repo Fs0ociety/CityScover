@@ -271,8 +271,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          Solver.PreviousStageSolutionCost = bestSolution.Cost;
 
          _tour = bestSolution.SolutionGraph.DeepCopy();
-         _timeWalkThreshold = Parameters[ParameterCodes.HNDTimeWalkThreshold];
-         _tMaxThreshold = Parameters[ParameterCodes.HNDTmaxThreshold];
+         _timeWalkThreshold = Parameters[ParameterCodes.HNDtimeWalkThreshold];
+         _tMaxThreshold = Parameters[ParameterCodes.HNDtMaxThreshold];
          _tMax = Solver.WorkingConfiguration.ArrivalTime
             .Add(Solver.WorkingConfiguration.TourDuration);
          _tMaxThresholdTime = _tMax - _tMaxThreshold;

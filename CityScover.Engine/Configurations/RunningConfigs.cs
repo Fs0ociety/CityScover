@@ -56,17 +56,17 @@ namespace CityScover.Engine.Configs
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
-                        [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
+                        new StageFlow(AlgorithmType.HybridNearestDistance)
                         {
                            AlgorithmParameters =
                            {
                               [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                              [ParameterCodes.HNDtMaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDtimeWalkThreshold] = new TimeSpan(0, 20, 0)
                            }
                         }
                      }
@@ -82,21 +82,12 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.LKImprovementThreshold] = 2000,
-                        [ParameterCodes.MaxIterationsWithNoImprovements] = 1
+                        [ParameterCodes.LKimprovementThreshold] = 2000,
+                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 1
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 1)
-                        //new StageFlow(AlgorithmType.HybridNearestDistance, runningCount: 1)
-                        //{
-                        //   AlgorithmParameters =
-                        //   {
-                        //      [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 30, 0),
-                        //      [ParameterCodes.HNDTmaxThreshold] = new TimeSpan(1, 0, 0),
-                        //      [ParameterCodes.HNDTimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                        //   }
-                        //}
+                        new StageFlow(AlgorithmType.LinKernighan)
                      }
                   }
                },
@@ -110,8 +101,8 @@ namespace CityScover.Engine.Configs
                      RunningCount = 3,
                      AlgorithmParameters =
                      {
-                        [ParameterCodes.MaxDeadlockIterations] = 2,
-                        [ParameterCodes.TabuTenureFactor] = 2
+                        [ParameterCodes.TABUmaxDeadlockIterations] = 2,
+                        [ParameterCodes.TABUtenureFactor] = 2
                      },
                      ChildrenFlows =
                      {
@@ -120,8 +111,8 @@ namespace CityScover.Engine.Configs
                            AlgorithmParameters =
                            {
                               [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.LKImprovementThreshold] = 2000,
-                              [ParameterCodes.MaxIterationsWithNoImprovements] = 2
+                              [ParameterCodes.LKimprovementThreshold] = 2000,
+                              [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                            }
                         }
                      }
@@ -157,7 +148,7 @@ namespace CityScover.Engine.Configs
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
-                        [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6
                      }
                   }
                }
@@ -299,7 +290,7 @@ namespace CityScover.Engine.Configs
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
-                        [ParameterCodes.GreedyMaxNodesToAdd] = 6
+                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6
                      }
                   }
                },
@@ -314,8 +305,8 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.LKImprovementThreshold] = 2000,
-                        [ParameterCodes.MaxIterationsWithNoImprovements] = 1
+                        [ParameterCodes.LKimprovementThreshold] = 2000,
+                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 1
                      },
                      ChildrenFlows =
                      {
@@ -327,7 +318,7 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
-         _configurations.Add(c5Test);
+         _configurations.Add(c1Test);
       }
       #endregion
 

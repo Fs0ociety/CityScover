@@ -21,11 +21,11 @@ namespace CityScover
       static async Task Main(string[] args)
       {
          DisplayLogo();
-         //IConfigurationService configService = ConfigurationService.Instance;
-         //await configService.ShowConfigurationsMenu();
-         ISolverService solverService = SolverService.Instance;
-         await solverService.Run();
-         WriteLine("Press any key to continue...");
+         IConfigurationService configService = ConfigurationService.Instance;
+         await configService.ShowConfigurationsMenu();
+         //ISolverService solverService = SolverService.Instance;
+         //await solverService.Run();
+         WriteLine("\nPress any key to continue...");
          ReadKey();
       }
 

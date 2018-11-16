@@ -68,10 +68,6 @@ namespace CityScover.Engine.Algorithms.Greedy
          Algorithm algorithm = default;
          foreach (var child in childrenAlgorithms)
          {
-            //if (child.CurrentAlgorithm != Solver.CurrentStage.Flow.CurrentAlgorithm)
-            //{
-            //   Solver.CurrentStage.Flow.CurrentAlgorithm = child.CurrentAlgorithm;
-            //}
             algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
             if (algorithm is null)
             {
@@ -79,10 +75,8 @@ namespace CityScover.Engine.Algorithms.Greedy
             }
             
             algorithm.Parameters = child.AlgorithmParameters;
-            // TODO: Verificare il tipo di algoritmo restituito per eventuali impostazioni di parametri
-            // [vedere metodo GetImprovementAlgorithms() nella classe LocalSearchTemplate.cs]
-
             algorithm.Provider = Provider;
+
             yield return algorithm;
          }
       }
@@ -147,7 +141,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnInitializing();
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;         
-         int maxNodesToAdd = Parameters[ParameterCodes.GreedyMaxNodesToAdd];
+         int maxNodesToAdd = Parameters[ParameterCodes.GREEDYmaxNodesToAdd];
          _solutionsHistory = new Collection<TOSolution>();
          _processingNodes = new Queue<int>();
          _tour = new CityMapGraph();

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 05/11/2018
+// File update: 16/11/2018
 //
 
 using CityScover.Commons;
@@ -69,52 +69,90 @@ namespace CityScover.Services
             WriteLine($"\t     [{stageDescription.ToUpper()}]\n");
             WriteLine($"\t     Algorithm family:    \"{stage.Category}\"");
 
-            //DisplayStageFlow(stage.Flow);
+            DisplayStageFlow(stage.Flow);
             WriteLine("\t    --------------------------------------------------------\n");
          }
          WriteLine("\t============================================================\n");
       }
 
-      //private void DisplayStageFlow(StageFlow flow, string tabulator = "\t")
-      //{
-      //   WriteLine($"{tabulator}     Current algorithm:   \"{flow.CurrentAlgorithm}\"");
-      //   WriteLine($"{tabulator}     Max iterations:      \"{flow.RunningCount}\"");
+      private void DisplayStageFlow(StageFlow flow, string tabulator = "\t")
+      {
+         WriteLine($"{tabulator}     Current algorithm:   \"{flow.CurrentAlgorithm}\"");
+         WriteLine($"{tabulator}     Max iterations:      \"{flow.RunningCount}\"");
 
-      //   if (flow.MaximumNodesToEvaluate != default)
-      //   {
-      //      WriteLine($"{tabulator}     Maximum nodes to consider:  \"{flow.MaximumNodesToEvaluate}\"");
-      //   }
-      //   if (flow.CanExecuteImprovements != default)
-      //   {
-      //      WriteLine($"{tabulator}     Can {flow.CurrentAlgorithm} executes improvements:  \"{flow.CanExecuteImprovements}\"");
-      //   }
-      //   if (flow.LkImprovementThreshold != default)
-      //   {
-      //      WriteLine($"{tabulator}     Lin Kernighan improvement threshold:  \"{flow.LkImprovementThreshold}\"");
-      //   }
-      //   if (flow.MaxIterationsWithoutImprovements != default)
-      //   {
-      //      WriteLine($"{tabulator}     Maximum iterations without improvement:  \"{flow.MaxIterationsWithoutImprovements}\"");
-      //   }
-      //   if (flow.MaximumDeadlockIterations != default)
-      //   {
-      //      WriteLine($"{tabulator}     Deadlock condition:  \"{flow.MaximumDeadlockIterations}\"");
-      //   }
-      //   if (flow.HndTmaxThreshold != default)
-      //   {
-      //      WriteLine($"{tabulator}     TMax threshold:  \"" +
-      //         $"{flow.HndTmaxThreshold.Hours + ((flow.HndTmaxThreshold.Hours == 1) ? " hour" : " hours")} and " +
-      //         $"{flow.HndTmaxThreshold.Minutes} minutes.\"");
-      //   }
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.CanDoImprovements))
+         {
+            bool canDoImprovements = flow.AlgorithmParameters[ParameterCodes.CanDoImprovements];
+            if (canDoImprovements != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Can {flow.CurrentAlgorithm} executes improvements:  \"{canDoImprovements}\"");
+            }
+         }
 
-      //   if (flow.ChildrenFlows.Any())
-      //   {
-      //      WriteLine($"\n{tabulator}     \"{flow.CurrentAlgorithm} inner algorithms\"");
-      //      WriteLine($"{tabulator}     " + "{");
-      //      DisplayStageFlow(flow.ChildrenFlows.FirstOrDefault(), "\t    ");
-      //      WriteLine($"{tabulator}     " + "}");
-      //   }
-      //}
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.GREEDYmaxNodesToAdd))
+         {
+            int maxNodesToAdd = flow.AlgorithmParameters[ParameterCodes.GREEDYmaxNodesToAdd];
+            if (maxNodesToAdd != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Maximum nodes to consider:  \"{maxNodesToAdd}\"");
+            }
+         }
+
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LKimprovementThreshold))
+         {
+            int lkImprovementThreshold = flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold];
+            if (lkImprovementThreshold != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Lin Kernighan improvement threshold:  \"{lkImprovementThreshold}\"");
+            }
+         }
+
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LSmaxRunsWithNoImprovements))
+         {
+            int maxIterationsWithNoImprovements = flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements];
+            if (maxIterationsWithNoImprovements != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Maximum iterations without improvement:  \"{maxIterationsWithNoImprovements}\"");
+            }
+         }
+
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.TABUmaxDeadlockIterations))
+         {
+            int maxDeadlockIterations = flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations];
+            if (maxDeadlockIterations != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Deadlock condition:  \"{maxDeadlockIterations}\"");
+            }
+         }
+
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HNDtMaxThreshold))
+         {
+            TimeSpan hndTmaxThreshold = flow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold];
+            if (hndTmaxThreshold != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"TMax threshold:  \"" +
+                  $"{hndTmaxThreshold.Hours + "hour" + ((hndTmaxThreshold.Hours == 1) ? string.Empty : "s ")} and " +
+                  $"{hndTmaxThreshold.Minutes} minutes.\"");
+            }
+         }
+
+         if (flow.ChildrenFlows.Any())
+         {
+            WriteLine($"\n{tabulator}     \"{flow.CurrentAlgorithm} inner algorithms\"");
+            foreach (var children in flow.ChildrenFlows)
+            {
+               WriteLine($"{tabulator}     " + "{");
+               DisplayStageFlow(children, "\t" + string.Concat(Enumerable.Repeat("   ", 1)));
+               WriteLine($"{tabulator}     " + "}\n");
+            }
+         }
+      }
       #endregion
 
       #region Run configuration menu
@@ -215,32 +253,35 @@ namespace CityScover.Services
             do
             {
                WriteLine();
-               WriteLine("<1> Set Problem size");
-               WriteLine("<2> Set Tour Category");
-               WriteLine("<3> Set Walking Speed");
-               WriteLine("<4> Set Arrival Time");
-               WriteLine("<5> Set Tour duration");
-               WriteLine("<6> Set Algorithm monitoring");
-               WriteLine("<7> Set Algorithm's stages");
-               WriteLine("<8> Back\n");
+               WriteLine("<| 1 |> Set the \"PROBLEM SIZE\"\n");
+               WriteLine("<| 2 |> Set the \"TOUR CATEGORY\"\n");
+               WriteLine("<| 3 |> Set the \"WALKING SPEED\"\n");
+               WriteLine("<| 4 |> Set the \"ARRIVAL TIME TO HOTEL\"\n");
+               WriteLine("<| 5 |> Set the \"TOUR DURATION\"\n");
+               WriteLine("<| 6 |> Set the \"ALGORITHM'S STAGES\"\n");
+               WriteLine("<| 7 |> Back\n");
                Write("Select an option: ");
                choice = ReadLine().Trim();
 
                canProceed = int.TryParse(choice, out option)
-                  && option >= 1 && option <= 8;
+                  && option >= 1 && option <= 7;
 
                if (!canProceed)
                {
-                  WriteLine($"Insert a value between 1 and 8.\n");
+                  WriteLine($"Insert a value between 1 and 7.\n");
                }
             } while (!canProceed);
 
             isExiting = SetConfigurationParameter(option);
-            await Task.Delay(700).ConfigureAwait(continueOnCapturedContext: false);
+            if (!isExiting)
+            {
+               await Task.Delay(700).ConfigureAwait(continueOnCapturedContext: false);
+            }
          }
 
          if (canCreateConfiguration)
          {
+            _algorithmMonitoring = GetAlgorithmMonitoring();
             WriteLine("\nCreation of new configuration in progress...!\n");
             await Task.Delay(TimeSpan.FromSeconds(1))
                .ConfigureAwait(continueOnCapturedContext: false);
@@ -280,7 +321,7 @@ namespace CityScover.Services
          return _tourCategory != TourCategoryType.None &&
                _problemSize.HasValue && _walkingSpeed.HasValue &&
                _arrivalTime.HasValue && _tourDuration.HasValue &&
-               _algorithmMonitoring.HasValue && _stages.Count == _maxStagesCount;
+               _stages.Count == _maxStagesCount;
       }
 
       private bool SetConfigurationParameter(int option)
@@ -305,12 +346,9 @@ namespace CityScover.Services
                _tourDuration = GetTourDuration();
                break;
             case 6:
-               _algorithmMonitoring = GetAlgorithmMonitoring();
-               break;
-            case 7:
                _stages = GetAlgorithmStages();
                break;
-            case 8:
+            case 7:
                isExiting = true;
                break;
             default:
@@ -330,15 +368,15 @@ namespace CityScover.Services
          do
          {
             WriteLine("\n-----> PROBLEM SIZE <-----\n");
-            WriteLine("<1> 15 nodes");
-            WriteLine("<2> 20 nodes");
-            WriteLine("<3> 30 nodes");
-            WriteLine("<4> 45 nodes");
-            WriteLine("<5> 60 nodes");
-            WriteLine("<6> 75 nodes");
-            WriteLine("<7> 90 nodes");
-            WriteLine("<8> Over 100 nodes");
-            WriteLine("<9> Back\n");
+            WriteLine("1. 15 nodes");
+            WriteLine("2. 20 nodes");
+            WriteLine("3. 30 nodes");
+            WriteLine("4. 45 nodes");
+            WriteLine("5. 60 nodes");
+            WriteLine("6. 75 nodes");
+            WriteLine("7. 90 nodes");
+            WriteLine("8. Over 100 nodes");
+            WriteLine("9. Back\n");
 
             Write("Enter a problem size [number of nodes]: ");
             choice = ReadLine().Trim();
@@ -400,10 +438,10 @@ namespace CityScover.Services
          WriteLine("\n-----> TOUR CATEGORY <-----\n");
          do
          {
-            WriteLine("<1> Historical and Cultural");
-            WriteLine("<2> Culinary");
-            WriteLine("<3> Sport");
-            WriteLine("<4> Back\n");
+            WriteLine("1. Historical and Cultural");
+            WriteLine("2. Culinary");
+            WriteLine("3. Sport");
+            WriteLine("4. Back\n");
 
             Write("Select the Tour category: ");
             choice = ReadLine().Trim();
@@ -678,14 +716,14 @@ namespace CityScover.Services
                if (improvementAlgorithm != AlgorithmType.None)
                {
                   byte runningCount = GetAlgorithmIterations();
-                  var (maxIterationsWithoutImprovements, improvementThreshold) = GetLocalSearchParameters(runningCount);
+                  var (maxRunsWithNoImprovements, improvementThreshold) = GetLocalSearchParameters(runningCount);
                   stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
-                  //stage.Flow.MaxIterationsWithoutImprovements = maxIterationsWithoutImprovements;
-                  //stage.Flow.LkImprovementThreshold = improvementThreshold;
+                  stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
+                  stage.Flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
                }
                else
                {
-                  //ResetStage(stage);
+                  ResetStage(stage);
                }
             }
          }
@@ -708,12 +746,12 @@ namespace CityScover.Services
             if (lsAlgorithm != AlgorithmType.None)
             {
                byte runningCount = GetAlgorithmIterations();
-               var (maximumDeadlockIterations, canExecuteImprovements) = GetMetaHeuristicParameters(runningCount);
+               var (maxDeadlockIterations, canDoImprovements) = GetMetaHeuristicParameters(runningCount);
                stage.Flow.ChildrenFlows.Add(new StageFlow(lsAlgorithm, runningCount));
-               //stage.Flow.MaximumDeadlockIterations = maximumDeadlockIterations;
-               //stage.Flow.CanExecuteImprovements = canExecuteImprovements;
+               stage.Flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations] = maxDeadlockIterations;
+               stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = canDoImprovements;
 
-               if (canExecuteImprovements)
+               if (canDoImprovements)
                {
                   WriteLine($"Select an improvement algorithm for stage {stageId}.\n");
                   AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
@@ -724,7 +762,7 @@ namespace CityScover.Services
                   }
                   else
                   {
-                     //ResetStage(stage);
+                     ResetStage(stage);
                   }
                }
             }
@@ -736,10 +774,10 @@ namespace CityScover.Services
          string choice = string.Empty;
          AlgorithmType algorithm = AlgorithmType.None;
 
-         WriteLine("<1> Nearest Neighbor");
-         WriteLine("<2> Nearest Neighbor Knapsack");
-         WriteLine("<3> Cheapest Insertion");
-         WriteLine("<4> Back\n");
+         WriteLine("1. Nearest Neighbor");
+         WriteLine("2. Nearest Neighbor Knapsack");
+         WriteLine("3. Cheapest Insertion");
+         WriteLine("4. Back\n");
          choice = ReadLine().Trim();
 
          switch (choice)
@@ -765,8 +803,8 @@ namespace CityScover.Services
          string choice = string.Empty;
          AlgorithmType algorithm = AlgorithmType.None;
 
-         WriteLine("<1> Two Opt");
-         WriteLine("<2> Back\n");
+         WriteLine("1. Two Opt");
+         WriteLine("2. Back\n");
          choice = ReadLine().Trim();
 
          switch (choice)
@@ -807,14 +845,18 @@ namespace CityScover.Services
          string choice = string.Empty;
          AlgorithmType algorithm = AlgorithmType.None;
 
-         WriteLine("<1> Lin Kernighan");
-         WriteLine("<2> Back\n");
+         WriteLine("1. Lin Kernighan");
+         WriteLine("2. Hybrid Nearest Distance");
+         WriteLine("3. Back\n");
          choice = ReadLine().Trim();
 
          switch (choice)
          {
             case "1":
                algorithm = AlgorithmType.LinKernighan;
+               break;
+            case "2":
+               algorithm = AlgorithmType.HybridNearestDistance;
                break;
             default:
                break;
@@ -956,18 +998,14 @@ namespace CityScover.Services
          return runningCount;
       }
 
-      //private void ResetStage(Stage stage)
-      //{
-      //   stage.Category = AlgorithmFamily.None;
-      //   stage.Description = StageType.InvalidStage;
-      //   stage.Flow.CurrentAlgorithm = AlgorithmType.None;
-      //   stage.Flow.ChildrenFlows.Clear();
-      //   stage.Flow.CanExecuteImprovements = true;
-      //   stage.Flow.RunningCount = default;
-      //   stage.Flow.LkImprovementThreshold = default;
-      //   stage.Flow.MaximumDeadlockIterations = default;
-      //   stage.Flow.MaxIterationsWithoutImprovements = default;
-      //}
+      private void ResetStage(Stage stage)
+      {
+         stage.Category = AlgorithmFamily.None;
+         stage.Description = StageType.InvalidStage;
+         stage.Flow.CurrentAlgorithm = AlgorithmType.None;
+         stage.Flow.ChildrenFlows.Clear();
+         stage.Flow.AlgorithmParameters.Clear();
+      }
       #endregion
       #endregion
 
@@ -1034,7 +1072,7 @@ namespace CityScover.Services
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = _tourCategory,
-            PointsFilename = @"cityscover-points-" + _problemSize.Value,
+            PointsFilename = @"cityscover-points-" + _problemSize.Value + ".xml",
             StartingPointId = 1,
             WalkingSpeed = _walkingSpeed.Value / 3.6,  // in m/s.
             ArrivalTime = _arrivalTime.Value,

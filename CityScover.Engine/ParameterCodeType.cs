@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 16/11/2018
 //
 
 namespace CityScover.Engine
@@ -15,42 +15,42 @@ namespace CityScover.Engine
    public enum ParameterCodes
    {
       /// <summary>
-      /// Maximum number of nodes to add to the tour for Greedy algorithms.
-      /// </summary>
-      GreedyMaxNodesToAdd,
-      
-      /// <summary>
       /// Flag that states if an algorithm can execute an improvement logic.
       /// </summary>
       CanDoImprovements,
+
+      /// <summary>
+      /// Maximum number of nodes to add to the tour for Greedy algorithms.
+      /// </summary>
+      GREEDYmaxNodesToAdd,
 
       /// <summary>
       /// Stopping condition for Local Search algorithm. 
       /// It verifies if there are one or more iterations without 
       /// solution cost improvements during algorithm's execution.
       /// </summary>
-      MaxIterationsWithNoImprovements,
+      LSmaxRunsWithNoImprovements,
+
+      /// <summary>
+      /// Lin Kernighan threshold to trigger improvement logic.
+      /// </summary>
+      LKimprovementThreshold,
+
+      /// <summary>
+      /// Hybrid Nearest Distance algorithm's threshold for Tmax constraint.
+      /// </summary>
+      HNDtMaxThreshold,
+
+      /// <summary>
+      /// Hybrid Nearest Distance algorithm's threshold for time walk.
+      /// </summary>
+      HNDtimeWalkThreshold,
 
       /// <summary>
       /// Stopping condition for MetaHeuristic algorithm. 
       /// It verifies if there is a deadlock in the algorithm's execution.
       /// </summary>
-      MaxDeadlockIterations,
-
-      /// <summary>
-      /// Lin Kernighan threshold to trigger improvement logic.
-      /// </summary>
-      LKImprovementThreshold,
-
-      /// <summary>
-      /// Hybrid Nearest Distance algorithm's threshold for Tmax constraint.
-      /// </summary>
-      HNDTmaxThreshold,
-
-      /// <summary>
-      /// Hybrid Nearest Distance algorithm's threshold for time walk.
-      /// </summary>
-      HNDTimeWalkThreshold,
+      TABUmaxDeadlockIterations,
 
       /// <summary>
       /// Divisor used to calculate the real tabu tenure parameter in Tabu Search algorithm.
@@ -59,7 +59,7 @@ namespace CityScover.Engine
       /// Best range for this parameter is in range [2 - 4] for 2-Opt moves 
       /// and [8 - 16] for 3-Opt moves.
       /// </summary>
-      TabuTenureFactor
+      TABUtenureFactor
    }
    #endregion
 }

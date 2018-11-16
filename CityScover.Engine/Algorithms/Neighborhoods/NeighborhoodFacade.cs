@@ -44,10 +44,12 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                TOSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
                if (newSolution != null)
                {
-                  string message = MessagesRepository.GetMessage(MessageCode.LSNewNeighborhoodMoveDetails,
+                  string message = MessagesRepository.GetMessage(
+                     MessageCode.LSNewNeighborhoodMoveDetails,
                      newSolution.Id,
-                     $"({currentEdge.Entity.PointFrom.Id},{currentEdge.Entity.PointTo.Id})",
-                     $"({candidateEdge.Entity.PointFrom.Id},{candidateEdge.Entity.PointTo.Id})");
+                     $"({currentEdge.Entity.PointFrom.Id}, {currentEdge.Entity.PointTo.Id})",
+                     $"({candidateEdge.Entity.PointFrom.Id}, {candidateEdge.Entity.PointTo.Id})");
+
                   newSolution.Description = message;
                   neighborhood.Add(newSolution);
                }

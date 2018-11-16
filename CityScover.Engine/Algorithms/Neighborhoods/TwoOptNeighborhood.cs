@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 16/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -20,7 +20,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    internal class TwoOptNeighborhood : Neighborhood
    {
       #region Private fields
-      private readonly CityMapGraph _cityMapClone;
+      private readonly CityMapGraph _cityMap;
       private CityMapGraph _tour;
       #endregion
 
@@ -28,7 +28,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal TwoOptNeighborhood()
       {
          Type = AlgorithmType.TwoOpt;
-         _cityMapClone = Solver.Instance.CityMapGraph.DeepCopy();
+         _cityMap = Solver.Instance.CityMapGraph;
       }
       #endregion
 
@@ -49,7 +49,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             }
 
             newSolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
-            newSolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
+            newSolutionGraph.AddRouteFromGraph(_cityMap, currNodeAdjNode, currentNodeId);
             currentNodeId = currNodeAdjNode;
          }
       }
@@ -59,10 +59,9 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution)
       {
          _tour = solution.SolutionGraph.DeepCopy();
-         var currentSolutionPoints = _tour.Nodes;
          var candidateEdges = new Dictionary<RouteWorker, IEnumerable<RouteWorker>>();
 
-         foreach (var node in currentSolutionPoints)
+         foreach (var node in _tour.Nodes)
          {
             int fixedNodeId = node.Entity.Id;
             var itemNeighbors = _tour.GetAdjacentNodes(fixedNodeId);
@@ -77,8 +76,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                }
 
                currentEdge.IsVisited = true;
-               var processingNodeId = neighbor;
-               var previousProcessingNodeId = fixedNodeId;
+               int processingNodeId = neighbor;
+               int previousProcessingNodeId = fixedNodeId;
                int newProcessingNodeId = default;
 
                while (processingNodeId != fixedNodeId)
@@ -103,7 +102,6 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                      }
 
                      procNodeAdjNodeEdge.IsVisited = true;
-
                      if (adjacentNodeId != previousProcessingNodeId)
                      {
                         previousProcessingNodeId = processingNodeId;
@@ -132,8 +130,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          newSolutionGraph.RemoveEdge(currentEdgePointFromId, currentEdgePointToId);
          newSolutionGraph.RemoveEdge(candidateEdgePointFromId, candidateEdgePointToId);
 
-         newSolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointFromId, candidateEdgePointFromId);
-         newSolutionGraph.AddRouteFromGraph(_cityMapClone, currentEdgePointToId, candidateEdgePointToId);
+         newSolutionGraph.AddRouteFromGraph(_cityMap, currentEdgePointFromId, candidateEdgePointFromId);
+         newSolutionGraph.AddRouteFromGraph(_cityMap, currentEdgePointToId, candidateEdgePointToId);
 
          // Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
          TwoOptSwap(currentEdge, candidateEdge, newSolutionGraph, candidateEdgePointFromId);

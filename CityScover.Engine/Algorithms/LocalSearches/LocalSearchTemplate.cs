@@ -153,8 +153,8 @@ namespace CityScover.Engine.Algorithms
          _solutionsHistory = new Collection<TOSolution>();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          CanDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
-         _improvementThreshold = Parameters[ParameterCodes.LKImprovementThreshold];
-         _maxIterationsWithoutImprovements = Parameters[ParameterCodes.MaxIterationsWithNoImprovements];
+         _improvementThreshold = Parameters[ParameterCodes.LKimprovementThreshold];
+         _maxIterationsWithoutImprovements = Parameters[ParameterCodes.LSmaxRunsWithNoImprovements];
 
          _bestSolution = Solver.BestSolution;
          _solutionsHistory.Add(_bestSolution);
