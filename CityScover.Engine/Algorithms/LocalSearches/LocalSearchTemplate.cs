@@ -229,7 +229,7 @@ namespace CityScover.Engine.Algorithms
          base.OnTerminating();
          Solver.BestSolution = _bestSolution;
          Console.ForegroundColor = ConsoleColor.Yellow;
-         SendMessage(MessageCode.LSFinish, _currentSolutionCost);
+         SendMessage(MessageCode.LSFinish, _bestSolution.Id, _bestSolution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
          SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
       }

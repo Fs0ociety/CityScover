@@ -39,7 +39,7 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.LSNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with total cost: {1}.",
             [MessageCode.LSBestFound] = "Best solution found with total cost: ({0}). Previous solution total cost: ({1}).",
             [MessageCode.LSInvariateSolution] = "A better solution of current best (id: {0} , total cost: {1}), hasn't found. Terminating...",
-            [MessageCode.LSFinish] = "Stop condition occurred with solution cost: ({0})",
+            [MessageCode.LSFinish] = "Stop condition occurred with solution {0} with total cost: ({1})",
             [MessageCode.LKStartSolution] = "Starting with current LS Best Solution {0} with cost {1}.",
             [MessageCode.LKHStepIncreased] = "Lin Kernighan Step {0} of {1}.",
             [MessageCode.LKStarting] = "Max iterations with no improvements reached. Lin Kernighan starting...",

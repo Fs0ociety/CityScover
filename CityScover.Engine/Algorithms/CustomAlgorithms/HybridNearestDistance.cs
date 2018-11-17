@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 17/11/2018
 //
 
 using CityScover.Commons;
@@ -192,7 +192,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                throw new NullReferenceException(nameof(outgoingEdge));
             }
 
-            InterestPointWorker successorPoint = _tour.TourPoints
+            InterestPointWorker successorPoint = _tour.Nodes
                .Where(point => point.Entity.Id == outgoingEdge.Entity.PointTo.Id)
                .FirstOrDefault();
             if (successorPoint is null)
@@ -222,6 +222,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                tourUpdated = false;
                SendMessage(MessageCode.HNDTourRestored, 
                   candidateNode.Entity.Name, tourPointToRemove.Entity.Name);
+               
             }
          }
 
