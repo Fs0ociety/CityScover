@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 17/11/2018
 //
 
 using CityScover.Commons;
@@ -46,7 +46,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       #region Internal properties
       internal TOSolution CurrentBestSolution { get; set; }
-      internal byte MaxSteps { get; set; }
+      internal int MaxSteps { get; set; }
       #endregion
 
       #region Private methods

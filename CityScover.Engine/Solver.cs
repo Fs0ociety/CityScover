@@ -116,21 +116,14 @@ namespace CityScover.Engine
       /// <returns></returns>
       private async Task ExecuteWithoutMonitoring(Algorithm algorithm)
       {
-         bool exceptionOccurred = false;
          try
          {
             await Task.Run(() => algorithm.Start());
          }
          catch (Exception ex)
          {
-            exceptionOccurred = true;
             Debug.WriteLine(GetType().Name);
             Debug.WriteLine(ex.Message);
-         }
-
-         if (!exceptionOccurred)
-         {
-            // TODO
          }
       }
 
@@ -141,7 +134,6 @@ namespace CityScover.Engine
       /// <returns></returns>
       private async Task ExecuteWithMonitoring(Algorithm algorithm)
       {
-         bool exceptionOccurred = false;
          algorithm.Provider = new AlgorithmTracker();
          ExecutionReporter reporter = new ExecutionReporter();
          reporter.Subscribe(algorithm.Provider);
@@ -152,7 +144,6 @@ namespace CityScover.Engine
          }
          catch (Exception ex)
          {
-            exceptionOccurred = true;
             Debug.WriteLine(GetType().Name);
             Debug.WriteLine(ex.Message);
          }
@@ -160,11 +151,6 @@ namespace CityScover.Engine
          {
             reporter.Unsubscribe();
             reporter = null;
-         }
-
-         if (!exceptionOccurred)
-         {
-            // TODO
          }
       }
 

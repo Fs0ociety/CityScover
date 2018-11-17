@@ -6,10 +6,9 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/11/2018
+// File update: 17/11/2018
 //
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -27,7 +26,7 @@ namespace CityScover.Engine
       {
       }
 
-      public StageFlow(AlgorithmType algorithm, byte runningCount = 1)
+      public StageFlow(AlgorithmType algorithm, int runningCount = 1)
       {
          CurrentAlgorithm = algorithm;
          RunningCount = runningCount;
@@ -45,7 +44,11 @@ namespace CityScover.Engine
       /// <summary>
       /// Maximum iterations for an algorithm.
       /// </summary>
-      public byte RunningCount { get; set; } = default;
+      public int RunningCount { get; set; } = default;
+
+      /// <summary>
+      /// Specific parameters of the algorithm.
+      /// </summary>
       public IDictionary<ParameterCodes, dynamic> AlgorithmParameters { get; set; }
       public ICollection<StageFlow> ChildrenFlows { get; set; }
       #endregion

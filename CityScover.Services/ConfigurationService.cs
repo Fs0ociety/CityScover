@@ -70,7 +70,7 @@ namespace CityScover.Services
             WriteLine($"\t     Algorithm family:    \"{stage.Category}\"");
 
             DisplayStageFlow(stage.Flow);
-            WriteLine("\t    --------------------------------------------------------\n");
+            WriteLine("\n\t    --------------------------------------------------------\n");
          }
          WriteLine("\t============================================================\n");
       }
@@ -137,7 +137,7 @@ namespace CityScover.Services
             {
                WriteLine($"{tabulator}     " +
                   $"TMax threshold:  \"" +
-                  $"{hndTmaxThreshold.Hours + "hour" + ((hndTmaxThreshold.Hours == 1) ? string.Empty : "s ")} and " +
+                  $"{hndTmaxThreshold.Hours + " hour" + ((hndTmaxThreshold.Hours == 1) ? string.Empty : "s ")} and " +
                   $"{hndTmaxThreshold.Minutes} minutes.\"");
             }
          }
@@ -149,7 +149,7 @@ namespace CityScover.Services
             {
                WriteLine($"{tabulator}     " + "{");
                DisplayStageFlow(children, "\t" + string.Concat(Enumerable.Repeat("   ", 1)));
-               WriteLine($"{tabulator}     " + "}\n");
+               WriteLine($"{tabulator}     " + "}");
             }
          }
       }
@@ -306,6 +306,7 @@ namespace CityScover.Services
                      await RunConfigurationMenu(config);
                      break;
                   case "3":
+                     ResetParameters();
                      break;
                   default:
                      WriteLine("Selected invalid option. " +
@@ -314,6 +315,17 @@ namespace CityScover.Services
                }
             } while (choice != "3");
          }
+      }
+
+      private void ResetParameters()
+      {
+         _problemSize = default;
+         _tourCategory = default;
+         _walkingSpeed = default;
+         _arrivalTime = default;
+         _tourDuration = default;
+         _algorithmMonitoring = default;
+         _stages.Clear();
       }
 
       private bool IsConfigurationSettingsCompleted()
@@ -715,7 +727,7 @@ namespace CityScover.Services
 
                if (improvementAlgorithm != AlgorithmType.None)
                {
-                  byte runningCount = GetAlgorithmIterations();
+                  int runningCount = GetAlgorithmIterations();
                   var (maxRunsWithNoImprovements, improvementThreshold) = GetLocalSearchParameters(runningCount);
                   stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
                   stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
@@ -745,26 +757,11 @@ namespace CityScover.Services
 
             if (lsAlgorithm != AlgorithmType.None)
             {
-               byte runningCount = GetAlgorithmIterations();
-               var (maxDeadlockIterations, canDoImprovements) = GetMetaHeuristicParameters(runningCount);
+               int runningCount = GetAlgorithmIterations();
+               var (maxDeadlockIterations, tenureFactor) = GetMetaHeuristicParameters(runningCount);
                stage.Flow.ChildrenFlows.Add(new StageFlow(lsAlgorithm, runningCount));
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations] = maxDeadlockIterations;
-               stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = canDoImprovements;
-
-               if (canDoImprovements)
-               {
-                  WriteLine($"Select an improvement algorithm for stage {stageId}.\n");
-                  AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
-                  if (improvementAlgorithm != AlgorithmType.None)
-                  {
-                     runningCount = GetAlgorithmIterations();
-                     stage.Flow.ChildrenFlows.First().ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
-                  }
-                  else
-                  {
-                     ResetStage(stage);
-                  }
-               }
+               stage.Flow.AlgorithmParameters[ParameterCodes.TABUtenureFactor] = tenureFactor;
             }
          }
       }
@@ -865,44 +862,48 @@ namespace CityScover.Services
          return algorithm;
       }
 
-      private (byte, ushort) GetLocalSearchParameters(byte maxIterations)
+      private (int, int) GetLocalSearchParameters(int maxIterations)
       {
          const string firstParamStr = "maximum iterations without improvements";
          const string secondParamStr = "improvement threshold";
-         const ushort maximumImprovementThreshold = 500;
-         byte maxIterationsWithoutImprovements = default;
-         ushort improvementThreshold = default;
+         const int maximumImprovementThreshold = 500;
+         int maxRunsWithNoImprovements = default;
+         int improvementThreshold = default;
          bool canProceed = default;
 
          WriteLine("\n********** (TUNING PARAMETERS) **********\n");
-         do
+
+         if (maxIterations > 1)
          {
-            Write($"Set the \"{firstParamStr.ToUpper()}\" to trigger the improvement algorithm. " +
-               $"Range: [1 - {maxIterations - 1}]: ");
-            string firstParam = ReadLine().Trim();
-
-            canProceed = byte.TryParse(firstParam, out byte firstParamValue);
-            canProceed = firstParamValue > 0 && firstParamValue < maxIterations;
-
-            if (canProceed)
+            do
             {
-               maxIterationsWithoutImprovements = firstParamValue;
-            }
-            else
-            {
-               WriteLine($"\nInvalid parameters settings.\n" +
-                  $"Valid range for the parameter \"{firstParamStr.ToUpper()}\": [1 - {maxIterations - 1}].\n");
-            }
-         } while (!canProceed);
+               Write($"Set the \"{firstParamStr.ToUpper()}\" to trigger the improvement algorithm. " +
+                  $"Range: [1 - {maxIterations - 1}]: ");
+               string firstParam = ReadLine().Trim();
 
-         canProceed = default;
+               canProceed = int.TryParse(firstParam, out int firstParamValue);
+               canProceed = firstParamValue > 0 && firstParamValue < maxIterations;
+
+               if (canProceed)
+               {
+                  maxRunsWithNoImprovements = firstParamValue;
+               }
+               else
+               {
+                  WriteLine($"\nInvalid parameters settings.\n" +
+                     $"Valid range for the parameter \"{firstParamStr.ToUpper()}\": [1 - {maxIterations - 1}].\n");
+               }
+            } while (!canProceed);
+
+            canProceed = default;
+         }
 
          do
          {
             Write($"Set the \"{secondParamStr.ToUpper()}\". Range: [1 - 500]: ");
             string secondParam = ReadLine().Trim();
 
-            canProceed = ushort.TryParse(secondParam, out ushort secondParamValue);
+            canProceed = int.TryParse(secondParam, out int secondParamValue);
             canProceed = secondParamValue > 0 && secondParamValue <= maximumImprovementThreshold;
 
             if (canProceed)
@@ -912,68 +913,77 @@ namespace CityScover.Services
             else
             {
                WriteLine($"\nInvalid parameters settings.\n" +
-                  $"Valid range for the parameter \"{secondParam.ToUpper()}\": [1 - {maximumImprovementThreshold}]\n");
+                  $"Valid range for the parameter: [1 - {maximumImprovementThreshold}]\n");
             }
 
          } while (!canProceed);
 
-         return (maxIterationsWithoutImprovements, improvementThreshold);
+         return (maxRunsWithNoImprovements, improvementThreshold);
       }
 
-      private (byte, bool) GetMetaHeuristicParameters(byte maxIterations)
+      private (int, int) GetMetaHeuristicParameters(int maxIterations)
       {
          const string firstParamStr = "maximum deadlock iterations";
-         byte maximumDeadlockIterations = default;
-         bool canExecuteImprovements = default;
+         const string secondParamStr = "tabu tenure factor";
+         int tenureFactor = default;
+         int maxDeadlockIterations = default;
          bool canProceed = default;
 
          WriteLine("\n********** (TUNING PARAMETERS) **********\n");
+
+         if (maxIterations > 1)
+         {
+            do
+            {
+               Write($"Set the \"{firstParamStr.ToUpper()}\" to stop the MetaHeuristic algorithm. " +
+                  $"Range: [1 - {maxIterations - 1}]: ");
+               string firstParam = ReadLine().Trim();
+
+               canProceed = int.TryParse(firstParam, out int firstParamValue) &&
+                  firstParamValue > 0 && firstParamValue < maxIterations;
+
+               if (canProceed)
+               {
+                  maxDeadlockIterations = firstParamValue;
+               }
+               else
+               {
+                  WriteLine($"Invalid value for \"{firstParamStr.ToUpper()}\" parameter.\n" +
+                     $"Insert a value between 1 and {maxIterations - 1}.\n");
+               }
+            } while (!canProceed);
+
+            canProceed = default;
+         }
+
          do
          {
-            Write($"Set the \"{firstParamStr.ToUpper()}\" to stop the MetaHeuristic algorithm. " +
-               $"Range: [1 - {maxIterations - 1}]: ");
-            string firstParam = ReadLine().Trim();
+            Write($"Set the \"{secondParamStr.ToUpper()}\" to calculate the TABU TENURE. " +
+               $"Valid values: [2, 4, 8]: ");
+            string secondParam = ReadLine().Trim();
 
-            canProceed = byte.TryParse(firstParam, out byte firstParamValue) &&
-               firstParamValue > 0 && firstParamValue < maxIterations;
+            canProceed = int.TryParse(secondParam, out int secondParamValue) &&
+               secondParamValue == 2 || secondParamValue == 4 || secondParamValue == 8;
 
             if (canProceed)
             {
-               maximumDeadlockIterations = firstParamValue;
+               tenureFactor = secondParamValue;
             }
             else
             {
-               WriteLine($"Invalid value for \"{firstParamStr.ToUpper()}\" parameter.\n" +
-                  $"Insert a value between 1 and {maxIterations - 1}.\n");
+               WriteLine($"\nInvalid value {secondParamValue} for \"{secondParamStr.ToUpper()}\" parameter. " +
+                  $"Valid values: [2, 4, 8].\n");
             }
          } while (!canProceed);
 
-         canProceed = default;
-         string response = string.Empty;
-
-         do
-         {
-            Write("Do you want MetaHeuristic algorithm can executes improvements? [y/N]: ");
-            response = ReadLine().Trim();
-
-            canProceed = response == "y" || response == "Y" ||
-               response == "n" || response == "N";
-
-            if (!canProceed)
-            {
-               WriteLine("Entered invalid string. Insert only \"y|Y\" or \"n|N\".\n");
-            }
-         } while (!canProceed);
-
-         canExecuteImprovements = response == "y" || response == "Y";
-         return (maximumDeadlockIterations, canExecuteImprovements);
+         return (maxDeadlockIterations, tenureFactor);
       }
 
-      private byte GetAlgorithmIterations()
+      private int GetAlgorithmIterations()
       {
          const string paramDescription = "maximum number of iterations";
-         const byte runninCountThreshold = 50;
-         byte runningCount = default;
+         const int runninCountThreshold = 50;
+         int runningCount = default;
          bool canProceed = default;
 
          do
@@ -981,7 +991,7 @@ namespace CityScover.Services
             Write($"Insert the \"{paramDescription.ToUpper()}\" for the algorithm. (Max: 50 iterations): ");
             string value = ReadLine().Trim();
 
-            canProceed = byte.TryParse(value, out byte maxIterations) &&
+            canProceed = int.TryParse(value, out int maxIterations) &&
                maxIterations > 0 && maxIterations <= runninCountThreshold;
 
             if (canProceed)

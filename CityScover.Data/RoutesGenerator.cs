@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale
-// File update: 09/11/2018
+// File update: 17/11/2018
 //
 
 using CityScover.Entities;
@@ -41,7 +41,7 @@ namespace CityScover.Data
 
          if (File.Exists(_filename))
          {
-            return;
+            File.Delete(_filename);
          }
 
          int routeId = default;
