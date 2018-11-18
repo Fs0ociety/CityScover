@@ -85,21 +85,28 @@ namespace CityScover.Engine
       private int CalculateCost(TOSolution solution) => 
          solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
 
-      //private int CalculateCost2(TOSolution solution)
-      //{
-      //   // Calcolo del termine del gradimento.
-      //   int scoreTerm = solution.SolutionGraph.TourPoints.Sum(node => node.Entity.Score.Value);
+      private int CalculateCost2(TOSolution solution)
+      {
+         // Calcolo del termine del gradimento.
+         int scoreTerm = solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
 
-      //   // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
-      //   // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.
-      //   double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
+         // Il peso che determina l'importanza dei termini dell'equazione.
+         double lambda = 0.8;
 
-      //   // Calcolo del termine della distanza.
-      //   double distanceTerm = solution.SolutionGraph.TourPoints.Sum(node =>
-      //   {
+         // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
+         // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.
+         double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
 
-      //   });
-      //}
+         // Calcolo del termine della distanza.
+         double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
+         {
+            RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
+            double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
+            return nodeDistScoreTerm / distanceWeightSum;
+         });
+
+         return (int)Math.Round((lambda * scoreTerm) + ((1 - lambda) * distanceTerm));
+      }
       #endregion
 
       #region Penalty Function delegates
