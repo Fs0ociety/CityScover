@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/11/2018
+// File update: 17/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -43,20 +43,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
-      private void SetRandomCandidateId(InterestPointWorker candidateNode, InterestPointWorker adjNode, out int id)
-      {
-         if (candidateNode is null)
-         {
-            id = adjNode.Entity.Id;
-         }
-         else
-         {
-            id = (new Random().Next(2) != 0)
-               ? candidateNode.Entity.Id
-               : adjNode.Entity.Id;
-         }
-      }
-
       private IEnumerable<Algorithm> GetImprovementAlgorithms()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
@@ -127,7 +113,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             }
             else if (deltaScore == bestScore)
             {
-               SetRandomCandidateId(candidateNode, adjNode, out int pointId);
+               CityMapGraph.SetRandomCandidateId(candidateNode, adjNode, out int pointId);               
                candidateNode = _cityMapClone[pointId];
             }
          });

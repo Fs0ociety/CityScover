@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/11/2018
+// File update: 17/11/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -189,6 +189,22 @@ namespace CityScover.Engine.Workers
       }
       #endregion
 
+      #region Internal static methods
+      internal static void SetRandomCandidateId(InterestPointWorker candidateNode, InterestPointWorker adjNode, out int id)
+      {
+         if (candidateNode is null)
+         {
+            id = adjNode.Entity.Id;
+         }
+         else
+         {
+            id = (new Random().Next(2) != 0)
+               ? candidateNode.Entity.Id
+               : adjNode.Entity.Id;
+         }
+      }
+      #endregion
+
       #region Overrides
       public override string ToString()
       {
@@ -199,7 +215,6 @@ namespace CityScover.Engine.Workers
             (node) => { return node.IsVisited; },
             node => {
                string message = MessagesRepository.GetMessage(MessageCode.CMGraphNodeToString, node.Entity.Name, node.ArrivalTime.ToString("HH:mm"));
-               //result += $"({node.Entity.Name})";
                result += $"({message})";
             },
             edge =>

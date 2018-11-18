@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 17/11/2018
 //
 
 using CityScover.Commons;
@@ -167,17 +167,11 @@ namespace CityScover.Engine.Algorithms
 
       internal override async Task PerformStep()
       {
-         if (CanDoImprovements && _shouldRunImprovementAlgorithm)
-         {
-            await RunImprovementAlgorithms();
-            SendMessage(MessageCode.LSResumeSolution, _bestSolution.Id, _bestSolution.Cost);
-         }
-
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);
 
          foreach (var neighborSolution in currentNeighborhood)
          {
-            SendMessage(MessageCode.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep + 1);
+            SendMessage(MessageCode.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep);
             SendMessage(neighborSolution.Description);
             Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
@@ -199,6 +193,7 @@ namespace CityScover.Engine.Algorithms
          if (AcceptImprovementsOnly)
          {
             bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
+            var delta = _currentSolutionCost - _previousSolutionCost;
             if (isBetterThanCurrentBestSolution)
             {
                SendMessage(MessageCode.LSBestFound, solution.Cost, _bestSolution.Cost);
@@ -206,21 +201,33 @@ namespace CityScover.Engine.Algorithms
                _solutionsHistory.Add(solution);
                _currentSolutionCost = solution.Cost;
 
-               if (CanDoImprovements)
-               {
-                  var delta = _currentSolutionCost - _previousSolutionCost;
-                  if (delta < _improvementThreshold)
-                  {
-                     _iterationsWithoutImprovement++;
-                     _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-                  }
-               }
+               //if (CanDoImprovements)
+               //{
+                  //var delta = _currentSolutionCost - _previousSolutionCost;
+               //   if (delta < _improvementThreshold)
+               //   {
+               //      _iterationsWithoutImprovement++;
+               //      _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+               //   }
+               //}
+            }
+            
+            if (CanDoImprovements && delta < _improvementThreshold)
+            {
+               _iterationsWithoutImprovement++;
+               _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
             }
          }
          else
          {
             _bestSolution = solution;
             _currentSolutionCost = solution.Cost;
+         }
+
+         if (CanDoImprovements && _shouldRunImprovementAlgorithm)
+         {
+            await RunImprovementAlgorithms();
+            SendMessage(MessageCode.LSResumeSolution, _bestSolution.Id, _bestSolution.Cost);
          }
       }
 

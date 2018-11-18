@@ -23,7 +23,6 @@ namespace CityScover.Engine
    internal abstract class Algorithm
    {
       #region Private members
-      //private Stopwatch _timer;
       private DateTime _startingTime;
       private AlgorithmStatus _status;
       private ushort _currentStep;
@@ -38,17 +37,16 @@ namespace CityScover.Engine
       }
 
       internal Algorithm(AlgorithmTracker provider, bool acceptImprovementsOnly = true)
-      {
-         //CurrentAlgorithm = Solver.CurrentStage.Flow.CurrentAlgorithm;
+      {         
          _acceptImprovementsOnly = acceptImprovementsOnly;
          _provider = provider;
+         _currentStep = 1;
       }
       #endregion
 
       #region Private Protected properties
       private protected Solver Solver => Solver.Instance;
-      //private protected AlgorithmType CurrentAlgorithm { get; set; }
-
+      
       private protected AlgorithmStatus Status
       {
          get => _status;
@@ -149,7 +147,6 @@ namespace CityScover.Engine
       internal virtual void OnInitializing()
       {
          _status = AlgorithmStatus.Initializing;
-         //_timer = Stopwatch.StartNew();
          _startingTime = DateTime.Now;
       }
 
@@ -160,9 +157,7 @@ namespace CityScover.Engine
 
       internal virtual void OnTerminated()
       {
-         _status = AlgorithmStatus.Terminated;
-         //_timer.Stop();
-         //Solver.CurrentStageExecutionTime = Solver.CurrentStageExecutionTime.Add(_timer.Elapsed);
+         _status = AlgorithmStatus.Terminated;         
          Solver.CurrentStageExecutionTime = Solver.CurrentStageExecutionTime.Add(DateTime.Now - _startingTime);
          if (Solver.IsMonitoringEnabled)
          {
@@ -173,7 +168,6 @@ namespace CityScover.Engine
       internal virtual void OnError(Exception exception)
       {
          _status = AlgorithmStatus.Error;
-         //_timer.Stop();
          if (Solver.IsMonitoringEnabled)
          {
             Debug.WriteLine(exception.StackTrace);

@@ -268,3 +268,5 @@ __pycache__/
 .vscode/solution-explorer/interface.cs-template
 .vscode/solution-explorer/interface.ts-template
 .vscode/solution-explorer/template-list.json
+/CityScover.Data/cityscover-routes-6.xml
+/CityScover.Data/cityscover-routes-11.xml

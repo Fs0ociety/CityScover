@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/11/2018
+// File update: 17/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -61,7 +61,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Internal methods
       internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution)
       {
-         _algorithm.SendMessage(MessageCode.LSNewNeighborhood, _algorithm.CurrentStep + 1);
+         _algorithm.SendMessage(MessageCode.LSNewNeighborhood, _algorithm.CurrentStep);
          ICollection<TOSolution> neighborhood = default;
          var candidateEdges = _neighborhood.GetCandidates(solution);
          if (candidateEdges is null)

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 17/11/2018
+// File update: 18/11/2018
 //
 
 using CityScover.Commons;
@@ -22,13 +22,12 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
    internal class LinKernighan : Algorithm
    {
       #region Private fields
-      private CityMapGraph _cityMapClone;
+      private CityMapGraph _cityMap;
       private CityMapGraph _currentSolutionGraph;
-      private TOSolution _currentSolution;
       private ICollection<RouteWorker> _executedMoves;
       private InterestPointWorker _startPOI;
       private InterestPointWorker _endPOI;
-      private byte _executedSteps;
+      private ICollection<TOSolution> _solutionsHistory;
       #endregion
 
       #region Constructors
@@ -52,67 +51,55 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #region Private methods
       private IEnumerable<InterestPointWorker> GetClosestSNeighbors()
       {
-         return from neighbor in GetClosestNeighbors()
-                from edge in _currentSolutionGraph.GetEdges(neighbor.Entity.Id)
-                where edge.Entity.PointTo.Id != _endPOI.Entity.Id
-                && _currentSolutionGraph.ContainsNode(neighbor.Entity.Id)
-                select neighbor;
+         int predEndPOINodeId = _currentSolutionGraph.GetPredecessorNodes(_endPOI.Entity.Id).FirstOrDefault();
+         IEnumerable<InterestPointWorker> sCandidates = _currentSolutionGraph.TourPoints
+            .Where(node => node.Entity.Id != predEndPOINodeId 
+            && node.Entity.Id != _endPOI.Entity.Id)
+            .OrderByDescending(node => node.Entity.Score.Value);
+          
+         //return from neighbor in GetClosestNeighbors()
+         //       from edge in _currentSolutionGraph.GetEdges(neighbor.Entity.Id)
+         //       where edge.Entity.PointTo.Id != _endPOI.Entity.Id
+         //       && _currentSolutionGraph.ContainsNode(neighbor.Entity.Id)
+         //       select neighbor;
+         return sCandidates;
       }
 
-      private IEnumerable<InterestPointWorker> GetClosestNeighbors()
-      {
-         int bestScore = default;
-         ICollection<InterestPointWorker> potentialCandidates = new Collection<InterestPointWorker>();
+      //private IEnumerable<InterestPointWorker> GetClosestNeighbors()
+      //{
+      //   int bestScore = default;
+      //   ICollection<InterestPointWorker> potentialCandidates = new Collection<InterestPointWorker>();
 
-         var adjPOIIds = _cityMapClone.GetAdjacentNodes(_endPOI.Entity.Id).Where(nodeId => nodeId != _startPOI.Entity.Id);
-         adjPOIIds.ToList().ForEach(adjPOIId => SetBestCandidate(adjPOIId));
+      //   var adjPOIIds = _cityMap.GetAdjacentNodes(_endPOI.Entity.Id);
+      //   adjPOIIds.ToList().ForEach(adjPOIId =>
+      //   {
+      //      InterestPointWorker candidateNode = default;
+      //      var node = _cityMap[adjPOIId];
+      //      if (node.Entity.Id == _startPOI.Entity.Id)
+      //      {
+      //         return;
+      //      }
 
-         // Caso particolare (gestito solo per irrobustire il codice): se ho 2 nodi del grafo, e
-         // il secondo è già stato visitato, io ritorno collezione vuota come potentialCandidates.
+      //      var deltaScore = Math.Abs(node.Entity.Score.Value - _endPOI.Entity.Score.Value);
+      //      if (deltaScore > bestScore)
+      //      {
+      //         bestScore = deltaScore;
+      //         candidateNode = node;
+      //      }
+      //      else if (deltaScore == bestScore)
+      //      {
+      //         CityMapGraph.SetRandomCandidateId(candidateNode, node, out int pointId);
+      //         candidateNode = _cityMap[pointId];
+      //      }
 
-         // First local function: SetBestCandidate
-         void SetBestCandidate(int nodeKey)
-         {
-            InterestPointWorker candidateNode = default;
-            var node = _cityMapClone[nodeKey];
+      //      if (candidateNode != null)
+      //      {
+      //         potentialCandidates.Add(candidateNode);
+      //      }
+      //   });
 
-            var deltaScore = Math.Abs(node.Entity.Score.Value -
-               _endPOI.Entity.Score.Value);
-
-            if (deltaScore > bestScore)
-            {
-               bestScore = deltaScore;
-               candidateNode = node;
-            }
-            else if (deltaScore == bestScore)
-            {
-               SetRandomCandidateId(out int pointId);
-               candidateNode = _cityMapClone[pointId];
-            }
-
-            // Second local function: SetRandomCandidateId
-            void SetRandomCandidateId(out int id)
-            {
-               if (candidateNode is null)
-               {
-                  id = node.Entity.Id;
-               }
-               else
-               {
-                  id = (new Random().Next(2) != 0)
-                     ? candidateNode.Entity.Id
-                     : node.Entity.Id;
-               }
-            }
-
-            if (candidateNode != null)
-            {
-               potentialCandidates.Add(candidateNode);
-            }
-         }
-
-         return potentialCandidates.OrderByDescending(node => node.Entity.Score.Value);
-      }
+      //   return potentialCandidates.OrderByDescending(node => node.Entity.Score.Value);
+      //}
 
       private void SwapNodes(int stopSwappingNodeId)
       {
@@ -126,9 +113,26 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             }
 
             _currentSolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
-            _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, currNodeAdjNode, currentNodeId);
+            _currentSolutionGraph.AddRouteFromGraph(_cityMap, currNodeAdjNode, currentNodeId);
             currentNodeId = currNodeAdjNode;
          }
+      }
+
+      // Funzione che costruisce un nuovo ciclo hamiltoniano.
+      // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè
+      // è il punto di partenza per la chiusura del ciclo.
+      private int BuildHamiltonianPath(int sPOIId)
+      {
+         // Rimuovo l'unico arco di s. l'arco (j,s) per via della struttura Meriottesca è posseduto da j non da s.
+         RouteWorker sEdge = _currentSolutionGraph.GetEdges(sPOIId).FirstOrDefault();
+         if (sEdge is null)
+         {
+            throw new InvalidOperationException();
+         }
+
+         int sEdgePointToId = sEdge.Entity.PointTo.Id;
+         _currentSolutionGraph.RemoveEdge(sPOIId, sEdgePointToId);
+         return sEdgePointToId;
       }
       #endregion
 
@@ -136,21 +140,18 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         AcceptImprovementsOnly = false;
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKStarting);
          Console.ForegroundColor = ConsoleColor.Gray;
 
          SendMessage(MessageCode.LKStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
 
-         _cityMapClone = Solver.CityMapGraph.DeepCopy();
+         _solutionsHistory = new Collection<TOSolution>();
+         _cityMap = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
 
-         _currentSolution = new TOSolution
-         {
-            SolutionGraph = CurrentBestSolution.SolutionGraph.DeepCopy()
-         };
-
-         _currentSolutionGraph = _currentSolution.SolutionGraph;
+         _currentSolutionGraph = CurrentBestSolution.SolutionGraph.DeepCopy();
 
          _startPOI = _currentSolutionGraph.GetStartPoint();
          _endPOI = _currentSolutionGraph.GetEndPoint();
@@ -166,14 +167,19 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       internal override async Task PerformStep()
       {
+         Console.ForegroundColor = ConsoleColor.Cyan;
+         SendMessage(MessageCode.LKHStepIncreased, CurrentStep, MaxSteps);
+         Console.ForegroundColor = ConsoleColor.Gray;
          InterestPointWorker sNode = default;
          var sNodesCandidates = GetClosestSNeighbors();
          foreach (var sNodeCandidate in sNodesCandidates)
          {
-            RouteWorker fromEndNodeToSNodeEdge = _cityMapClone.GetEdge(_endPOI.Entity.Id, sNodeCandidate.Entity.Id);
+            RouteWorker fromEndNodeToSNodeEdge = _cityMap.GetEdge(_endPOI.Entity.Id, sNodeCandidate.Entity.Id);
             if (!_executedMoves.Contains(fromEndNodeToSNodeEdge))
             {
                sNode = sNodeCandidate;
+               // Build Steam And Cycle.
+               _currentSolutionGraph.AddRouteFromGraph(_cityMap, _endPOI.Entity.Id, sNodeCandidate.Entity.Id);
                _executedMoves.Add(fromEndNodeToSNodeEdge);
                break;
             }
@@ -184,24 +190,21 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             return;
          }
 
-         int sNodeId = sNode.Entity.Id;
+         //int sNodeId = sNode.Entity.Id;
+         //_currentSolutionGraph.AddRouteFromGraph(_cityMap, _endPOI.Entity.Id, sNodeId);
 
-         // Build Steam And Cycle.
-         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _endPOI.Entity.Id, sNodeId);
+         int junctionNodeId = BuildHamiltonianPath(sNode.Entity.Id);
 
-         int junctionNodeId = BuildHamiltonianPath(sNodeId);
-
-         // Ricreo il ciclo nell'unico modo possibile dal nuovo cammino hamiltoniano.
-         // Un cazzo.. Il taccone della Nonato ancoraaa??
-         SwapNodes(_startPOI.Entity.Id);
+         SwapNodes(sNode.Entity.Id);
 
          // Poi ricreo il ciclo.
-         _currentSolutionGraph.AddRouteFromGraph(_cityMapClone, _startPOI.Entity.Id, junctionNodeId);
+         _currentSolutionGraph.AddRouteFromGraph(_cityMap, _startPOI.Entity.Id, junctionNodeId);
 
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _currentSolutionGraph.DeepCopy()
          };
+         _solutionsHistory.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
 
@@ -209,57 +212,47 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          {
             Provider.NotifyObservers(newSolution);
          }
-         _executedSteps++;
-         _currentSolution = newSolution;
-         Console.ForegroundColor = ConsoleColor.Cyan;
-         SendMessage(MessageCode.LKHStepIncreased, _executedSteps, MaxSteps);
-         Console.ForegroundColor = ConsoleColor.Gray;
-
-         // Local function per costruire un nuovo ciclo hamiltoniano.
-         // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè
-         // è il punto di partenza per la chiusura del ciclo.
-         int BuildHamiltonianPath(int sPOIId)
-         {
-            // Rimuovo l'unico arco di s. l'arco (j,s) per via della struttura Meriottesca è posseduto da j non da s.
-            RouteWorker sEdge = _currentSolutionGraph.GetEdges(sPOIId).FirstOrDefault();
-            if (sEdge is null)
-            {
-               throw new InvalidOperationException();
-            }
-
-            int sEdgePointToId = sEdge.Entity.PointTo.Id;
-            _currentSolutionGraph.RemoveEdge(sPOIId, sEdgePointToId);
-            return sEdgePointToId;
-         }
       }
 
       internal override void OnTerminating()
       {
          base.OnTerminating();
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(_currentSolution.Cost, CurrentBestSolution.Cost);
-         if (isBetterThanCurrentBestSolution)
+         TOSolution bestSolution = CurrentBestSolution;
+         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
+
+         _solutionsHistory.ToList().ForEach(solution =>
          {
-            CurrentBestSolution = _currentSolution;
-            SendMessage(MessageCode.LKBestFound, _currentSolution.Cost);
+            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, bestSolution.Cost);
+            if (isBetterThanCurrentBestSolution)
+            {
+               bestSolution = solution;
+            }
+         });
+         
+         if (CurrentBestSolution.Cost != bestSolution.Cost)
+         {
+            SendMessage(MessageCode.LKBestFound, bestSolution.Cost);
          }
          else
          {
             SendMessage(MessageCode.LKInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
-         Solver.BestSolution = CurrentBestSolution;
+
+         Solver.BestSolution = bestSolution;
       }
 
       internal override void OnTerminated()
       {
-         _cityMapClone = null;
+         _cityMap = null;
          SendMessage(MessageCode.LKFinish);
          base.OnTerminated();
       }
 
       internal override bool StopConditions()
       {
-         return _executedSteps == MaxSteps;
+         return CurrentStep > MaxSteps ||
+            Status == AlgorithmStatus.Error;
       } 
       #endregion
    }

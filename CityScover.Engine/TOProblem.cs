@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 18/11/2018
 //
 
 using CityScover.Commons;
@@ -84,6 +84,22 @@ namespace CityScover.Engine
       /// </returns>
       private int CalculateCost(TOSolution solution) => 
          solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
+
+      //private int CalculateCost2(TOSolution solution)
+      //{
+      //   // Calcolo del termine del gradimento.
+      //   int scoreTerm = solution.SolutionGraph.TourPoints.Sum(node => node.Entity.Score.Value);
+
+      //   // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
+      //   // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.
+      //   double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
+
+      //   // Calcolo del termine della distanza.
+      //   double distanceTerm = solution.SolutionGraph.TourPoints.Sum(node =>
+      //   {
+
+      //   });
+      //}
       #endregion
 
       #region Penalty Function delegates
