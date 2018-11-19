@@ -153,8 +153,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          _currentSolutionGraph = CurrentBestSolution.SolutionGraph.DeepCopy();
 
-         _startPOI = _currentSolutionGraph.GetStartPoint();
-         _endPOI = _currentSolutionGraph.GetEndPoint();
+         _startPOI = CurrentBestSolution.SolutionGraph.GetStartPoint();
+         _endPOI = CurrentBestSolution.SolutionGraph.GetEndPoint();
 
          if (_startPOI is null || _endPOI is null)
          {
@@ -170,7 +170,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKHStepIncreased, CurrentStep, MaxSteps);
          Console.ForegroundColor = ConsoleColor.Gray;
+
          InterestPointWorker sNode = default;
+
          var sNodesCandidates = GetClosestSNeighbors();
          foreach (var sNodeCandidate in sNodesCandidates)
          {
@@ -197,9 +199,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          SwapNodes(sNode.Entity.Id);
 
-         // Poi ricreo il ciclo.
+         // Poi ricreo il ciclo.         
          _currentSolutionGraph.AddRouteFromGraph(_cityMap, _startPOI.Entity.Id, junctionNodeId);
-
+         
          TOSolution newSolution = new TOSolution()
          {
             SolutionGraph = _currentSolutionGraph.DeepCopy()

@@ -110,7 +110,7 @@ namespace CityScover.Engine
       public void OnError(Exception error)
       {
          //_timer.Stop();
-         Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPExceptionOccurred, error.Message));
+         Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPExceptionOccurred, error.Message, error.StackTrace));
          throw error;
       }
 

@@ -35,7 +35,7 @@ namespace CityScover.Engine
       {
          var solverConfig = Solver.Instance.WorkingConfiguration;
          _tMax = solverConfig.ArrivalTime.Add(solverConfig.TourDuration);
-         ObjectiveFunc = CalculateCost;
+         ObjectiveFunc = CalculateCost2;
          PenaltyFunc = CalculatePenalty;
          IsMinimizing = false;
 
@@ -95,15 +95,27 @@ namespace CityScover.Engine
 
          // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
          // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.
-         double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
+         double distanceWeightSum = default;
+         foreach (var edge in solution.SolutionGraph.Edges)
+         {
+            distanceWeightSum += 1 / edge.Weight.Invoke();
+         }
+         //double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
 
          // Calcolo del termine della distanza.
-         double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
+         //double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
+         //{
+         //   RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
+         //   double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
+         //   return nodeDistScoreTerm / distanceWeightSum;
+         //});
+         double distanceTerm = default;
+         foreach (var node in solution.SolutionGraph.Nodes)
          {
             RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
             double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
-            return nodeDistScoreTerm / distanceWeightSum;
-         });
+            distanceTerm += nodeDistScoreTerm / distanceWeightSum;
+         }
 
          return (int)Math.Round((lambda * scoreTerm) + ((1 - lambda) * distanceTerm));
       }
