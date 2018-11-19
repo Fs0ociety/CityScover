@@ -6,14 +6,16 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/11/2018
+// File update: 19/11/2018
 //
 
 using CityScover.Engine.Workers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.Neighborhoods
 {
@@ -33,7 +35,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Private methods
-      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge, 
+      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge,
          CityMapGraph newSolutionGraph, in int edge2PointFromId)
       {
          int currentNodeId = currentEdge.Entity.PointTo.Id;
@@ -56,6 +58,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Internal methods
+
+      #region GetCandidates [Single-Threaded]
       internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution)
       {
          _tour = solution.SolutionGraph.DeepCopy();
@@ -117,7 +121,68 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          return candidateEdges;
       }
+      #endregion
 
+      #region GetCandidates [Multi-Threaded]
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in TOSolution solution)
+      {
+         _tour = solution.SolutionGraph.DeepCopy();
+         var candidateEdges = new ConcurrentDictionary<RouteWorker, IEnumerable<RouteWorker>>();
+
+         Parallel.ForEach(_tour.Nodes, node =>
+         {
+            int fixedNodeId = node.Entity.Id;
+            var itemNeighbors = _tour.GetAdjacentNodes(fixedNodeId);
+
+            foreach (var neighbor in itemNeighbors)
+            {
+               var candidateEdgesCurrentEdge = new Collection<RouteWorker>();
+               var currentEdge = _tour.GetEdge(fixedNodeId, neighbor);
+
+               if (currentEdge is null)
+               {
+                  continue;
+               }
+               currentEdge.IsVisited = true;
+               int processingNodeId = neighbor;
+               int previousProcessingNodeId = fixedNodeId;
+               int newProcessingNodeId = default;
+
+               while (processingNodeId != fixedNodeId)
+               {
+                  var nextNeighbors = _tour.GetAdjacentNodes(processingNodeId);
+
+                  foreach (var adjacentNodeId in nextNeighbors)
+                  {
+                     var procNodeAdjNodeEdge = _tour.GetEdge(processingNodeId, adjacentNodeId);
+                     if (procNodeAdjNodeEdge is null)
+                     {
+                        continue;
+                     }
+
+                     if (!_tour.AreAdjacentEdges(currentEdge.Entity.PointFrom.Id, currentEdge.Entity.PointTo.Id, 
+                        procNodeAdjNodeEdge.Entity.PointFrom.Id, procNodeAdjNodeEdge.Entity.PointTo.Id))
+                     {
+                        candidateEdgesCurrentEdge.Add(procNodeAdjNodeEdge);
+                     }
+
+                     procNodeAdjNodeEdge.IsVisited = true;
+                     if (adjacentNodeId != previousProcessingNodeId)
+                     {
+                        previousProcessingNodeId = processingNodeId;
+                        newProcessingNodeId = adjacentNodeId;
+                     }
+                  }
+                  processingNodeId = newProcessingNodeId;
+               }
+               candidateEdges.TryAdd(currentEdge, candidateEdgesCurrentEdge);
+            }
+         });
+
+         return candidateEdges;
+      }
+      #endregion
+   
       internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
          CityMapGraph newSolutionGraph = _tour.DeepCopy();

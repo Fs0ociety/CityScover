@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 17/11/2018
+// File update: 19/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -58,17 +58,34 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       }
       #endregion
 
+      #region Internal types
+      internal enum RunningMode
+      {
+         Sequential,
+         Parallel
+      }
+      #endregion
+
       #region Internal methods
-      internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution)
+      internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution, RunningMode runningMode = RunningMode.Sequential)
       {
          _algorithm.SendMessage(MessageCode.LSNewNeighborhood, _algorithm.CurrentStep);
          ICollection<TOSolution> neighborhood = default;
-         var candidateEdges = _neighborhood.GetCandidates(solution);
+         IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges = default;
+
+         if (runningMode == RunningMode.Parallel)
+         {
+            candidateEdges = _neighborhood.GetCandidatesParallel(solution);
+         }
+         else
+         {
+            candidateEdges = _neighborhood.GetCandidates(solution);
+         }
+
          if (candidateEdges is null)
          {
             return neighborhood;
          }
-
          if (candidateEdges.Any())
          {
             neighborhood = new Collection<TOSolution>();

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/11/2018
+// File update: 19/11/2018
 //
 
 using CityScover.Engine.Algorithms.Metaheuristics;
@@ -60,6 +60,9 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Internal methods
       internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution) =>
          _neighborhoodWorker.GetCandidates(solution);
+
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in TOSolution solution) => 
+         _neighborhoodWorker.GetCandidatesParallel(solution);
 
       internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {

@@ -167,7 +167,7 @@ namespace CityScover.Engine.Algorithms
 
       internal override async Task PerformStep()
       {
-         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution);
+         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(_bestSolution, NeighborhoodFacade.RunningMode.Parallel);
 
          foreach (var neighborSolution in currentNeighborhood)
          {

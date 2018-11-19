@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 19/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -27,6 +27,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       /// <param name="solution"> Solution to process. </param>
       /// <returns></returns>
       internal abstract IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution);
+      internal abstract IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in TOSolution solution);
 
       /// <summary>
       /// Returns a new TOSolution type formed with the new processed informations.

@@ -38,8 +38,8 @@ namespace CityScover.Engine.Configs
          Configuration c1Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.Culinary,
-            PointsFilename = @"cityscover-points-30.xml",
+            TourCategory = TourCategoryType.Sport,
+            PointsFilename = @"cityscover-points-45.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
