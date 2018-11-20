@@ -106,7 +106,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override bool StopConditions()
       {
-         return base.StopConditions() || !_processingNodes.Any();
+         return !_processingNodes.Any() || base.StopConditions();
       }
       #endregion
    }

@@ -169,8 +169,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          Console.ForegroundColor = ConsoleColor.Gray;
          
          InterestPointWorker sNode = default;
-         
+
          // Tolgo l'arco (j,i).
+         SendMessage(_currentSolutionGraph.ToString());
          _currentSolutionGraph.RemoveEdge(_endPOI.Entity.Id, _startPOI.Entity.Id);
 
          var sNodesCandidates = GetClosestSNeighbors();
@@ -185,12 +186,16 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
                _executedMoves.Add(fromEndNodeToSNodeEdge);
                break;
             }
+            SendMessage(MessageCode.LKBlockedMove, $"(" + fromEndNodeToSNodeEdge.Entity.PointFrom.Id + "," + fromEndNodeToSNodeEdge.Entity.PointTo.Id + ")");
          }
 
          if (sNode is null)
          {
+            SendMessage(MessageCode.LKNoSNodeSelected);
+            ForceStop = true;
             return;
          }
+         //SendMessage("S node is " + sNode.Entity.Id);
 
          int junctionNodeId = BuildHamiltonianPath(sNode.Entity.Id);
 
@@ -252,8 +257,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       internal override bool StopConditions()
       {
-         return CurrentStep > MaxSteps ||
-            Status == AlgorithmStatus.Error;
+         return CurrentStep > MaxSteps || base.StopConditions();
       } 
       #endregion
    }

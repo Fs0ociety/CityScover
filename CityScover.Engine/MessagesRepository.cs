@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 20/11/2018
 //
 
 using System.Collections.Generic;
@@ -44,6 +44,7 @@ namespace CityScover.Engine.Algorithms
             [MessageCode.LKHStepIncreased] = "Lin Kernighan Step {0} of {1}.",
             [MessageCode.LKStarting] = "Max iterations with no improvements reached. Lin Kernighan starting...",
             [MessageCode.LKBlockedMove] = "Move {0} already selected! Continue searching...",
+            [MessageCode.LKNoSNodeSelected] = "No one move can be selected! Terminating...",
             [MessageCode.LKBestFound] = "Best solution found with total cost: ({0}).",
             [MessageCode.LKInvariateSolution] = "A better solution of current best (id: {0} , total cost: {1}), hasn't found. Terminating...",
             [MessageCode.LKFinish] = "Lin Kernighan algorithm finished successfully.",
@@ -104,6 +105,7 @@ namespace CityScover.Engine.Algorithms
       LKHStepIncreased,
       LKStarting,
       LKBlockedMove,
+      LKNoSNodeSelected,
       LKBestFound,
       LKInvariateSolution,
       LKFinish,

@@ -202,10 +202,10 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
       }
 
-      internal override bool StopConditions()
-      {
-         return Status == AlgorithmStatus.Error;
-      }
+      //internal override bool StopConditions()
+      //{
+      //   return Status == AlgorithmStatus.Error;
+      //}
       #endregion
    }
 }

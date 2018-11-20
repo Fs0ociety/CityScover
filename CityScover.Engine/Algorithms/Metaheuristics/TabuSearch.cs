@@ -186,7 +186,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override bool StopConditions()
       {
          bool shouldStop = _currentIteration == _maxIterations
-            || Status == AlgorithmStatus.Error;
+            || base.StopConditions();
 
          if (_maxDeadlockIterations > 0)
          {

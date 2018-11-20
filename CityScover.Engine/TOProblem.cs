@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/11/2018
+// File update: 20/11/2018
 //
 
 using CityScover.Commons;
@@ -88,31 +88,31 @@ namespace CityScover.Engine
          int scoreTerm = solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
 
          // Il peso che determina l'importanza dei termini dell'equazione.
-         double lambda = 0.6;
+         double lambda = 0.5;
 
          // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
          // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.
-         double distanceWeightSum = default;
-         foreach (var edge in solution.SolutionGraph.Edges)
-         {
-            distanceWeightSum += 1 / edge.Weight.Invoke();
-         }
-         //double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
-
-         // Calcolo del termine della distanza.
-         //double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
+         //double distanceWeightSum = default;
+         //foreach (var edge in solution.SolutionGraph.Edges)
          //{
-         //   RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
-         //   double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
-         //   return nodeDistScoreTerm / distanceWeightSum;
-         //});
-         double distanceTerm = default;
-         foreach (var node in solution.SolutionGraph.Nodes)
+         //   distanceWeightSum += 1 / edge.Weight.Invoke();
+         //}
+         double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
+
+         //Calcolo del termine della distanza.
+         double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
          {
             RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
             double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
-            distanceTerm += nodeDistScoreTerm / distanceWeightSum;
-         }
+            return nodeDistScoreTerm / distanceWeightSum;
+         });
+         //double distanceTerm = default;
+         //foreach (var node in solution.SolutionGraph.Nodes)
+         //{
+         //   RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
+         //   double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
+         //   distanceTerm += nodeDistScoreTerm / distanceWeightSum;
+         //}
 
          return (int)Math.Round((lambda * scoreTerm) + ((1 - lambda) * distanceTerm));
       }

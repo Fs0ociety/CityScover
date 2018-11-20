@@ -73,6 +73,12 @@ namespace CityScover.Engine
          }
       }
 
+      internal bool ForceStop
+      {
+         get;
+         private protected set;
+      }
+
       internal bool AcceptImprovementsOnly
       {
          get => _acceptImprovementsOnly;
@@ -140,7 +146,6 @@ namespace CityScover.Engine
 
       #region Internal abstract methods
       internal abstract Task PerformStep();
-      internal abstract bool StopConditions();
       #endregion
 
       #region Virtual methods
@@ -173,6 +178,11 @@ namespace CityScover.Engine
             Debug.WriteLine(exception.StackTrace);
             _provider.NotifyError(exception);
          }
+      }
+
+      internal virtual bool StopConditions()
+      {
+         return ForceStop || _status == AlgorithmStatus.Error;
       }
       #endregion
    }

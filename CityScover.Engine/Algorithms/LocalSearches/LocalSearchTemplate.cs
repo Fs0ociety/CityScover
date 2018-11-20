@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 17/11/2018
+// File update: 20/11/2018
 //
 
 using CityScover.Commons;
@@ -203,16 +203,6 @@ namespace CityScover.Engine.Algorithms
                _bestSolution = solution;
                _solutionsHistory.Add(solution);
                _currentSolutionCost = solution.Cost;
-
-               //if (CanDoImprovements)
-               //{
-               //var delta = _currentSolutionCost - _previousSolutionCost;
-               //   if (delta < _improvementThreshold)
-               //   {
-               //      _iterationsWithoutImprovement++;
-               //      _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-               //   }
-               //}
             }
 
             if (CanDoImprovements && delta < _improvementThreshold)
@@ -246,8 +236,7 @@ namespace CityScover.Engine.Algorithms
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == _currentSolutionCost ||
-            Status == AlgorithmStatus.Error;
+         return _previousSolutionCost == _currentSolutionCost || base.StopConditions();
       }
       #endregion
    }
