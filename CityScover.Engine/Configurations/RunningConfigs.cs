@@ -314,7 +314,7 @@ namespace CityScover.Engine.Configs
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 2)
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 5)
                      }
                   }
                },

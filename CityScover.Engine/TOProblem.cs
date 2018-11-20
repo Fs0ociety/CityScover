@@ -88,7 +88,7 @@ namespace CityScover.Engine
          int scoreTerm = solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
 
          // Il peso che determina l'importanza dei termini dell'equazione.
-         double lambda = 0.8;
+         double lambda = 0.6;
 
          // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
          // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.

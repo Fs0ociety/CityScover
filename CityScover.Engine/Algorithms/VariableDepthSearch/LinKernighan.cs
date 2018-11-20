@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/11/2018
+// File update: 20/11/2018
 //
 
 using CityScover.Commons;
@@ -160,9 +160,6 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          {
             throw new NullReferenceException();
          }
-
-         // Tolgo l'arco (j,i).
-         _currentSolutionGraph.RemoveEdge(_endPOI.Entity.Id, _startPOI.Entity.Id);
       }
 
       internal override async Task PerformStep()
@@ -170,8 +167,11 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKHStepIncreased, CurrentStep, MaxSteps);
          Console.ForegroundColor = ConsoleColor.Gray;
-
+         
          InterestPointWorker sNode = default;
+         
+         // Tolgo l'arco (j,i).
+         _currentSolutionGraph.RemoveEdge(_endPOI.Entity.Id, _startPOI.Entity.Id);
 
          var sNodesCandidates = GetClosestSNeighbors();
          foreach (var sNodeCandidate in sNodesCandidates)
@@ -192,9 +192,6 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             return;
          }
 
-         //int sNodeId = sNode.Entity.Id;
-         //_currentSolutionGraph.AddRouteFromGraph(_cityMap, _endPOI.Entity.Id, sNodeId);
-
          int junctionNodeId = BuildHamiltonianPath(sNode.Entity.Id);
 
          SwapNodes(sNode.Entity.Id);
@@ -214,6 +211,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          {
             Provider.NotifyObservers(newSolution);
          }
+
+         _endPOI = _currentSolutionGraph.GetEndPoint();
       }
 
       internal override void OnTerminating()
