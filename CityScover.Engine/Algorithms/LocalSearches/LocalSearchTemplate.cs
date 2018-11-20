@@ -116,7 +116,7 @@ namespace CityScover.Engine.Algorithms
             }
             algorithm.Parameters = child.AlgorithmParameters;
             algorithm.Provider = Provider;
-         
+
             yield return algorithm;
          }
       }
@@ -153,9 +153,12 @@ namespace CityScover.Engine.Algorithms
          _solutionsHistory = new Collection<TOSolution>();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          CanDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
-         _improvementThreshold = Parameters[ParameterCodes.LKimprovementThreshold];
-         _maxIterationsWithoutImprovements = Parameters[ParameterCodes.LSmaxRunsWithNoImprovements];
 
+         if (CanDoImprovements)
+         {
+            _improvementThreshold = Parameters[ParameterCodes.LKimprovementThreshold];
+            _maxIterationsWithoutImprovements = Parameters[ParameterCodes.LSmaxRunsWithNoImprovements];
+         }
          _bestSolution = Solver.BestSolution;
          _solutionsHistory.Add(_bestSolution);
          SendMessage(MessageCode.LSStartSolution, _bestSolution.Id, _bestSolution.Cost);
@@ -203,7 +206,7 @@ namespace CityScover.Engine.Algorithms
 
                //if (CanDoImprovements)
                //{
-                  //var delta = _currentSolutionCost - _previousSolutionCost;
+               //var delta = _currentSolutionCost - _previousSolutionCost;
                //   if (delta < _improvementThreshold)
                //   {
                //      _iterationsWithoutImprovement++;
@@ -211,7 +214,7 @@ namespace CityScover.Engine.Algorithms
                //   }
                //}
             }
-            
+
             if (CanDoImprovements && delta < _improvementThreshold)
             {
                _iterationsWithoutImprovement++;

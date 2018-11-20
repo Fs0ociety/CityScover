@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 17/11/2018
+// File update: 20/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -59,7 +59,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             {
                throw new NullReferenceException(nameof(algorithm));
             }
-            
+
             algorithm.Parameters = child.AlgorithmParameters;
             algorithm.Provider = Provider;
 
@@ -102,7 +102,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             var adjNode = _cityMapClone[adjPOIId];
             if (adjNode.IsVisited)
             {
-                return;
+               return;
             }
 
             var deltaScore = Math.Abs(adjNode.Entity.Score.Value - interestPoint.Entity.Score.Value);
@@ -113,7 +113,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             }
             else if (deltaScore == bestScore)
             {
-               CityMapGraph.SetRandomCandidateId(candidateNode, adjNode, out int pointId);               
+               CityMapGraph.SetRandomCandidateId(candidateNode, adjNode, out int pointId);
                candidateNode = _cityMapClone[pointId];
             }
          });
@@ -126,12 +126,17 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;         
-         int maxNodesToAdd = Parameters[ParameterCodes.GREEDYmaxNodesToAdd];
-         _solutionsHistory = new Collection<TOSolution>();
-         _processingNodes = new Queue<int>();
+         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          _tour = new CityMapGraph();
+         _processingNodes = new Queue<int>();
+         _solutionsHistory = new Collection<TOSolution>();
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
+         int maxNodesToAdd = default;
+
+         if (Parameters.ContainsKey(ParameterCodes.GREEDYmaxNodesToAdd))
+         {
+            maxNodesToAdd = Parameters[ParameterCodes.GREEDYmaxNodesToAdd];
+         }
 
          Solver.CityMapGraph.TourPoints
             .Select(node => node.Entity.Id)
