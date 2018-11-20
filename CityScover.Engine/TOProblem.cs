@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/11/2018
+// File update: 19/11/2018
 //
 
 using CityScover.Commons;
@@ -35,7 +35,7 @@ namespace CityScover.Engine
       {
          var solverConfig = Solver.Instance.WorkingConfiguration;
          _tMax = solverConfig.ArrivalTime.Add(solverConfig.TourDuration);
-         ObjectiveFunc = CalculateCost2;
+         ObjectiveFunc = CalculateCost;
          PenaltyFunc = CalculatePenalty;
          IsMinimizing = false;
 
@@ -74,7 +74,7 @@ namespace CityScover.Engine
 
       #region Objective Function delegates
       /// <summary>
-      /// Calculates the solution cost passed as parameter.
+      /// Calculates the solution cost passed as parameter using an equation of convex combination.
       /// </summary>
       /// <param name="solution">
       /// Solution to evaluate.
@@ -82,10 +82,7 @@ namespace CityScover.Engine
       /// <returns>
       /// An Evaluation Object.
       /// </returns>
-      private int CalculateCost(TOSolution solution) => 
-         solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
-
-      private int CalculateCost2(TOSolution solution)
+      private int CalculateCost(TOSolution solution)
       {
          // Calcolo del termine del gradimento.
          int scoreTerm = solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);

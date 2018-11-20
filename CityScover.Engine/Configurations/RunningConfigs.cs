@@ -113,6 +113,10 @@ namespace CityScover.Engine.Configs
                               [ParameterCodes.CanDoImprovements] = true,
                               [ParameterCodes.LKimprovementThreshold] = 2000,
                               [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                           },
+                           ChildrenFlows =
+                           {
+
                            }
                         }
                      }

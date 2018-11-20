@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/11/2018
+// File update: 20/11/2018
 //
 
 using CityScover.Commons;
@@ -136,9 +136,21 @@ namespace CityScover.Services
             if (hndTmaxThreshold != default)
             {
                WriteLine($"{tabulator}     " +
-                  $"TMax threshold:  \"" +
+                  $"TMax threshold:\t   \"" +
                   $"{hndTmaxThreshold.Hours + " hour" + ((hndTmaxThreshold.Hours == 1) ? string.Empty : "s ")} and " +
                   $"{hndTmaxThreshold.Minutes} minutes.\"");
+            }
+         }
+
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HNDtimeWalkThreshold))
+         {
+            TimeSpan hndTimeWalkThreshold = flow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold];
+            if (hndTimeWalkThreshold != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Time Walk threshold:\t\"" +
+                  $"{hndTimeWalkThreshold.Hours + " hour" + ((hndTimeWalkThreshold.Hours == 1) ? string.Empty : "s ")} and " +
+                  $"{hndTimeWalkThreshold.Minutes} minutes.\"");
             }
          }
 
@@ -572,7 +584,6 @@ namespace CityScover.Services
          bool canProceed = default;
          string[] formats = { "g", "G", "%h" };
          TimeSpan? tourDuration = default;
-         CultureInfo culture = CultureInfo.CurrentCulture;
 
          WriteLine("\n-----> TOUR DURATION <-----\n");
          do
@@ -585,7 +596,7 @@ namespace CityScover.Services
                break;
             }
 
-            canProceed = TimeSpan.TryParseExact(tourDurationStr, formats, culture, out var interval)
+            canProceed = TimeSpan.TryParseExact(tourDurationStr, formats, CultureInfo.CurrentCulture, out var interval)
                && interval.Hours >= 1;
 
             if (canProceed)
@@ -722,22 +733,12 @@ namespace CityScover.Services
 
             if (response == "y" || response == "Y")
             {
-               WriteLine($"Select an improvement algorithm for stage {stageId}.\n");
-               AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
-
-               if (improvementAlgorithm != AlgorithmType.None)
-               {
-                  int runningCount = GetAlgorithmIterations();
-                  var (maxRunsWithNoImprovements, improvementThreshold) = GetLocalSearchParameters(runningCount);
-                  stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
-                  stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
-                  stage.Flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
-               }
-               else
-               {
-                  ResetStage(stage);
-               }
+               SetStageImprovementSettings(stageId, stage);
             }
+         }
+         else
+         {
+            ResetStage(stage);
          }
       }
 
@@ -762,7 +763,79 @@ namespace CityScover.Services
                stage.Flow.ChildrenFlows.Add(new StageFlow(lsAlgorithm, runningCount));
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations] = maxDeadlockIterations;
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUtenureFactor] = tenureFactor;
+               bool canExecuteImprovements = GetCanDoImprovements();
+
+               if (canExecuteImprovements)
+               {
+                  SetStageImprovementSettings(stageId, stage);
+               }
             }
+            else
+            {
+               ResetStage(stage);
+            }
+         }
+         else
+         {
+            ResetStage(stage);
+         }
+      }
+
+      private void SetStageImprovementSettings(int stageId, Stage stage)
+      {
+         string response = string.Empty;
+         Write($"How many improvement algorithms do you want to run for stage {stageId}? [Max: 2]: ");
+         response = ReadLine().Trim();
+
+         if (int.TryParse(response, out int improvements) &&
+            improvements >= 1 && improvements <= 2)
+         {
+            if (improvements == 1)
+            {
+               AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
+               if (improvementAlgorithm != AlgorithmType.None)
+               {
+                  SetImprovementAlgorithmParams(stage, improvementAlgorithm);
+               }
+            }
+            else
+            {
+               for (int i = 1; i <= improvements; i++)
+               {
+                  WriteLine($"\nSet the improvement algorithm number {i}.\n");
+                  AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
+                  if (improvementAlgorithm != AlgorithmType.None)
+                  {
+                     SetImprovementAlgorithmParams(stage, improvementAlgorithm);
+                  }
+               }
+            }
+         }
+         else
+         {
+            ResetStage(stage);
+         }
+      }
+
+      private void SetImprovementAlgorithmParams(Stage stage, AlgorithmType improvementAlgorithm)
+      {
+         if (improvementAlgorithm == AlgorithmType.LinKernighan)
+         {
+            int runningCount = GetAlgorithmIterations();
+            var (maxRunsWithNoImprovements, improvementThreshold) = GetLocalSearchParameters(runningCount);
+            stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
+            stage.Flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
+            stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+         }
+         else if (improvementAlgorithm == AlgorithmType.HybridNearestDistance)
+         {
+            var (tMaxThreshold, timeWalkThreshold) = GetCustomAlgorithmParameters();
+            stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount: 1));
+            StageFlow stageFlow = stage.Flow.ChildrenFlows
+               .Where(flow => flow.CurrentAlgorithm == improvementAlgorithm)
+               .FirstOrDefault();
+            stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
+            stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
          }
       }
 
@@ -860,6 +933,28 @@ namespace CityScover.Services
          }
 
          return algorithm;
+      }
+
+      private bool GetCanDoImprovements()
+      {
+         bool canProceed = default;
+         string response = string.Empty;
+
+         do
+         {
+            Write("Do you want MetaHeuristic algorithm can executes improvements? [y/N]: ");
+            response = ReadLine().Trim();
+
+            canProceed = response == "y" || response == "Y" ||
+               response == "n" || response == "N";
+
+            if (!canProceed)
+            {
+               WriteLine("Entered invalid string. Insert only \"y|Y\" or \"n|N\".\n");
+            }
+         } while (!canProceed);
+
+         return response == "y" || response == "Y";
       }
 
       private (int, int) GetLocalSearchParameters(int maxIterations)
@@ -977,6 +1072,44 @@ namespace CityScover.Services
          } while (!canProceed);
 
          return (maxDeadlockIterations, tenureFactor);
+      }
+
+      private (TimeSpan, TimeSpan) GetCustomAlgorithmParameters()
+      {
+         const string tMaxDescription = "time threshold to tmax";
+         const string timeWalkDescription = "time walk threshold for a route";
+         TimeSpan tMaxThreshold = default;
+         TimeSpan timeWalkThreshold = default;
+         bool canProceed = default;
+
+         do
+         {
+            Write($"Insert the \"{tMaxDescription.ToUpper()}\" for custom algorithm in the format hours and minutes [H:min]: ");
+            string value = ReadLine().Trim();
+            canProceed = TimeSpan.TryParse(value, out tMaxThreshold);
+
+            if (tMaxThreshold.Hours == 0 && tMaxThreshold.Minutes == 0)
+            {
+               canProceed = false;
+            }
+         } while (!canProceed);
+
+         canProceed = default;
+
+         do
+         {
+            Write($"Insert the \"{timeWalkDescription.ToUpper()}\" for custom algorithm in the format hours and minutes [H:min]: ");
+            string value = ReadLine().Trim();
+            canProceed = TimeSpan.TryParse(value, out timeWalkThreshold);
+
+            if (timeWalkThreshold.Hours == 0 && timeWalkThreshold.Minutes == 0)
+            {
+               canProceed = false;
+            }
+
+         } while (!canProceed);
+
+         return (tMaxThreshold, timeWalkThreshold);
       }
 
       private int GetAlgorithmIterations()
