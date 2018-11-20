@@ -32,6 +32,7 @@ namespace CityScover.Services
       private DateTime? _arrivalTime = default;
       private TimeSpan? _tourDuration = default;
       private bool? _algorithmMonitoring = default;
+      private double? _lambdaWeight = default;
       private TourCategoryType _tourCategory = default;
       private Collection<Stage> _stages = new Collection<Stage>();
 
@@ -136,7 +137,7 @@ namespace CityScover.Services
             if (hndTmaxThreshold != default)
             {
                WriteLine($"{tabulator}     " +
-                  $"TMax threshold:\t   \"" +
+                  $"TMax threshold:      \"" +
                   $"{hndTmaxThreshold.Hours + " hour" + ((hndTmaxThreshold.Hours == 1) ? string.Empty : "s ")} and " +
                   $"{hndTmaxThreshold.Minutes} minutes.\"");
             }
@@ -148,7 +149,7 @@ namespace CityScover.Services
             if (hndTimeWalkThreshold != default)
             {
                WriteLine($"{tabulator}     " +
-                  $"Time Walk threshold:\t\"" +
+                  $"Time Walk threshold:    \"" +
                   $"{hndTimeWalkThreshold.Hours + " hour" + ((hndTimeWalkThreshold.Hours == 1) ? string.Empty : "s ")} and " +
                   $"{hndTimeWalkThreshold.Minutes} minutes.\"");
             }
@@ -293,6 +294,7 @@ namespace CityScover.Services
 
          if (canCreateConfiguration)
          {
+            _lambdaWeight = GetLambdaWeight();
             _algorithmMonitoring = GetAlgorithmMonitoring();
             WriteLine("\nCreation of new configuration in progress...!\n");
             await Task.Delay(TimeSpan.FromSeconds(1))
@@ -393,14 +395,12 @@ namespace CityScover.Services
          {
             WriteLine("\n-----> PROBLEM SIZE <-----\n");
             WriteLine("1. 15 nodes");
-            WriteLine("2. 20 nodes");
-            WriteLine("3. 30 nodes");
-            WriteLine("4. 45 nodes");
-            WriteLine("5. 60 nodes");
-            WriteLine("6. 75 nodes");
-            WriteLine("7. 90 nodes");
-            WriteLine("8. Over 100 nodes");
-            WriteLine("9. Back\n");
+            WriteLine("2. 30 nodes");
+            WriteLine("3. 45 nodes");
+            WriteLine("4. 60 nodes");
+            WriteLine("5. 75 nodes");
+            WriteLine("6. 90 nodes");
+            WriteLine("7. Back\n");
 
             Write("Enter a problem size [number of nodes]: ");
             choice = ReadLine().Trim();
@@ -412,33 +412,25 @@ namespace CityScover.Services
                   nodesCount = 15;
                   break;
                case "2":
-                  nodesCount = 20;
-                  break;
-               case "3":
                   nodesCount = 30;
                   break;
-               case "4":
+               case "3":
                   nodesCount = 45;
                   break;
-               case "5":
+               case "4":
                   nodesCount = 60;
                   break;
-               case "6":
+               case "5":
                   nodesCount = 75;
                   break;
-               case "7":
+               case "6":
                   nodesCount = 90;
                   break;
-               case "8":
-                  Write("Insert a custom number of nodes: ");
-                  choice = ReadLine().Trim();
-                  nodesCount = int.Parse(choice);
-                  break;
-               case "9":
+               case "7":
                   break;
                default:
                   canProceed = false;
-                  WriteLine("Enter a value between [1-8].\n");
+                  WriteLine("Enter a value between [1-7].\n");
                   break;
             }
          } while (!canProceed);
@@ -513,10 +505,6 @@ namespace CityScover.Services
             canProceed = double.TryParse(walkingSpeedStr, out var walkSpeed)
                || walkSpeed >= 1 && walkSpeed <= 6;
 
-            if (walkingSpeedStr == string.Empty)
-            {
-               break;
-            }
             if (canProceed)
             {
                walkingSpeed = walkSpeed;
@@ -620,6 +608,44 @@ namespace CityScover.Services
       }
       #endregion
 
+      #region Lambda weight menu
+      private double? GetLambdaWeight()
+      {
+         string valueStr = string.Empty;
+         double? lambda = default;
+         bool canProceed = default;
+
+         WriteLine("\n-----> CONVEX COMBINATION: [z = lambda*x + (1 - lambda)*y] <-----\n");
+         do
+         {
+            Write("Insert the value between 0 and 1 of the lambda weight typed in floating point format: ");
+            valueStr = ReadLine().Trim();
+
+            if (valueStr.Contains("."))
+            {
+               valueStr = valueStr.Replace('.', ',');
+            }
+            canProceed = double.TryParse(valueStr, out double lambdaValue);
+
+            if (canProceed)
+            {
+               lambda = lambdaValue;
+            }
+            else
+            {
+               WriteLine("Invalid lambda value. Valid range is [0 - 1]\n");
+            }
+         } while (!canProceed);
+
+         if (lambda.HasValue)
+         {
+            WriteLine($"\n\"Lambda weight\" set to {lambda.Value}\n");
+         }
+
+         return lambda;
+      }
+      #endregion
+
       #region Algorithm Monitoring menu
       private bool? GetAlgorithmMonitoring()
       {
@@ -630,7 +656,7 @@ namespace CityScover.Services
          WriteLine("\n-----> ALGORITHM MONITORING <-----\n");
          do
          {
-            WriteLine("Do you want to monitor algorithms's executions? [y/N]");
+            Write("Do you want to monitor algorithms's executions? [y/N]: ");
             choice = ReadLine().Trim();
 
             if (choice == "y" || choice == "Y")
@@ -643,7 +669,7 @@ namespace CityScover.Services
             }
             else
             {
-               WriteLine("Invalid choice. Enter \"y | Y\" or \"n | N\"");
+               WriteLine("Invalid choice. Enter \"y\" or \"Y\" or \"n\" or \"N\"");
             }
 
             canProceed = toMonitoring.HasValue;
@@ -702,6 +728,8 @@ namespace CityScover.Services
          stage.Category = AlgorithmFamily.Greedy;
          algorithm = GetGreedyAlgorithm();
          stage.Flow.CurrentAlgorithm = algorithm;
+
+         // TODO: Ask for GREEDY MAX NODES TO ADD!
       }
 
       private void SetSecondStage(int stageId, Stage stage)
@@ -719,6 +747,7 @@ namespace CityScover.Services
             do
             {
                stage.Flow.CurrentAlgorithm = algorithm;
+               stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;
                WriteLine($"Do you want to set an improvement algorithm for stage {stageId}? [y/N]: ");
                response = ReadLine().Trim();
 
@@ -760,14 +789,20 @@ namespace CityScover.Services
             {
                int runningCount = GetAlgorithmIterations();
                var (maxDeadlockIterations, tenureFactor) = GetMetaHeuristicParameters(runningCount);
-               stage.Flow.ChildrenFlows.Add(new StageFlow(lsAlgorithm, runningCount));
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations] = maxDeadlockIterations;
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUtenureFactor] = tenureFactor;
+               StageFlow stageFlow = new StageFlow(lsAlgorithm, runningCount);
                bool canExecuteImprovements = GetCanDoImprovements();
 
                if (canExecuteImprovements)
                {
+                  stageFlow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;
+                  stage.Flow.ChildrenFlows.Add(stageFlow);
                   SetStageImprovementSettings(stageId, stage);
+               }
+               else
+               {
+                  stageFlow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = false;
                }
             }
             else
@@ -792,6 +827,7 @@ namespace CityScover.Services
          {
             if (improvements == 1)
             {
+               WriteLine();
                AlgorithmType improvementAlgorithm = GetImprovementAlgorithm();
                if (improvementAlgorithm != AlgorithmType.None)
                {
@@ -823,19 +859,48 @@ namespace CityScover.Services
          {
             int runningCount = GetAlgorithmIterations();
             var (maxRunsWithNoImprovements, improvementThreshold) = GetLocalSearchParameters(runningCount);
-            stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
-            stage.Flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
-            stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+
+            if (stage.Description == StageType.StageTwo)
+            {
+               stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
+               stage.Flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
+               stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+            }
+            else if (stage.Description == StageType.StageThree)
+            {
+               foreach (var childFlow in stage.Flow.ChildrenFlows)
+               {
+                  childFlow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
+                  childFlow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
+                  childFlow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+               }
+            }
          }
          else if (improvementAlgorithm == AlgorithmType.HybridNearestDistance)
          {
             var (tMaxThreshold, timeWalkThreshold) = GetCustomAlgorithmParameters();
-            stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount: 1));
-            StageFlow stageFlow = stage.Flow.ChildrenFlows
-               .Where(flow => flow.CurrentAlgorithm == improvementAlgorithm)
-               .FirstOrDefault();
-            stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
-            stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
+
+            if (stage.Description == StageType.StageTwo)
+            {
+               StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
+               //stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount: 1));
+               //StageFlow stageFlow = stage.Flow.ChildrenFlows
+               //   .Where(flow => flow.CurrentAlgorithm == improvementAlgorithm)
+               //   .FirstOrDefault();
+               stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
+               stage.Flow.ChildrenFlows.Add(stageFlow);
+            }
+            else if (stage.Description == StageType.StageThree)
+            {
+               foreach (var childFlow in stage.Flow.ChildrenFlows)
+               {
+                  StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
+                  stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
+                  stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
+                  childFlow.ChildrenFlows.Add(stageFlow);
+               }
+            }
          }
       }
 
