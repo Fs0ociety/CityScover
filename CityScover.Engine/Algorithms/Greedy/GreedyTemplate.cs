@@ -187,7 +187,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          SendMessage(MessageCode.GreedyFinish);
          base.OnTerminated();
 
-         Task improvementTask = Task.Run(() => RunImprovementAlgorithms());
+         Task improvementTask = RunImprovementAlgorithms();
          try
          {
             improvementTask.Wait();
@@ -202,10 +202,10 @@ namespace CityScover.Engine.Algorithms.Greedy
          }
       }
 
-      //internal override bool StopConditions()
-      //{
-      //   return Status == AlgorithmStatus.Error;
-      //}
+      internal override bool StopConditions()
+      {
+         return !_processingNodes.Any() || base.StopConditions();
+      }
       #endregion
    }
 }

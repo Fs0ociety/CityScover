@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 20/11/2018
+// File update: 21/11/2018
 //
 
 using CityScover.Commons;
@@ -219,7 +219,15 @@ namespace CityScover.Engine.Algorithms
 
          if (CanDoImprovements && _shouldRunImprovementAlgorithm)
          {
-            await RunImprovementAlgorithms();
+            Task improvementTask = RunImprovementAlgorithms();
+            try
+            {
+               improvementTask.Wait();
+            }
+            catch (AggregateException ae)
+            {
+               OnError(ae.InnerException);
+            }
             SendMessage(MessageCode.LSResumeSolution, _bestSolution.Id, _bestSolution.Cost);
          }
       }

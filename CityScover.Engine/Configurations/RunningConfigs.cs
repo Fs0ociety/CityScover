@@ -108,15 +108,24 @@ namespace CityScover.Engine.Configs
                      {
                         new StageFlow(AlgorithmType.TwoOpt)
                         {
+                           ChildrenFlows =
+                           {
+                              new StageFlow(AlgorithmType.LinKernighan, 20),
+                              new StageFlow(AlgorithmType.HybridNearestDistance)
+                              {
+                                 AlgorithmParameters =
+                                 {
+                                    [ParameterCodes.CanDoImprovements] = true,
+                                    [ParameterCodes.HNDtMaxThreshold] = new TimeSpan(1, 0, 0),
+                                    [ParameterCodes.HNDtimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                                 }
+                              }
+                           },
                            AlgorithmParameters =
                            {
                               [ParameterCodes.CanDoImprovements] = true,
                               [ParameterCodes.LKimprovementThreshold] = 2000,
                               [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
-                           },
-                           ChildrenFlows =
-                           {
-
                            }
                         }
                      }
@@ -322,7 +331,7 @@ namespace CityScover.Engine.Configs
          };
          #endregion
 
-         _configurations.Add(c5Test);
+         _configurations.Add(c1Test);
       }
       #endregion
 

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 17/11/2018
+// File update: 21/11/2018
 //
 
 using CityScover.Commons;
@@ -257,6 +257,25 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _tour.AddRouteFromGraph(Solver.CityMapGraph, predecessorNodeKey, nodeKeyToRestore);
          _tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToRestore, successorNodeKey);
       }
+
+      private void Restart()
+      {
+         Algorithm algorithm = new HybridNearestDistance
+         {
+            Parameters = Parameters,
+            Provider = Provider
+         };
+
+         Task algorithmTask = Task.Run(() => algorithm.Start());
+         try
+         {
+            algorithmTask.Wait();
+         }
+         catch (AggregateException ae)
+         {
+            OnError(ae.InnerException);
+         }
+      }
       #endregion
 
       #region Overrides
@@ -360,15 +379,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          if (_isTourUpdated)
          {
-            Task algorithmTask = Task.Run(() => new HybridNearestDistance().Start());
-            try
-            {
-               algorithmTask.Wait();
-            }
-            catch (AggregateException ae)
-            {
-               OnError(ae.InnerException);
-            }
+            Restart();
          }
       }
 

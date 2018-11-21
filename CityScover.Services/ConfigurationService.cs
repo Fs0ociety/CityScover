@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 20/11/2018
+// File update: 21/11/2018
 //
 
 using CityScover.Commons;
@@ -87,7 +87,7 @@ namespace CityScover.Services
             if (canDoImprovements != default)
             {
                WriteLine($"{tabulator}     " +
-                  $"Can {flow.CurrentAlgorithm} executes improvements:  \"{canDoImprovements}\"");
+                  $"Can do improvements: \"{canDoImprovements}\"");
             }
          }
 
@@ -149,7 +149,7 @@ namespace CityScover.Services
             if (hndTimeWalkThreshold != default)
             {
                WriteLine($"{tabulator}     " +
-                  $"Time Walk threshold:    \"" +
+                  $"Time Walk threshold: \"" +
                   $"{hndTimeWalkThreshold.Hours + " hour" + ((hndTimeWalkThreshold.Hours == 1) ? string.Empty : "s ")} and " +
                   $"{hndTimeWalkThreshold.Minutes} minutes.\"");
             }
@@ -158,10 +158,11 @@ namespace CityScover.Services
          if (flow.ChildrenFlows.Any())
          {
             WriteLine($"\n{tabulator}     \"{flow.CurrentAlgorithm} inner algorithms\"");
+            string tab = tabulator + "   ";
             foreach (var children in flow.ChildrenFlows)
             {
                WriteLine($"{tabulator}     " + "{");
-               DisplayStageFlow(children, "\t" + string.Concat(Enumerable.Repeat("   ", 1)));
+               DisplayStageFlow(children, tab);
                WriteLine($"{tabulator}     " + "}");
             }
          }
@@ -290,6 +291,10 @@ namespace CityScover.Services
             {
                await Task.Delay(700).ConfigureAwait(continueOnCapturedContext: false);
             }
+            else
+            {
+               ResetParameters();
+            }
          }
 
          if (canCreateConfiguration)
@@ -297,8 +302,7 @@ namespace CityScover.Services
             _lambdaWeight = GetLambdaWeight();
             _algorithmMonitoring = GetAlgorithmMonitoring();
             WriteLine("\nCreation of new configuration in progress...!\n");
-            await Task.Delay(TimeSpan.FromSeconds(1))
-               .ConfigureAwait(continueOnCapturedContext: false);
+            await Task.Delay(1000).ConfigureAwait(continueOnCapturedContext: false);
             Configuration config = CreateConfiguration();
             Configurations.Add(config);
             WriteLine("New custom configuration created successfully and added to available configurations!\n");
@@ -577,7 +581,7 @@ namespace CityScover.Services
          do
          {
             Write("Insert the duration of the tour. Valid format: [hh:mm OR h:m] " +
-               "[Press \"Enter\" key to go back.]\n");
+               "[Press \"Enter\" key to go back.]: ");
             tourDurationStr = ReadLine().Trim();
             if (tourDurationStr == string.Empty)
             {
@@ -749,7 +753,7 @@ namespace CityScover.Services
             {
                stage.Flow.CurrentAlgorithm = algorithm;
                stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;
-               WriteLine($"Do you want to set an improvement algorithm for stage {stageId}? [y/N]: ");
+               Write($"Do you want to set an improvement algorithm for stage {stageId}? [y/N]: ");
                response = ReadLine().Trim();
 
                canProceed = response == "y" || response == "Y" ||
@@ -1216,8 +1220,8 @@ namespace CityScover.Services
          stage.Flow.AlgorithmParameters.Clear();
       }
       #endregion
+      
       #endregion
-
       #endregion
 
       #region IConfigurationService implementation

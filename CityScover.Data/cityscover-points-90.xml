@@ -886,7 +886,7 @@
     <!-- Nr. 68 -->
     <!-- Gatto Bianco -->
     <PointOfInterest id="68" name="Gatto Bianco">
-      <Coordinates latitude="44,832703" longitude="11.618762"/>
+      <Coordinates latitude="44,832703" longitude="11,618762"/>
       <Category id="2"/>
       <ThematicScore category="2" value="50"/>
       <OpeningTimes>
