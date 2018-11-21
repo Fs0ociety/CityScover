@@ -625,7 +625,8 @@ namespace CityScover.Services
             {
                valueStr = valueStr.Replace('.', ',');
             }
-            canProceed = double.TryParse(valueStr, out double lambdaValue);
+            canProceed = double.TryParse(valueStr, out double lambdaValue) && 
+               lambdaValue >= 0 && lambdaValue <= 1;
 
             if (canProceed)
             {

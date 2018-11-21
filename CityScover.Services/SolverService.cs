@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/10/2018
+// File update: 21/11/2018
 //
 
 using CityScover.Commons;
@@ -44,7 +44,6 @@ namespace CityScover.Services
          foreach (var tourConfig in _tourConfigurations)
          {
             await solver.Execute(tourConfig);
-            //ReportConfiguration();
          }
       }
 
@@ -52,14 +51,6 @@ namespace CityScover.Services
       {
          var solver = Solver.Instance;
          await Task.Run(() => solver.Execute(configuration));
-         //ReportConfiguration();
-      }
-
-      public void ReportConfiguration()
-      {
-         // Usa stampe ordinate. Valutare un eventuale ReportService.
-         // Accedere ai dati contenuti nel Solver per la visualizzazione ordinata delle informazioni relative alla configurazione eseguita.
-         throw new System.NotImplementedException();
       }
       #endregion
    }

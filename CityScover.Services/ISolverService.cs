@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/10/2018
+// File update: 21/11/2018
 //
 
 using CityScover.Engine;
@@ -26,10 +26,5 @@ namespace CityScover.Services
       /// </summary>
       /// <param name="configuration">Configuration to execute.</param>
       Task Run(Configuration configuration);
-
-      /// <summary>
-      /// Invoke the Solver instance to display results at the end of Configuration's execution.
-      /// </summary>
-      void ReportConfiguration();
    }
 }
