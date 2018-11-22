@@ -146,6 +146,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
+         // DA PULIRE Istanza di Local Search ad ogni giro successivo al primo!!!
+
          _innerAlgorithm.AcceptImprovementsOnly = false;
          _innerAlgorithm.Provider = Provider;
          _currentBestSolution = Solver.BestSolution;

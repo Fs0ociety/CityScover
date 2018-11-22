@@ -224,16 +224,6 @@ namespace CityScover.Engine.Algorithms
          }
          else
          {
-            _bestSolution = solution;
-            var delta = _currentSolutionCost - _previousSolutionCost;
-            if (CanDoImprovements && delta < _improvementThreshold)
-            {
-               _iterationsWithoutImprovement++;
-               _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-            }
-         }
-         else
-         {
             CurrentBestSolution = solution;
             _currentSolutionCost = solution.Cost;
 

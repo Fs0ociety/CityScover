@@ -188,6 +188,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                continue;
             }
 
+            int predecessorPointId = _tour.Edges
+               .Where(edge => edge.Entity.PointTo.Id == tourPointToRemove.Entity.Id)
+               .Select(edge => edge.Entity.PointFrom.Id)
+               .FirstOrDefault();
+          
             RouteWorker outgoingEdge = _tour.Edges
                .Where(edge => edge.Entity.PointFrom.Id == tourPointToRemove.Entity.Id)
                .FirstOrDefault();
@@ -205,7 +210,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             }
 
             UpdateTourInternal(tourPointToRemove, candidateNode,
-               predecessorPoint.Entity.Id, successorPoint.Entity.Id);
+               predecessorPointId, successorPoint.Entity.Id);
 
             _currentSolution = new TOSolution()
             {
