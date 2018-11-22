@@ -34,7 +34,7 @@ namespace CityScover.Engine
       /// <summary>
       /// Lin Kernighan threshold to trigger improvement logic.
       /// </summary>
-      LKimprovementThreshold,
+      LSimprovementThreshold,
 
       /// <summary>
       /// Hybrid Nearest Distance algorithm's threshold for Tmax constraint.

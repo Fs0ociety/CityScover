@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 21/11/2018
+// File update: 22/11/2018
 //
 
 using CityScover.Commons;
@@ -27,6 +27,7 @@ namespace CityScover.Services
    public class ConfigurationService : Singleton<ConfigurationService>, IConfigurationService
    {
       private readonly int _maxStagesCount;
+      private readonly int _tourCategoriesCount;
       private int? _problemSize = default;
       private double? _walkingSpeed = default;
       private DateTime? _arrivalTime = default;
@@ -40,6 +41,7 @@ namespace CityScover.Services
       private ConfigurationService()
       {
          _maxStagesCount = 3;
+         _tourCategoriesCount = 3;
       }
       #endregion
 
@@ -101,9 +103,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LKimprovementThreshold))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LSimprovementThreshold))
          {
-            int lkImprovementThreshold = flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold];
+            int lkImprovementThreshold = flow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold];
             if (lkImprovementThreshold != default)
             {
                WriteLine($"{tabulator}     " +
@@ -398,12 +400,12 @@ namespace CityScover.Services
          do
          {
             WriteLine("\n-----> PROBLEM SIZE <-----\n");
-            WriteLine("1. 15 nodes");
-            WriteLine("2. 30 nodes");
-            WriteLine("3. 45 nodes");
-            WriteLine("4. 60 nodes");
-            WriteLine("5. 75 nodes");
-            WriteLine("6. 90 nodes");
+            WriteLine("1. 15 nodes (5 for each tour category)");
+            WriteLine("2. 30 nodes (10 for each tour category)");
+            WriteLine("3. 45 nodes (15 for each tour category)");
+            WriteLine("4. 60 nodes (20 for each tour category)");
+            WriteLine("5. 75 nodes (25 for each tour category)");
+            WriteLine("6. 90 nodes (30 for each tour category)");
             WriteLine("7. Back\n");
 
             Write("Enter a problem size [number of nodes]: ");
@@ -629,7 +631,7 @@ namespace CityScover.Services
             {
                valueStr = valueStr.Replace('.', ',');
             }
-            canProceed = double.TryParse(valueStr, out double lambdaValue) && 
+            canProceed = double.TryParse(valueStr, out double lambdaValue) &&
                lambdaValue >= 0 && lambdaValue <= 1;
 
             if (canProceed)
@@ -727,14 +729,52 @@ namespace CityScover.Services
 
       private void SetFirstStage(int stageId, Stage stage)
       {
+         bool canProceed = default;
+         string response = string.Empty;
          AlgorithmType algorithm;
          WriteLine($"Select the Greedy algorithm of stage number {stageId}.\n");
          stage.Description = StageType.StageOne;
          stage.Category = AlgorithmFamily.Greedy;
          algorithm = GetGreedyAlgorithm();
-         stage.Flow.CurrentAlgorithm = algorithm;
 
-         // TODO: Ask for GREEDY MAX NODES TO ADD!
+         if (algorithm != AlgorithmType.None)
+         {
+            stage.Flow.CurrentAlgorithm = algorithm;
+
+            do
+            {
+               Write("Do you want the Greedy algorithm takes into account improvements? [y/N]: ");
+               response = ReadLine().Trim();
+
+               canProceed = response == "y" || response == "Y" ||
+                  response == "n" || response == "N";
+
+               if (!canProceed)
+               {
+                  WriteLine("Entered invalid string. Insert only \"y\" or \"Y\" or \"n\" or \"N\".\n");
+               }
+            } while (!canProceed);
+
+            if (response == "y" || response == "Y")
+            {
+               int maxNodesToAdd = GetGreedyParameters();
+               var (tMaxThreshold, timeWalkThreshold) = GetCustomAlgorithmParameters();
+               stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;
+               stage.Flow.AlgorithmParameters[ParameterCodes.GREEDYmaxNodesToAdd] = maxNodesToAdd;
+               StageFlow stageFlow = new StageFlow(AlgorithmType.HybridNearestDistance);
+               stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
+               stage.Flow.ChildrenFlows.Add(stageFlow);
+            }
+            else
+            {
+               stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = false;
+            }
+         }
+         else
+         {
+            ResetStage(stage);
+         }
       }
 
       private void SetSecondStage(int stageId, Stage stage)
@@ -761,7 +801,7 @@ namespace CityScover.Services
 
                if (!canProceed)
                {
-                  WriteLine("Entered invalid string. Insert only \"y|Y\" or \"n|N\".\n");
+                  WriteLine("Entered invalid string. Insert only \"y\" or \"Y\" or \"n\" or \"N\".\n");
                }
             } while (!canProceed);
 
@@ -868,7 +908,7 @@ namespace CityScover.Services
             if (stage.Description == StageType.StageTwo)
             {
                stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
-               stage.Flow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
+               stage.Flow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
                stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
             }
             else if (stage.Description == StageType.StageThree)
@@ -876,7 +916,7 @@ namespace CityScover.Services
                foreach (var childFlow in stage.Flow.ChildrenFlows)
                {
                   childFlow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
-                  childFlow.AlgorithmParameters[ParameterCodes.LKimprovementThreshold] = improvementThreshold;
+                  childFlow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
                   childFlow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
                }
             }
@@ -888,10 +928,6 @@ namespace CityScover.Services
             if (stage.Description == StageType.StageTwo)
             {
                StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
-               //stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount: 1));
-               //StageFlow stageFlow = stage.Flow.ChildrenFlows
-               //   .Where(flow => flow.CurrentAlgorithm == improvementAlgorithm)
-               //   .FirstOrDefault();
                stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
                stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
                stage.Flow.ChildrenFlows.Add(stageFlow);
@@ -1025,6 +1061,37 @@ namespace CityScover.Services
          } while (!canProceed);
 
          return response == "y" || response == "Y";
+      }
+
+      private int GetGreedyParameters()
+      {
+         const string paramDescription = "maximum nodes to take into account";
+         int maxNodesToAdd = default;
+         bool canProceed = default;
+         string valueStr = string.Empty;
+
+         WriteLine("\n********** (TUNING PARAMETERS) **********\n");
+         do
+         {
+            Write($"Insert the \"{paramDescription.ToUpper()}\" (Valid range [5 - {(int)_problemSize / _tourCategoriesCount}]): ");
+            valueStr = ReadLine().Trim();
+
+            canProceed = int.TryParse(valueStr, out int value) &&
+               value > 5 && value <= (int)_problemSize / _tourCategoriesCount;
+
+            if (canProceed)
+            {
+               maxNodesToAdd = value;
+            }
+            else
+            {
+               WriteLine($"\nInvalid value for \"{paramDescription.ToUpper()}\".\n" +
+                  $"Insert a value greater than 5 and less than or equals to {(int)_problemSize / _tourCategoriesCount}.\n");
+            }
+
+         } while (!canProceed);
+
+         return maxNodesToAdd;
       }
 
       private (int, int) GetLocalSearchParameters(int maxIterations)
@@ -1220,7 +1287,7 @@ namespace CityScover.Services
          stage.Flow.AlgorithmParameters.Clear();
       }
       #endregion
-      
+
       #endregion
       #endregion
 

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 21/11/2018
+// File update: 22/11/2018
 //
 
 using CityScover.Commons;
@@ -47,6 +47,10 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          Type = AlgorithmType.HybridNearestDistance;
       }
+      #endregion
+
+      #region Internal properties
+      internal TOSolution CurrentBestSolution { get; set; }
       #endregion
 
       #region Private methods
@@ -90,7 +94,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          Collection<(RouteWorker, TimeSpan)> removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
 
          var centralTourRoutes = _tour.Edges
-            .Where(edge => edge.Entity.PointFrom.Id != _startPOI.Entity.Id && 
+            .Where(edge => edge.Entity.PointFrom.Id != _startPOI.Entity.Id &&
                            edge.Entity.PointTo.Id != _startPOI.Entity.Id);
 
          foreach (var route in centralTourRoutes)
@@ -130,12 +134,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             {
                break;
             }
-         
+
             InterestPointWorker candidateNode = _processingNodes.Dequeue();
 
             foreach (var (edge, tWalk) in removalEdgesCandidates)
             {
-               InterestPointWorker currentPointFrom = _tour.TourPoints
+               InterestPointWorker currentPointFrom = _tour.Nodes
                   .Where(point => point.Entity.Id == edge.Entity.PointFrom.Id)
                   .FirstOrDefault();
                if (currentPointFrom is null)
@@ -173,7 +177,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                   }
                   else if (pointToScore == currentPointScore)
                   {
-                     tourPointToRemove = (new Random().Next(2) == 0) 
+                     tourPointToRemove = (new Random().Next(2) == 0)
                         ? tourPointToRemove : currentPointTo;
                   }
                }
@@ -200,7 +204,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                throw new NullReferenceException(nameof(successorPoint));
             }
 
-            UpdateTourInternal(tourPointToRemove, candidateNode, 
+            UpdateTourInternal(tourPointToRemove, candidateNode,
                predecessorPoint.Entity.Id, successorPoint.Entity.Id);
 
             _currentSolution = new TOSolution()
@@ -209,7 +213,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             };
 
             tourUpdated = true;
-            SendMessage(MessageCode.HNDTourUpdated, 
+            SendMessage(MessageCode.HNDTourUpdated,
                tourPointToRemove.Entity.Name, candidateNode.Entity.Name);
             Solver.EnqueueSolution(_currentSolution);
             await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
@@ -217,19 +221,19 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             if (!_currentSolution.IsValid)
             {
-               UndoUpdateTourInternal(tourPointToRemove, candidateNode.Entity.Id, 
+               UndoUpdateTourInternal(tourPointToRemove, candidateNode.Entity.Id,
                   predecessorPoint.Entity.Id, successorPoint.Entity.Id);
                tourUpdated = false;
-               SendMessage(MessageCode.HNDTourRestored, 
+               SendMessage(MessageCode.HNDTourRestored,
                   candidateNode.Entity.Name, tourPointToRemove.Entity.Name);
-               
+
             }
          }
 
          _isTourUpdated = tourUpdated;
       }
 
-      private void UpdateTourInternal(InterestPointWorker nodeToRemove, InterestPointWorker nodeToAdd, 
+      private void UpdateTourInternal(InterestPointWorker nodeToRemove, InterestPointWorker nodeToAdd,
          int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToRemove = nodeToRemove.Entity.Id;
@@ -244,7 +248,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, successorNodeKey);
       }
 
-      private void UndoUpdateTourInternal(InterestPointWorker nodeToRestore, int nodeKeyToRemove, 
+      private void UndoUpdateTourInternal(InterestPointWorker nodeToRestore, int nodeKeyToRemove,
          int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToRestore = nodeToRestore.Entity.Id;
@@ -287,19 +291,23 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SendMessage(MessageCode.CustomAlgStart);
          }
          _processingNodes = new Queue<InterestPointWorker>();
-         TOSolution bestSolution = Solver.BestSolution;
-         Solver.PreviousStageSolutionCost = bestSolution.Cost;
 
-         _tour = bestSolution.SolutionGraph.DeepCopy();
+         if (CurrentBestSolution is null)
+         {
+            CurrentBestSolution = Solver.BestSolution;
+         }
+         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
+
+         _tour = CurrentBestSolution.SolutionGraph.DeepCopy();
          _timeWalkThreshold = Parameters[ParameterCodes.HNDtimeWalkThreshold];
          _tMaxThreshold = Parameters[ParameterCodes.HNDtMaxThreshold];
          _tMax = Solver.WorkingConfiguration.ArrivalTime
             .Add(Solver.WorkingConfiguration.TourDuration);
          _tMaxThresholdTime = _tMax - _tMaxThreshold;
-      
-         _startPOI = _tour.GetStartPoint() ?? throw 
+
+         _startPOI = _tour.GetStartPoint() ?? throw
             new NullReferenceException(nameof(_startPOI));
-         _endPOI = _tour.GetEndPoint() ?? throw 
+         _endPOI = _tour.GetEndPoint() ?? throw
             new NullReferenceException(nameof(_endPOI));
 
          AddPointsNotInTour();
@@ -387,7 +395,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          bool isGreaterThanTmaxThreshold = _endPOI.TotalTime > _tMaxThresholdTime;
 
-         bool shouldStop = isGreaterThanTmaxThreshold || !_processingNodes.Any() || 
+         bool shouldStop = isGreaterThanTmaxThreshold || !_processingNodes.Any() ||
             Status == AlgorithmStatus.Error;
 
          return shouldStop;

@@ -20,6 +20,8 @@ namespace CityScover.Engine.Algorithms.Greedy
 {
    internal abstract class GreedyTemplate : Algorithm
    {
+      private bool _canDoImprovements;
+
       #region Protected fields
       protected double _averageSpeedWalk;
       protected CityMapGraph _cityMapClone;
@@ -131,11 +133,16 @@ namespace CityScover.Engine.Algorithms.Greedy
          _processingNodes = new Queue<int>();
          _solutionsHistory = new Collection<TOSolution>();
          _cityMapClone = Solver.CityMapGraph.DeepCopy();
+         _canDoImprovements = default;
          int maxNodesToAdd = default;
 
-         if (Parameters.ContainsKey(ParameterCodes.GREEDYmaxNodesToAdd))
+         if (Parameters.ContainsKey(ParameterCodes.CanDoImprovements))
          {
-            maxNodesToAdd = Parameters[ParameterCodes.GREEDYmaxNodesToAdd];
+            _canDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
+            if (_canDoImprovements)
+            {
+               maxNodesToAdd = Parameters[ParameterCodes.GREEDYmaxNodesToAdd];
+            }
          }
 
          Solver.CityMapGraph.TourPoints
@@ -187,18 +194,17 @@ namespace CityScover.Engine.Algorithms.Greedy
          SendMessage(MessageCode.GreedyFinish);
          base.OnTerminated();
 
-         Task improvementTask = RunImprovementAlgorithms();
-         try
+         if (_canDoImprovements)
          {
-            improvementTask.Wait();
-         }
-         catch (AggregateException ae)
-         {
-            OnError(ae.InnerException);
-         }
-         finally
-         {
-            // TODO...
+            Task improvementTask = RunImprovementAlgorithms();
+            try
+            {
+               improvementTask.Wait();
+            }
+            catch (AggregateException ae)
+            {
+               OnError(ae.InnerException);
+            }
          }
       }
 
