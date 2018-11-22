@@ -196,25 +196,37 @@ namespace CityScover.Engine.Algorithms
          if (AcceptImprovementsOnly)
          {
             bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, _bestSolution.Cost);
-            var delta = _currentSolutionCost - _previousSolutionCost;
+            
             if (isBetterThanCurrentBestSolution)
             {
                SendMessage(MessageCode.LSBestFound, solution.Cost, _bestSolution.Cost);
                _bestSolution = solution;
                _solutionsHistory.Add(solution);
                _currentSolutionCost = solution.Cost;
-            }
 
-            if (CanDoImprovements && delta < _improvementThreshold)
+               var delta = _currentSolutionCost - _previousSolutionCost;
+               if (CanDoImprovements && delta < _improvementThreshold)
+               {
+                  _iterationsWithoutImprovement++;
+                  _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+               }
+            }
+            else
             {
                _iterationsWithoutImprovement++;
-               _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
             }
          }
          else
          {
             _bestSolution = solution;
             _currentSolutionCost = solution.Cost;
+
+            var delta = _currentSolutionCost - _previousSolutionCost;
+            if (CanDoImprovements && delta < _improvementThreshold)
+            {
+               _iterationsWithoutImprovement++;
+               _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+            }
          }
 
          if (CanDoImprovements && _shouldRunImprovementAlgorithm)
