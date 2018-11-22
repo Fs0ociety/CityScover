@@ -25,12 +25,11 @@ namespace CityScover.Engine.Algorithms
    {
       #region Private fields
       private int _previousSolutionCost;
-      private int _currentSolutionCost;
+      //private int _currentBestSolutionCost;
       private int _iterationsWithoutImprovement;
       private bool _shouldRunImprovementAlgorithm;
       private int _improvementThreshold;
       private int _maxIterationsWithoutImprovements;
-      //private TOSolution _bestSolution;
       private NeighborhoodFacade _neighborhoodFacade;
       private ICollection<TOSolution> _solutionsHistory;
       #endregion
@@ -52,6 +51,20 @@ namespace CityScover.Engine.Algorithms
       #region Internal properties
       internal TOSolution CurrentBestSolution { get; set; }
       internal bool CanDoImprovements { get; set; }
+      #endregion
+
+      #region Internal methods
+      internal void ResetState()
+      {
+         _previousSolutionCost = default;
+         //_currentBestSolutionCost = default;
+         _iterationsWithoutImprovement = default;
+         _shouldRunImprovementAlgorithm = default;
+         _improvementThreshold = default;
+         _maxIterationsWithoutImprovements = default;
+         CurrentBestSolution = default;
+         _solutionsHistory.Clear();
+      }
       #endregion
 
       #region Private methods
@@ -166,10 +179,9 @@ namespace CityScover.Engine.Algorithms
          {
             CurrentBestSolution = Solver.BestSolution;
          }
-         //_bestSolution = Solver.BestSolution;
          _solutionsHistory.Add(CurrentBestSolution);
          SendMessage(MessageCode.LSStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
-         _currentSolutionCost = CurrentBestSolution.Cost;
+         //_currentBestSolutionCost = CurrentBestSolution.Cost;
          _previousSolutionCost = default;
          _iterationsWithoutImprovement = default;
          _shouldRunImprovementAlgorithm = default;
@@ -194,46 +206,76 @@ namespace CityScover.Engine.Algorithms
          }
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
          var solution = GetBest(currentNeighborhood, CurrentBestSolution, null);
-         Console.ForegroundColor = ConsoleColor.Green;
+         Console.ForegroundColor = ConsoleColor.DarkGreen;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
 
-         _previousSolutionCost = _currentSolutionCost;
+         //_previousSolutionCost = _currentBestSolutionCost;
+         _previousSolutionCost = CurrentBestSolution.Cost;
 
-         if (AcceptImprovementsOnly)
-         {
-            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
-            if (isBetterThanCurrentBestSolution)
-            {
-               SendMessage(MessageCode.LSBestFound, solution.Cost, CurrentBestSolution.Cost);
-               CurrentBestSolution = solution;
-               _solutionsHistory.Add(solution);
-               _currentSolutionCost = solution.Cost;
-
-               var delta = _currentSolutionCost - _previousSolutionCost;
-               if (CanDoImprovements && delta < _improvementThreshold)
-               {
-                  _iterationsWithoutImprovement++;
-                  _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-               }
-            }
-            else
-            {
-               _iterationsWithoutImprovement++;
-            }
-         }
-         else
+         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
+         if (!AcceptImprovementsOnly || (AcceptImprovementsOnly && isBetterThanCurrentBestSolution))
          {
             CurrentBestSolution = solution;
-            _currentSolutionCost = solution.Cost;
+            //_currentBestSolutionCost = solution.Cost;
+         }
 
-            var delta = _currentSolutionCost - _previousSolutionCost;
-            if (CanDoImprovements && delta < _improvementThreshold)
+         if (isBetterThanCurrentBestSolution)
+         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            SendMessage(MessageCode.LSBestFound, solution.Cost, _previousSolutionCost);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            _solutionsHistory.Add(solution);
+            
+            //E' migliore, ma di quanto? Se il delta è 0 comunque incremento l'iterationsWithoutImprovement.
+            var delta = CurrentBestSolution.Cost - _previousSolutionCost;
+            if (delta < _improvementThreshold)
             {
                _iterationsWithoutImprovement++;
                _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
             }
          }
+         else
+         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            SendMessage(MessageCode.LSInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
+         }
+         
+         //if (AcceptImprovementsOnly)
+         //{
+         //   bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
+         //   if (isBetterThanCurrentBestSolution)
+         //   {
+         //      SendMessage(MessageCode.LSBestFound, solution.Cost, CurrentBestSolution.Cost);
+         //      CurrentBestSolution = solution;
+         //      _solutionsHistory.Add(solution);
+         //      _currentSolutionCost = solution.Cost;
+
+         //      var delta = _currentSolutionCost - _previousSolutionCost;
+         //      if (CanDoImprovements && delta < _improvementThreshold)
+         //      {
+         //         _iterationsWithoutImprovement++;
+         //         _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+         //      }
+         //   }
+         //   else
+         //   {
+         //      _iterationsWithoutImprovement++;
+         //   }
+         //}
+         //else
+         //{
+         //   CurrentBestSolution = solution;
+         //   _currentSolutionCost = solution.Cost;
+
+         //   var delta = _currentSolutionCost - _previousSolutionCost;
+         //   if (CanDoImprovements && delta < _improvementThreshold)
+         //   {
+         //      _iterationsWithoutImprovement++;
+         //      _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+         //   }
+         //}
 
          if (CanDoImprovements && _shouldRunImprovementAlgorithm)
          {
@@ -262,7 +304,7 @@ namespace CityScover.Engine.Algorithms
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == _currentSolutionCost || base.StopConditions();
+         return _previousSolutionCost == CurrentBestSolution.Cost || base.StopConditions();
       }
       #endregion
    }

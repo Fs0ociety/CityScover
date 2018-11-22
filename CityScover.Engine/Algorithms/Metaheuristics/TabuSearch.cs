@@ -146,10 +146,9 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
-         // DA PULIRE Istanza di Local Search ad ogni giro successivo al primo!!!
-
          _innerAlgorithm.AcceptImprovementsOnly = false;
          _innerAlgorithm.Provider = Provider;
+         Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          _currentBestSolution = Solver.BestSolution;
       }
 
@@ -158,22 +157,34 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _neighborhood.TabuList.ToList().ForEach(move => move.Expiration++);
          await RunLocalSearch();
 
-         bool isBetterThanPreviousBestSolution =
-            Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
+         bool isBetterThanPreviousBestSolution = Solver.Problem.CompareSolutionsCost(_innerAlgorithm.CurrentBestSolution.Cost, _currentBestSolution.Cost);
+         //bool isBetterThanPreviousBestSolution =
+         //   Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
 
-         if (!isBetterThanPreviousBestSolution)
+         if (isBetterThanPreviousBestSolution)
+         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            SendMessage(MessageCode.TSBestFound, _innerAlgorithm.CurrentBestSolution.Cost, _currentBestSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            _currentBestSolution = new TOSolution()
+            {
+               SolutionGraph = _innerAlgorithm.CurrentBestSolution.SolutionGraph.DeepCopy()
+            };
+         }
+         else
          {
             _noImprovementsCount++;
          }
 
          AspirationCriteria();
          _currentIteration++;
+         _innerAlgorithm.ResetState();
       }
 
-      internal override void OnError(Exception exception)
-      {
-         base.OnError(exception);
-      }
+      //internal override void OnError(Exception exception)
+      //{
+      //   base.OnError(exception);
+      //}
 
       internal override void OnTerminating()
       {
@@ -181,10 +192,10 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          Solver.BestSolution = _currentBestSolution;
       }
 
-      internal override void OnTerminated()
-      {
-         base.OnTerminated();
-      }
+      //internal override void OnTerminated()
+      //{
+      //   base.OnTerminated();
+      //}
 
       internal override bool StopConditions()
       {
