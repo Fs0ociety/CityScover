@@ -215,7 +215,7 @@ namespace CityScover.Engine.Workers
             (node) => { return node.IsVisited; },
             node => {
                string message = MessagesRepository.GetMessage(MessageCode.CMGraphNodeToString, node.Entity.Name, node.ArrivalTime.ToString("HH:mm"));
-               result += $"({message})";
+               result += $"({node.Entity.Id} - {message})";
             },
             edge =>
             {

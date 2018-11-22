@@ -38,7 +38,7 @@ namespace CityScover.Engine.Configs
          Configuration c1Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.Sport,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsFilename = @"cityscover-points-45.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
@@ -82,12 +82,21 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.LKimprovementThreshold] = 2000,
-                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 1
+                        [ParameterCodes.LSimprovementThreshold] = 2000,
+                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 5)
+                        new StageFlow(AlgorithmType.HybridNearestDistance)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.CanDoImprovements] = true,
+                              [ParameterCodes.HNDtMaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDtimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                           }
+                        },
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 15)
                      }
                   }
                },
@@ -110,7 +119,6 @@ namespace CityScover.Engine.Configs
                         {
                            ChildrenFlows =
                            {
-                              new StageFlow(AlgorithmType.LinKernighan, 20),
                               new StageFlow(AlgorithmType.HybridNearestDistance)
                               {
                                  AlgorithmParameters =
@@ -124,7 +132,7 @@ namespace CityScover.Engine.Configs
                            AlgorithmParameters =
                            {
                               [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.LKimprovementThreshold] = 2000,
+                              [ParameterCodes.LSimprovementThreshold] = 2000,
                               [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                            }
                         }
@@ -303,6 +311,7 @@ namespace CityScover.Engine.Configs
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
+                        [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.GREEDYmaxNodesToAdd] = 6
                      }
                   }
@@ -318,12 +327,20 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.LKimprovementThreshold] = 2000,
-                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 1
+                        [ParameterCodes.LSimprovementThreshold] = 2000,
+                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 100)
+                        new StageFlow(AlgorithmType.HybridNearestDistance)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.CanDoImprovements] = true,
+                              [ParameterCodes.HNDtMaxThreshold] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HNDtimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                           }
+                        }
                      }
                   }
                },

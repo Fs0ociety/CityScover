@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/11/2018
+// File update: 22/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -21,7 +21,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #region Private fields
       private LocalSearchTemplate _innerAlgorithm;
       private TabuSearchNeighborhood _neighborhood;
-      private TOSolution _bestSolution;
+      private TOSolution _currentBestSolution;
       private int _tenure;
       private int _maxIterations;
       private int _maxDeadlockIterations;
@@ -90,6 +90,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          if (algorithm is LocalSearchTemplate ls)
          {
             algorithm.Parameters = flow.AlgorithmParameters;
+            ls.CurrentBestSolution = _currentBestSolution;
             _innerAlgorithm = ls;
          }
          else
@@ -147,7 +148,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          _innerAlgorithm.AcceptImprovementsOnly = false;
          _innerAlgorithm.Provider = Provider;
-         _bestSolution = Solver.BestSolution;
+         _currentBestSolution = Solver.BestSolution;
       }
 
       internal override async Task PerformStep()
@@ -175,7 +176,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         Solver.BestSolution = _bestSolution;
+         Solver.BestSolution = _currentBestSolution;
       }
 
       internal override void OnTerminated()

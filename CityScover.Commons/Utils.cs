@@ -17,7 +17,7 @@ namespace CityScover.Commons
    /// </summary>
    public static class Utils
    {
-      public const int DelayTask = 900;
+      public const int DelayTask = 250;
       public const string TMaxConstraint = "TMax";
       public const string TimeWindowsConstraint = "Time Windows";
 
