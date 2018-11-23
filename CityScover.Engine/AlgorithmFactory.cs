@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/11/2018
+// File update: 23/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -67,8 +67,12 @@ namespace CityScover.Engine
                algorithm = new TabuSearch(neighborhood);
                break;
 
-            case AlgorithmType.HybridNearestDistance:
-               algorithm = new HybridNearestDistance();
+            case AlgorithmType.HybridDistanceInsertion:
+               algorithm = new HybridDistanceInsertion();
+               break;
+
+            case AlgorithmType.HybridDistanceUpdate:
+               algorithm = new HybridDistanceUpdate();
                break;
 
             // Add new Algorithm types here ...

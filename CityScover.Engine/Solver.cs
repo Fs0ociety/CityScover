@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 23/11/2018
 //
 
 using CityScover.Data;
@@ -196,7 +196,6 @@ namespace CityScover.Engine
          PreviousStageSolutionCost = default;
          CurrentStageExecutionTime = default;
          CurrentAlgorithm = AlgorithmType.None;
-         Results.Clear();
          _solverTasks.Clear();
          AlgorithmTasks.Clear();
          ConstraintsToRelax.Clear();

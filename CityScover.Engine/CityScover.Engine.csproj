@@ -51,8 +51,9 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
+    <Compile Include="Algorithms\CustomAlgorithms\HybridDistanceUpdate.cs" />
     <Compile Include="MessagesRepository.cs" />
-    <Compile Include="Algorithms\CustomAlgorithms\HybridNearestDistance.cs" />
+    <Compile Include="Algorithms\CustomAlgorithms\HybridDistanceInsertion.cs" />
     <Compile Include="Algorithms\Greedy\CheapestInsertion.cs" />
     <Compile Include="Algorithms\Greedy\GreedyTemplate.cs" />
     <Compile Include="Algorithms\Greedy\NearestNeighbor.cs" />
@@ -64,7 +65,6 @@
     <Compile Include="Algorithms\Neighborhoods\NeighborhoodFacade.cs" />
     <Compile Include="NeighborhoodFactory.cs" />
     <Compile Include="ParameterCodeType.cs" />
-    <Compile Include="Result.cs" />
     <Compile Include="Algorithms\LocalSearches\LocalSearchTemplate.cs" />
     <Compile Include="Algorithms\VariableDepthSearch\LinKernighan.cs" />
     <Compile Include="Algorithms\Neighborhoods\Neighborhood.cs" />

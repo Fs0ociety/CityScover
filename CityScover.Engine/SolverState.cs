@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 23/11/2018
 //
 
 using CityScover.Commons;
@@ -100,8 +100,6 @@ namespace CityScover.Engine
 
       internal IDictionary<int, Task> AlgorithmTasks => _algorithmTasks;
       
-      internal ICollection<Result> Results { get; private set; }
-
       internal ICollection<string> ConstraintsToRelax { get; private set; }
       #endregion
 
@@ -110,7 +108,6 @@ namespace CityScover.Engine
       {
          _solverTasks = new Collection<Task>();
          _algorithmTasks = new Dictionary<int, Task>();
-         Results = new Collection<Result>();
          ConstraintsToRelax = new Collection<string>();
       }
       #endregion

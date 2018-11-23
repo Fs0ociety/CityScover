@@ -90,7 +90,8 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.LinKernighan:
-            case AlgorithmType.HybridNearestDistance:
+            case AlgorithmType.HybridDistanceInsertion:
+            case AlgorithmType.HybridDistanceUpdate:
                result = AlgorithmFamily.Improvement;
                break;
 
