@@ -210,7 +210,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             }
 
             UpdateTourInternal(tourPointToRemove, candidateNode,
-               predecessorPointId, successorPoint.Entity.Id);
+               predecessorPoint.Entity.Id, successorPoint.Entity.Id);
 
             _currentSolution = new TOSolution()
             {

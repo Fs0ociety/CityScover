@@ -85,8 +85,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          _neighborhood.NeighborhoodWorker = NeighborhoodFactory.CreateNeighborhood(flow.CurrentAlgorithm);
          _neighborhood.Type = _neighborhood.NeighborhoodWorker.Type;
-         Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm, _neighborhood.NeighborhoodWorker);
-         
+         Algorithm algorithm = Solver.GetAlgorithm(flow.CurrentAlgorithm, _neighborhood);
+
          if (algorithm is LocalSearchTemplate ls)
          {
             algorithm.Parameters = flow.AlgorithmParameters;
@@ -100,6 +100,33 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          return _innerAlgorithm;
       }
 
+      private void IncrementTabuMovesExpirations()
+      {
+         _neighborhood.TabuList.ToList().ForEach(move =>
+         {
+            move.Expiration++;
+
+            int pointFromId = Solver.CityMapGraph
+               .Edges
+               .Where(edge => edge.Entity.Id == move.FirstEdgeId)
+               .Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault();
+
+            int pointToId = Solver.CityMapGraph
+               .Edges
+               .Where(edge => edge.Entity.Id == move.SecondEdgeId)
+               .Select(edge => edge.Entity.PointTo.Id).FirstOrDefault();
+
+            string message = MessagesRepository.GetMessage(MessageCode.TSMovesLocked,
+               $"({pointFromId}, {pointToId})",
+               $"{move.Expiration}",
+               $"{_tenure}");
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            SendMessage(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
+         });
+      }
+
       private void AspirationCriteria()
       {
          // Using LINQ with generic Predicate<T> delegate to remove items in Tabu list.
@@ -111,6 +138,24 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             if (tabuMove.Expiration >= _tenure)
             {
                _neighborhood.TabuList.Remove(tabuMove);
+
+               int pointFromId = Solver.CityMapGraph
+               .Edges
+               .Where(edge => edge.Entity.Id == tabuMove.FirstEdgeId)
+               .Select(edge => edge.Entity.PointFrom.Id).FirstOrDefault();
+
+               int pointToId = Solver.CityMapGraph
+                  .Edges
+                  .Where(edge => edge.Entity.Id == tabuMove.SecondEdgeId)
+                  .Select(edge => edge.Entity.PointTo.Id).FirstOrDefault();
+
+               string message = MessagesRepository.GetMessage(MessageCode.TSMoveUnlocked,
+                  $"({pointFromId}, {pointToId})",
+                  $"{tabuMove.Expiration}");
+               
+               Console.ForegroundColor = ConsoleColor.Magenta;
+               SendMessage(message);
+               Console.ForegroundColor = ConsoleColor.Gray;
             }
          }
       }
@@ -150,19 +195,27 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _innerAlgorithm.Provider = Provider;
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          _currentBestSolution = Solver.BestSolution;
+         Console.ForegroundColor = ConsoleColor.Magenta;
+         SendMessage(MessageCode.TSStarting, _currentBestSolution.Id, _currentBestSolution.Cost);
+         Console.ForegroundColor = ConsoleColor.Gray;
       }
 
       internal override async Task PerformStep()
       {
-         _neighborhood.TabuList.ToList().ForEach(move => move.Expiration++);
-         await RunLocalSearch();
+         //IncrementTabuMovesExpirations();
+         await RunLocalSearch().ConfigureAwait(continueOnCapturedContext: false);
 
-         bool isBetterThanPreviousBestSolution = Solver.Problem.CompareSolutionsCost(_innerAlgorithm.CurrentBestSolution.Cost, _currentBestSolution.Cost);
+         bool isBetterThanPreviousBestSolution = Solver.Problem.CompareSolutionsCost(
+            _innerAlgorithm.CurrentBestSolution.Cost,
+            _currentBestSolution.Cost);
+
          //bool isBetterThanPreviousBestSolution =
          //   Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
 
          if (isBetterThanPreviousBestSolution)
          {
+            // La CurrentBestSolution fornita dalla LS è migliore della best corrente della Tabu, quindi
+            // applico la mossa (faccio assegnamento)
             Console.ForegroundColor = ConsoleColor.Green;
             SendMessage(MessageCode.TSBestFound, _innerAlgorithm.CurrentBestSolution.Cost, _currentBestSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -170,6 +223,9 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             {
                SolutionGraph = _innerAlgorithm.CurrentBestSolution.SolutionGraph.DeepCopy()
             };
+            var (firstEdgeId, secondEdgeId) = _innerAlgorithm.Move;
+            _neighborhood.TabuList.Add(new TabuMove(firstEdgeId, secondEdgeId, expiration: 0));
+            IncrementTabuMovesExpirations();
          }
          else
          {
@@ -181,21 +237,11 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _innerAlgorithm.ResetState();
       }
 
-      //internal override void OnError(Exception exception)
-      //{
-      //   base.OnError(exception);
-      //}
-
       internal override void OnTerminating()
       {
          base.OnTerminating();
          Solver.BestSolution = _currentBestSolution;
       }
-
-      //internal override void OnTerminated()
-      //{
-      //   base.OnTerminated();
-      //}
 
       internal override bool StopConditions()
       {

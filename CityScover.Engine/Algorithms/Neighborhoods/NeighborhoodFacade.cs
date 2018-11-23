@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/11/2018
+// File update: 23/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -19,10 +19,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal class NeighborhoodFacade
    {
-      #region Private fields
       private Neighborhood _neighborhood;
       private LocalSearchTemplate _algorithm;
-      #endregion
 
       #region Constructors
       internal NeighborhoodFacade(Neighborhood neighborhood, LocalSearchTemplate algorithm)
@@ -44,6 +42,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
                TOSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
                if (newSolution != null)
                {
+                  _algorithm.Move = Tuple.Create(currentEdge.Entity.Id, candidateEdge.Entity.Id);
                   string message = MessagesRepository.GetMessage(
                      MessageCode.LSNewNeighborhoodMoveDetails,
                      newSolution.Id,

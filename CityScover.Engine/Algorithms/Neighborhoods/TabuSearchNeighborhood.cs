@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/11/2018
+// File update: 23/11/2018
 //
 
 using CityScover.Engine.Algorithms.Metaheuristics;
@@ -19,10 +19,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal class TabuSearchNeighborhood : Neighborhood
    {
-      #region Private fields
       private Neighborhood _neighborhoodWorker;
       private IList<TabuMove> _tabuList;
-      #endregion
 
       #region Constructors
       internal TabuSearchNeighborhood()
@@ -67,7 +65,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
          TabuMove forbiddenMove = _tabuList
-            .Where(move => move.FirstEdge == currentEdge && move.SecondEdge == candidateEdge)
+            .Where(move => move.FirstEdgeId == currentEdge.Entity.Id && 
+                           move.SecondEdgeId == candidateEdge.Entity.Id)
             .FirstOrDefault();
 
          if (forbiddenMove != null)
@@ -76,8 +75,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          }
 
          TOSolution solution = _neighborhoodWorker.ProcessCandidate(currentEdge, candidateEdge);
-         TabuMove reversedMove = new TabuMove(currentEdge, candidateEdge, expiration: 0);
-         _tabuList.Add(reversedMove);
+         //TabuMove reversedMove = new TabuMove(currentEdge, candidateEdge, expiration: 0);
+         //_tabuList.Add(reversedMove);
          return solution;
       }
       #endregion

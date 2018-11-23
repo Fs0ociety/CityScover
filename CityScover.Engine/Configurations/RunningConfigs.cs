@@ -54,21 +54,21 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
-                     AlgorithmParameters =
-                     {
-                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6
-                     },
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.HybridNearestDistance)
                         {
                            AlgorithmParameters =
                            {
-                              [ParameterCodes.CanDoImprovements] = true,
                               [ParameterCodes.HNDtMaxThreshold] = new TimeSpan(1, 0, 0),
                               [ParameterCodes.HNDtimeWalkThreshold] = new TimeSpan(0, 20, 0)
                            }
                         }
+                     },
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6
                      }
                   }
                },
@@ -79,24 +79,15 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 10)
+                     },
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.LSimprovementThreshold] = 2000,
                         [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
-                     },
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.HybridNearestDistance)
-                        {
-                           AlgorithmParameters =
-                           {
-                              [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.HNDtMaxThreshold] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HNDtimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                           }
-                        },
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 15)
                      }
                   }
                },
@@ -107,27 +98,14 @@ namespace CityScover.Engine.Configs
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
-                     RunningCount = 3,
-                     AlgorithmParameters =
-                     {
-                        [ParameterCodes.TABUmaxDeadlockIterations] = 2,
-                        [ParameterCodes.TABUtenureFactor] = 2
-                     },
+                     RunningCount = 20,
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.TwoOpt)
                         {
                            ChildrenFlows =
                            {
-                              new StageFlow(AlgorithmType.HybridNearestDistance)
-                              {
-                                 AlgorithmParameters =
-                                 {
-                                    [ParameterCodes.CanDoImprovements] = true,
-                                    [ParameterCodes.HNDtMaxThreshold] = new TimeSpan(1, 0, 0),
-                                    [ParameterCodes.HNDtimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                                 }
-                              }
+                              new StageFlow(AlgorithmType.LinKernighan, 20)
                            },
                            AlgorithmParameters =
                            {
@@ -136,6 +114,11 @@ namespace CityScover.Engine.Configs
                               [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                            }
                         }
+                     },
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.TABUmaxDeadlockIterations] = 18,
+                        [ParameterCodes.TABUtenureFactor] = 2
                      }
                   }
                }

@@ -51,6 +51,12 @@ namespace CityScover.Engine.Algorithms
       #region Internal properties
       internal TOSolution CurrentBestSolution { get; set; }
       internal bool CanDoImprovements { get; set; }
+
+      /// <summary>
+      /// Property used to assign the local search move which has made this solution.
+      /// Used only by Tabu Search.
+      /// </summary>
+      internal Tuple<int, int> Move { get; set; }
       #endregion
 
       #region Internal methods
@@ -189,7 +195,7 @@ namespace CityScover.Engine.Algorithms
 
       internal override async Task PerformStep()
       {
-         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution, NeighborhoodFacade.RunningMode.Parallel);
+         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution, NeighborhoodFacade.RunningMode.Sequential);
 
          foreach (var neighborSolution in currentNeighborhood)
          {
@@ -205,6 +211,8 @@ namespace CityScover.Engine.Algorithms
             }
          }
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
+
+         // Cerco la migliore soluzione dell'intorno appena calcolato.
          var solution = GetBest(currentNeighborhood, CurrentBestSolution, null);
          Console.ForegroundColor = ConsoleColor.DarkGreen;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
@@ -241,7 +249,8 @@ namespace CityScover.Engine.Algorithms
             SendMessage(MessageCode.LSInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
-         
+
+         #region TODO: REMOVE Old-LocalSearch
          //if (AcceptImprovementsOnly)
          //{
          //   bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
@@ -276,6 +285,7 @@ namespace CityScover.Engine.Algorithms
          //      _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
          //   }
          //}
+         #endregion
 
          if (CanDoImprovements && _shouldRunImprovementAlgorithm)
          {

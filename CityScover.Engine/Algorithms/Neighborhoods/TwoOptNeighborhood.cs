@@ -203,7 +203,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          TOSolution newSolution = new TOSolution()
          {
-            SolutionGraph = newSolutionGraph
+            SolutionGraph = newSolutionGraph            
          };
 
          return newSolution;
