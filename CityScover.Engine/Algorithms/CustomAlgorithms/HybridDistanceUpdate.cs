@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/11/2018
+// File update: 24/11/2018
 //
 
 using CityScover.Commons;
@@ -21,6 +21,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 {
    internal class HybridDistanceUpdate : HybridDistanceInsertion
    {
+      private double _averageSpeedWalk;
+      private IEnumerable<(RouteWorker, TimeSpan)> _candidateEdges;
+
       #region Constructors
       internal HybridDistanceUpdate()
          : this(provider: null)
@@ -38,7 +41,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Private methods
-      private IEnumerable<(RouteWorker edge, TimeSpan tWalk)> CalculateMaximumEdgesTimeWalk(double averageSpeedWalk)
+      private IEnumerable<(RouteWorker edge, TimeSpan tWalk)> CalculateMaxEdgesTimeWalk()
       {
          // Set of tuples containing infos: (Route, Travel time)
          Collection<(RouteWorker, TimeSpan)> removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
@@ -49,7 +52,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          foreach (var route in centralTourRoutes)
          {
-            double tWalkMinutes = (route.Weight.Invoke() / averageSpeedWalk) / 60.0;
+            double tWalkMinutes = (route.Weight.Invoke() / _averageSpeedWalk) / 60.0;
             TimeSpan timeRouteWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
             if (timeRouteWalk > _timeWalkThreshold)
@@ -62,136 +65,70 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          return removalEdgesCandidates;
       }
 
-      private async Task TryUpdateTour()
+      private int FindPointToRemove(int candidateNodeKey)
       {
-         double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
-         var removalEdgesCandidates = CalculateMaximumEdgesTimeWalk(averageSpeedWalk);
-         if (!removalEdgesCandidates.Any())
-         {
-            return;
-         }
-
-         AddPointsNotInTour();
-         InterestPointWorker tourPointToRemove = default;
-         InterestPointWorker predecessorPoint = default;
-         RouteWorker ingoingRoute = default;
+         int nodeKeyToRemove = default;
          int currentPointScore = int.MaxValue;
-         bool tourUpdated = default;
 
-         while (_processingNodes.Any())
+         foreach (var (edge, tWalk) in _candidateEdges)
          {
-            if (tourUpdated)
+            var newEdge = Solver.CityMapGraph
+               .GetEdge(edge.Entity.PointFrom.Id, candidateNodeKey);
+            if (newEdge is null)
             {
-               break;
+               throw new NullReferenceException(nameof(newEdge));
             }
 
-            InterestPointWorker candidateNode = _processingNodes.Dequeue();
+            double tWalkMinutes = (newEdge.Weight.Invoke() / _averageSpeedWalk) / 60.0;
+            TimeSpan tEdgeWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
-            foreach (var (edge, tWalk) in removalEdgesCandidates)
+            if (tEdgeWalk < tWalk)
             {
-               InterestPointWorker currentPointFrom = _tour.Nodes
-                  .Where(point => point.Entity.Id == edge.Entity.PointFrom.Id)
+               int currentPointToId = _tour.Edges
+                  .Where(e => e.Entity.PointFrom.Id == edge.Entity.PointTo.Id)
+                  .Select(e => e.Entity.PointTo.Id)
                   .FirstOrDefault();
-               if (currentPointFrom is null)
+
+               if (!_tour.ContainsNode(currentPointToId))
                {
-                  throw new NullReferenceException(nameof(currentPointFrom));
+                  throw new NullReferenceException(nameof(currentPointToId));
                }
 
-               var newEdge = Solver.CityMapGraph
-                  .GetEdge(currentPointFrom.Entity.Id, candidateNode.Entity.Id);
-               if (newEdge is null)
+               InterestPointWorker currentPointTo = _tour[currentPointToId];
+               int pointToScore = currentPointTo.Entity.Score.Value;
+               if (pointToScore < currentPointScore)
                {
-                  throw new NullReferenceException(nameof(newEdge));
+                  nodeKeyToRemove = currentPointTo.Entity.Id;
+                  currentPointScore = pointToScore;
                }
-
-               double tWalkMinutes = (newEdge.Weight.Invoke() / averageSpeedWalk) / 60.0;
-               TimeSpan tEdgeWalk = TimeSpan.FromMinutes(tWalkMinutes);
-
-               if (tEdgeWalk < tWalk)
+               else if (pointToScore == currentPointScore)
                {
-                  InterestPointWorker currentPointTo = _tour.TourPoints
-                     .Where(point => point.Entity.Id == edge.Entity.PointTo.Id)
-                     .FirstOrDefault();
-                  if (currentPointTo is null)
-                  {
-                     throw new NullReferenceException(nameof(currentPointTo));
-                  }
-
-                  int pointToScore = currentPointTo.Entity.Score.Value;
-                  if (pointToScore < currentPointScore)
-                  {
-                     tourPointToRemove = currentPointTo;
-                     currentPointScore = pointToScore;
-                     predecessorPoint = currentPointFrom;
-                     ingoingRoute = edge;
-                  }
-                  else if (pointToScore == currentPointScore)
-                  {
-                     tourPointToRemove = (new Random().Next(2) == 0)
-                        ? tourPointToRemove : currentPointTo;
-                  }
+                  nodeKeyToRemove = (new Random().Next(2) == 0)
+                     ? nodeKeyToRemove : currentPointTo.Entity.Id;
                }
-            }
-
-            if (tourPointToRemove is null)
-            {
-               continue;
-            }
-
-            int predecessorPointId = _tour.Edges
-               .Where(edge => edge.Entity.PointTo.Id == tourPointToRemove.Entity.Id)
-               .Select(edge => edge.Entity.PointFrom.Id)
-               .FirstOrDefault();
-
-            RouteWorker outgoingEdge = _tour.Edges
-               .Where(edge => edge.Entity.PointFrom.Id == tourPointToRemove.Entity.Id)
-               .FirstOrDefault();
-            if (outgoingEdge is null)
-            {
-               throw new NullReferenceException(nameof(outgoingEdge));
-            }
-
-            InterestPointWorker successorPoint = _tour.Nodes
-               .Where(point => point.Entity.Id == outgoingEdge.Entity.PointTo.Id)
-               .FirstOrDefault();
-            if (successorPoint is null)
-            {
-               throw new NullReferenceException(nameof(successorPoint));
-            }
-
-            UpdateTourInternal(tourPointToRemove, candidateNode,
-               predecessorPoint.Entity.Id, successorPoint.Entity.Id);
-
-            _currentSolution = new TOSolution()
-            {
-               SolutionGraph = _tour
-            };
-
-            tourUpdated = true;
-            SendMessage(MessageCode.HNDTourUpdated,
-               tourPointToRemove.Entity.Name, candidateNode.Entity.Name);
-            Solver.EnqueueSolution(_currentSolution);
-            await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
-            await Solver.AlgorithmTasks[_currentSolution.Id];
-
-            if (!_currentSolution.IsValid)
-            {
-               UndoUpdateTourInternal(tourPointToRemove, candidateNode.Entity.Id,
-                  predecessorPoint.Entity.Id, successorPoint.Entity.Id);
-               tourUpdated = false;
-               SendMessage(MessageCode.HNDTourRestored,
-                  candidateNode.Entity.Name, tourPointToRemove.Entity.Name);
-
             }
          }
 
-         TourUpdated = tourUpdated;
+         return nodeKeyToRemove;
       }
 
-      private void UpdateTourInternal(InterestPointWorker nodeToRemove, InterestPointWorker nodeToAdd, 
-         int predecessorNodeKey, int successorNodeKey)
+      private (int, int) GetBorderPoints(int nodeKeyToRemove)
       {
-         int nodeKeyToRemove = nodeToRemove.Entity.Id;
+         int predecessorNodeKey = _tour.Edges
+            .Where(edge => edge.Entity.PointTo.Id == nodeKeyToRemove)
+            .Select(edge => edge.Entity.PointFrom.Id)
+            .FirstOrDefault();
+
+         int successorNodeKey = _tour.Edges
+            .Where(edge => edge.Entity.PointFrom.Id == nodeKeyToRemove)
+            .Select(edge => edge.Entity.PointTo.Id)
+            .FirstOrDefault();
+
+         return (predecessorNodeKey, successorNodeKey);
+      }
+
+      private void UpdateTour(InterestPointWorker nodeToAdd, int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
+      {
          int nodeKeyToAdd = nodeToAdd.Entity.Id;
 
          _tour.RemoveEdge(predecessorNodeKey, nodeKeyToRemove);
@@ -203,8 +140,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, successorNodeKey);
       }
 
-      private void UndoUpdateTourInternal(InterestPointWorker nodeToRestore, int nodeKeyToRemove,
-         int predecessorNodeKey, int successorNodeKey)
+      private void UndoUpdate(InterestPointWorker nodeToRestore, int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToRestore = nodeToRestore.Entity.Id;
 
@@ -222,11 +158,38 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
+         _candidateEdges = new Collection<(RouteWorker, TimeSpan)>();
+         _candidateEdges = CalculateMaxEdgesTimeWalk();
       }
 
-      internal override Task PerformStep()
+      internal override async Task PerformStep()
       {
-         throw new NotImplementedException();
+         InterestPointWorker candidateNode = _processingNodes.Dequeue();
+         int nodeKeyToRemove = FindPointToRemove(candidateNode.Entity.Id);
+         var (predecessorNodeKey, successorNodeKey) = GetBorderPoints(nodeKeyToRemove);
+         InterestPointWorker nodeToRemove = _tour.TourPoints
+            .Where(point => point.Entity.Id == nodeKeyToRemove)
+            .FirstOrDefault();
+         UpdateTour(candidateNode, nodeKeyToRemove, predecessorNodeKey, successorNodeKey);
+
+         _currentSolution = new TOSolution()
+         {
+            SolutionGraph = _tour
+         };
+
+         TourUpdated = true;
+         SendMessage(MessageCode.HDUTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
+         Solver.EnqueueSolution(_currentSolution);
+         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+         await Solver.AlgorithmTasks[_currentSolution.Id];
+
+         if (!_currentSolution.IsValid)
+         {
+            UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
+            SendMessage(MessageCode.HDUTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
+            TourUpdated = false;
+         }
       }
 
       internal override void OnError(Exception exception)
@@ -236,12 +199,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       internal override void OnTerminating()
       {
-         base.OnTerminating();
       }
 
       internal override bool StopConditions()
       {
-         return base.StopConditions();
+         bool shouldStop = !_candidateEdges.Any() || TourUpdated || base.StopConditions();
+         return shouldStop;
       }
       #endregion
    }

@@ -133,9 +133,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HNDtMaxThreshold))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HDIthresholdToTmax))
          {
-            TimeSpan hndTmaxThreshold = flow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold];
+            TimeSpan hndTmaxThreshold = flow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax];
             if (hndTmaxThreshold != default)
             {
                WriteLine($"{tabulator}     " +
@@ -145,9 +145,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HNDtimeWalkThreshold))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HDItimeWalkThreshold))
          {
-            TimeSpan hndTimeWalkThreshold = flow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold];
+            TimeSpan hndTimeWalkThreshold = flow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold];
             if (hndTimeWalkThreshold != default)
             {
                WriteLine($"{tabulator}     " +
@@ -762,8 +762,8 @@ namespace CityScover.Services
                stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;
                stage.Flow.AlgorithmParameters[ParameterCodes.GREEDYmaxNodesToAdd] = maxNodesToAdd;
                StageFlow stageFlow = new StageFlow(AlgorithmType.HybridDistanceInsertion);
-               stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
-               stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                stage.Flow.ChildrenFlows.Add(stageFlow);
             }
             else
@@ -928,8 +928,8 @@ namespace CityScover.Services
             if (stage.Description == StageType.StageTwo)
             {
                StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
-               stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
-               stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                stage.Flow.ChildrenFlows.Add(stageFlow);
             }
             else if (stage.Description == StageType.StageThree)
@@ -937,8 +937,8 @@ namespace CityScover.Services
                foreach (var childFlow in stage.Flow.ChildrenFlows)
                {
                   StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
-                  stageFlow.AlgorithmParameters[ParameterCodes.HNDtMaxThreshold] = tMaxThreshold;
-                  stageFlow.AlgorithmParameters[ParameterCodes.HNDtimeWalkThreshold] = timeWalkThreshold;
+                  stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
+                  stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                   childFlow.ChildrenFlows.Add(stageFlow);
                }
             }

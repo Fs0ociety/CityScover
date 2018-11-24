@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/11/2018
+// File update: 24/11/2018
 //
 
 namespace CityScover.Engine
@@ -37,14 +37,14 @@ namespace CityScover.Engine
       LSimprovementThreshold,
 
       /// <summary>
-      /// Hybrid Nearest Distance algorithm's threshold for Tmax constraint.
+      /// Hybrid Distance Insertion algorithm's threshold for Tmax constraint.
       /// </summary>
-      HNDtMaxThreshold,
+      HDIthresholdToTmax,
 
       /// <summary>
-      /// Hybrid Nearest Distance algorithm's threshold for time walk.
+      /// Hybrid Distance Insertion algorithm's threshold for time walk.
       /// </summary>
-      HNDtimeWalkThreshold,
+      HDItimeWalkThreshold,
 
       /// <summary>
       /// Stopping condition for MetaHeuristic algorithm. 

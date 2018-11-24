@@ -6,14 +6,13 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/11/2018
+// File update: 24/11/2018
 //
 
 using CityScover.Commons;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -92,21 +91,33 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       private void Restart()
       {
-         Algorithm algorithm = new HybridDistanceInsertion
-         {
-            Provider = Provider,
-            Parameters = Parameters
-         };
+         AddPointsNotInTour();
+         Task insertionTask = Task.Run(() => PerformStep());
 
-         Task algorithmTask = Task.Run(() => algorithm.Start());
          try
          {
-            algorithmTask.Wait();
+            insertionTask.Wait();
          }
          catch (AggregateException ae)
          {
             OnError(ae.InnerException);
          }
+
+         //Algorithm algorithm = new HybridDistanceInsertion
+         //{
+         //   Provider = Provider,
+         //   Parameters = Parameters
+         //};
+
+         //Task algorithmTask = Task.Run(() => algorithm.Start());
+         //try
+         //{
+         //   algorithmTask.Wait();
+         //}
+         //catch (AggregateException ae)
+         //{
+         //   OnError(ae.InnerException);
+         //}
       }
       #endregion
 
@@ -114,21 +125,27 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+
+         if (!Parameters.Any())
+         {
+            throw new KeyNotFoundException(nameof(Parameters));
+         }
          if (Solver.IsMonitoringEnabled)
          {
-            SendMessage(MessageCode.CustomAlgStart);
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            SendMessage(MessageCode.HDIStarting);
+            Console.ForegroundColor = ConsoleColor.Gray;
          }
-         _processingNodes = new Queue<InterestPointWorker>();
-
          if (CurrentBestSolution is null)
          {
             CurrentBestSolution = Solver.BestSolution;
          }
-         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
 
-         _tour = CurrentBestSolution.SolutionGraph.DeepCopy();
-         _tMaxThreshold = Parameters[ParameterCodes.HNDtMaxThreshold];
-         _timeWalkThreshold = Parameters[ParameterCodes.HNDtimeWalkThreshold];
+         _processingNodes = new Queue<InterestPointWorker>();
+         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
+         _tour = CurrentBestSolution.SolutionGraph.DeepCopy();         
+         _tMaxThreshold = Parameters[ParameterCodes.HDIthresholdToTmax];
+         _timeWalkThreshold = Parameters[ParameterCodes.HDItimeWalkThreshold];
          _tMax = Solver.WorkingConfiguration.ArrivalTime
             .Add(Solver.WorkingConfiguration.TourDuration);
          _tMaxThresholdTime = _tMax - _tMaxThreshold;
@@ -156,7 +173,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SolutionGraph = _tour
          };
 
-         SendMessage(MessageCode.HNDNewNodeAdded, point.Entity.Name);
+         SendMessage(MessageCode.HDINewNodeAdded, point.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
@@ -166,7 +183,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             UndoAdditionPoint(point.Entity.Id, _previousEndPOIKey, _startPOI.Entity.Id);
             _addedNodesCount--;
             _endPOI = _tour.GetEndPoint();
-            SendMessage(MessageCode.HNDNewNodeRemoved, point.Entity.Name);
+            SendMessage(MessageCode.HDINewNodeRemoved, point.Entity.Name);
          }
       }
 
@@ -185,8 +202,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             HybridDistanceUpdate updateAlgorithm = new HybridDistanceUpdate()
             {
-               Provider = Provider
+               Provider = Provider,
+               Parameters = Parameters
             };
+
+            if (Solver.IsMonitoringEnabled)
+            {
+               Console.ForegroundColor = ConsoleColor.DarkMagenta;
+               SendMessage(MessageCode.HDUStarting);
+               Console.ForegroundColor = ConsoleColor.Gray;
+            }
 
             Task updateTask = Task.Run(() => updateAlgorithm.Start());
             try
@@ -203,24 +228,25 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                _processingNodes = null;
             }
 
-            if (_currentSolution != null && Solver.BestSolution != null)
-            {
-               bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
-               _currentSolution.Cost,
-               Solver.BestSolution.Cost,
-               considerEqualityComparison: true);
-
-               if (isBetterThanCurrentBestSolution)
-               {
-                  Solver.BestSolution = _currentSolution;
-               }
-            }
-
             if (updateAlgorithm.TourUpdated)
             {
-               updateAlgorithm = null;
-               Restart();
+               if (_currentSolution != null && Solver.BestSolution != null)
+               {
+                  bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
+                  _currentSolution.Cost, Solver.BestSolution.Cost, considerEqualityComparison: true);
+
+                  if (isBetterThanCurrentBestSolution)
+                  {
+                     Solver.BestSolution = _currentSolution;
+                     Restart();
+                  }
+               }
             }
+            updateAlgorithm = null;
+         }
+         else
+         {
+            Solver.BestSolution = _currentSolution;
          }
       }
 
