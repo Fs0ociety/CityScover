@@ -67,12 +67,12 @@ namespace CityScover.Engine
                algorithm = new TabuSearch(neighborhood);
                break;
 
-            case AlgorithmType.HybridDistanceInsertion:
-               algorithm = new HybridDistanceInsertion();
+            case AlgorithmType.HybridCustomInsertion:
+               algorithm = new HybridCustomInsertion();
                break;
 
-            case AlgorithmType.HybridDistanceUpdate:
-               algorithm = new HybridDistanceUpdate();
+            case AlgorithmType.HybridCustomUpdate:
+               algorithm = new HybridCustomUpdate();
                break;
 
             // Add new Algorithm types here ...

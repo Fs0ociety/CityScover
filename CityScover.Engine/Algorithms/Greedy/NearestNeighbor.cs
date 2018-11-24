@@ -6,12 +6,11 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 21/11/2018
+// File update: 24/11/2018
 //
 
 using CityScover.Commons;
 using CityScover.Engine.Workers;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.Greedy

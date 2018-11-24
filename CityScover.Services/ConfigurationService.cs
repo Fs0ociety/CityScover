@@ -761,7 +761,7 @@ namespace CityScover.Services
                var (tMaxThreshold, timeWalkThreshold) = GetCustomAlgorithmParameters();
                stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;
                stage.Flow.AlgorithmParameters[ParameterCodes.GREEDYmaxNodesToAdd] = maxNodesToAdd;
-               StageFlow stageFlow = new StageFlow(AlgorithmType.HybridDistanceInsertion);
+               StageFlow stageFlow = new StageFlow(AlgorithmType.HybridCustomInsertion);
                stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
                stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                stage.Flow.ChildrenFlows.Add(stageFlow);
@@ -921,7 +921,7 @@ namespace CityScover.Services
                }
             }
          }
-         else if (improvementAlgorithm == AlgorithmType.HybridDistanceInsertion)
+         else if (improvementAlgorithm == AlgorithmType.HybridCustomInsertion)
          {
             var (tMaxThreshold, timeWalkThreshold) = GetCustomAlgorithmParameters();
 
@@ -1032,7 +1032,7 @@ namespace CityScover.Services
                algorithm = AlgorithmType.LinKernighan;
                break;
             case "2":
-               algorithm = AlgorithmType.HybridDistanceInsertion;
+               algorithm = AlgorithmType.HybridCustomInsertion;
                break;
             default:
                break;

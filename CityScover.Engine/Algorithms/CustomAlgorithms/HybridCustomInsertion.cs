@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.CustomAlgorithms
 {
-   internal class HybridDistanceInsertion : Algorithm
+   internal class HybridCustomInsertion : Algorithm
    {
       #region Private fields
       private int _addedNodesCount;
@@ -26,18 +26,19 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private DateTime _tMax;
       private DateTime _tMaxThresholdTime;
       private TimeSpan _tMaxThreshold;
+      private TOSolution _currentSolution;
       #endregion
 
       #region Constructors
-      internal HybridDistanceInsertion()
+      internal HybridCustomInsertion()
          : this(provider: null)
       {
       }
 
-      internal HybridDistanceInsertion(AlgorithmTracker provider)
+      internal HybridCustomInsertion(AlgorithmTracker provider)
          : base(provider)
       {
-         Type = AlgorithmType.HybridDistanceInsertion;
+         Type = AlgorithmType.HybridCustomInsertion;
       }
       #endregion
 
@@ -47,7 +48,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private protected InterestPointWorker _endPOI;
       private protected TimeSpan _timeWalkThreshold;
       private protected Queue<InterestPointWorker> _processingNodes;
-      private protected TOSolution _currentSolution;
 
       private protected void AddPointsNotInTour()
       {
@@ -91,33 +91,19 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       private void Restart()
       {
-         AddPointsNotInTour();
-         Task insertionTask = Task.Run(() => PerformStep());
+         Algorithm algorithm = Solver.GetAlgorithm(AlgorithmType.HybridCustomInsertion);
+         algorithm.Provider = Provider;
+         algorithm.Parameters = Parameters;
 
+         Task algorithmTask = Task.Run(() => algorithm.Start());
          try
          {
-            insertionTask.Wait();
+            algorithmTask.Wait();
          }
          catch (AggregateException ae)
          {
             OnError(ae.InnerException);
          }
-
-         //Algorithm algorithm = new HybridDistanceInsertion
-         //{
-         //   Provider = Provider,
-         //   Parameters = Parameters
-         //};
-
-         //Task algorithmTask = Task.Run(() => algorithm.Start());
-         //try
-         //{
-         //   algorithmTask.Wait();
-         //}
-         //catch (AggregateException ae)
-         //{
-         //   OnError(ae.InnerException);
-         //}
       }
       #endregion
 
@@ -143,7 +129,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          _processingNodes = new Queue<InterestPointWorker>();
          Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
-         _tour = CurrentBestSolution.SolutionGraph.DeepCopy();         
+         _tour = CurrentBestSolution.SolutionGraph.DeepCopy();
          _tMaxThreshold = Parameters[ParameterCodes.HDIthresholdToTmax];
          _timeWalkThreshold = Parameters[ParameterCodes.HDItimeWalkThreshold];
          _tMax = Solver.WorkingConfiguration.ArrivalTime
@@ -173,10 +159,10 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SolutionGraph = _tour
          };
 
-         SendMessage(MessageCode.HDINewNodeAdded, point.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
+         SendMessage(MessageCode.HDINewNodeAdded, point.Entity.Name);
 
          if (!_currentSolution.IsValid)
          {
@@ -184,6 +170,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             _addedNodesCount--;
             _endPOI = _tour.GetEndPoint();
             SendMessage(MessageCode.HDINewNodeRemoved, point.Entity.Name);
+         }
+
+         // Notify observers.
+         if (Solver.IsMonitoringEnabled)
+         {
+            Provider.NotifyObservers(_currentSolution);
          }
       }
 
@@ -200,11 +192,10 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          if (_addedNodesCount == 0)
          {
-            HybridDistanceUpdate updateAlgorithm = new HybridDistanceUpdate()
-            {
-               Provider = Provider,
-               Parameters = Parameters
-            };
+            HybridCustomUpdate updateAlgorithm = 
+               (HybridCustomUpdate)Solver.GetAlgorithm(AlgorithmType.HybridCustomUpdate);
+            updateAlgorithm.Provider = Provider;
+            updateAlgorithm.Parameters = Parameters;
 
             if (Solver.IsMonitoringEnabled)
             {
@@ -230,16 +221,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             if (updateAlgorithm.TourUpdated)
             {
-               if (_currentSolution != null && Solver.BestSolution != null)
-               {
-                  bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
-                  _currentSolution.Cost, Solver.BestSolution.Cost, considerEqualityComparison: true);
+               bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
+               updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, considerEqualityComparison: true);
 
-                  if (isBetterThanCurrentBestSolution)
-                  {
-                     Solver.BestSolution = _currentSolution;
-                     Restart();
-                  }
+               if (isBetterThanCurrentBestSolution)
+               {
+                  Solver.BestSolution = updateAlgorithm.CurrentSolution;
+                  Restart();
                }
             }
             updateAlgorithm = null;

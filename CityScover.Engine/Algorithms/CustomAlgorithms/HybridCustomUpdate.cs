@@ -19,25 +19,27 @@ using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.CustomAlgorithms
 {
-   internal class HybridDistanceUpdate : HybridDistanceInsertion
+   internal class HybridCustomUpdate : HybridCustomInsertion
    {
       private double _averageSpeedWalk;
+      private TOSolution _currentSolution;
       private IEnumerable<(RouteWorker, TimeSpan)> _candidateEdges;
 
       #region Constructors
-      internal HybridDistanceUpdate()
+      internal HybridCustomUpdate()
          : this(provider: null)
       {
       }
-      internal HybridDistanceUpdate(AlgorithmTracker provider)
+      internal HybridCustomUpdate(AlgorithmTracker provider)
          : base(provider)
       {
-         Type = AlgorithmType.HybridDistanceUpdate;
+         Type = AlgorithmType.HybridCustomUpdate;
       }
       #endregion
 
       #region Internal properties
       internal bool TourUpdated { get; set; }
+      internal TOSolution CurrentSolution => _currentSolution;
       #endregion
 
       #region Private methods
@@ -103,6 +105,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                }
                else if (pointToScore == currentPointScore)
                {
+                  // Random choose
                   nodeKeyToRemove = (new Random().Next(2) == 0)
                      ? nodeKeyToRemove : currentPointTo.Entity.Id;
                }
@@ -189,6 +192,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
             SendMessage(MessageCode.HDUTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
             TourUpdated = false;
+         }
+
+         // Notify observers.
+         if (Solver.IsMonitoringEnabled)
+         {
+            Provider.NotifyObservers(_currentSolution);
          }
       }
 

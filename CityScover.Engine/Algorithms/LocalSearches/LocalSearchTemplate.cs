@@ -125,7 +125,7 @@ namespace CityScover.Engine.Algorithms
                lk.MaxSteps = child.RunningCount;
                lk.CurrentBestSolution = CurrentBestSolution;
             }
-            else if (algorithm is HybridDistanceInsertion hnd)
+            else if (algorithm is HybridCustomInsertion hnd)
             {
                algorithm = hnd;
                hnd.CurrentBestSolution = CurrentBestSolution;

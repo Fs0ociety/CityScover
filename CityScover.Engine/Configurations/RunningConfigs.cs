@@ -56,7 +56,7 @@ namespace CityScover.Engine.Configs
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridDistanceInsertion)
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
                         {
                            AlgorithmParameters =
                            {
@@ -241,7 +241,7 @@ namespace CityScover.Engine.Configs
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridDistanceInsertion)
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
                         {
                            AlgorithmParameters =
                            {
@@ -284,7 +284,7 @@ namespace CityScover.Engine.Configs
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridDistanceInsertion)
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
                         {
                            AlgorithmParameters =
                            {
