@@ -13,6 +13,7 @@ using CityScover.Commons;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,6 +49,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private protected InterestPointWorker _endPOI;
       private protected TimeSpan _timeWalkThreshold;
       private protected Queue<InterestPointWorker> _processingNodes;
+      private protected ICollection<TOSolution> _solutionsHistory;
 
       private protected void AddPointsNotInTour()
       {
@@ -111,12 +113,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         _solutionsHistory = new Collection<TOSolution>();
 
          if (!Parameters.Any())
          {
             throw new KeyNotFoundException(nameof(Parameters));
          }
-         if (Solver.IsMonitoringEnabled)
+         if (Solver.IsMonitoringEnabled && Type == AlgorithmType.HybridCustomInsertion)
          {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             SendMessage(MessageCode.HDIStarting);
@@ -156,13 +159,14 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          _currentSolution = new TOSolution()
          {
-            SolutionGraph = _tour
+            SolutionGraph = _tour.DeepCopy()
          };
 
          Solver.EnqueueSolution(_currentSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
          SendMessage(MessageCode.HDINewNodeAdded, point.Entity.Name);
+         _solutionsHistory.Add(_currentSolution);
 
          if (!_currentSolution.IsValid)
          {
@@ -189,6 +193,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnTerminating()
       {
          base.OnTerminating();
+         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
 
          if (_addedNodesCount == 0)
          {

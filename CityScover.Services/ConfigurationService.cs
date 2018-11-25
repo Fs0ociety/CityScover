@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/11/2018
+// File update: 25/11/2018
 //
 
 using CityScover.Commons;
@@ -324,7 +324,7 @@ namespace CityScover.Services
 
          if (canCreateConfiguration)
          {
-            _lambdaWeight = GetLambdaWeight();
+            //_lambdaWeight = GetLambdaWeight();
             _algorithmMonitoring = GetAlgorithmMonitoring();
             WriteLine("\nCreation of new configuration in progress...!\n");
             await Task.Delay(1000).ConfigureAwait(continueOnCapturedContext: false);
@@ -638,42 +638,42 @@ namespace CityScover.Services
       #endregion
 
       #region Lambda weight menu
-      private double? GetLambdaWeight()
-      {
-         string valueStr = string.Empty;
-         double? lambda = default;
-         bool canProceed = default;
+      //private double? GetLambdaWeight()
+      //{
+      //   string valueStr = string.Empty;
+      //   double? lambda = default;
+      //   bool canProceed = default;
 
-         WriteLine("\n-----> CONVEX COMBINATION: [z = lambda*x + (1 - lambda)*y] <-----\n");
-         do
-         {
-            Write("Insert the value between 0 and 1 of the lambda weight typed in floating point format: ");
-            valueStr = ReadLine().Trim();
+      //   WriteLine("\n-----> CONVEX COMBINATION: [z = lambda*x + (1 - lambda)*y] <-----\n");
+      //   do
+      //   {
+      //      Write("Insert the value between 0 and 1 of the lambda weight typed in floating point format: ");
+      //      valueStr = ReadLine().Trim();
 
-            if (valueStr.Contains("."))
-            {
-               valueStr = valueStr.Replace('.', ',');
-            }
-            canProceed = double.TryParse(valueStr, out double lambdaValue) &&
-               lambdaValue >= 0 && lambdaValue <= 1;
+      //      if (valueStr.Contains("."))
+      //      {
+      //         valueStr = valueStr.Replace('.', ',');
+      //      }
+      //      canProceed = double.TryParse(valueStr, out double lambdaValue) &&
+      //         lambdaValue >= 0 && lambdaValue <= 1;
 
-            if (canProceed)
-            {
-               lambda = lambdaValue;
-            }
-            else
-            {
-               WriteLine("Invalid lambda value. Valid range is [0 - 1]\n");
-            }
-         } while (!canProceed);
+      //      if (canProceed)
+      //      {
+      //         lambda = lambdaValue;
+      //      }
+      //      else
+      //      {
+      //         WriteLine("Invalid lambda value. Valid range is [0 - 1]\n");
+      //      }
+      //   } while (!canProceed);
 
-         if (lambda.HasValue)
-         {
-            WriteLine($"\n\"Lambda weight\" set to {lambda.Value}\n");
-         }
+      //   if (lambda.HasValue)
+      //   {
+      //      WriteLine($"\n\"Lambda weight\" set to {lambda.Value}\n");
+      //   }
 
-         return lambda;
-      }
+      //   return lambda;
+      //}
       #endregion
 
       #region Algorithm Monitoring menu
@@ -755,6 +755,13 @@ namespace CityScover.Services
          bool canProceed = default;
          string response = string.Empty;
          AlgorithmType algorithm;
+
+         if (!_problemSize.HasValue)
+         {
+            WriteLine("You must set the problem size before setting the greedy algorithm!\n");
+            return;
+         }
+
          WriteLine($"Select the Greedy algorithm of stage number {stageId}.\n");
          stage.Description = StageType.StageOne;
          stage.Category = AlgorithmFamily.Greedy;
@@ -763,6 +770,8 @@ namespace CityScover.Services
          if (algorithm != AlgorithmType.None)
          {
             stage.Flow.CurrentAlgorithm = algorithm;
+            SetRelaxedConstraints(stage.Flow);
+            SetObjectiveFunctionWeight(stage.Flow);
 
             do
             {
@@ -782,11 +791,13 @@ namespace CityScover.Services
             {
                int maxNodesToAdd = GetGreedyParameters();
                var (tMaxThreshold, timeWalkThreshold) = GetCustomAlgorithmParameters();
-               stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;
+               stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;               
                stage.Flow.AlgorithmParameters[ParameterCodes.GREEDYmaxNodesToAdd] = maxNodesToAdd;
                StageFlow stageFlow = new StageFlow(AlgorithmType.HybridCustomInsertion);
                stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
                stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
+               SetRelaxedConstraints(stageFlow);
+               SetObjectiveFunctionWeight(stageFlow);
                stage.Flow.ChildrenFlows.Add(stageFlow);
             }
             else
@@ -812,6 +823,8 @@ namespace CityScover.Services
 
          if (algorithm != AlgorithmType.None)
          {
+            SetRelaxedConstraints(stage.Flow);
+            SetObjectiveFunctionWeight(stage.Flow);
             do
             {
                stage.Flow.CurrentAlgorithm = algorithm;
@@ -860,6 +873,8 @@ namespace CityScover.Services
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations] = maxDeadlockIterations;
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUtenureFactor] = tenureFactor;
                StageFlow stageFlow = new StageFlow(lsAlgorithm, runningCount);
+               SetRelaxedConstraints(stageFlow);
+               SetObjectiveFunctionWeight(stageFlow);
                bool canExecuteImprovements = GetCanDoImprovements();
 
                if (canExecuteImprovements)
@@ -881,6 +896,126 @@ namespace CityScover.Services
          else
          {
             ResetStage(stage);
+         }
+      }
+
+      private void SetRelaxedConstraints(StageFlow flow)
+      {
+         bool canProceed = default;
+         string response = string.Empty;
+
+         do
+         {
+            Write("Do you want to relax some problem constraints for this algorithm execution? [y/N]: ");
+            response = ReadLine().Trim();
+
+            canProceed = response == "y" || response == "Y" ||
+               response == "n" || response == "N";
+
+            if (!canProceed)
+            {
+               WriteLine("Entered invalid string. Insert only \"y\" or \"Y\" or \"n\" or \"N\".\n");
+            }
+         } while (!canProceed);
+
+         if (response == "y" || response == "Y")
+         {
+            SetRelaxedConstraintsInternal(flow);
+         }
+      }
+
+      private void SetRelaxedConstraintsInternal(StageFlow flow)
+      {
+         bool canProceed = default;
+         string choice = string.Empty;
+         Collection<string> relaxedConstraints = new Collection<string>();
+         do
+         {
+            WriteLine($"Select one or more constraint which you want to relax.\n");
+            WriteLine("1. Time Windows");
+            WriteLine("2. Back\n");
+
+            choice = ReadLine().Trim();
+            switch (choice)
+            {
+               case "1":
+                  relaxedConstraints.Add(Utils.TimeWindowsConstraint);
+                  canProceed = true;
+                  break;
+               default:
+                  break;
+            }
+         } while (!canProceed);
+
+         if (relaxedConstraints.Any())
+         {
+            flow.AlgorithmParameters[ParameterCodes.RelaxedConstraints] = relaxedConstraints;
+            var constraints = relaxedConstraints
+                  .Aggregate((currConstraint, nextConstraint) => currConstraint += " , " + nextConstraint);
+            WriteLine($"\nConstraints relaxed are: {constraints}.\n");
+         }
+      }
+
+      private void SetObjectiveFunctionWeight(StageFlow flow)
+      {
+         bool canProceed = default;
+         string response = string.Empty;
+
+         do
+         {
+            Write($"Do you want to change the default value for objective function (lambda) weight (Default value is {Utils.ObjectiveFunctionWeightDefault}) ? [y/N]: ");
+            response = ReadLine().Trim();
+
+            canProceed = response == "y" || response == "Y" ||
+               response == "n" || response == "N";
+
+            if (!canProceed)
+            {
+               WriteLine("Entered invalid string. Insert only \"y\" or \"Y\" or \"n\" or \"N\".\n");
+            }
+         } while (!canProceed);
+
+         if (response == "y" || response == "Y")
+         {
+            SetObjectiveFunctionWeightInternal(flow);
+         }
+      }
+
+      private void SetObjectiveFunctionWeightInternal(StageFlow flow)
+      {
+         bool canProceed = default;
+         string valueStr = string.Empty;
+         double? lambda = default;
+         Collection<string> relaxedConstraints = new Collection<string>();
+         WriteLine("\n-----> CONVEX COMBINATION: [z = lambda*x + (1 - lambda)*y] <-----\n");
+         do
+         {
+            WriteLine($"Insert the value between 0 and 1 of the lambda weight typed in floating point format.\n" +
+               $"x = Score term.\ny = Distance term.\n\nExamples: 0.5 means that both terms have the same weight into cost computation.\n" +
+               $"1 means that only the score term is taken into consideration.\n");
+            valueStr = ReadLine().Trim();
+
+            if (valueStr.Contains("."))
+            {
+               valueStr = valueStr.Replace('.', ',');
+            }
+            canProceed = double.TryParse(valueStr, out double lambdaValue) &&
+               lambdaValue >= 0 && lambdaValue <= 1;
+
+            if (canProceed)
+            {
+               lambda = lambdaValue;
+            }
+            else
+            {
+               WriteLine("Invalid lambda value. Valid range is [0 - 1]\n");
+            }
+         } while (!canProceed);
+
+         if (lambda.HasValue)
+         {
+            flow.AlgorithmParameters[ParameterCodes.ObjectiveFunctionScoreWeight] = lambda;
+            WriteLine($"\n\"Lambda weight\" set to {lambda.Value}\n");
          }
       }
 
@@ -932,7 +1067,10 @@ namespace CityScover.Services
             {
                stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
                stage.Flow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
-               stage.Flow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+               StageFlow childrenFlow = new StageFlow(improvementAlgorithm, runningCount);
+               SetRelaxedConstraints(childrenFlow);
+               SetObjectiveFunctionWeight(childrenFlow);
+               stage.Flow.ChildrenFlows.Add(childrenFlow);
             }
             else if (stage.Description == StageType.StageThree)
             {
@@ -940,7 +1078,10 @@ namespace CityScover.Services
                {
                   childFlow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
                   childFlow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
-                  childFlow.ChildrenFlows.Add(new StageFlow(improvementAlgorithm, runningCount));
+                  StageFlow nephewFlow = new StageFlow(improvementAlgorithm, runningCount);
+                  SetRelaxedConstraints(nephewFlow);
+                  SetObjectiveFunctionWeight(nephewFlow);
+                  childFlow.ChildrenFlows.Add(nephewFlow);
                }
             }
          }
@@ -951,6 +1092,8 @@ namespace CityScover.Services
             if (stage.Description == StageType.StageTwo)
             {
                StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
+               SetRelaxedConstraints(stageFlow);
+               SetObjectiveFunctionWeight(stageFlow);
                stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
                stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                stage.Flow.ChildrenFlows.Add(stageFlow);
@@ -960,6 +1103,8 @@ namespace CityScover.Services
                foreach (var childFlow in stage.Flow.ChildrenFlows)
                {
                   StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
+                  SetRelaxedConstraints(stageFlow);
+                  SetObjectiveFunctionWeight(stageFlow);
                   stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
                   stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                   childFlow.ChildrenFlows.Add(stageFlow);

@@ -178,12 +178,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          _currentSolution = new TOSolution()
          {
-            SolutionGraph = _tour
+            SolutionGraph = _tour.DeepCopy()
          };
 
          TourUpdated = true;
          SendMessage(MessageCode.HDUTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
+         _solutionsHistory.Add(_currentSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
 
@@ -199,11 +200,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             Provider.NotifyObservers(_currentSolution);
          }
-      }
-
-      internal override void OnError(Exception exception)
-      {
-         base.OnError(exception);
       }
 
       internal override void OnTerminating()
