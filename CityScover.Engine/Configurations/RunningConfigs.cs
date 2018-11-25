@@ -53,18 +53,7 @@ namespace CityScover.Engine.Configs
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.HybridCustomInsertion)
-                        {
-                           AlgorithmParameters =
-                           {
-                              [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                           }
-                        }
-                     },
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,                     
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
@@ -86,11 +75,21 @@ namespace CityScover.Engine.Configs
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
                      ChildrenFlows =
                      {
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                           }
+                        },
                         new StageFlow(AlgorithmType.LinKernighan, runningCount: 10)
                      },
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3,
                         [ParameterCodes.LSimprovementThreshold] = 2000,
                         [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                      }
@@ -110,6 +109,15 @@ namespace CityScover.Engine.Configs
                         {
                            ChildrenFlows =
                            {
+                              new StageFlow(AlgorithmType.HybridCustomInsertion)
+                              {
+                                 AlgorithmParameters =
+                                 {
+                                    [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
+                                    [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                                    [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                                 }
+                              },
                               new StageFlow(AlgorithmType.LinKernighan, 20)
                            },
                            AlgorithmParameters =
@@ -123,7 +131,8 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.TABUmaxDeadlockIterations] = 18,
-                        [ParameterCodes.TABUtenureFactor] = 2
+                        [ParameterCodes.TABUtenureFactor] = 2,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
                      }
                   }
                }

@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/11/2018
+// File update: 25/11/2018
 //
 
 using CityScover.Commons;
@@ -25,7 +25,6 @@ namespace CityScover.Engine.Algorithms
    {
       #region Private fields
       private int _previousSolutionCost;
-      //private int _currentBestSolutionCost;
       private int _iterationsWithoutImprovement;
       private bool _shouldRunImprovementAlgorithm;
       private int _improvementThreshold;
@@ -63,7 +62,6 @@ namespace CityScover.Engine.Algorithms
       internal void ResetState()
       {
          _previousSolutionCost = default;
-         //_currentBestSolutionCost = default;
          _iterationsWithoutImprovement = default;
          _shouldRunImprovementAlgorithm = default;
          _improvementThreshold = default;
@@ -187,7 +185,6 @@ namespace CityScover.Engine.Algorithms
          }
          _solutionsHistory.Add(CurrentBestSolution);
          SendMessage(MessageCode.LSStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
-         //_currentBestSolutionCost = CurrentBestSolution.Cost;
          _previousSolutionCost = default;
          _iterationsWithoutImprovement = default;
          _shouldRunImprovementAlgorithm = default;
@@ -217,15 +214,13 @@ namespace CityScover.Engine.Algorithms
          Console.ForegroundColor = ConsoleColor.DarkGreen;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
-
-         //_previousSolutionCost = _currentBestSolutionCost;
+         
          _previousSolutionCost = CurrentBestSolution.Cost;
 
          bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
          if (!AcceptImprovementsOnly || (AcceptImprovementsOnly && isBetterThanCurrentBestSolution))
          {
             CurrentBestSolution = solution;
-            //_currentBestSolutionCost = solution.Cost;
          }
 
          if (isBetterThanCurrentBestSolution)

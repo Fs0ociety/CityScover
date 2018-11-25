@@ -6,11 +6,13 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/11/2018
+// File update: 25/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +29,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private int _maxDeadlockIterations;
       private int _noImprovementsCount;
       private int _currentIteration;
+      private ICollection<TOSolution> _solutionsHistory;
       #endregion
 
       #region Constructors
@@ -172,6 +175,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
+         _solutionsHistory = new Collection<TOSolution>();
          _maxIterations = Solver.CurrentStage.Flow.RunningCount;
          _maxDeadlockIterations = Parameters[ParameterCodes.TABUmaxDeadlockIterations];
          int tabuTenureFactor = Parameters[ParameterCodes.TABUtenureFactor];
@@ -201,16 +205,12 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       }
 
       internal override async Task PerformStep()
-      {
-         //IncrementTabuMovesExpirations();
+      {         
          await RunLocalSearch().ConfigureAwait(continueOnCapturedContext: false);
 
          bool isBetterThanPreviousBestSolution = Solver.Problem.CompareSolutionsCost(
             _innerAlgorithm.CurrentBestSolution.Cost,
             _currentBestSolution.Cost);
-
-         //bool isBetterThanPreviousBestSolution =
-         //   Solver.Problem.CompareSolutionsCost(Solver.BestSolution.Cost, Solver.PreviousStageSolutionCost);
 
          if (isBetterThanPreviousBestSolution)
          {
@@ -223,6 +223,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             {
                SolutionGraph = _innerAlgorithm.CurrentBestSolution.SolutionGraph.DeepCopy()
             };
+            _solutionsHistory.Add(_currentBestSolution);
             var (firstEdgeId, secondEdgeId) = _innerAlgorithm.Move;
             _neighborhood.TabuList.Add(new TabuMove(firstEdgeId, secondEdgeId, expiration: 0));
             IncrementTabuMovesExpirations();
@@ -241,6 +242,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          base.OnTerminating();
          Solver.BestSolution = _currentBestSolution;
+         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
       }
 
       internal override bool StopConditions()
