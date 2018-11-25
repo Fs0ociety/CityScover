@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/11/2018
+// File update: 25/11/2018
 //
 
 using CityScover.Data;
@@ -40,11 +40,6 @@ namespace CityScover.Engine
          if (_solutionsQueue is null)
          {
             _solutionsQueue = new BlockingCollection<TOSolution>();
-         }
-
-         foreach (string relaxedConstraint in configuration.RelaxedConstraints)
-         {
-            ConstraintsToRelax.Add(relaxedConstraint);
          }
 
          WorkingConfiguration = configuration;

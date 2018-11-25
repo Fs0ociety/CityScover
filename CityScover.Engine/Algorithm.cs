@@ -6,13 +6,15 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 25/11/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Algorithms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine
@@ -152,6 +154,26 @@ namespace CityScover.Engine
       internal virtual void OnInitializing()
       {
          _status = AlgorithmStatus.Initializing;
+         double scoreWeight = Utils.ObjectiveFunctionWeightDefault;
+         if (Parameters.ContainsKey(ParameterCodes.ObjectiveFunctionScoreWeight))
+         {
+            double scoreParam = Parameters[ParameterCodes.ObjectiveFunctionScoreWeight];
+            if (scoreWeight >= 0 && scoreWeight <= 1)
+            {
+               scoreWeight = scoreParam;
+            }
+         }
+         Solver.CurrentObjectiveFunctionWeight = scoreWeight;
+
+         if (Parameters.ContainsKey(ParameterCodes.RelaxedConstraints))
+         {
+            Solver.ConstraintsToRelax.Clear();
+            foreach (string relaxedConstraint in Parameters[ParameterCodes.RelaxedConstraints])
+            {
+               Solver.ConstraintsToRelax.Add(relaxedConstraint);
+            }
+         }
+
          _startingTime = DateTime.Now;
       }
 

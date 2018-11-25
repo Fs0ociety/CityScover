@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/11/2018
+// File update: 25/11/2018
 //
 
 
@@ -20,6 +20,7 @@ namespace CityScover.Commons
       public const int DelayTask = 250;
       public const string TMaxConstraint = "TMax";
       public const string TimeWindowsConstraint = "Time Windows";
+      public const double ObjectiveFunctionWeightDefault = 1.0;
 
       /// <summary>
       /// Analogo al metodo di estensione ufficiale di Microsoft contenuto nel namespace System.Linq

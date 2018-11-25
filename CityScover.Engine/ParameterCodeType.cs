@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 24/11/2018
+// File update: 25/11/2018
 //
 
 namespace CityScover.Engine
@@ -18,6 +18,18 @@ namespace CityScover.Engine
       /// Flag that states if an algorithm can execute an improvement logic.
       /// </summary>
       CanDoImprovements,
+
+      /// <summary>
+      /// Relaxed constraints for this algorithm.
+      /// </summary>
+      RelaxedConstraints,
+      
+      /// <summary>
+      /// The Lambda parameter to set the score term (and the distance term) weight.
+      /// It is used into the convex combination into objective function.
+      /// It has values between 0 and 1.
+      /// </summary>
+      ObjectiveFunctionScoreWeight,
 
       /// <summary>
       /// Maximum number of nodes to add to the tour for Greedy algorithms.
