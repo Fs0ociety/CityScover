@@ -103,6 +103,29 @@ namespace CityScover.Services
             }
          }
 
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.RelaxedConstraints))
+         {
+            Collection<string> relaxedConstraints = flow.AlgorithmParameters[ParameterCodes.RelaxedConstraints];
+            if (relaxedConstraints != default)
+            {
+               var constraints = relaxedConstraints
+                  .Aggregate((currConstraint, nextConstraint) => currConstraint += "," + nextConstraint);
+               WriteLine($"{tabulator}     " +
+                  $"Relaxed constraints: \"" +                  
+                  $"{constraints}\"");
+            }
+         }
+
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.ObjectiveFunctionScoreWeight))
+         {
+            double objectiveFunctionScoreWeight = flow.AlgorithmParameters[ParameterCodes.ObjectiveFunctionScoreWeight];
+            if (objectiveFunctionScoreWeight != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Objective function score weight:  \"{objectiveFunctionScoreWeight}\"");
+            }
+         }
+
          if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LSimprovementThreshold))
          {
             int lkImprovementThreshold = flow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold];

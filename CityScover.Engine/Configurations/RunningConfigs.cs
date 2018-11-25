@@ -68,7 +68,12 @@ namespace CityScover.Engine.Configs
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6
+                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
                      }
                   }
                },
