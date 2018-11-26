@@ -25,8 +25,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       private CityMapGraph _cityMap;
       private CityMapGraph _currentSolutionGraph;
       private ICollection<RouteWorker> _executedMoves;
-      private InterestPointWorker _startPOI;
-      private InterestPointWorker _endPOI;
+      private InterestPointWorker _startPoi;
+      private InterestPointWorker _endPoi;
       private ICollection<TOSolution> _solutionsHistory;
       #endregion
 
@@ -51,10 +51,10 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #region Private methods
       private IEnumerable<InterestPointWorker> GetClosestSNeighbors()
       {
-         int predEndPOINodeId = _currentSolutionGraph.GetPredecessorNodes(_endPOI.Entity.Id).FirstOrDefault();
+         int predEndPoiNodeId = _currentSolutionGraph.GetPredecessorNodes(_endPoi.Entity.Id).FirstOrDefault();
          IEnumerable<InterestPointWorker> sCandidates = _currentSolutionGraph.TourPoints
-            .Where(node => node.Entity.Id != predEndPOINodeId 
-            && node.Entity.Id != _endPOI.Entity.Id)
+            .Where(node => node.Entity.Id != predEndPoiNodeId && 
+                           node.Entity.Id != _endPoi.Entity.Id)
             .OrderByDescending(node => node.Entity.Score.Value);
           
          //return from neighbor in GetClosestNeighbors()
@@ -103,7 +103,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       private void SwapNodes(int stopSwappingNodeId)
       {
-         int currentNodeId = _startPOI.Entity.Id;
+         int currentNodeId = _startPoi.Entity.Id;
          while (currentNodeId != stopSwappingNodeId)
          {
             var currNodeAdjNode = _currentSolutionGraph.GetAdjacentNodes(currentNodeId).FirstOrDefault();
@@ -121,17 +121,17 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       // Funzione che costruisce un nuovo ciclo hamiltoniano.
       // La funzione restituisce l'ID dell'altro nodo dell'arco che vado a togliere, poichè
       // è il punto di partenza per la chiusura del ciclo.
-      private int BuildHamiltonianPath(int sPOIId)
+      private int BuildHamiltonianPath(int sPoiId)
       {
          // Rimuovo l'unico arco di s. l'arco (j,s) per via della struttura Meriottesca è posseduto da j non da s.
-         RouteWorker sEdge = _currentSolutionGraph.GetEdges(sPOIId).FirstOrDefault();
+         RouteWorker sEdge = _currentSolutionGraph.GetEdges(sPoiId).FirstOrDefault();
          if (sEdge is null)
          {
             throw new InvalidOperationException();
          }
 
          int sEdgePointToId = sEdge.Entity.PointTo.Id;
-         _currentSolutionGraph.RemoveEdge(sPOIId, sEdgePointToId);
+         _currentSolutionGraph.RemoveEdge(sPoiId, sEdgePointToId);
          return sEdgePointToId;
       }
       #endregion
@@ -153,10 +153,10 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          _currentSolutionGraph = CurrentBestSolution.SolutionGraph.DeepCopy();
 
-         _startPOI = CurrentBestSolution.SolutionGraph.GetStartPoint();
-         _endPOI = CurrentBestSolution.SolutionGraph.GetEndPoint();
+         _startPoi = CurrentBestSolution.SolutionGraph.GetStartPoint();
+         _endPoi = CurrentBestSolution.SolutionGraph.GetEndPoint();
 
-         if (_startPOI is null || _endPOI is null)
+         if (_startPoi is null || _endPoi is null)
          {
             throw new NullReferenceException();
          }
@@ -172,17 +172,17 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          // Tolgo l'arco (j,i).
          SendMessage(_currentSolutionGraph.ToString());
-         _currentSolutionGraph.RemoveEdge(_endPOI.Entity.Id, _startPOI.Entity.Id);
+         _currentSolutionGraph.RemoveEdge(_endPoi.Entity.Id, _startPoi.Entity.Id);
 
          var sNodesCandidates = GetClosestSNeighbors();
          foreach (var sNodeCandidate in sNodesCandidates)
          {
-            RouteWorker fromEndNodeToSNodeEdge = _cityMap.GetEdge(_endPOI.Entity.Id, sNodeCandidate.Entity.Id);
+            RouteWorker fromEndNodeToSNodeEdge = _cityMap.GetEdge(_endPoi.Entity.Id, sNodeCandidate.Entity.Id);
             if (!_executedMoves.Contains(fromEndNodeToSNodeEdge))
             {
                sNode = sNodeCandidate;
                // Build Steam And Cycle.
-               _currentSolutionGraph.AddRouteFromGraph(_cityMap, _endPOI.Entity.Id, sNodeCandidate.Entity.Id);
+               _currentSolutionGraph.AddRouteFromGraph(_cityMap, _endPoi.Entity.Id, sNodeCandidate.Entity.Id);
                _executedMoves.Add(fromEndNodeToSNodeEdge);
                break;
             }
@@ -202,7 +202,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          SwapNodes(sNode.Entity.Id);
 
          // Poi ricreo il ciclo.         
-         _currentSolutionGraph.AddRouteFromGraph(_cityMap, _startPOI.Entity.Id, junctionNodeId);
+         _currentSolutionGraph.AddRouteFromGraph(_cityMap, _startPoi.Entity.Id, junctionNodeId);
          
          TOSolution newSolution = new TOSolution()
          {
@@ -217,7 +217,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             Provider.NotifyObservers(newSolution);
          }
 
-         _endPOI = _currentSolutionGraph.GetEndPoint();
+         _endPoi = _currentSolutionGraph.GetEndPoint();
       }
 
       internal override void OnTerminating()

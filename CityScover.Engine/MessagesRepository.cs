@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 20/11/2018
+// File update: 26/11/2018
 //
 
 using System.Collections.Generic;
@@ -15,12 +15,12 @@ namespace CityScover.Engine.Algorithms
 {
    internal static class MessagesRepository
    {
-      private static IDictionary<MessageCode, string> _algorithmMessages;
+      private static readonly IDictionary<MessageCode, string> AlgorithmMessages;
 
       #region Static constructors
       static MessagesRepository()
       {
-         _algorithmMessages = new Dictionary<MessageCode, string>()
+         AlgorithmMessages = new Dictionary<MessageCode, string>()
          {
             [MessageCode.None] = string.Empty,
             [MessageCode.GreedyNodeAdded] = "Point of interest \"{0}\" added to solution {1}.",
@@ -75,12 +75,9 @@ namespace CityScover.Engine.Algorithms
       #region Internal methods
       internal static string GetMessage(MessageCode code, params object[] messageList)
       {
-         if (!_algorithmMessages.ContainsKey(code))
-         {
-            return string.Empty;
-         }
-
-         return string.Format(_algorithmMessages[code], messageList);
+         return !AlgorithmMessages.ContainsKey(code) 
+            ? string.Empty 
+            : string.Format(AlgorithmMessages[code], messageList);
       }
       #endregion
    }

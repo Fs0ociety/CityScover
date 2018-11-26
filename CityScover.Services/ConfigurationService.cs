@@ -11,7 +11,6 @@
 
 using CityScover.Commons;
 using CityScover.Engine;
-using CityScover.Engine.Configs;
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using CityScover.Engine.Configurations;
 using static System.Console;
 
 namespace CityScover.Services

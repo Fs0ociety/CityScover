@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -42,8 +42,12 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          while (currentNodeId != edge2PointFromId)
          {
-            var currNodeAdjNode = newSolutionGraph.GetAdjacentNodes(currentNodeId)
-               .Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
+            //var currNodeAdjNode = newSolutionGraph.GetAdjacentNodes(currentNodeId)
+            //   .Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
+
+            var currNodeAdjNode = newSolutionGraph
+               .GetAdjacentNodes(currentNodeId)
+               .FirstOrDefault(x => x != candidateEdge.Entity.PointTo.Id);
 
             if (currNodeAdjNode == 0)
             {

@@ -11,10 +11,10 @@
 
 using CityScover.Commons;
 using CityScover.Engine;
-using CityScover.Engine.Configs;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CityScover.Engine.Configurations;
 
 namespace CityScover.Services
 {

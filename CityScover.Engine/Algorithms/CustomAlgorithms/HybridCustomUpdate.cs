@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 24/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Commons;
@@ -48,16 +48,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          // Set of tuples containing infos: (Route, Travel time)
          Collection<(RouteWorker, TimeSpan)> removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
 
-         var centralTourRoutes = _tour.Edges
-            .Where(edge => edge.Entity.PointFrom.Id != _startPOI.Entity.Id &&
-                           edge.Entity.PointTo.Id != _startPOI.Entity.Id);
+         var centralTourRoutes = Tour.Edges
+            .Where(edge => edge.Entity.PointFrom.Id != StartPoi.Entity.Id &&
+                           edge.Entity.PointTo.Id != StartPoi.Entity.Id);
 
          foreach (var route in centralTourRoutes)
          {
             double tWalkMinutes = (route.Weight.Invoke() / _averageSpeedWalk) / 60.0;
             TimeSpan timeRouteWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
-            if (timeRouteWalk > _timeWalkThreshold)
+            if (timeRouteWalk > TimeWalkThreshold)
             {
                var removalEdgeCandidate = (route, timeRouteWalk);
                removalEdgesCandidates.Add(removalEdgeCandidate);
@@ -86,17 +86,17 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             if (tEdgeWalk < tWalk)
             {
-               int currentPointToId = _tour.Edges
+               int currentPointToId = Tour.Edges
                   .Where(e => e.Entity.PointFrom.Id == edge.Entity.PointTo.Id)
                   .Select(e => e.Entity.PointTo.Id)
                   .FirstOrDefault();
 
-               if (!_tour.ContainsNode(currentPointToId))
+               if (!Tour.ContainsNode(currentPointToId))
                {
                   throw new NullReferenceException(nameof(currentPointToId));
                }
 
-               InterestPointWorker currentPointTo = _tour[currentPointToId];
+               InterestPointWorker currentPointTo = Tour[currentPointToId];
                int pointToScore = currentPointTo.Entity.Score.Value;
                if (pointToScore < currentPointScore)
                {
@@ -117,12 +117,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       private (int, int) GetBorderPoints(int nodeKeyToRemove)
       {
-         int predecessorNodeKey = _tour.Edges
+         int predecessorNodeKey = Tour.Edges
             .Where(edge => edge.Entity.PointTo.Id == nodeKeyToRemove)
             .Select(edge => edge.Entity.PointFrom.Id)
             .FirstOrDefault();
 
-         int successorNodeKey = _tour.Edges
+         int successorNodeKey = Tour.Edges
             .Where(edge => edge.Entity.PointFrom.Id == nodeKeyToRemove)
             .Select(edge => edge.Entity.PointTo.Id)
             .FirstOrDefault();
@@ -134,26 +134,26 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          int nodeKeyToAdd = nodeToAdd.Entity.Id;
 
-         _tour.RemoveEdge(predecessorNodeKey, nodeKeyToRemove);
-         _tour.RemoveEdge(nodeKeyToRemove, successorNodeKey);
-         _tour.RemoveNode(nodeKeyToRemove);
+         Tour.RemoveEdge(predecessorNodeKey, nodeKeyToRemove);
+         Tour.RemoveEdge(nodeKeyToRemove, successorNodeKey);
+         Tour.RemoveNode(nodeKeyToRemove);
 
-         _tour.AddNode(nodeKeyToAdd, nodeToAdd);
-         _tour.AddRouteFromGraph(Solver.CityMapGraph, predecessorNodeKey, nodeKeyToAdd);
-         _tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, successorNodeKey);
+         Tour.AddNode(nodeKeyToAdd, nodeToAdd);
+         Tour.AddRouteFromGraph(Solver.CityMapGraph, predecessorNodeKey, nodeKeyToAdd);
+         Tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, successorNodeKey);
       }
 
       private void UndoUpdate(InterestPointWorker nodeToRestore, int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToRestore = nodeToRestore.Entity.Id;
 
-         _tour.RemoveEdge(predecessorNodeKey, nodeKeyToRemove);
-         _tour.RemoveEdge(nodeKeyToRemove, successorNodeKey);
-         _tour.RemoveNode(nodeKeyToRemove);
+         Tour.RemoveEdge(predecessorNodeKey, nodeKeyToRemove);
+         Tour.RemoveEdge(nodeKeyToRemove, successorNodeKey);
+         Tour.RemoveNode(nodeKeyToRemove);
 
-         _tour.AddNode(nodeKeyToRestore, nodeToRestore);
-         _tour.AddRouteFromGraph(Solver.CityMapGraph, predecessorNodeKey, nodeKeyToRestore);
-         _tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToRestore, successorNodeKey);
+         Tour.AddNode(nodeKeyToRestore, nodeToRestore);
+         Tour.AddRouteFromGraph(Solver.CityMapGraph, predecessorNodeKey, nodeKeyToRestore);
+         Tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToRestore, successorNodeKey);
       }
       #endregion
 
@@ -168,23 +168,23 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       internal override async Task PerformStep()
       {
-         InterestPointWorker candidateNode = _processingNodes.Dequeue();
+         InterestPointWorker candidateNode = ProcessingNodes.Dequeue();
          int nodeKeyToRemove = FindPointToRemove(candidateNode.Entity.Id);
          var (predecessorNodeKey, successorNodeKey) = GetBorderPoints(nodeKeyToRemove);
-         InterestPointWorker nodeToRemove = _tour.TourPoints
-            .Where(point => point.Entity.Id == nodeKeyToRemove)
-            .FirstOrDefault();
          UpdateTour(candidateNode, nodeKeyToRemove, predecessorNodeKey, successorNodeKey);
+
+         InterestPointWorker nodeToRemove = Tour.TourPoints
+            .FirstOrDefault(point => point.Entity.Id == nodeKeyToRemove);
 
          _currentSolution = new TOSolution()
          {
-            SolutionGraph = _tour.DeepCopy()
+            SolutionGraph = Tour.DeepCopy()
          };
 
          TourUpdated = true;
          SendMessage(MessageCode.HDUTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
-         _solutionsHistory.Add(_currentSolution);
+         SolutionsHistory.Add(_currentSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
 

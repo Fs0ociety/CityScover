@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -42,22 +42,22 @@ namespace CityScover.Engine.Algorithms.Greedy
       /// <returns></returns>
       protected override InterestPointWorker GetBestNeighbor(InterestPointWorker interestPoint)
       {
-         var adjPOIIds = _cityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
+         var adjPoiIds = CityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
 
          var tempNodes = new Collection<(int NodeKey, double Ratio)>();
-         adjPOIIds.ToList().ForEach(adjPOIId => AddWeightedNode(adjPOIId));
+         adjPoiIds.ToList().ForEach(AddWeightedNode);
 
          // First local function: AddWeightedNode
-         void AddWeightedNode(int adjPOIId)
+         void AddWeightedNode(int adjPoiId)
          {
-            var node = _cityMapClone[adjPOIId];
+            var node = CityMapClone[adjPoiId];
             if (node.IsVisited)
             {
                return;
             }
 
             int deltaScore = Math.Abs(node.Entity.Score.Value - interestPoint.Entity.Score.Value);
-            RouteWorker edge = _cityMapClone.GetEdge(interestPoint.Entity.Id, adjPOIId);
+            RouteWorker edge = CityMapClone.GetEdge(interestPoint.Entity.Id, adjPoiId);
             if (edge is null)
             {
                return;
@@ -65,7 +65,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             
             //var value = node.Entity.Score.Value / edge.Weight.Invoke();
             var value = deltaScore / edge.Weight.Invoke();
-            tempNodes.Add((adjPOIId, value));
+            tempNodes.Add((adjPoiId, value));
          }
 
          var tempNodesSorted = from node in tempNodes
@@ -76,7 +76,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          int candidateNodeId = tempNodesSorted.FirstOrDefault();
          if (candidateNodeId != 0)
          {
-            candidateNode = _cityMapClone[candidateNodeId];
+            candidateNode = CityMapClone[candidateNodeId];
          }
 
          return candidateNode;

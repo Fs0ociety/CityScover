@@ -7,29 +7,29 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 26/11/2018
 //
 
-using CityScover.Commons;
-using CityScover.Engine.Algorithms.CustomAlgorithms;
-using CityScover.Engine.Algorithms.Neighborhoods;
-using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using CityScover.Commons;
+using CityScover.Engine.Algorithms.CustomAlgorithms;
+using CityScover.Engine.Algorithms.Neighborhoods;
+using CityScover.Engine.Algorithms.VariableDepthSearch;
 
-namespace CityScover.Engine.Algorithms
+namespace CityScover.Engine.Algorithms.LocalSearches
 {
    internal class LocalSearchTemplate : Algorithm
    {
       #region Private fields
+      private readonly NeighborhoodFacade _neighborhoodFacade;
       private int _previousSolutionCost;
       private int _iterationsWithoutImprovement;
       private bool _shouldRunImprovementAlgorithm;
       private int _improvementThreshold;
       private int _maxIterationsWithoutImprovements;
-      private NeighborhoodFacade _neighborhoodFacade;
       private ICollection<TOSolution> _solutionsHistory;
       #endregion
 
@@ -112,21 +112,21 @@ namespace CityScover.Engine.Algorithms
             yield return null;
          }
 
-         Algorithm algorithm = default;
          foreach (var child in childrenAlgorithms)
          {
-            algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
+            var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
 
-            if (algorithm is LinKernighan lk)
+            switch (algorithm)
             {
-               algorithm = lk;
-               lk.MaxSteps = child.RunningCount;
-               lk.CurrentBestSolution = CurrentBestSolution;
-            }
-            else if (algorithm is HybridCustomInsertion hnd)
-            {
-               algorithm = hnd;
-               hnd.CurrentBestSolution = CurrentBestSolution;
+               case LinKernighan lk:
+                  algorithm = lk;
+                  lk.MaxSteps = child.RunningCount;
+                  lk.CurrentBestSolution = CurrentBestSolution;
+                  break;
+               case HybridCustomInsertion hnd:
+                  algorithm = hnd;
+                  hnd.CurrentBestSolution = CurrentBestSolution;
+                  break;
             }
 
             if (algorithm is null)

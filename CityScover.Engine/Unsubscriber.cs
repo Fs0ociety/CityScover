@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 26/11/2018
 //
 
 using System;
@@ -17,16 +17,16 @@ namespace CityScover.Engine
    /// <summary>
    /// TODO
    /// </summary>
-   /// <typeparam name="Solution"></typeparam>
-   internal class Unsubscriber<Solution> : IDisposable
+   /// <typeparam name="TSolution"></typeparam>
+   internal class Unsubscriber<TSolution> : IDisposable
    {
       #region Private fields
-      private ICollection<IObserver<Solution>> _observers;
-      private readonly IObserver<Solution> _observer;
+      private readonly ICollection<IObserver<TSolution>> _observers;
+      private readonly IObserver<TSolution> _observer;
       #endregion
 
       #region Constructors
-      internal Unsubscriber(ICollection<IObserver<Solution>> observers, IObserver<Solution> observer)
+      internal Unsubscriber(ICollection<IObserver<TSolution>> observers, IObserver<TSolution> observer)
       {
          _observers = observers;
          _observer = observer;

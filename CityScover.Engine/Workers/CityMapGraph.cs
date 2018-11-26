@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 17/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -28,20 +28,20 @@ namespace CityScover.Engine.Workers
       #endregion
 
       #region Internal methods
-      internal void AddRouteFromGraph(CityMapGraph source, int fromPOIKey, int toPOIKey)
+      internal void AddRouteFromGraph(CityMapGraph source, int fromPoiKey, int toPoiKey)
       {
          if (source is null)
          {
             throw new ArgumentNullException();
          }
 
-         RouteWorker edge = source.GetEdge(fromPOIKey, toPOIKey);
+         RouteWorker edge = source.GetEdge(fromPoiKey, toPoiKey);
          if (edge is null)
          {
             throw new InvalidOperationException();
          }
 
-         AddEdge(fromPOIKey, toPOIKey, edge);
+         AddEdge(fromPoiKey, toPoiKey, edge);
       }
 
       internal void AddNodeFromGraph(CityMapGraph source, int nodeKey)
@@ -72,9 +72,7 @@ namespace CityScover.Engine.Workers
             throw new InvalidOperationException();
          }
 
-         return Nodes
-            .Where(x => x.Entity.Id == startNodeId)
-            .FirstOrDefault();
+         return Nodes.FirstOrDefault(x => x.Entity.Id == startNodeId);
       }
 
       internal InterestPointWorker GetEndPoint()
@@ -121,14 +119,14 @@ namespace CityScover.Engine.Workers
 
       internal void CalculateTimes()
       {
-         int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
+         int startPoiId = Solver.Instance.WorkingConfiguration.StartingPointId;
          DateTime currNodeTotalTime = Solver.Instance.WorkingConfiguration.ArrivalTime;
          DateTime currNodeArrivalTime = currNodeTotalTime;
          TimeSpan currNodeWaitOpeningTime = default;
 
-         BreadthFirstSearch(startPOIId,
+         BreadthFirstSearch(startPoiId,
             (node, isVisited) => node.IsVisited = isVisited,
-            node => { return node.IsVisited; },
+            node => node.IsVisited,
             node =>
             {
                node.ArrivalTime = currNodeArrivalTime;
@@ -208,18 +206,18 @@ namespace CityScover.Engine.Workers
       #region Overrides
       public override string ToString()
       {
-         string result = String.Empty;
-         int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
-         BreadthFirstSearch(startPOIId,
+         string result = string.Empty;
+         int startPoiId = Solver.Instance.WorkingConfiguration.StartingPointId;
+         BreadthFirstSearch(startPoiId,
             (node, isVisited) => node.IsVisited = isVisited,
-            (node) => { return node.IsVisited; },
+            (node) => node.IsVisited,
             node => {
                string message = MessagesRepository.GetMessage(MessageCode.CMGraphNodeToString, node.Entity.Name, node.ArrivalTime.ToString("HH:mm"));
                result += $"({node.Entity.Id} - {message})";
             },
             edge =>
             {
-               if (edge.Entity.PointTo.Id != startPOIId)
+               if (edge.Entity.PointTo.Id != startPoiId)
                {
                   result += $" --> ";
                }

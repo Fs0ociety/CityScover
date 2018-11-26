@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Algorithms.Metaheuristics;
@@ -20,7 +20,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    internal class TabuSearchNeighborhood : Neighborhood
    {
       private Neighborhood _neighborhoodWorker;
-      private IList<TabuMove> _tabuList;
+      private readonly IList<TabuMove> _tabuList;
 
       #region Constructors
       internal TabuSearchNeighborhood()
@@ -49,10 +49,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             throw new ArgumentNullException($"{nameof(value)} can not be null");
       }
 
-      internal IList<TabuMove> TabuList
-      {
-         get => _tabuList;
-      }
+      internal IList<TabuMove> TabuList => _tabuList;
       #endregion
 
       #region Internal methods
@@ -65,18 +62,15 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
          TabuMove forbiddenMove = _tabuList
-            .Where(move => move.FirstEdgeId == currentEdge.Entity.Id && 
-                           move.SecondEdgeId == candidateEdge.Entity.Id)
-            .FirstOrDefault();
+            .FirstOrDefault(move => move.FirstEdgeId == currentEdge.Entity.Id && 
+                                    move.SecondEdgeId == candidateEdge.Entity.Id);
 
          if (forbiddenMove != null)
          {
             return default;
          }
 
-         TOSolution solution = _neighborhoodWorker.ProcessCandidate(currentEdge, candidateEdge);
-         //TabuMove reversedMove = new TabuMove(currentEdge, candidateEdge, expiration: 0);
-         //_tabuList.Add(reversedMove);
+         var solution = _neighborhoodWorker.ProcessCandidate(currentEdge, candidateEdge);
          return solution;
       }
       #endregion

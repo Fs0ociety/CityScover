@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Commons;
@@ -127,12 +127,11 @@ namespace CityScover.Engine
       {
          bool satisfied = true;
          CityMapGraph solutionGraph = solution.SolutionGraph;
-         int startPOIId = Solver.Instance.WorkingConfiguration.StartingPointId;
-         IEnumerator<InterestPointWorker> processingNodes = solutionGraph.TourPoints.GetEnumerator();
+         var processingNodes = solutionGraph.TourPoints.GetEnumerator();
 
          while (satisfied && processingNodes.MoveNext())
          {
-            InterestPointWorker node = processingNodes.Current;
+            var node = processingNodes.Current;
             TimeSpan visitTime = default;
             if (node.Entity.TimeVisit.HasValue)
             {

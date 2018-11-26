@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -14,13 +14,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using CityScover.Engine.Algorithms.LocalSearches;
 
 namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal class NeighborhoodFacade
    {
-      private Neighborhood _neighborhood;
-      private LocalSearchTemplate _algorithm;
+      private readonly Neighborhood _neighborhood;
+      private readonly LocalSearchTemplate _algorithm;
 
       #region Constructors
       internal NeighborhoodFacade(Neighborhood neighborhood, LocalSearchTemplate algorithm)
@@ -72,25 +73,22 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          ICollection<TOSolution> neighborhood = default;
          IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges = default;
 
-         if (runningMode == RunningMode.Parallel)
-         {
-            candidateEdges = _neighborhood.GetCandidatesParallel(solution);
-         }
-         else
-         {
-            candidateEdges = _neighborhood.GetCandidates(solution);
-         }
+         candidateEdges = runningMode == RunningMode.Parallel 
+            ? _neighborhood.GetCandidatesParallel(solution) 
+            : _neighborhood.GetCandidates(solution);
 
          if (candidateEdges is null)
          {
-            return neighborhood;
-         }
-         if (candidateEdges.Any())
-         {
-            neighborhood = new Collection<TOSolution>();
-            ProcessCandidates(candidateEdges, solution, neighborhood);
+            return null;
          }
 
+         if (!candidateEdges.Any())
+         {
+            return null;
+         }
+
+         neighborhood = new Collection<TOSolution>();
+         ProcessCandidates(candidateEdges, solution, neighborhood);
          return neighborhood;
       }
       #endregion

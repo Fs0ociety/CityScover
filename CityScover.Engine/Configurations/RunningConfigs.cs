@@ -6,27 +6,23 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 26/11/2018
 //
 
-using CityScover.Commons;
-using CityScover.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using CityScover.Commons;
+using CityScover.Entities;
 
-namespace CityScover.Engine.Configs
+namespace CityScover.Engine.Configurations
 {
    public static class RunningConfigs
    {
-      #region Private fields
-      private readonly static ICollection<Configuration> _configurations;
-      #endregion
-
       #region Static Constructors
       static RunningConfigs()
       {
-         _configurations = new Collection<Configuration>();
+         Configurations = new Collection<Configuration>();
          CreateConfigurationsTest();
       }
       #endregion
@@ -321,12 +317,12 @@ namespace CityScover.Engine.Configs
          //};
          #endregion
 
-         _configurations.Add(c1Test);
+         Configurations.Add(c1Test);
       }
       #endregion
 
       #region Public properties
-      public static ICollection<Configuration> Configurations => _configurations;
+      public static ICollection<Configuration> Configurations { get; }
       #endregion
    }
 }

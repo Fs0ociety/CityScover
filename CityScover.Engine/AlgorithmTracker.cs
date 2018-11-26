@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 26/10/2018
+// File update: 26/11/2018
 //
 
 using System;
@@ -20,7 +20,7 @@ namespace CityScover.Engine
    internal class AlgorithmTracker : IObservable<TOSolution>
    {
       #region Private fields
-      private ICollection<IObserver<TOSolution>> _observers;
+      private readonly ICollection<IObserver<TOSolution>> _observers;
       #endregion
 
       #region Constructors

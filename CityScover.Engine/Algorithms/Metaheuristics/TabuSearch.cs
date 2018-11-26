@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -15,14 +15,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CityScover.Engine.Algorithms.LocalSearches;
 
 namespace CityScover.Engine.Algorithms.Metaheuristics
 {
    internal class TabuSearch : Algorithm
    {
       #region Private fields
+      private readonly TabuSearchNeighborhood _neighborhood;
       private LocalSearchTemplate _innerAlgorithm;
-      private TabuSearchNeighborhood _neighborhood;
       private TOSolution _currentBestSolution;
       private int _tenure;
       private int _maxIterations;
@@ -75,12 +76,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private LocalSearchTemplate GetLocalSearchAlgorithm()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms is null)
-         {
-            return null;
-         }
 
-         var flow = childrenAlgorithms.FirstOrDefault();
+         var flow = childrenAlgorithms?.FirstOrDefault();
          if (flow is null)
          {
             return null;

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 20/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -23,13 +23,13 @@ namespace CityScover.Engine.Algorithms.Greedy
       private bool _canDoImprovements;
 
       #region Protected fields
-      protected double _averageSpeedWalk;
-      protected CityMapGraph _cityMapClone;
-      protected DateTime _timeSpent;
-      protected InterestPointWorker _startingPoint;
-      protected CityMapGraph _tour;
-      protected ICollection<TOSolution> _solutionsHistory;
-      protected Queue<int> _processingNodes;
+      protected double AverageSpeedWalk;
+      protected CityMapGraph CityMapClone;
+      protected DateTime TimeSpent;
+      protected InterestPointWorker StartingPoint;
+      protected CityMapGraph Tour;
+      protected ICollection<TOSolution> SolutionsHistory;
+      protected Queue<int> ProcessingNodes;
       #endregion
 
       #region Constructors
@@ -53,10 +53,9 @@ namespace CityScover.Engine.Algorithms.Greedy
             yield return null;
          }
 
-         Algorithm algorithm = default;
          foreach (var child in childrenAlgorithms)
          {
-            algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
+            var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
             if (algorithm is null)
             {
                throw new NullReferenceException(nameof(algorithm));
@@ -98,10 +97,10 @@ namespace CityScover.Engine.Algorithms.Greedy
          int bestScore = default;
          InterestPointWorker candidateNode = default;
 
-         var adjPOIIds = _cityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
-         adjPOIIds.ToList().ForEach(adjPOIId =>
+         var adjPoiIds = CityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
+         adjPoiIds.ToList().ForEach(adjPoiId =>
          {
-            var adjNode = _cityMapClone[adjPOIId];
+            var adjNode = CityMapClone[adjPoiId];
             if (adjNode.IsVisited)
             {
                return;
@@ -116,7 +115,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             else if (deltaScore == bestScore)
             {
                CityMapGraph.SetRandomCandidateId(candidateNode, adjNode, out int pointId);
-               candidateNode = _cityMapClone[pointId];
+               candidateNode = CityMapClone[pointId];
             }
          });
 
@@ -128,11 +127,11 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
-         _tour = new CityMapGraph();
-         _processingNodes = new Queue<int>();
-         _solutionsHistory = new Collection<TOSolution>();
-         _cityMapClone = Solver.CityMapGraph.DeepCopy();
+         AverageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
+         Tour = new CityMapGraph();
+         ProcessingNodes = new Queue<int>();
+         SolutionsHistory = new Collection<TOSolution>();
+         CityMapClone = Solver.CityMapGraph.DeepCopy();
          _canDoImprovements = default;
          int maxNodesToAdd = default;
 
@@ -148,47 +147,47 @@ namespace CityScover.Engine.Algorithms.Greedy
          Solver.CityMapGraph.TourPoints
             .Select(node => node.Entity.Id)
             .ToList()
-            .ForEach(nodeId => _processingNodes.Enqueue(nodeId));
+            .ForEach(nodeId => ProcessingNodes.Enqueue(nodeId));
 
          if (maxNodesToAdd != default)
          {
-            _processingNodes.Clear();
+            ProcessingNodes.Clear();
             Solver.CityMapGraph.TourPoints
                .Take(maxNodesToAdd)
                .Select(node => node.Entity.Id).ToList()
-               .ForEach(nodeId => _processingNodes.Enqueue(nodeId));
+               .ForEach(nodeId => ProcessingNodes.Enqueue(nodeId));
          }
 
-         _startingPoint = _cityMapClone.GetStartPoint();
-         if (_startingPoint is null)
+         StartingPoint = CityMapClone.GetStartPoint();
+         if (StartingPoint is null)
          {
             throw new OperationCanceledException(
-               $"{nameof(_startingPoint)} in {nameof(NearestNeighbor)}");
+               $"{nameof(StartingPoint)} in {nameof(NearestNeighbor)}");
          }
 
-         _timeSpent = DateTime.Now;
-         _startingPoint.IsVisited = true;
+         TimeSpent = DateTime.Now;
+         StartingPoint.IsVisited = true;
       }
 
       internal override void OnError(Exception exception)
       {
          CurrentStep = default;
-         TOSolution lastProducedSolution = _solutionsHistory.Last();
+         TOSolution lastProducedSolution = SolutionsHistory.Last();
          base.OnError(exception);
       }
 
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         Solver.BestSolution = _solutionsHistory.Last();
+         Solver.BestSolution = SolutionsHistory.Last();
       }
 
       internal override void OnTerminated()
       {
-         _cityMapClone = null;
-         TOSolution bestProducedSolution = _solutionsHistory.Last();
+         CityMapClone = null;
+         TOSolution bestProducedSolution = SolutionsHistory.Last();
 
-         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
+         SendMessage(TOSolution.SolutionCollectionToString(SolutionsHistory));
 
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          SendMessage(MessageCode.GreedyFinish);
@@ -210,7 +209,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       internal override bool StopConditions()
       {
-         return !_processingNodes.Any() || base.StopConditions();
+         return !ProcessingNodes.Any() || base.StopConditions();
       }
       #endregion
    }

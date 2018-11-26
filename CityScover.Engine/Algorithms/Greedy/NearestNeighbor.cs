@@ -6,11 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 24/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Commons;
-using CityScover.Engine.Workers;
 using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.Greedy
@@ -39,61 +38,61 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         var startingPointId = _startingPoint.Entity.Id;
-         _tour.AddNode(startingPointId, _startingPoint);
-         var neighborPOI = GetBestNeighbor(_startingPoint);
-         if (neighborPOI is null)
+         var startingPointId = StartingPoint.Entity.Id;
+         Tour.AddNode(startingPointId, StartingPoint);
+         var neighborPoi = GetBestNeighbor(StartingPoint);
+         if (neighborPoi is null)
          {
             return;
          }
 
-         neighborPOI.IsVisited = true;
-         var neighborPOIId = neighborPOI.Entity.Id;
-         _tour.AddNode(neighborPOIId, neighborPOI);
-         _tour.AddRouteFromGraph(_cityMapClone, startingPointId, neighborPOIId);
-         _tour.AddRouteFromGraph(_cityMapClone, neighborPOIId, startingPointId);
-         _previousCandidateId = neighborPOI.Entity.Id;
+         neighborPoi.IsVisited = true;
+         var neighborPoiId = neighborPoi.Entity.Id;
+         Tour.AddNode(neighborPoiId, neighborPoi);
+         Tour.AddRouteFromGraph(CityMapClone, startingPointId, neighborPoiId);
+         Tour.AddRouteFromGraph(CityMapClone, neighborPoiId, startingPointId);
+         _previousCandidateId = neighborPoi.Entity.Id;
       }
 
       internal override async Task PerformStep()
       {
-         _tour.RemoveEdge(_previousCandidateId, _startingPoint.Entity.Id);
-         InterestPointWorker newStartPOI = _cityMapClone[_processingNodes.Dequeue()];
+         Tour.RemoveEdge(_previousCandidateId, StartingPoint.Entity.Id);
+         var newStartPoi = CityMapClone[ProcessingNodes.Dequeue()];
 
-         var candidatePOI = GetBestNeighbor(newStartPOI);
-         if (candidatePOI is null)
+         var candidatePoi = GetBestNeighbor(newStartPoi);
+         if (candidatePoi is null)
          {
-            _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, _startingPoint.Entity.Id);
+            Tour.AddRouteFromGraph(CityMapClone, _previousCandidateId, StartingPoint.Entity.Id);
             return;
          }
          
-         candidatePOI.IsVisited = true;
-         _tour.AddNode(candidatePOI.Entity.Id, candidatePOI);
-         _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, candidatePOI.Entity.Id);
-         _tour.AddRouteFromGraph(_cityMapClone, candidatePOI.Entity.Id, _startingPoint.Entity.Id);
+         candidatePoi.IsVisited = true;
+         Tour.AddNode(candidatePoi.Entity.Id, candidatePoi);
+         Tour.AddRouteFromGraph(CityMapClone, _previousCandidateId, candidatePoi.Entity.Id);
+         Tour.AddRouteFromGraph(CityMapClone, candidatePoi.Entity.Id, StartingPoint.Entity.Id);
          
          TOSolution newSolution = new TOSolution()
          {
-            SolutionGraph = _tour.DeepCopy()
+            SolutionGraph = Tour.DeepCopy()
          };
 
-         SendMessage(MessageCode.GreedyNodeAdded, candidatePOI.Entity.Name, newSolution.Id);
-         _solutionsHistory.Add(newSolution);
+         SendMessage(MessageCode.GreedyNodeAdded, candidatePoi.Entity.Name, newSolution.Id);
+         SolutionsHistory.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
          await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[newSolution.Id];
 
          if (!newSolution.IsValid)
          {
-            _tour.RemoveEdge(_previousCandidateId, candidatePOI.Entity.Id);
-            _tour.RemoveEdge(candidatePOI.Entity.Id, _startingPoint.Entity.Id);
-            _tour.RemoveNode(candidatePOI.Entity.Id);
-            _tour.AddRouteFromGraph(_cityMapClone, _previousCandidateId, _startingPoint.Entity.Id);
-            SendMessage(MessageCode.GreedyNodeRemoved, candidatePOI.Entity.Name);
+            Tour.RemoveEdge(_previousCandidateId, candidatePoi.Entity.Id);
+            Tour.RemoveEdge(candidatePoi.Entity.Id, StartingPoint.Entity.Id);
+            Tour.RemoveNode(candidatePoi.Entity.Id);
+            Tour.AddRouteFromGraph(CityMapClone, _previousCandidateId, StartingPoint.Entity.Id);
+            SendMessage(MessageCode.GreedyNodeRemoved, candidatePoi.Entity.Name);
          }
          else
          {
-            _previousCandidateId = candidatePOI.Entity.Id;
+            _previousCandidateId = candidatePoi.Entity.Id;
          }
 
          // Notify observers.

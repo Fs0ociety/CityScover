@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -61,9 +61,7 @@ namespace CityScover.Engine
       /// <returns></returns>
       internal async Task Run(Algorithm algorithm)
       {
-         //_timer = Stopwatch.StartNew();
-         await Task.Run(() => algorithm.Start());         
-         //RunningTime = _timer;
+         await Task.Run(algorithm.Start);         
       }
       #endregion
 

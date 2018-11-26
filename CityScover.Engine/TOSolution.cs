@@ -73,10 +73,7 @@ namespace CityScover.Engine
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
       internal CityMapGraph SolutionGraph {
-         get
-         {
-            return _solutionGraph;
-         }
+         get => _solutionGraph;
          set
          {
             _solutionGraph = value;
@@ -136,11 +133,11 @@ namespace CityScover.Engine
       #region Private methods
       private DateTime CalculateTotalTime()
       {
-         InterestPointWorker startPOI = _solutionGraph.GetStartPoint();
-         InterestPointWorker endPOI = _solutionGraph.GetEndPoint();
-         DateTime endPOITotalTime = endPOI.TotalTime;
+         InterestPointWorker startPoi = _solutionGraph.GetStartPoint();
+         InterestPointWorker endPoi = _solutionGraph.GetEndPoint();
+         DateTime endPoiTotalTime = endPoi.TotalTime;
 
-         RouteWorker returnEdge = Solver.Instance.CityMapGraph.GetEdge(endPOI.Entity.Id, startPOI.Entity.Id);
+         RouteWorker returnEdge = Solver.Instance.CityMapGraph.GetEdge(endPoi.Entity.Id, startPoi.Entity.Id);
          if (returnEdge is null)
          {
             throw new NullReferenceException(nameof(returnEdge));
@@ -148,7 +145,7 @@ namespace CityScover.Engine
 
          double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
          TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
-         DateTime timeSpent = endPOITotalTime.Add(timeReturn);
+         DateTime timeSpent = endPoiTotalTime.Add(timeReturn);
          return timeSpent;
       }
       #endregion

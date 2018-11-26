@@ -17,6 +17,7 @@ using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
+using CityScover.Engine.Algorithms.LocalSearches;
 
 namespace CityScover.Engine
 {

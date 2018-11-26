@@ -113,7 +113,7 @@ namespace CityScover.Engine
       {
          try
          {
-            await Task.Run(() => algorithm.Start());
+            await Task.Run(algorithm.Start);
          }
          catch (Exception ex)
          {
@@ -225,7 +225,7 @@ namespace CityScover.Engine
             Console.WriteLine(ex.Message);
             return;
          }
-         _solverTasks.Add(Task.Run(() => TakeNewSolutions()));
+         _solverTasks.Add(Task.Run(TakeNewSolutions));
 
          if (IsMonitoringEnabled)
          {
