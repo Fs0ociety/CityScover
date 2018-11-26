@@ -47,7 +47,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Overrides
-      internal override Func<TOSolution, int> ObjectiveFunc
+      internal sealed override Func<TOSolution, int> ObjectiveFunc
       {
          get => _objectiveFunc;
          set
@@ -59,7 +59,7 @@ namespace CityScover.Engine
          }
       }
 
-      internal override Func<TOSolution, int> PenaltyFunc
+      internal sealed override Func<TOSolution, int> PenaltyFunc
       {
          get => _penaltyFunc;
          set

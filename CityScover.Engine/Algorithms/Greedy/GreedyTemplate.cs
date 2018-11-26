@@ -53,6 +53,11 @@ namespace CityScover.Engine.Algorithms.Greedy
             yield return null;
          }
 
+         if (childrenAlgorithms is null)
+         {
+            yield break;
+         }
+
          foreach (var child in childrenAlgorithms)
          {
             var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);

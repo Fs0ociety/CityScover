@@ -52,7 +52,7 @@ namespace CityScover.Engine
             NotifyError(new NullReferenceException());
          }
 
-         ((ExecutionReporter)executionReporter).OnNextMessage(message);
+         ((ExecutionReporter)executionReporter)?.OnNextMessage(message);
       }
 
       internal void NotifyError(Exception exception)

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 26/11/2018
 //
 
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace CityScover.Engine
    {
       #region Constructors
       public StageFlow() 
-         : this(AlgorithmType.None, runningCount: 1)
+         : this(AlgorithmType.None)
       {
       }
 

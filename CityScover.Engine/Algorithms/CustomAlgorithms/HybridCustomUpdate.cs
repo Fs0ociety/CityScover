@@ -182,17 +182,20 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          };
 
          TourUpdated = true;
-         SendMessage(MessageCode.HDUTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
-         Solver.EnqueueSolution(_currentSolution);
-         SolutionsHistory.Add(_currentSolution);
-         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
-         await Solver.AlgorithmTasks[_currentSolution.Id];
-
-         if (!_currentSolution.IsValid)
+         if (nodeToRemove != null)
          {
-            UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
-            SendMessage(MessageCode.HDUTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
-            TourUpdated = false;
+            SendMessage(MessageCode.HDUTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
+            Solver.EnqueueSolution(_currentSolution);
+            SolutionsHistory.Add(_currentSolution);
+            await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+            await Solver.AlgorithmTasks[_currentSolution.Id];
+
+            if (!_currentSolution.IsValid)
+            {
+               UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
+               SendMessage(MessageCode.HDUTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
+               TourUpdated = false;
+            }
          }
 
          // Notify observers.

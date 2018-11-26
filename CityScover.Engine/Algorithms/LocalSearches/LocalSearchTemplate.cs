@@ -112,6 +112,11 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             yield return null;
          }
 
+         if (childrenAlgorithms is null)
+         {
+            yield break;
+         }
+
          foreach (var child in childrenAlgorithms)
          {
             var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
@@ -192,14 +197,14 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
       internal override async Task PerformStep()
       {
-         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution, NeighborhoodFacade.RunningMode.Sequential);
+         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution, NeighborhoodFacade.RunningMode.Parallel);
 
          foreach (var neighborSolution in currentNeighborhood)
          {
             SendMessage(MessageCode.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep);
             SendMessage(neighborSolution.Description);
             Solver.EnqueueSolution(neighborSolution);
-            await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+            await Task.Delay(Utils.DelayTask).ConfigureAwait(false);
 
             if (Solver.IsMonitoringEnabled)
             {

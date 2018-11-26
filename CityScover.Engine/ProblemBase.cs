@@ -42,6 +42,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
+
       /// <summary>
       /// Ritorna il miglior costo tra cost1 e cost2, a seconda che il
       /// problema sia di massimo o di minimo. Ad esempio, se il problema è di
@@ -49,6 +50,7 @@ namespace CityScover.Engine
       /// </summary>
       /// <param name="firstSolutionCost">Costo prima soluzione</param>
       /// <param name="secondSolutionCost">Costo seconda soluzione</param>
+      /// <param name="considerEqualityComparison">Valutare il confronto con uguaglianza</param>
       /// <returns>Il confronto da fare.</returns>
       internal bool CompareSolutionsCost(int firstSolutionCost, int secondSolutionCost, bool considerEqualityComparison = false)
       {
