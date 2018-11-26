@@ -70,10 +70,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution, RunningMode runningMode = RunningMode.Sequential)
       {
          _algorithm.SendMessage(MessageCode.LSNewNeighborhood, _algorithm.CurrentStep);
-         ICollection<TOSolution> neighborhood = default;
-         IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges = default;
 
-         candidateEdges = runningMode == RunningMode.Parallel 
+         var candidateEdges = runningMode == RunningMode.Parallel 
             ? _neighborhood.GetCandidatesParallel(solution) 
             : _neighborhood.GetCandidates(solution);
 
@@ -87,7 +85,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             return null;
          }
 
-         neighborhood = new Collection<TOSolution>();
+         ICollection<TOSolution> neighborhood = new Collection<TOSolution>();
          ProcessCandidates(candidateEdges, solution, neighborhood);
          return neighborhood;
       }

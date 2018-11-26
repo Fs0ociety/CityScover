@@ -209,7 +209,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                Console.ForegroundColor = ConsoleColor.Gray;
             }
 
-            Task updateTask = Task.Run(() => updateAlgorithm.Start());
+            Task updateTask = Task.Run(updateAlgorithm.Start);
             try
             {
                updateTask.Wait();
@@ -217,6 +217,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             catch (AggregateException ae)
             {
                OnError(ae.InnerException);
+               updateAlgorithm = null;
             }
             finally
             {
@@ -224,18 +225,20 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                ProcessingNodes = null;
             }
 
-            if (updateAlgorithm.TourUpdated)
+            if (!updateAlgorithm.TourUpdated)
             {
-               bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
-               updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, considerEqualityComparison: true);
-
-               if (isBetterThanCurrentBestSolution)
-               {
-                  Solver.BestSolution = updateAlgorithm.CurrentSolution;
-                  Restart();
-               }
+               return;
             }
-            updateAlgorithm = null;
+
+            var isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
+               updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, true);
+
+            if (!isBetterThanCurrentBestSolution)
+            {
+               return;
+            }
+            Solver.BestSolution = updateAlgorithm.CurrentSolution;
+            Restart();
          }
          else
          {

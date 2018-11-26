@@ -28,16 +28,12 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          _tabuList = new List<TabuMove>();
       }
 
-      internal TabuSearchNeighborhood(Neighborhood neighborhood)
-         : this(neighborhood, new List<TabuMove>())
-      {
-      }
-   
       internal TabuSearchNeighborhood(Neighborhood neighborhood, IList<TabuMove> tabuList)
       {
-         Type = neighborhood.Type;
          _neighborhoodWorker = neighborhood ?? throw new ArgumentNullException();
+         Type = neighborhood.Type;
          _tabuList = tabuList;
+
       }
       #endregion
 

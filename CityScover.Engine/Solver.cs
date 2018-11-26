@@ -145,7 +145,6 @@ namespace CityScover.Engine
          finally
          {
             reporter.Unsubscribe();
-            reporter = null;
          }
       }
 

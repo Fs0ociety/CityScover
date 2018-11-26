@@ -9,15 +9,13 @@
 // File update: 23/11/2018
 //
 
-using CityScover.Engine.Algorithms;
 using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.Greedy;
+using CityScover.Engine.Algorithms.LocalSearches;
 using CityScover.Engine.Algorithms.Metaheuristics;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
-using System.Collections.Generic;
-using CityScover.Engine.Algorithms.LocalSearches;
 
 namespace CityScover.Engine
 {
@@ -35,7 +33,7 @@ namespace CityScover.Engine
       internal static Algorithm CreateAlgorithm(AlgorithmType algorithmType)
       {
          Algorithm algorithm = default;
-         Neighborhood neighborhood = default;
+         Neighborhood neighborhood;
 
          switch (algorithmType)
          {
@@ -77,9 +75,8 @@ namespace CityScover.Engine
                break;
 
             // Add new Algorithm types here ...
-
             default:
-               break;
+               throw new ArgumentOutOfRangeException(nameof(algorithmType), algorithmType, null);
          }
          return algorithm;
       }
@@ -107,37 +104,56 @@ namespace CityScover.Engine
             case AlgorithmType.TwoOpt:
                algorithm = new LocalSearchTemplate(neighborhood);
                break;
-
-            default:
+            case AlgorithmType.TabuSearch:
+               algorithm = new TabuSearch(neighborhood);
                break;
+            default:
+               throw new ArgumentOutOfRangeException(nameof(currentAlgorithm), currentAlgorithm, null);
          }
+
          return algorithm;
       }
 
-      internal static Algorithm CreateAlgorithm<TNeighborhood>(AlgorithmType currentAlgorithm, TNeighborhood neighborhood)
-         where TNeighborhood : Neighborhood
-      {
-         if (EqualityComparer<TNeighborhood>.Default.Equals(neighborhood, default))
-         {
-            throw new ArgumentNullException(nameof(neighborhood));
-         }
+      #region Generic version
+      //internal static Algorithm CreateAlgorithm<TNeighborhood>(AlgorithmType currentAlgorithm, TNeighborhood neighborhood)
+      //   where TNeighborhood : Neighborhood
+      //{
+      //   if (EqualityComparer<TNeighborhood>.Default.Equals(neighborhood, default))
+      //   {
+      //      throw new ArgumentNullException(nameof(neighborhood));
+      //   }
 
-         Algorithm algorithm = default;
+      //   Algorithm algorithm = default;
 
-         switch (currentAlgorithm)
-         {
-            case AlgorithmType.None:
-               break;
+      //   switch (currentAlgorithm)
+      //   {
+      //      case AlgorithmType.None:
+      //         break;
 
-            case AlgorithmType.TwoOpt:
-               algorithm = new LocalSearchTemplate(neighborhood);
-               break;
-
-            default:
-               break;
-         }
-         return algorithm;
-      }
+      //      case AlgorithmType.TwoOpt:
+      //         algorithm = new LocalSearchTemplate(neighborhood);
+      //         break;
+      //      case AlgorithmType.NearestNeighbor:
+      //         break;
+      //      case AlgorithmType.NearestNeighborKnapsack:
+      //         break;
+      //      case AlgorithmType.CheapestInsertion:
+      //         break;
+      //      case AlgorithmType.LinKernighan:
+      //         break;
+      //      case AlgorithmType.TabuSearch:
+      //         break;
+      //      case AlgorithmType.HybridCustomInsertion:
+      //         break;
+      //      case AlgorithmType.HybridCustomUpdate:
+      //         break;
+      //      default:
+      //         throw new ArgumentOutOfRangeException(nameof(currentAlgorithm), currentAlgorithm, null);
+      //   }
+      //   return algorithm;
+      //}
+      #endregion
+      
       #endregion
    }
 }
