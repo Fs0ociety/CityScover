@@ -34,14 +34,14 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Private methods
       private void ProcessCandidates(
          IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges, 
-         ICollection<TOSolution> neighborhood)
+         ICollection<ToSolution> neighborhood)
       {
          foreach (var currentEdge in candidateEdges.Keys)
          {
             var edges = candidateEdges[currentEdge];
             foreach (var candidateEdge in edges)
             {
-               TOSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
+               ToSolution newSolution = _neighborhood.ProcessCandidate(currentEdge, candidateEdge);
                if (newSolution != null)
                {
                   _algorithm.Move = Tuple.Create(currentEdge.Entity.Id, candidateEdge.Entity.Id);
@@ -68,7 +68,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Internal methods
-      internal IEnumerable<TOSolution> GenerateNeighborhood(in TOSolution solution, RunningMode runningMode = RunningMode.Sequential)
+      internal IEnumerable<ToSolution> GenerateNeighborhood(in ToSolution solution, RunningMode runningMode = RunningMode.Sequential)
       {
          _algorithm.SendMessage(MessageCode.LSNewNeighborhood, _algorithm.CurrentStep);
 
@@ -86,7 +86,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             return null;
          }
 
-         ICollection<TOSolution> neighborhood = new Collection<TOSolution>();
+         ICollection<ToSolution> neighborhood = new Collection<ToSolution>();
          ProcessCandidates(candidateEdges, neighborhood);
          return neighborhood;
       }

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 namespace CityScover.Engine
@@ -44,10 +44,7 @@ namespace CityScover.Engine
                break;
 
             case ProblemFamily.TeamOrienteering:
-               problem = new TOProblem();
-               break;
-
-            default:
+               problem = new ToProblem();
                break;
          }
          return problem;

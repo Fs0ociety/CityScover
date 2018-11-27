@@ -85,8 +85,8 @@
     <Compile Include="Stage.cs" />
     <Compile Include="StageFlow.cs" />
     <Compile Include="StageType.cs" />
-    <Compile Include="TOProblem.cs" />
-    <Compile Include="TOSolution.cs" />
+    <Compile Include="ToProblem.cs" />
+    <Compile Include="ToSolution.cs" />
     <Compile Include="Unsubscriber.cs" />
     <Compile Include="Workers\CityMapGraph.cs" />
     <Compile Include="Workers\InterestPointWorker.cs" />

@@ -29,16 +29,11 @@ namespace CityScover.Engine.Algorithms.Greedy
       protected CityMapGraph CityMapClone;
       protected InterestPointWorker StartingPoint;
       protected CityMapGraph Tour;
-      protected ICollection<TOSolution> SolutionsHistory;
+      protected ICollection<ToSolution> SolutionsHistory;
       protected Queue<int> ProcessingNodes;
       #endregion
 
       #region Constructors
-      internal GreedyTemplate()
-         : this(provider: null)
-      {
-      }
-
       internal GreedyTemplate(AlgorithmTracker provider)
          : base(provider)
       {
@@ -80,7 +75,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          {
             if (algorithm is null)
             {
-               throw new InvalidOperationException($"Bad configuration format: " +
+               throw new InvalidOperationException("Bad configuration format: " +
                   $"{nameof(Solver.WorkingConfiguration)}.");
             }
 
@@ -136,7 +131,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          //_averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          Tour = new CityMapGraph();
          ProcessingNodes = new Queue<int>();
-         SolutionsHistory = new Collection<TOSolution>();
+         SolutionsHistory = new Collection<ToSolution>();
          CityMapClone = Solver.CityMapGraph.DeepCopy();
          _canDoImprovements = default;
          int maxNodesToAdd = default;
@@ -193,7 +188,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          CityMapClone = null;
          //TOSolution bestProducedSolution = SolutionsHistory.Last();
 
-         SendMessage(TOSolution.SolutionCollectionToString(SolutionsHistory));
+         SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
 
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
          SendMessage(MessageCode.GreedyFinish);

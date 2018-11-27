@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/10/2018
+// File update: 27/11/2018
 //
 
 using System;
@@ -17,10 +17,6 @@ namespace CityScover.Engine.Workers
 {
    internal sealed class RouteWorker : IGraphEdgeWeight
    {
-      #region Private fields
-      private bool _isVisited;
-      #endregion
-
       #region Constructors
       internal RouteWorker(Route route)
       {
@@ -29,19 +25,9 @@ namespace CityScover.Engine.Workers
       #endregion
 
       #region Internal properties
-      internal Route Entity { get; private set; }      
+      internal Route Entity { get; private set; }
 
-      internal bool IsVisited
-      {
-         get => _isVisited;
-         set
-         {
-            if (_isVisited != value)
-            {
-               _isVisited = value;
-            }
-         }
-      }
+      internal bool IsVisited { get; set; }
       #endregion
 
       #region Internal methods

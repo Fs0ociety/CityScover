@@ -30,7 +30,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       private bool _shouldRunImprovementAlgorithm;
       private int _improvementThreshold;
       private int _maxIterationsWithoutImprovements;
-      private ICollection<TOSolution> _solutionsHistory;
+      private ICollection<ToSolution> _solutionsHistory;
       #endregion
 
       #region Constructors
@@ -43,7 +43,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Internal properties
-      internal TOSolution CurrentBestSolution { get; set; }
+      internal ToSolution CurrentBestSolution { get; set; }
       private bool CanDoImprovements { get; set; }
 
       /// <summary>
@@ -67,7 +67,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Private methods
-      private TOSolution GetBest(IEnumerable<TOSolution> neighborhood, TOSolution currentSolution, byte? maxImprovementsCount)
+      private ToSolution GetBest(IEnumerable<ToSolution> neighborhood, ToSolution currentSolution, byte? maxImprovementsCount)
       {
          if (neighborhood is null || currentSolution is null)
          {
@@ -78,7 +78,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             throw new ArgumentException("maxImprovementsCount can not have value 0.");
          }
 
-         TOSolution bestSolution = currentSolution;
+         ToSolution bestSolution = currentSolution;
          byte currentImprovement = default;
 
          foreach (var solution in neighborhood)
@@ -146,7 +146,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          {
             if (algorithm is null)
             {
-               throw new InvalidOperationException($"Bad configuration format: " +
+               throw new InvalidOperationException("Bad configuration format: " +
                   $"{nameof(Solver.WorkingConfiguration)}.");
             }
 
@@ -169,7 +169,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         _solutionsHistory = new Collection<TOSolution>();
+         _solutionsHistory = new Collection<ToSolution>();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          CanDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
 
@@ -245,43 +245,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             Console.ForegroundColor = ConsoleColor.Gray;
          }
 
-         #region TODO: REMOVE Old-LocalSearch
-         //if (AcceptImprovementsOnly)
-         //{
-         //   bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
-         //   if (isBetterThanCurrentBestSolution)
-         //   {
-         //      SendMessage(MessageCode.LSBestFound, solution.Cost, CurrentBestSolution.Cost);
-         //      CurrentBestSolution = solution;
-         //      _solutionsHistory.Add(solution);
-         //      _currentSolutionCost = solution.Cost;
-
-         //      var delta = _currentSolutionCost - _previousSolutionCost;
-         //      if (CanDoImprovements && delta < _improvementThreshold)
-         //      {
-         //         _iterationsWithoutImprovement++;
-         //         _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-         //      }
-         //   }
-         //   else
-         //   {
-         //      _iterationsWithoutImprovement++;
-         //   }
-         //}
-         //else
-         //{
-         //   CurrentBestSolution = solution;
-         //   _currentSolutionCost = solution.Cost;
-
-         //   var delta = _currentSolutionCost - _previousSolutionCost;
-         //   if (CanDoImprovements && delta < _improvementThreshold)
-         //   {
-         //      _iterationsWithoutImprovement++;
-         //      _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-         //   }
-         //}
-         #endregion
-
          if (CanDoImprovements && _shouldRunImprovementAlgorithm)
          {
             Task improvementTask = RunImprovementAlgorithms();
@@ -304,12 +267,13 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          Console.ForegroundColor = ConsoleColor.Yellow;
          SendMessage(MessageCode.LSFinish, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
-         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
+         SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
       }
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == CurrentBestSolution.Cost || base.StopConditions();
+         return _previousSolutionCost == CurrentBestSolution.Cost || 
+                base.StopConditions();
       }
       #endregion
    }

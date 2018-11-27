@@ -64,7 +64,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Internal methods
 
       #region GetCandidates [Single-Threaded]
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution)
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in ToSolution solution)
       {
          _tour = solution.SolutionGraph.DeepCopy();
          var candidateEdges = new Dictionary<RouteWorker, IEnumerable<RouteWorker>>();
@@ -128,7 +128,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region GetCandidates [Multi-Threaded]
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in TOSolution solution)
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in ToSolution solution)
       {
          _tour = solution.SolutionGraph.DeepCopy();
          var candidateEdges = new ConcurrentDictionary<RouteWorker, IEnumerable<RouteWorker>>();
@@ -187,7 +187,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       }
       #endregion
    
-      internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
+      internal override ToSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
          CityMapGraph newSolutionGraph = _tour.DeepCopy();
 
@@ -205,7 +205,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          // Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
          TwoOptSwap(currentEdge, candidateEdge, newSolutionGraph, candidateEdgePointFromId);
 
-         TOSolution newSolution = new TOSolution()
+         ToSolution newSolution = new ToSolution()
          {
             SolutionGraph = newSolutionGraph            
          };

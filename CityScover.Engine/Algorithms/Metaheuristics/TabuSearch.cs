@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -24,21 +24,16 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #region Private fields
       private readonly TabuSearchNeighborhood _neighborhood;
       private LocalSearchTemplate _innerAlgorithm;
-      private TOSolution _currentBestSolution;
+      private ToSolution _currentBestSolution;
       private int _tenure;
       private int _maxIterations;
       private int _maxDeadlockIterations;
       private int _noImprovementsCount;
       private int _currentIteration;
-      private ICollection<TOSolution> _solutionsHistory;
+      private ICollection<ToSolution> _solutionsHistory;
       #endregion
 
       #region Constructors
-      internal TabuSearch()
-         : this(null)
-      {
-      }
-
       internal TabuSearch(Neighborhood neighborhood)
          : this(neighborhood, null)
       {
@@ -172,14 +167,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         _solutionsHistory = new Collection<TOSolution>();
+         _solutionsHistory = new Collection<ToSolution>();
          _maxIterations = Solver.CurrentStage.Flow.RunningCount;
          _maxDeadlockIterations = Parameters[ParameterCodes.TABUmaxDeadlockIterations];
          int tabuTenureFactor = Parameters[ParameterCodes.TABUtenureFactor];
 
          if (tabuTenureFactor == 0)
          {
-            throw new InvalidOperationException($"Bad configuration format: " +
+            throw new InvalidOperationException("Bad configuration format: " +
                $"{nameof(ParameterCodes.TABUtenureFactor)}.");
          }
 
@@ -188,7 +183,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          if (_innerAlgorithm is null)
          {
-            throw new InvalidOperationException($"Bad configuration format: " +
+            throw new InvalidOperationException("Bad configuration format: " +
                $"{nameof(Solver.WorkingConfiguration)}.");
          }
 
@@ -216,13 +211,13 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             Console.ForegroundColor = ConsoleColor.Green;
             SendMessage(MessageCode.TSBestFound, _innerAlgorithm.CurrentBestSolution.Cost, _currentBestSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
-            _currentBestSolution = new TOSolution()
+            _currentBestSolution = new ToSolution()
             {
                SolutionGraph = _innerAlgorithm.CurrentBestSolution.SolutionGraph.DeepCopy()
             };
             _solutionsHistory.Add(_currentBestSolution);
             var (firstEdgeId, secondEdgeId) = _innerAlgorithm.Move;
-            _neighborhood.TabuList.Add(new TabuMove(firstEdgeId, secondEdgeId, expiration: 0));
+            _neighborhood.TabuList.Add(new TabuMove(firstEdgeId, secondEdgeId));
             IncrementTabuMovesExpirations();
          }
          else
@@ -239,7 +234,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          base.OnTerminating();
          Solver.BestSolution = _currentBestSolution;
-         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
+         SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
       }
 
       internal override bool StopConditions()

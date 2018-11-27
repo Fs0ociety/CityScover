@@ -17,21 +17,21 @@ namespace CityScover.Engine
    /// This class acts as a mediator between the Algorithm in execution and observer objects.
    /// His role is to notify all observer that a new solution has been produced.
    /// </summary>
-   internal class AlgorithmTracker : IObservable<TOSolution>
+   internal class AlgorithmTracker : IObservable<ToSolution>
    {
       #region Private fields
-      private readonly ICollection<IObserver<TOSolution>> _observers;
+      private readonly ICollection<IObserver<ToSolution>> _observers;
       #endregion
 
       #region Constructors
       public AlgorithmTracker()
       {
-         _observers = new Collection<IObserver<TOSolution>>();
+         _observers = new Collection<IObserver<ToSolution>>();
       }
       #endregion
 
       #region Public methods
-      internal void NotifyObservers(TOSolution solution)
+      internal void NotifyObservers(ToSolution solution)
       {
          foreach (var observer in _observers)
          {
@@ -73,14 +73,14 @@ namespace CityScover.Engine
       #endregion
 
       #region Interfaces implementation
-      public IDisposable Subscribe(IObserver<TOSolution> observer)
+      public IDisposable Subscribe(IObserver<ToSolution> observer)
       {
          // Check whether observer is already registered. If not, add it.
          if (!_observers.Contains(observer))
          {
             _observers.Add(observer);
          }
-         return new Unsubscriber<TOSolution>(_observers, observer);
+         return new Unsubscriber<ToSolution>(_observers, observer);
       }
       #endregion
    }

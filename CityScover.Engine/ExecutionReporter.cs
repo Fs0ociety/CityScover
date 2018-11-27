@@ -9,7 +9,6 @@
 // File update: 27/11/2018
 //
 
-using CityScover.Engine.Algorithms;
 using System;
 using System.Threading.Tasks;
 
@@ -20,7 +19,7 @@ namespace CityScover.Engine
    /// and start execution of all stages of the Algorithm.
    /// In addition, it monitors the execution of the Algorithm.
    /// </summary>
-   internal sealed class ExecutionReporter : IObserver<TOSolution>
+   internal sealed class ExecutionReporter : IObserver<ToSolution>
    {
       #region Private fields
       private IDisposable _unsubscriber;
@@ -29,10 +28,6 @@ namespace CityScover.Engine
 
       #region Private properties
       private Solver Solver => Solver.Instance;
-
-      //public Stopwatch RunningTime { get; set; }
-
-      public TimeSpan ExecutionTime { get; set; }
       #endregion
 
       #region Internal methods
@@ -68,7 +63,7 @@ namespace CityScover.Engine
       #endregion
 
       #region IObserver implementation
-      public void OnNext(TOSolution solution)
+      public void OnNext(ToSolution solution)
       {
          Task taskToAwait = Solver.AlgorithmTasks[solution.Id];
 
@@ -101,15 +96,12 @@ namespace CityScover.Engine
    
       public void OnError(Exception error)
       {
-         //_timer.Stop();
          Console.WriteLine(MessagesRepository.GetMessage(MessageCode.EXREPExceptionOccurred, error.Message, error.StackTrace));
          throw error;
       }
 
       public void OnCompleted()
       {
-         //_timer.Stop();
-         
          //string algorithmDescription = Solver.CurrentStage.Flow.CurrentAlgorithm.ToString();
          //TimeSpan elapsedTime = _timer.Elapsed;
          TimeSpan elapsedTime = Solver.CurrentStageExecutionTime;

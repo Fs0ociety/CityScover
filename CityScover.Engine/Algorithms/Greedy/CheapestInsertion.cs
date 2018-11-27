@@ -27,7 +27,20 @@ namespace CityScover.Engine.Algorithms.Greedy
       private InterestPointWorker _newStartingPoint;
       private InterestPointWorker _endPoint;
 
-      #region Private methods  
+      #region Constructors
+      internal CheapestInsertion()
+         : this(null)
+      {
+      }
+
+      internal CheapestInsertion(AlgorithmTracker provider)
+         : base(provider)
+      {
+         Type = AlgorithmType.NearestNeighbor;
+      }
+      #endregion
+
+      #region Private methods
       //private InterestPointWorker GetCheapestBestNeighbor()
       //{
       //   int bestScore = default;
@@ -86,7 +99,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       //         }
       //      }
       //   }
-   
+
       //   return candidateNode;
       //}
 
@@ -149,9 +162,8 @@ namespace CityScover.Engine.Algorithms.Greedy
       private bool CanCompareCosts(InterestPointWorker node, int nodeId, int neighborId) =>
          !node.IsVisited && nodeId != neighborId && !Tour.ContainsNode(nodeId);
 
-      private bool HasToBeSetCandidateNode(InterestPointWorker node, IEnumerable<InterestPointWorker> candidates) =>
-         node is null || candidates.Any();
-      //node is null || (node != null && candidates.Any());
+      //private bool HasToBeSetCandidateNode(InterestPointWorker node, IEnumerable<InterestPointWorker> candidates) =>
+      //   node is null || candidates.Any();
       #endregion
 
       #region Overrides
@@ -190,7 +202,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          Tour.AddRouteFromGraph(CityMapClone, _newStartingPoint.Entity.Id, candidateNode.Entity.Id);
          Tour.AddRouteFromGraph(CityMapClone, candidateNode.Entity.Id, _endPoint.Entity.Id);
 
-         TOSolution newSolution = new TOSolution()
+         ToSolution newSolution = new ToSolution()
          {
             SolutionGraph = Tour
          };

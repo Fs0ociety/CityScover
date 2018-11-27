@@ -23,7 +23,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       #region Constructors
       internal NearestNeighbor()
-         : this(provider: null)
+         : this(null)
       {
       }
 
@@ -71,7 +71,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          Tour.AddRouteFromGraph(CityMapClone, _previousCandidateId, candidatePoi.Entity.Id);
          Tour.AddRouteFromGraph(CityMapClone, candidatePoi.Entity.Id, StartingPoint.Entity.Id);
          
-         TOSolution newSolution = new TOSolution()
+         ToSolution newSolution = new ToSolution()
          {
             SolutionGraph = Tour.DeepCopy()
          };

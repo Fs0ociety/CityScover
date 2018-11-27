@@ -27,7 +27,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private DateTime _tMax;
       private DateTime _tMaxThresholdTime;
       private TimeSpan _tMaxThreshold;
-      private TOSolution _currentSolution;
+      private ToSolution _currentSolution;
       #endregion
 
       #region Constructors
@@ -49,11 +49,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private protected InterestPointWorker EndPoi;
       private protected TimeSpan TimeWalkThreshold;
       private protected Queue<InterestPointWorker> ProcessingNodes;
-      private protected ICollection<TOSolution> SolutionsHistory;
+      private protected ICollection<ToSolution> SolutionsHistory;
       #endregion
 
       #region Internal properties
-      internal TOSolution CurrentBestSolution { get; set; }
+      internal ToSolution CurrentBestSolution { get; set; }
       #endregion
 
       #region Private methods
@@ -139,7 +139,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         SolutionsHistory = new Collection<TOSolution>();
+         SolutionsHistory = new Collection<ToSolution>();
 
          if (!Parameters.Any())
          {
@@ -183,7 +183,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          EndPoi = Tour.GetEndPoint();
          _addedNodesCount++;
 
-         _currentSolution = new TOSolution()
+         _currentSolution = new ToSolution()
          {
             SolutionGraph = Tour.DeepCopy()
          };
@@ -219,7 +219,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         SendMessage(TOSolution.SolutionCollectionToString(SolutionsHistory));
+         SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
 
          if (_addedNodesCount == 0)
          {

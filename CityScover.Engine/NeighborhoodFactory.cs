@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -34,9 +34,6 @@ namespace CityScover.Engine
                break;
 
             // Add new Algorithm types here for new Neighborhoods ...
-
-            default:
-               break;
          }
          return neighborhood;
       }

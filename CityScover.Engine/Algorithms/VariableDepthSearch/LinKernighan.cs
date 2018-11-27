@@ -27,7 +27,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       private ICollection<RouteWorker> _executedMoves;
       private InterestPointWorker _startPoi;
       private InterestPointWorker _endPoi;
-      private ICollection<TOSolution> _solutionsHistory;
+      private ICollection<ToSolution> _solutionsHistory;
       #endregion
 
       #region Constructors
@@ -44,7 +44,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #endregion
 
       #region Internal properties
-      internal TOSolution CurrentBestSolution { get; set; }
+      internal ToSolution CurrentBestSolution { get; set; }
       internal int MaxSteps { get; set; }
       #endregion
 
@@ -147,7 +147,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          SendMessage(MessageCode.LKStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
 
-         _solutionsHistory = new Collection<TOSolution>();
+         _solutionsHistory = new Collection<ToSolution>();
          _cityMap = Solver.CityMapGraph.DeepCopy();
          _executedMoves = new Collection<RouteWorker>();
 
@@ -204,7 +204,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          // Poi ricreo il ciclo.         
          _currentSolutionGraph.AddRouteFromGraph(_cityMap, _startPoi.Entity.Id, junctionNodeId);
          
-         TOSolution newSolution = new TOSolution()
+         ToSolution newSolution = new ToSolution()
          {
             SolutionGraph = _currentSolutionGraph.DeepCopy()
          };
@@ -224,8 +224,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          base.OnTerminating();
 
-         TOSolution bestSolution = CurrentBestSolution;
-         SendMessage(TOSolution.SolutionCollectionToString(_solutionsHistory));
+         ToSolution bestSolution = CurrentBestSolution;
+         SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
 
          _solutionsHistory.ToList().ForEach(solution =>
          {

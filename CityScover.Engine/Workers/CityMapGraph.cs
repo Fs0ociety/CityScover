@@ -6,12 +6,11 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.ADT.Graphs;
 using CityScover.Commons;
-using CityScover.Engine.Algorithms;
 using CityScover.Entities;
 using System;
 using System.Collections.Generic;
@@ -219,7 +218,7 @@ namespace CityScover.Engine.Workers
             {
                if (edge.Entity.PointTo.Id != startPoiId)
                {
-                  result += $" --> ";
+                  result += " --> ";
                }
             });
 

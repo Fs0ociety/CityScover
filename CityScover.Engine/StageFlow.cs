@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using System.Collections.Generic;
@@ -39,12 +39,12 @@ namespace CityScover.Engine
       /// <summary>
       /// Current algorithm type for the current flow of a stage.
       /// </summary>
-      public AlgorithmType CurrentAlgorithm { get; set; } = default;
+      public AlgorithmType CurrentAlgorithm { get; set; }
 
       /// <summary>
       /// Maximum iterations for an algorithm.
       /// </summary>
-      public int RunningCount { get; set; } = default;
+      public int RunningCount { get; set; }
 
       /// <summary>
       /// Specific parameters of the algorithm.

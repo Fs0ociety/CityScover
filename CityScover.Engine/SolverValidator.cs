@@ -30,7 +30,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
-      internal void Validate(TOSolution solution)
+      internal void Validate(ToSolution solution)
       {
          var problemConstraints = Solver.Problem.Constraints;
 

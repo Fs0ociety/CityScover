@@ -22,7 +22,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
    internal class HybridCustomUpdate : HybridCustomInsertion
    {
       private double _averageSpeedWalk;
-      private TOSolution _currentSolution;
+      private ToSolution _currentSolution;
       private IEnumerable<(RouteWorker, TimeSpan)> _candidateEdges;
 
       #region Constructors
@@ -39,7 +39,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       #region Internal properties
       internal bool TourUpdated { get; private set; }
-      internal TOSolution CurrentSolution => _currentSolution;
+      internal ToSolution CurrentSolution => _currentSolution;
       #endregion
 
       #region Private methods
@@ -176,7 +176,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          InterestPointWorker nodeToRemove = Tour.TourPoints
             .FirstOrDefault(point => point.Entity.Id == nodeKeyToRemove);
 
-         _currentSolution = new TOSolution()
+         _currentSolution = new ToSolution()
          {
             SolutionGraph = Tour.DeepCopy()
          };

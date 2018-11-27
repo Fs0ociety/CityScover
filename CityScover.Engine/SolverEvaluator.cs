@@ -30,7 +30,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
-      internal void Evaluate(TOSolution solution)
+      internal void Evaluate(ToSolution solution)
       {
          var objectiveFunc = Solver.Problem.ObjectiveFunc;
          solution.Cost = objectiveFunc.Invoke(solution);

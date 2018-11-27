@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace CityScover.Engine
 {
-   internal class TOProblem : ProblemBase
+   internal class ToProblem : ProblemBase
    {
       #region Constants
       private const int PenaltyAmount = -200;
@@ -25,13 +25,10 @@ namespace CityScover.Engine
 
       #region Private fields
       private readonly DateTime _tMax;
-      private Func<TOSolution, int> _objectiveFunc;
-      private Func<TOSolution, int> _penaltyFunc;
       #endregion
 
       #region Constructors
-      internal TOProblem()
-         : base()
+      internal ToProblem()
       {
          var solverConfig = Solver.Instance.WorkingConfiguration;
          _tMax = solverConfig.ArrivalTime.Add(solverConfig.TourDuration);
@@ -40,36 +37,15 @@ namespace CityScover.Engine
          IsMinimizing = false;
 
          Constraints.Add(
-            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TMaxConstraint, IsTMaxConstraintSatisfied));
+            new KeyValuePair<string, Func<ToSolution, bool>>(Utils.TMaxConstraint, IsTMaxConstraintSatisfied));
          Constraints.Add(
-            new KeyValuePair<string, Func<TOSolution, bool>>(Utils.TimeWindowsConstraint, IsTimeWindowsConstraintSatisfied));
+            new KeyValuePair<string, Func<ToSolution, bool>>(Utils.TimeWindowsConstraint, IsTimeWindowsConstraintSatisfied));
       }
       #endregion
 
       #region Overrides
-      internal sealed override Func<TOSolution, int> ObjectiveFunc
-      {
-         get => _objectiveFunc;
-         set
-         {
-            if (value != _objectiveFunc)
-            {
-               _objectiveFunc = value;
-            }
-         }
-      }
-
-      internal sealed override Func<TOSolution, int> PenaltyFunc
-      {
-         get => _penaltyFunc;
-         set
-         {
-            if (value != _penaltyFunc)
-            {
-               _penaltyFunc = value;
-            }
-         }
-      }
+      internal sealed override Func<ToSolution, int> ObjectiveFunc { get; set; }
+      internal sealed override Func<ToSolution, int> PenaltyFunc { get; set; }
       #endregion
 
       #region Objective Function delegates
@@ -82,7 +58,7 @@ namespace CityScover.Engine
       /// <returns>
       /// An Evaluation Object.
       /// </returns>
-      private int CalculateCost(TOSolution solution)
+      private int CalculateCost(ToSolution solution)
       {
          // Calcolo del termine del gradimento.
          int scoreTerm = solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
@@ -98,6 +74,10 @@ namespace CityScover.Engine
          double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
          {
             RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
+            if (edge is null)
+            {
+               return 0;
+            }
             double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
             return nodeDistScoreTerm / distanceWeightSum;
          });
@@ -107,11 +87,11 @@ namespace CityScover.Engine
       #endregion
 
       #region Penalty Function delegates
-      private int CalculatePenalty(TOSolution solution) => PenaltyAmount;
+      private int CalculatePenalty(ToSolution solution) => PenaltyAmount;
       #endregion
 
       #region Constraints delegates
-      private bool IsTimeWindowsConstraintSatisfied(TOSolution solution)
+      private bool IsTimeWindowsConstraintSatisfied(ToSolution solution)
       {
          bool satisfied = true;
          CityMapGraph solutionGraph = solution.SolutionGraph;
@@ -137,7 +117,7 @@ namespace CityScover.Engine
                   if (time.ClosingTime.HasValue && nodeTime > (time.ClosingTime.Value - visitTime))
                   {
                      satisfied = false;
-                     continue;
+                     //continue;
                   }
                }
             }
@@ -146,7 +126,7 @@ namespace CityScover.Engine
          return satisfied;
       }
 
-      private bool IsTMaxConstraintSatisfied(TOSolution solution)
+      private bool IsTMaxConstraintSatisfied(ToSolution solution)
       {
          return solution.TimeSpent <= _tMax;
       }

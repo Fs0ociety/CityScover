@@ -49,13 +49,13 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Internal methods
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution) =>
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in ToSolution solution) =>
          _neighborhoodWorker.GetCandidates(solution);
 
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in TOSolution solution) => 
+      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in ToSolution solution) => 
          _neighborhoodWorker.GetCandidatesParallel(solution);
 
-      internal override TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
+      internal override ToSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
       {
          TabuMove forbiddenMove = _tabuList
             .FirstOrDefault(move => move.FirstEdgeId == currentEdge.Entity.Id && 

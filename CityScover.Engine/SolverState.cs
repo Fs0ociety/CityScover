@@ -29,9 +29,13 @@ namespace CityScover.Engine
    public sealed partial class Solver : Singleton<Solver>
    {
       #region Private fields
-      private BlockingCollection<TOSolution> _solutionsQueue;
+      private BlockingCollection<ToSolution> _solutionsQueue;
       private ICollection<Task> _solverTasks;
-
+      
+      /// <summary>
+      /// This delegate contains execution method to invoke by the current Algorithm.
+      /// </summary>
+      private Func<Algorithm, Task> _executionFunc;
       #endregion
 
       #region Constructors
@@ -48,11 +52,6 @@ namespace CityScover.Engine
       /// Points of interest filtered from the graph of the city.
       /// </summary>
       private IEnumerable<InterestPoint> Points { get; set; }
-
-      /// <summary>
-      /// This delegate contains execution method to invoke by the current Algorithm.
-      /// </summary>
-      private Func<Algorithm, Task> ExecutionInternalFunc { get; set; }
       #endregion
 
       #region Internal properties
@@ -100,7 +99,7 @@ namespace CityScover.Engine
       /// </summary>
       internal CityMapGraph CityMapGraph { get; private set; }
       
-      internal TOSolution BestSolution { get; set; }
+      internal ToSolution BestSolution { get; set; }
 
       internal int PreviousStageSolutionCost { get; set; }
 

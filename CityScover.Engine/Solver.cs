@@ -6,11 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Data;
-using CityScover.Engine.Algorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Workers;
 using CityScover.Entities;
@@ -39,7 +38,7 @@ namespace CityScover.Engine
       {
          if (_solutionsQueue is null)
          {
-            _solutionsQueue = new BlockingCollection<TOSolution>();
+            _solutionsQueue = new BlockingCollection<ToSolution>();
          }
 
          WorkingConfiguration = configuration;
@@ -97,7 +96,7 @@ namespace CityScover.Engine
             AlgorithmTasks.Add(solution.Id, processingSolutionTask);
          }
 
-         void ProcessSolution(TOSolution solution)
+         void ProcessSolution(ToSolution solution)
          {
             SolverValidator.Validate(solution);
             SolverEvaluator.Evaluate(solution);
@@ -179,6 +178,7 @@ namespace CityScover.Engine
          await Task.WhenAll(_solverTasks);
          _solutionsQueue.Dispose();
          _solutionsQueue = default;
+         _executionFunc = default;
          Points = default;
          Problem = default;
          CityMapGraph = default;
@@ -186,7 +186,6 @@ namespace CityScover.Engine
          CurrentStage = default;
          IsMonitoringEnabled = default;
          WorkingConfiguration = default;
-         ExecutionInternalFunc = default;
          PreviousStageSolutionCost = default;
          CurrentStageExecutionTime = default;
          CurrentAlgorithm = AlgorithmType.None;
@@ -203,7 +202,7 @@ namespace CityScover.Engine
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood neighborhood) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType, neighborhood);
 
-      internal void EnqueueSolution(TOSolution solution) =>
+      internal void EnqueueSolution(ToSolution solution) =>
          _solutionsQueue.Add(solution);
       #endregion
 
@@ -228,15 +227,18 @@ namespace CityScover.Engine
 
          if (IsMonitoringEnabled)
          {
-            ExecutionInternalFunc = ExecuteWithMonitoring;
-            await ExecuteConfiguration(ExecuteWithMonitoring);
+            //ExecutionInternalFunc = ExecuteWithMonitoring;
+            _executionFunc = ExecuteWithMonitoring;
+            //await ExecuteConfiguration(ExecuteWithMonitoring);
          }
          else
          {
-            ExecutionInternalFunc = ExecuteWithoutMonitoring;
-            await ExecuteConfiguration(ExecuteWithoutMonitoring);
+            //ExecutionInternalFunc = ExecuteWithoutMonitoring;
+            _executionFunc = ExecuteWithoutMonitoring;
+            //await ExecuteConfiguration(ExecuteWithoutMonitoring);
          }
 
+         await ExecuteConfiguration(_executionFunc);
          await ResetSolverState();
       }
       #endregion

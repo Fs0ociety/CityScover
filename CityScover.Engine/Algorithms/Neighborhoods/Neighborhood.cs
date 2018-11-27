@@ -26,8 +26,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       /// </summary>
       /// <param name="solution"> Solution to process. </param>
       /// <returns></returns>
-      internal abstract IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in TOSolution solution);
-      internal abstract IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in TOSolution solution);
+      internal abstract IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in ToSolution solution);
+      internal abstract IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in ToSolution solution);
 
       /// <summary>
       /// Returns a new TOSolution type formed with the new processed informations.
@@ -35,7 +35,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       /// <param name="currentEdge"></param>
       /// <param name="candidateEdge"></param>
       /// <returns></returns>
-      internal abstract TOSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge);
+      internal abstract ToSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge);
       #endregion
    }
 }

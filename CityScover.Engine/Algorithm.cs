@@ -24,68 +24,35 @@ namespace CityScover.Engine
    {
       #region Private members
       private DateTime _startingTime;
-      private AlgorithmStatus _status;
-      private ushort _currentStep;
-      private bool _acceptImprovementsOnly;
-      private AlgorithmTracker _provider;
       #endregion
 
       #region Constructors
-      internal Algorithm()
-         : this(null)
-      {
-      }
-
       internal Algorithm(AlgorithmTracker provider, bool acceptImprovementsOnly = true)
       {
-         _acceptImprovementsOnly = acceptImprovementsOnly;
-         _provider = provider;
-         _currentStep = 1;
+         AcceptImprovementsOnly = acceptImprovementsOnly;
+         Provider = provider;
+         CurrentStep = 1;
       }
       #endregion
 
       #region Private Protected properties
       private protected Solver Solver => Solver.Instance;
 
-      private protected AlgorithmStatus Status
-      {
-         get => _status;
-         private set
-         {
-            if (_status != value)
-            {
-               _status = value;
-            }
-         }
-      }
+      /// <summary>
+      /// Returns the current Status of the Algorithm.
+      /// See the AlgorithmStatus types for details.
+      /// </summary>
+      private protected AlgorithmStatus Status { get; private set; }
+
+      internal ushort CurrentStep { get; set; }
+
+      private protected bool ForceStop { get; set; }
       #endregion
-
+      
       #region Internal properties
-      internal ushort CurrentStep
-      {
-         get => _currentStep;
-         private protected set => _currentStep = value;
-      }
+      internal bool AcceptImprovementsOnly { get; set; }
 
-      internal bool ForceStop { get; private protected set; }
-
-      internal bool AcceptImprovementsOnly
-      {
-         get => _acceptImprovementsOnly;
-         set
-         {
-            if (_acceptImprovementsOnly != value)
-            {
-               _acceptImprovementsOnly = value;
-            }
-         }
-      }
-
-      internal AlgorithmTracker Provider
-      {
-         get => _provider;
-         set => _provider = value;
-      }
+      internal AlgorithmTracker Provider { get; set; }
 
       internal AlgorithmType Type { get; private protected set; }
 
@@ -97,14 +64,14 @@ namespace CityScover.Engine
       {
          OnInitializing();
 
-         _status = AlgorithmStatus.Running;
+         Status = AlgorithmStatus.Running;
 
          while (!StopConditions())
          {
             try
             {
                await Task.Run(PerformStep);
-               _currentStep++;
+               CurrentStep++;
             }
             catch (Exception ex)
             {
@@ -136,7 +103,7 @@ namespace CityScover.Engine
       #region Virtual methods
       internal virtual void OnInitializing()
       {
-         _status = AlgorithmStatus.Initializing;
+         Status = AlgorithmStatus.Initializing;
          double scoreWeight = Utils.ObjectiveFunctionWeightDefault;
          if (Parameters.ContainsKey(ParameterCodes.ObjectiveFunctionScoreWeight))
          {
@@ -162,32 +129,32 @@ namespace CityScover.Engine
 
       internal virtual void OnTerminating()
       {
-         _status = AlgorithmStatus.Terminating;
+         Status = AlgorithmStatus.Terminating;
       }
 
       internal virtual void OnTerminated()
       {
-         _status = AlgorithmStatus.Terminated;
+         Status = AlgorithmStatus.Terminated;
          Solver.CurrentStageExecutionTime = Solver.CurrentStageExecutionTime.Add(DateTime.Now - _startingTime);
          if (Solver.IsMonitoringEnabled)
          {
-            _provider.NotifyCompletion();
+            Provider.NotifyCompletion();
          }
       }
 
       internal virtual void OnError(Exception exception)
       {
-         _status = AlgorithmStatus.Error;
+         Status = AlgorithmStatus.Error;
          if (Solver.IsMonitoringEnabled)
          {
             Debug.WriteLine(exception.StackTrace);
-            _provider.NotifyError(exception);
+            Provider.NotifyError(exception);
          }
       }
 
       internal virtual bool StopConditions()
       {
-         return ForceStop || _status == AlgorithmStatus.Error;
+         return ForceStop || Status == AlgorithmStatus.Error;
       }
       #endregion
    }

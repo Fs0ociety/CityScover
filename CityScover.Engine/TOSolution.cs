@@ -6,10 +6,9 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
-using CityScover.Engine.Algorithms;
 using CityScover.Engine.Workers;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ using System.Linq;
 
 namespace CityScover.Engine
 {
-   internal class TOSolution
+   internal class ToSolution
    {
       #region Private fields
       private static int _sequenceId;
@@ -25,7 +24,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Constructors
-      internal TOSolution()
+      internal ToSolution()
       {
          Id = ++_sequenceId;
       }
@@ -102,7 +101,7 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal static methods
-      internal static string SolutionCollectionToString(IEnumerable<TOSolution> solutions)
+      internal static string SolutionCollectionToString(IEnumerable<ToSolution> solutions)
       {
          string message = string.Empty;
          if (solutions is null || !solutions.Any())
@@ -116,7 +115,7 @@ namespace CityScover.Engine
          {
             message += $"{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.ToString()}\n";
          });
-         TOSolution bestSolution = solutions.Last();
+         ToSolution bestSolution = solutions.Last();
          message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
 
          TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;
