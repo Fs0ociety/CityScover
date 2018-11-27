@@ -6,11 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Commons;
-using CityScover.Engine.Algorithms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,7 +37,7 @@ namespace CityScover.Engine
       }
 
       internal Algorithm(AlgorithmTracker provider, bool acceptImprovementsOnly = true)
-      {         
+      {
          _acceptImprovementsOnly = acceptImprovementsOnly;
          _provider = provider;
          _currentStep = 1;
@@ -47,7 +46,7 @@ namespace CityScover.Engine
 
       #region Private Protected properties
       private protected Solver Solver => Solver.Instance;
-      
+
       private protected AlgorithmStatus Status
       {
          get => _status;
@@ -65,20 +64,10 @@ namespace CityScover.Engine
       internal ushort CurrentStep
       {
          get => _currentStep;
-         private protected set
-         {
-            if (_currentStep != value)
-            {
-               _currentStep = value;
-            }
-         }
+         private protected set => _currentStep = value;
       }
 
-      internal bool ForceStop
-      {
-         get;
-         private protected set;
-      }
+      internal bool ForceStop { get; private protected set; }
 
       internal bool AcceptImprovementsOnly
       {
@@ -95,13 +84,7 @@ namespace CityScover.Engine
       internal AlgorithmTracker Provider
       {
          get => _provider;
-         set
-         {
-            if (_provider != value)
-            {
-               _provider = value;
-            }
-         }
+         set => _provider = value;
       }
 
       internal AlgorithmType Type { get; private protected set; }
@@ -123,12 +106,12 @@ namespace CityScover.Engine
                await Task.Run(PerformStep);
                _currentStep++;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                OnError(ex);
             }
          }
-                  
+
          OnTerminating();
          OnTerminated();
       }
@@ -146,7 +129,8 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal abstract methods
-      internal abstract Task PerformStep();
+
+      protected abstract Task PerformStep();
       #endregion
 
       #region Virtual methods
@@ -183,7 +167,7 @@ namespace CityScover.Engine
 
       internal virtual void OnTerminated()
       {
-         _status = AlgorithmStatus.Terminated;         
+         _status = AlgorithmStatus.Terminated;
          Solver.CurrentStageExecutionTime = Solver.CurrentStageExecutionTime.Add(DateTime.Now - _startingTime);
          if (Solver.IsMonitoringEnabled)
          {

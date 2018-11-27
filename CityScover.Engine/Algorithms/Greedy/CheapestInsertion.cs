@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 21/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Commons;
@@ -24,73 +24,71 @@ namespace CityScover.Engine.Algorithms.Greedy
    /// </summary>
    internal class CheapestInsertion : GreedyTemplate
    {
-      #region Private fields
       private InterestPointWorker _newStartingPoint;
       private InterestPointWorker _endPoint;
-      #endregion
 
       #region Private methods  
-      private InterestPointWorker GetCheapestBestNeighbor()
-      {
-         int bestScore = default;
-         InterestPointWorker candidateNode = default;
-         Collection<InterestPointWorker> candidateNodes = new Collection<InterestPointWorker>();
+      //private InterestPointWorker GetCheapestBestNeighbor()
+      //{
+      //   int bestScore = default;
+      //   InterestPointWorker candidateNode = default;
+      //   Collection<InterestPointWorker> candidateNodes = new Collection<InterestPointWorker>();
 
-         foreach (var currentPoint in Tour.Nodes)
-         {
-            int currentPointId = currentPoint.Entity.Id;
-            int currentPointScore = currentPoint.Entity.Score.Value;
-            var neighborPoints = Tour.GetAdjacentNodes(currentPointId);
+      //   foreach (var currentPoint in Tour.Nodes)
+      //   {
+      //      int currentPointId = currentPoint.Entity.Id;
+      //      int currentPointScore = currentPoint.Entity.Score.Value;
+      //      var neighborPoints = Tour.GetAdjacentNodes(currentPointId);
 
-            foreach (var neighborPointId in neighborPoints)
-            {
-               var processingEdge = CityMapClone.GetEdge(currentPointId, neighborPointId);
-               if (processingEdge is null)
-               {
-                  return null;
-               }
+      //      foreach (var neighborPointId in neighborPoints)
+      //      {
+      //         var processingEdge = CityMapClone.GetEdge(currentPointId, neighborPointId);
+      //         if (processingEdge is null)
+      //         {
+      //            return null;
+      //         }
 
-               InterestPointWorker neighborPoint = CityMapClone[neighborPointId];
-               int neighborPointScore = neighborPoint.Entity.Score.Value;
-               int currPointToNeighborScore = Math.Abs(currentPointScore - neighborPointScore);
+      //         InterestPointWorker neighborPoint = CityMapClone[neighborPointId];
+      //         int neighborPointScore = neighborPoint.Entity.Score.Value;
+      //         int currPointToNeighborScore = Math.Abs(currentPointScore - neighborPointScore);
 
-               foreach (var node in CityMapClone.Nodes)
-               {
-                  int nodeId = node.Entity.Id;
-                  int nodeScore = node.Entity.Score.Value;
-                  bool canCompareCosts = !Tour.ContainsNode(nodeId) &&
-                     nodeId != neighborPointId &&
-                     !node.IsVisited;
+      //         foreach (var node in CityMapClone.Nodes)
+      //         {
+      //            int nodeId = node.Entity.Id;
+      //            int nodeScore = node.Entity.Score.Value;
+      //            bool canCompareCosts = !Tour.ContainsNode(nodeId) &&
+      //               nodeId != neighborPointId &&
+      //               !node.IsVisited;
 
-                  if (canCompareCosts)
-                  {
-                     int currPointToNodeScore = Math.Abs(currentPointScore - nodeScore);
-                     int nodeToNeighborScore = Math.Abs(nodeScore - neighborPointScore);
-                     int deltaScore = currPointToNodeScore + nodeToNeighborScore - currPointToNeighborScore;
+      //            if (canCompareCosts)
+      //            {
+      //               int currPointToNodeScore = Math.Abs(currentPointScore - nodeScore);
+      //               int nodeToNeighborScore = Math.Abs(nodeScore - neighborPointScore);
+      //               int deltaScore = currPointToNodeScore + nodeToNeighborScore - currPointToNeighborScore;
 
-                     if (deltaScore > bestScore)
-                     {
-                        bestScore = deltaScore;
-                        candidateNode = node;
-                     }
-                     else if (deltaScore == 0 || deltaScore == bestScore)
-                     {
-                        candidateNodes.Add(node);
-                     }
-                  }
-               }
+      //               if (deltaScore > bestScore)
+      //               {
+      //                  bestScore = deltaScore;
+      //                  candidateNode = node;
+      //               }
+      //               else if (deltaScore == 0 || deltaScore == bestScore)
+      //               {
+      //                  candidateNodes.Add(node);
+      //               }
+      //            }
+      //         }
 
-               if (HasToBeSettedCandidateNode(candidateNode, candidateNodes))
-               {
-                  var nodeIndex = new Random().Next(0, candidateNodes.Count);
-                  candidateNode = candidateNodes[nodeIndex];
-                  candidateNodes.Clear();
-               }
-            }
-         }
-
-         return candidateNode;
-      }
+      //         if (HasToBeSetCandidateNode(candidateNode, candidateNodes))
+      //         {
+      //            var nodeIndex = new Random().Next(0, candidateNodes.Count);
+      //            candidateNode = candidateNodes[nodeIndex];
+      //            candidateNodes.Clear();
+      //         }
+      //      }
+      //   }
+   
+      //   return candidateNode;
+      //}
 
       private InterestPointWorker GetCheapestBestNeighbor(int nodeKey)
       {
@@ -151,8 +149,9 @@ namespace CityScover.Engine.Algorithms.Greedy
       private bool CanCompareCosts(InterestPointWorker node, int nodeId, int neighborId) =>
          !node.IsVisited && nodeId != neighborId && !Tour.ContainsNode(nodeId);
 
-      private bool HasToBeSettedCandidateNode(InterestPointWorker node, IEnumerable<InterestPointWorker> candidates) =>
-         node is null || (node != null && candidates.Any());
+      private bool HasToBeSetCandidateNode(InterestPointWorker node, IEnumerable<InterestPointWorker> candidates) =>
+         node is null || candidates.Any();
+      //node is null || (node != null && candidates.Any());
       #endregion
 
       #region Overrides
@@ -176,7 +175,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _endPoint = bestNeighbor;
       }
 
-      internal override async Task PerformStep()
+      protected override async Task PerformStep()
       {
          int processingNodeKey = ProcessingNodes.Dequeue();
          InterestPointWorker candidateNode = GetCheapestBestNeighbor(processingNodeKey);

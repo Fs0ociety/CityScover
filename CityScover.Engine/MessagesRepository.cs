@@ -11,7 +11,7 @@
 
 using System.Collections.Generic;
 
-namespace CityScover.Engine.Algorithms
+namespace CityScover.Engine
 {
    internal static class MessagesRepository
    {

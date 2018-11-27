@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/10/2018
+// File update: 26/11/2018
 //
 
 namespace CityScover.Engine
@@ -23,7 +23,7 @@ namespace CityScover.Engine
       #region Public properties
       public StageType Description { get; set; }
       public AlgorithmFamily Category { get; set; }
-      public StageFlow Flow { get; set; }
+      public StageFlow Flow { get; }
       #endregion
    }
 }

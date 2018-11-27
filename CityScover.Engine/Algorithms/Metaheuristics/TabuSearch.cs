@@ -201,7 +201,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          Console.ForegroundColor = ConsoleColor.Gray;
       }
 
-      internal override async Task PerformStep()
+      protected override async Task PerformStep()
       {         
          await RunLocalSearch().ConfigureAwait(continueOnCapturedContext: false);
 

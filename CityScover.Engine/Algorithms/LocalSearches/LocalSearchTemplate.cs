@@ -34,12 +34,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Constructors
-      internal LocalSearchTemplate(Neighborhood neighborhood)
-         : this(neighborhood, provider: null)
-      {
-      }
-
-      public LocalSearchTemplate(Neighborhood neighborhood, AlgorithmTracker provider)
+      internal LocalSearchTemplate(Neighborhood neighborhood, AlgorithmTracker provider = null)
          : base(provider)
       {
          Type = neighborhood.Type;
@@ -49,7 +44,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
       #region Internal properties
       internal TOSolution CurrentBestSolution { get; set; }
-      internal bool CanDoImprovements { get; set; }
+      private bool CanDoImprovements { get; set; }
 
       /// <summary>
       /// Property used to assign the local search move which has made this solution.
@@ -195,7 +190,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          _shouldRunImprovementAlgorithm = default;
       }
 
-      internal override async Task PerformStep()
+      protected override async Task PerformStep()
       {
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution, NeighborhoodFacade.RunningMode.Parallel);
 
@@ -219,7 +214,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          Console.ForegroundColor = ConsoleColor.DarkGreen;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
-         
+
          _previousSolutionCost = CurrentBestSolution.Cost;
 
          bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
@@ -234,7 +229,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             SendMessage(MessageCode.LSBestFound, solution.Cost, _previousSolutionCost);
             Console.ForegroundColor = ConsoleColor.Gray;
             _solutionsHistory.Add(solution);
-            
+
             //E' migliore, ma di quanto? Se il delta è 0 comunque incremento l'iterationsWithoutImprovement.
             var delta = CurrentBestSolution.Cost - _previousSolutionCost;
             if (delta < _improvementThreshold)

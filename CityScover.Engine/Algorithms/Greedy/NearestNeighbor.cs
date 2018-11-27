@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Commons;
@@ -54,7 +54,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          _previousCandidateId = neighborPoi.Entity.Id;
       }
 
-      internal override async Task PerformStep()
+      protected override async Task PerformStep()
       {
          Tour.RemoveEdge(_previousCandidateId, StartingPoint.Entity.Id);
          var newStartPoi = CityMapClone[ProcessingNodes.Dequeue()];
@@ -79,7 +79,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          SendMessage(MessageCode.GreedyNodeAdded, candidatePoi.Entity.Name, newSolution.Id);
          SolutionsHistory.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
-         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(Utils.DelayTask).ConfigureAwait(false);
          await Solver.AlgorithmTasks[newSolution.Id];
 
          if (!newSolution.IsValid)

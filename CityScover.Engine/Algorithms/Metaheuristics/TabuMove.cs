@@ -6,11 +6,8 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/11/2018
+// File update: 26/11/2018
 //
-
-using CityScover.Engine.Workers;
-using System;
 
 namespace CityScover.Engine.Algorithms.Metaheuristics
 {
@@ -30,8 +27,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #endregion
 
       #region Internal properties
-      internal int FirstEdgeId { get; set; }
-      internal int SecondEdgeId { get; set; }
+      internal int FirstEdgeId { get; }
+      internal int SecondEdgeId { get; }
       internal int Expiration { get; set; }
       #endregion   
    }

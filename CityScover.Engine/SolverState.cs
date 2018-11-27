@@ -31,7 +31,7 @@ namespace CityScover.Engine
       #region Private fields
       private BlockingCollection<TOSolution> _solutionsQueue;
       private ICollection<Task> _solverTasks;
-      private IDictionary<int, Task> _algorithmTasks;
+
       #endregion
 
       #region Constructors
@@ -42,7 +42,17 @@ namespace CityScover.Engine
 
       #region Private properties
       private SolverValidator SolverValidator => SolverValidator.Instance;
-      private SolverEvaluator SolverEvaluator => SolverEvaluator.Instance; 
+      private SolverEvaluator SolverEvaluator => SolverEvaluator.Instance;
+
+      /// <summary>
+      /// Points of interest filtered from the graph of the city.
+      /// </summary>
+      private IEnumerable<InterestPoint> Points { get; set; }
+
+      /// <summary>
+      /// This delegate contains execution method to invoke by the current Algorithm.
+      /// </summary>
+      private Func<Algorithm, Task> ExecutionInternalFunc { get; set; }
       #endregion
 
       #region Internal properties
@@ -55,11 +65,6 @@ namespace CityScover.Engine
       /// This flag says if algorithm's monitoring is active or not.
       /// </summary>
       internal bool IsMonitoringEnabled { get; private set; }
-
-      /// <summary>
-      /// This delegate contains execution method to invoke by the current Algorithm.
-      /// </summary>
-      internal Func<Algorithm, Task> ExecutionInternalFunc { get; private set; }
 
       /// <summary>
       /// Current stage in execution.
@@ -81,11 +86,6 @@ namespace CityScover.Engine
       internal double CurrentObjectiveFunctionWeight { get; set; }
 
       /// <summary>
-      /// Points of interest filtered from the graph of the city.
-      /// </summary>
-      internal IEnumerable<InterestPoint> Points { get; private set; }
-
-      /// <summary>
       /// Current type of Operating Reasearch problem.
       /// </summary>
       internal ProblemBase Problem { get; private set; }
@@ -104,8 +104,8 @@ namespace CityScover.Engine
 
       internal int PreviousStageSolutionCost { get; set; }
 
-      internal IDictionary<int, Task> AlgorithmTasks => _algorithmTasks;
-      
+      internal IDictionary<int, Task> AlgorithmTasks { get; private set; }
+
       internal ICollection<string> ConstraintsToRelax { get; private set; }
       #endregion
 
@@ -113,7 +113,7 @@ namespace CityScover.Engine
       protected override void InitializeInstance()
       {
          _solverTasks = new Collection<Task>();
-         _algorithmTasks = new Dictionary<int, Task>();
+         AlgorithmTasks = new Dictionary<int, Task>();
          ConstraintsToRelax = new Collection<string>();
       }
       #endregion

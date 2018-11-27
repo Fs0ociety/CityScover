@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 20/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Commons;
@@ -32,7 +32,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       #region Constructors
       internal LinKernighan()
-         : this(provider: null)
+         : this(null)
       {         
       }
 
@@ -162,7 +162,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          }
       }
 
-      internal override async Task PerformStep()
+      protected override async Task PerformStep()
       {
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKHStepIncreased, CurrentStep, MaxSteps);

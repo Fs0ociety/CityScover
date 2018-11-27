@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -20,21 +20,15 @@ namespace CityScover.Engine
    /// and start execution of all stages of the Algorithm.
    /// In addition, it monitors the execution of the Algorithm.
    /// </summary>
-   internal class ExecutionReporter : IObserver<TOSolution>
+   internal sealed class ExecutionReporter : IObserver<TOSolution>
    {
       #region Private fields
       private IDisposable _unsubscriber;
       //private Stopwatch _timer;
       #endregion
 
-      #region Constructors
-      internal ExecutionReporter()
-      {
-      }
-      #endregion
-
-      #region Internal properties
-      internal Solver Solver => Solver.Instance;
+      #region Private properties
+      private Solver Solver => Solver.Instance;
 
       //public Stopwatch RunningTime { get; set; }
 
@@ -47,12 +41,12 @@ namespace CityScover.Engine
       /// and gets the unsubscriber object to cancel subscription.
       /// </summary>
       /// <param name="provider"></param>
-      internal virtual void Subscribe(AlgorithmTracker provider) => _unsubscriber = provider.Subscribe(this);
+      internal void Subscribe(AlgorithmTracker provider) => _unsubscriber = provider.Subscribe(this);
 
       /// <summary>
       /// Cancel the subscription to provider.
       /// </summary>
-      internal virtual void Unsubscribe() => _unsubscriber.Dispose();
+      internal void Unsubscribe() => _unsubscriber.Dispose();
 
       /// <summary>
       /// Invoke the algorithm passed as argument and reports its running time.

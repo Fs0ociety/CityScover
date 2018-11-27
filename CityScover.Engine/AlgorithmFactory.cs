@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Algorithms.CustomAlgorithms;
@@ -22,7 +22,7 @@ namespace CityScover.Engine
    /// <summary>
    /// Factory class for the Algorithm abstract interface.
    /// </summary>
-   internal class AlgorithmFactory
+   internal static class AlgorithmFactory
    {
       #region Internal static methods
       /// <summary>

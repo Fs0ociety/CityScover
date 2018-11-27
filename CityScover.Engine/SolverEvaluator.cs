@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Commons;
@@ -25,10 +25,8 @@ namespace CityScover.Engine
       }
       #endregion
 
-      #region Internal properties
-      internal Solver Solver => Solver.Instance;
-
-      internal Configuration WorkingConfiguration => Solver.Instance.WorkingConfiguration;
+      #region Private properties
+      private Solver Solver => Solver.Instance;
       #endregion
 
       #region Internal methods
@@ -37,18 +35,20 @@ namespace CityScover.Engine
          var objectiveFunc = Solver.Problem.ObjectiveFunc;
          solution.Cost = objectiveFunc.Invoke(solution);
 
+         var penaltyFunc = Solver.Problem.PenaltyFunc;
+
          // Get the violated constraints to invoke the PenaltyFunc delegate.
          var violatedConstraints = solution.ProblemConstraints
             .Where(constraint => constraint.Value == false);
 
-         var penaltyFunc = Solver.Problem.PenaltyFunc;
-
-         foreach (var constraint in violatedConstraints)
-         {
-            int penalty = penaltyFunc.Invoke(solution);
-            solution.Cost += penalty;
-            solution.Penalty = penalty < 0 ? -penalty : penalty;
-         }
+         violatedConstraints.ToList()
+            .ForEach(
+               delegate
+               {
+                  int penalty = penaltyFunc.Invoke(solution);
+                  solution.Cost += penalty;
+                  solution.Penalty = penalty < 0 ? -penalty : penalty;
+               });
       }
       #endregion
    }

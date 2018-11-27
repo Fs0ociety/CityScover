@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -20,12 +20,13 @@ namespace CityScover.Engine.Algorithms.Greedy
 {
    internal abstract class GreedyTemplate : Algorithm
    {
+      //private double _averageSpeedWalk;
+      private DateTime _timeSpent;
       private bool _canDoImprovements;
 
       #region Protected fields
-      protected double AverageSpeedWalk;
+
       protected CityMapGraph CityMapClone;
-      protected DateTime TimeSpent;
       protected InterestPointWorker StartingPoint;
       protected CityMapGraph Tour;
       protected ICollection<TOSolution> SolutionsHistory;
@@ -132,7 +133,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         AverageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
+         //_averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          Tour = new CityMapGraph();
          ProcessingNodes = new Queue<int>();
          SolutionsHistory = new Collection<TOSolution>();
@@ -170,14 +171,14 @@ namespace CityScover.Engine.Algorithms.Greedy
                $"{nameof(StartingPoint)} in {nameof(NearestNeighbor)}");
          }
 
-         TimeSpent = DateTime.Now;
+         _timeSpent = DateTime.Now;
          StartingPoint.IsVisited = true;
       }
 
       internal override void OnError(Exception exception)
       {
          CurrentStep = default;
-         TOSolution lastProducedSolution = SolutionsHistory.Last();
+         //TOSolution lastProducedSolution = SolutionsHistory.Last();
          base.OnError(exception);
       }
 
@@ -190,7 +191,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnTerminated()
       {
          CityMapClone = null;
-         TOSolution bestProducedSolution = SolutionsHistory.Last();
+         //TOSolution bestProducedSolution = SolutionsHistory.Last();
 
          SendMessage(TOSolution.SolutionCollectionToString(SolutionsHistory));
 
@@ -198,17 +199,19 @@ namespace CityScover.Engine.Algorithms.Greedy
          SendMessage(MessageCode.GreedyFinish);
          base.OnTerminated();
 
-         if (_canDoImprovements)
+         if (!_canDoImprovements)
          {
-            Task improvementTask = RunImprovementAlgorithms();
-            try
-            {
-               improvementTask.Wait();
-            }
-            catch (AggregateException ae)
-            {
-               OnError(ae.InnerException);
-            }
+            return;
+         }
+
+         Task improvementTask = RunImprovementAlgorithms();
+         try
+         {
+            improvementTask.Wait();
+         }
+         catch (AggregateException ae)
+         {
+            OnError(ae.InnerException);
          }
       }
 

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Algorithms;
@@ -47,11 +47,6 @@ namespace CityScover.Engine
       /// Property used from SolverEvaluator to set a Penalty for the Solution.
       /// </summary>
       internal int Penalty { get; set; }
-
-      /// <summary>
-      /// Returns the sum of cost and penalty.
-      /// </summary>
-      //internal int CostAndPenalty => Cost + Penalty;
       
       /// <summary>
       /// Property used from SolverValidator to check the TMax constraint.
@@ -62,7 +57,7 @@ namespace CityScover.Engine
       /// Property used from SolverValidator for analysis of problem's constraints.
       /// Contains the results of validation of constraints.
       /// </summary>
-      internal IDictionary<string, bool> ProblemConstraints { get; set; } = new Dictionary<string, bool>();
+      internal IDictionary<string, bool> ProblemConstraints { get; } = new Dictionary<string, bool>();
 
       /// <summary>
       /// Property used to assign a significative description for this solution.

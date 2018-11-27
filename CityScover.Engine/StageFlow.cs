@@ -49,8 +49,8 @@ namespace CityScover.Engine
       /// <summary>
       /// Specific parameters of the algorithm.
       /// </summary>
-      public IDictionary<ParameterCodes, dynamic> AlgorithmParameters { get; set; }
-      public ICollection<StageFlow> ChildrenFlows { get; set; }
+      public IDictionary<ParameterCodes, dynamic> AlgorithmParameters { get; }
+      public ICollection<StageFlow> ChildrenFlows { get; }
       #endregion
    }
 }

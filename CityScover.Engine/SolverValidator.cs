@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Commons;
@@ -25,10 +25,8 @@ namespace CityScover.Engine
       }
       #endregion
 
-      #region Internal properties
-      internal Solver Solver => Solver.Instance;
-
-      internal Configuration WorkingConfiguration => Solver.Instance.WorkingConfiguration;
+      #region Private properties
+      private Solver Solver => Solver.Instance;
       #endregion
 
       #region Internal methods

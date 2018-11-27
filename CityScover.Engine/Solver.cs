@@ -94,7 +94,7 @@ namespace CityScover.Engine
          foreach (var solution in _solutionsQueue.GetConsumingEnumerable())
          {
             Task processingSolutionTask = Task.Run(() => ProcessSolution(solution));
-            _algorithmTasks.Add(solution.Id, processingSolutionTask);
+            AlgorithmTasks.Add(solution.Id, processingSolutionTask);
          }
 
          void ProcessSolution(TOSolution solution)

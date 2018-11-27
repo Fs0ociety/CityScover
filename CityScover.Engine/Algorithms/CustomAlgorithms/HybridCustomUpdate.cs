@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Commons;
@@ -27,7 +27,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       #region Constructors
       internal HybridCustomUpdate()
-         : this(provider: null)
+         : this(null)
       {
       }
       internal HybridCustomUpdate(AlgorithmTracker provider)
@@ -38,7 +38,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Internal properties
-      internal bool TourUpdated { get; set; }
+      internal bool TourUpdated { get; private set; }
       internal TOSolution CurrentSolution => _currentSolution;
       #endregion
 
@@ -166,7 +166,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _candidateEdges = CalculateMaxEdgesTimeWalk();
       }
 
-      internal override async Task PerformStep()
+      protected override async Task PerformStep()
       {
          InterestPointWorker candidateNode = ProcessingNodes.Dequeue();
          int nodeKeyToRemove = FindPointToRemove(candidateNode.Entity.Id);
@@ -203,10 +203,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             Provider.NotifyObservers(_currentSolution);
          }
-      }
-
-      internal override void OnTerminating()
-      {
       }
 
       internal override bool StopConditions()

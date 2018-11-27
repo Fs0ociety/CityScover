@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -20,7 +20,7 @@ namespace CityScover.Engine.Algorithms.Greedy
    {
       #region Constructors
       internal NearestNeighborKnapsack()
-         : this(provider: null)
+         : this(null)
       {
       }
 

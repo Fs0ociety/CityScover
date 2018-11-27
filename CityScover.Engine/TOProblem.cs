@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Commons;
@@ -92,11 +92,6 @@ namespace CityScover.Engine
 
          // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
          // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.
-         //double distanceWeightSum = default;
-         //foreach (var edge in solution.SolutionGraph.Edges)
-         //{
-         //   distanceWeightSum += 1 / edge.Weight.Invoke();
-         //}
          double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
 
          //Calcolo del termine della distanza.
@@ -106,13 +101,6 @@ namespace CityScover.Engine
             double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
             return nodeDistScoreTerm / distanceWeightSum;
          });
-         //double distanceTerm = default;
-         //foreach (var node in solution.SolutionGraph.Nodes)
-         //{
-         //   RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
-         //   double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
-         //   distanceTerm += nodeDistScoreTerm / distanceWeightSum;
-         //}
 
          return (int)Math.Round((lambda * scoreTerm) + ((1 - lambda) * distanceTerm));
       }
@@ -127,27 +115,34 @@ namespace CityScover.Engine
       {
          bool satisfied = true;
          CityMapGraph solutionGraph = solution.SolutionGraph;
-         var processingNodes = solutionGraph.TourPoints.GetEnumerator();
-
-         while (satisfied && processingNodes.MoveNext())
+         using (var processingNodes = solutionGraph.TourPoints.GetEnumerator())
          {
-            var node = processingNodes.Current;
-            TimeSpan visitTime = default;
-            if (node.Entity.TimeVisit.HasValue)
+            while (satisfied && processingNodes.MoveNext())
             {
-               visitTime = node.Entity.TimeVisit.Value;
-            }
+               var node = processingNodes.Current;
+               TimeSpan visitTime = default;
 
-            DateTime nodeTime = node.ArrivalTime + node.WaitOpeningTime;
-            foreach (var time in node.Entity.OpeningTimes)
-            {
-               if (time.ClosingTime.HasValue && nodeTime > (time.ClosingTime.Value - visitTime))
+               if (node?.Entity.TimeVisit != null)
                {
-                  satisfied = false;
+                  visitTime = node.Entity.TimeVisit.Value;
+               }
+               if (node == null)
+               {
                   continue;
+               }
+
+               DateTime nodeTime = node.ArrivalTime + node.WaitOpeningTime;
+               foreach (var time in node.Entity.OpeningTimes)
+               {
+                  if (time.ClosingTime.HasValue && nodeTime > (time.ClosingTime.Value - visitTime))
+                  {
+                     satisfied = false;
+                     continue;
+                  }
                }
             }
          }
+
          return satisfied;
       }
 

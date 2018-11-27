@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Commons;
@@ -50,8 +50,14 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private protected TimeSpan TimeWalkThreshold;
       private protected Queue<InterestPointWorker> ProcessingNodes;
       private protected ICollection<TOSolution> SolutionsHistory;
+      #endregion
 
-      private protected void AddPointsNotInTour()
+      #region Internal properties
+      internal TOSolution CurrentBestSolution { get; set; }
+      #endregion
+
+      #region Private methods
+      private void AddPointsNotInTour()
       {
          var currentSolutionNodes = Tour.Nodes;
          var cityMapGraphNodes = Solver.CityMapGraph.TourPoints;
@@ -66,13 +72,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          orderedFilteredNodes.ToList().ForEach(node => ProcessingNodes.Enqueue(node));
       }
-      #endregion
 
-      #region Internal properties
-      internal TOSolution CurrentBestSolution { get; set; }
-      #endregion
-
-      #region Private methods
       private void TryAddNode(InterestPointWorker nodeToAdd, int fromNodeKey, int toNodeKey)
       {
          int nodeKeyToAdd = nodeToAdd.Entity.Id;
@@ -89,6 +89,32 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          Tour.RemoveEdge(fromNodeKey, nodeKeyToRemove);
          Tour.RemoveNode(nodeKeyToRemove);
          Tour.AddRouteFromGraph(Solver.CityMapGraph, fromNodeKey, toNodeKey);
+      }
+
+      private HybridCustomUpdate RunUpdateTour()
+      {
+         HybridCustomUpdate updateAlgorithm = (HybridCustomUpdate)Solver
+            .GetAlgorithm(AlgorithmType.HybridCustomUpdate);
+         updateAlgorithm.Provider = Provider;
+         updateAlgorithm.Parameters = Parameters;
+
+         Task updateTask = Task.Run(updateAlgorithm.Start);
+         try
+         {
+            updateTask.Wait();
+         }
+         catch (AggregateException ae)
+         {
+            updateAlgorithm = null;
+            OnError(ae.InnerException);
+         }
+         finally
+         {
+            ProcessingNodes.Clear();
+            ProcessingNodes = null;
+         }
+
+         return updateAlgorithm;
       }
 
       private void Restart()
@@ -148,7 +174,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _addedNodesCount = default;
       }
 
-      internal override async Task PerformStep()
+      protected override async Task PerformStep()
       {
          InterestPointWorker point = ProcessingNodes.Dequeue();
 
@@ -197,11 +223,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          if (_addedNodesCount == 0)
          {
-            HybridCustomUpdate updateAlgorithm = 
-               (HybridCustomUpdate)Solver.GetAlgorithm(AlgorithmType.HybridCustomUpdate);
-            updateAlgorithm.Provider = Provider;
-            updateAlgorithm.Parameters = Parameters;
-
             if (Solver.IsMonitoringEnabled)
             {
                Console.ForegroundColor = ConsoleColor.DarkMagenta;
@@ -209,23 +230,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                Console.ForegroundColor = ConsoleColor.Gray;
             }
 
-            Task updateTask = Task.Run(updateAlgorithm.Start);
-            try
+            var updateAlgorithm = RunUpdateTour();
+            if (updateAlgorithm is null)
             {
-               updateTask.Wait();
+               return;
             }
-            catch (AggregateException ae)
-            {
-               OnError(ae.InnerException);
-               updateAlgorithm = null;
-            }
-            finally
-            {
-               ProcessingNodes.Clear();
-               ProcessingNodes = null;
-            }
-
-            if (!updateAlgorithm.TourUpdated)
+            if (updateAlgorithm.TourUpdated == false)
             {
                return;
             }

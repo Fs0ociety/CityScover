@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 27/11/2018
 //
 
 using CityScover.Engine.Workers;
@@ -32,8 +32,9 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #endregion
 
       #region Private methods
-      private void ProcessCandidates(IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges,
-         TOSolution solution, ICollection<TOSolution> neighborhood)
+      private void ProcessCandidates(
+         IDictionary<RouteWorker, IEnumerable<RouteWorker>> candidateEdges, 
+         ICollection<TOSolution> neighborhood)
       {
          foreach (var currentEdge in candidateEdges.Keys)
          {
@@ -86,7 +87,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          }
 
          ICollection<TOSolution> neighborhood = new Collection<TOSolution>();
-         ProcessCandidates(candidateEdges, solution, neighborhood);
+         ProcessCandidates(candidateEdges, neighborhood);
          return neighborhood;
       }
       #endregion

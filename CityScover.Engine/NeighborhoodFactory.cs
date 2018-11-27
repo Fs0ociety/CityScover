@@ -6,14 +6,14 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/11/2018
+// File update: 26/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
 
 namespace CityScover.Engine
 {
-   internal class NeighborhoodFactory
+   internal static class NeighborhoodFactory
    {
       #region Internal static methods
       internal static Neighborhood CreateNeighborhood(AlgorithmType algorithmType)
