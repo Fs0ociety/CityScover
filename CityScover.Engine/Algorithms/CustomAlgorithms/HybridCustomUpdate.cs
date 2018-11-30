@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 30/11/2018
 //
 
 using CityScover.Commons;
@@ -26,15 +26,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private IEnumerable<(RouteWorker, TimeSpan)> _candidateEdges;
 
       #region Constructors
-      internal HybridCustomUpdate()
-         : this(null)
+      internal HybridCustomUpdate() : this(null)
       {
       }
-      internal HybridCustomUpdate(AlgorithmTracker provider)
-         : base(provider)
-      {
-         Type = AlgorithmType.HybridCustomUpdate;
-      }
+      internal HybridCustomUpdate(AlgorithmTracker provider) : base(provider)
+         => Type = AlgorithmType.HybridCustomUpdate;
       #endregion
 
       #region Internal properties

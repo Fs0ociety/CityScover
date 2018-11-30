@@ -6,13 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 30/11/2018
 //
 
 using CityScover.Commons;
 using CityScover.Engine.Workers;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,16 +27,12 @@ namespace CityScover.Engine.Algorithms.Greedy
       private InterestPointWorker _endPoint;
 
       #region Constructors
-      internal CheapestInsertion()
-         : this(null)
+      internal CheapestInsertion() : this(null)
       {
       }
 
-      internal CheapestInsertion(AlgorithmTracker provider)
-         : base(provider)
-      {
-         Type = AlgorithmType.NearestNeighbor;
-      }
+      internal CheapestInsertion(AlgorithmTracker provider) : base(provider)
+         => Type = AlgorithmType.NearestNeighbor;
       #endregion
 
       #region Private methods

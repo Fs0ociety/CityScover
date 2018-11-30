@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 30/11/2018
 //
 
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -34,11 +34,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #endregion
 
       #region Constructors
-      internal TabuSearch(Neighborhood neighborhood)
-         : this(neighborhood, null)
-      {
-         Type = AlgorithmType.TabuSearch;
-      }
+      internal TabuSearch(Neighborhood neighborhood) : this(neighborhood, null) 
+         => Type = AlgorithmType.TabuSearch;
 
       internal TabuSearch(Neighborhood neighborhood, AlgorithmTracker provider)
          : base(provider)

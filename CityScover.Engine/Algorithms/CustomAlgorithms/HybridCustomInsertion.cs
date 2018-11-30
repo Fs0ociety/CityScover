@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 30/11/2018
 //
 
 using CityScover.Commons;
@@ -31,16 +31,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Constructors
-      internal HybridCustomInsertion()
-         : this(provider: null)
+      internal HybridCustomInsertion() : this(provider: null)
       {
       }
 
-      internal HybridCustomInsertion(AlgorithmTracker provider)
-         : base(provider)
-      {
-         Type = AlgorithmType.HybridCustomInsertion;
-      }
+      internal HybridCustomInsertion(AlgorithmTracker provider) : base(provider)
+         => Type = AlgorithmType.HybridCustomInsertion;
       #endregion
 
       #region Private Protected members

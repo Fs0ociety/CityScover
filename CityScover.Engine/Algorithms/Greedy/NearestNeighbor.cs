@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 30/11/2018
 //
 
 using CityScover.Commons;
@@ -22,16 +22,12 @@ namespace CityScover.Engine.Algorithms.Greedy
       private int _previousCandidateId;
 
       #region Constructors
-      internal NearestNeighbor()
-         : this(null)
+      internal NearestNeighbor() : this(null)
       {
       }
 
-      internal NearestNeighbor(AlgorithmTracker provider)
-         : base(provider)
-      {
-         Type = AlgorithmType.NearestNeighbor;
-      }
+      internal NearestNeighbor(AlgorithmTracker provider) : base(provider) 
+         => Type = AlgorithmType.NearestNeighbor;
       #endregion
 
       #region Overrides

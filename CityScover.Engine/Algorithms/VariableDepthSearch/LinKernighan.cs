@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 30/11/2018
 //
 
 using CityScover.Commons;
@@ -31,16 +31,12 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       #endregion
 
       #region Constructors
-      internal LinKernighan()
-         : this(null)
+      internal LinKernighan() : this(null)
       {         
       }
 
-      internal LinKernighan(AlgorithmTracker provider)
-         : base(provider)
-      {
-         Type = AlgorithmType.LinKernighan;
-      }
+      internal LinKernighan(AlgorithmTracker provider) : base(provider)
+         => Type = AlgorithmType.LinKernighan;
       #endregion
 
       #region Internal properties
