@@ -136,6 +136,83 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
+         #region Test - Configuration 2
+         Configuration c2Test = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.Sport,
+            PointsFilename = @"cityscover-points-90.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(10, 0, 0),
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
+                     }
+                  }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageThree,
+                  Category = AlgorithmFamily.MetaHeuristic,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.TabuSearch,
+                     RunningCount = 30,
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.TwoOpt)
+                        {
+                           ChildrenFlows =
+                           {
+                              new StageFlow(AlgorithmType.HybridCustomInsertion)
+                              {
+                                 AlgorithmParameters =
+                                 {
+                                    [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
+                                    [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 30, 0),
+                                    [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                                 }
+                              },
+                              new StageFlow(AlgorithmType.LinKernighan, 20)
+                           },
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.CanDoImprovements] = true,
+                              [ParameterCodes.LSimprovementThreshold] = 2000,
+                              [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                           }
+                        }
+                     },
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.TABUmaxDeadlockIterations] = 18,
+                        [ParameterCodes.TABUtenureFactor] = 2,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
+                     }
+                  }
+               }
+            }
+         };
+         #endregion
+
          #region Configuration for Test 2
          //Configuration c2Test = new Configuration()
          //{
@@ -317,7 +394,7 @@ namespace CityScover.Engine.Configurations
          //};
          #endregion
 
-         Configurations.Add(c1Test);
+         Configurations.Add(c2Test);
       }
       #endregion
 
