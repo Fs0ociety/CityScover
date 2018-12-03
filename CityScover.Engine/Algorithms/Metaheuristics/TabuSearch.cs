@@ -34,7 +34,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #endregion
 
       #region Constructors
-      internal TabuSearch(Neighborhood neighborhood) : this(neighborhood, null) 
+      internal TabuSearch(Neighborhood neighborhood) : this(neighborhood, null)
          => Type = AlgorithmType.TabuSearch;
 
       internal TabuSearch(Neighborhood neighborhood, AlgorithmTracker provider)
@@ -48,22 +48,26 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #endregion
 
       #region Private methods
+
+      #region Code for debug...
+      //private int CalculateTabuTenure(int problemSize, int factor)
+      //{
+      //   // Ver. 1
+      //   int start = (problemSize + 4 - 1) / 4;
+      //   int end = (problemSize + 2 - 1) / 2;
+
+      //   _tenure = new Random().Next(2) == 0 ? start : end;
+      //   return _tenure;
+
+      //   // Ver. 2
+      //   return new Random().Next(2) == 0 ?
+      //      (problemSize + 4 - 1) / 4 :
+      //      (problemSize + 2 - 1) / 2;
+      //}
+      #endregion
+
       private int CalculateTabuTenure(int problemSize, int factor)
-      {
-         #region Code for debug...
-         //int start = (problemSize + 4 - 1) / 4;
-         //int end = (problemSize + 2 - 1) / 2;
-
-         //_tenure = new Random().Next(2) == 0 ? start : end;
-         //return _tenure;
-         #endregion
-
-         //return new Random().Next(2) == 0 ?
-         //   (problemSize + 4 - 1) / 4 :
-         //   (problemSize + 2 - 1) / 2;
-
-         return (problemSize + factor - 1) / factor;
-      }
+         => (problemSize + factor - 1) / factor;
 
       private LocalSearchTemplate GetLocalSearchAlgorithm()
       {
@@ -121,8 +125,10 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       private void AspirationCriteria()
       {
+         #region LINQ version
          // Using LINQ with generic Predicate<T> delegate to remove items in Tabu list.
          //_neighborhood.TabuList.ToList().RemoveAll(tabuMove => tabuMove.Expiration >= _tenure);
+         #endregion
 
          // Using classic foreach, iterating over a copy of the Tabu list.
          foreach (var tabuMove in _neighborhood.TabuList.ToList())
@@ -144,7 +150,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                string message = MessagesRepository.GetMessage(MessageCode.TSMoveUnlocked,
                   $"({pointFromId}, {pointToId})",
                   $"{tabuMove.Expiration}");
-               
+
                Console.ForegroundColor = ConsoleColor.Magenta;
                SendMessage(message);
                Console.ForegroundColor = ConsoleColor.Gray;
@@ -169,7 +175,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _maxDeadlockIterations = Parameters[ParameterCodes.TABUmaxDeadlockIterations];
          int tabuTenureFactor = Parameters[ParameterCodes.TABUtenureFactor];
 
-         if (tabuTenureFactor == 0)
+         if (tabuTenureFactor <= 1)
          {
             throw new InvalidOperationException("Bad configuration format: " +
                $"{nameof(ParameterCodes.TABUtenureFactor)}.");
@@ -194,7 +200,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       }
 
       protected override async Task PerformStep()
-      {         
+      {
          await RunLocalSearch().ConfigureAwait(continueOnCapturedContext: false);
 
          bool isBetterThanPreviousBestSolution = Solver.Problem.CompareSolutionsCost(
