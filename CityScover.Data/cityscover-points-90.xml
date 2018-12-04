@@ -431,9 +431,9 @@
     <!-- Punti d'interesse Gastronomici -->
     <!---->
 
-    <!-- Nr. 32 -->
+    <!-- Nr. 34 -->
     <!-- Makorè -->
-    <PointOfInterest id="32" name="Makorè">
+    <PointOfInterest id="34" name="Makorè">
       <Coordinates latitude="44,837429" longitude="11,622981"/>
       <Category id="2"/>
       <ThematicScore category="2" value="80"/>
@@ -444,9 +444,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 33 -->
+    <!-- Nr. 35 -->
     <!-- Fuori Porta -->
-    <PointOfInterest id="33" name="Fuori Porta">
+    <PointOfInterest id="35" name="Fuori Porta">
       <Coordinates latitude="44,832623" longitude="11,636595"/>
       <Category id="2"/>
       <ThematicScore category="2" value="75"/>
@@ -456,9 +456,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 34 -->
+    <!-- Nr. 36 -->
     <!-- XI Comandamento -->
-    <PointOfInterest id="34" name="XI Comandamento">
+    <PointOfInterest id="36" name="XI Comandamento">
       <Coordinates latitude="44,832788" longitude="11,618828"/>
       <Category id="2"/>
       <ThematicScore category="2" value="65"/>
@@ -468,9 +468,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 35 -->
+    <!-- Nr. 37 -->
     <!-- Osteria I Quattro Angeli -->
-    <PointOfInterest id="35" name="Osteria I Quattro Angeli">
+    <PointOfInterest id="37" name="Osteria I Quattro Angeli">
       <Coordinates latitude="44,837011" longitude="11,618615"/>
       <Category id="2"/>
       <ThematicScore category="2" value="70"/>
@@ -481,9 +481,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 36 -->
+    <!-- Nr. 38 -->
     <!-- Trattoria da Noemi -->
-    <PointOfInterest id="36" name="Trattoria da Noemi">
+    <PointOfInterest id="38" name="Trattoria da Noemi">
       <Coordinates latitude="44,8330769" longitude="11,6189851"/>
       <Category id="2"/>
       <ThematicScore category="2" value="70"/>
@@ -494,9 +494,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 37 -->
+    <!-- Nr. 39 -->
     <!-- Il Don Giovanni -->
-    <PointOfInterest id="37" name="Il Don Giovanni">
+    <PointOfInterest id="39" name="Il Don Giovanni">
       <Coordinates latitude="44,838670" longitude="11,619772"/>
       <Category id="2"/>
       <ThematicScore category="2" value="90"/>
@@ -507,9 +507,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 38 -->
+    <!-- Nr. 40 -->
     <!-- L'Antico Giardino -->
-    <PointOfInterest id="38" name="L'Antico Giardino">
+    <PointOfInterest id="40" name="L'Antico Giardino">
       <Coordinates latitude="44,927789" longitude="11,511026"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -519,9 +519,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 39 -->
+    <!-- Nr. 41 -->
     <!-- Quel fantastico giovedì -->
-    <PointOfInterest id="39" name="Quel fantastico giovedì">
+    <PointOfInterest id="41" name="Quel fantastico giovedì">
       <Coordinates latitude="44,831354" longitude="11,619728"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -532,9 +532,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 40 -->
+    <!-- Nr. 42 -->
     <!-- Il sorpasso -->
-    <PointOfInterest id="40" name="Il sorpasso">
+    <PointOfInterest id="42" name="Il sorpasso">
       <Coordinates latitude="44,831343" longitude="11,624296"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -545,9 +545,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 41 -->
+    <!-- Nr. 43 -->
     <!-- Orsucci da Armando -->
-    <PointOfInterest id="41" name="Orsucci da Armando">
+    <PointOfInterest id="43" name="Orsucci da Armando">
       <Coordinates latitude="44,831616" longitude="11,624158"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -557,9 +557,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 42 -->
+    <!-- Nr. 44 -->
     <!-- The Lab - Food to Feel -->
-    <PointOfInterest id="42" name="The Lab - Food to Feel">
+    <PointOfInterest id="44" name="The Lab - Food to Feel">
       <Coordinates latitude="44,835922" longitude="11,620162"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -570,9 +570,9 @@
       <TimeVisit unit="min" duration="40"/>
     </PointOfInterest>
 
-    <!-- Nr. 43 -->
+    <!-- Nr. 45 -->
     <!-- Caffé del corso -->
-    <PointOfInterest id="43" name="Caffè del corso">
+    <PointOfInterest id="45" name="Caffè del corso">
       <Coordinates latitude="44,836889" longitude="11,622390"/>
       <Category id="2"/>
       <ThematicScore category="2" value="60" />
@@ -582,9 +582,9 @@
       <TimeVisit unit="min" duration="20"/>
     </PointOfInterest>
 
-    <!-- Nr. 44-->
+    <!-- Nr. 46-->
     <!-- Locanda 22 -->
-    <PointOfInterest id="44" name="Locanda 22">
+    <PointOfInterest id="46" name="Locanda 22">
       <Coordinates latitude="44,8370152" longitude="11,6182631"/>
       <Category id="2"/>
       <ThematicScore category="2" value="95"/>
@@ -595,9 +595,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 45 -->
+    <!-- Nr. 47 -->
     <!-- Ristorante Max -->
-    <PointOfInterest id="45" name="Ristorante Max">
+    <PointOfInterest id="47" name="Ristorante Max">
       <Coordinates latitude="44,837525" longitude="11,6178658"/>
       <Category id="2"/>
       <ThematicScore category="2" value="80"/>
@@ -607,9 +607,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 46 -->
+    <!-- Nr. 48 -->
     <!-- I Piaceri di Lucrezia -->
-    <PointOfInterest id="46" name="I Piaceri di Lucrezia">
+    <PointOfInterest id="48" name="I Piaceri di Lucrezia">
       <Coordinates latitude="44,828753" longitude="11,624123"/>
       <Category id="2"/>
       <ThematicScore category="2" value="85"/>
@@ -619,9 +619,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 47 -->
+    <!-- Nr. 49 -->
     <!-- Osteria Degli Ulivi -->
-    <PointOfInterest id="47" name="Osteria Degli Ulivi">
+    <PointOfInterest id="49" name="Osteria Degli Ulivi">
       <Coordinates latitude="44,8334787" longitude="11,6183261"/>
       <Category id="2"/>
       <ThematicScore category="2" value="80"/>
@@ -632,9 +632,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 48 -->
+    <!-- Nr. 50 -->
     <!-- Osteria degli Angeli -->
-    <PointOfInterest id="48" name="Osteria degli Angeli">
+    <PointOfInterest id="50" name="Osteria degli Angeli">
       <Coordinates latitude="44,833632" longitude="11,617518"/>
       <Category id="2"/>
       <ThematicScore category="2" value="75"/>
@@ -645,9 +645,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 49 -->
+    <!-- Nr. 51 -->
     <!-- Rifugio Degli Artisti -->
-    <PointOfInterest id="49" name="Rifugio Degli Artisti">
+    <PointOfInterest id="51" name="Rifugio Degli Artisti">
       <Coordinates latitude="44,7723155" longitude="11,3443391"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -657,9 +657,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 50 -->
+    <!-- Nr. 52 -->
     <!-- Hostaria Savonarola -->
-    <PointOfInterest id="50" name="Hostaria Savonarola">
+    <PointOfInterest id="52" name="Hostaria Savonarola">
       <Coordinates latitude="44,836824" longitude="11,619445"/>
       <Category id="2"/>
       <ThematicScore category="2" value="75"/>
@@ -670,9 +670,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 51 -->
+    <!-- Nr. 53 -->
     <!-- Antica Osteria Delle Volte -->
-    <PointOfInterest id="51" name="Antica Osteria Delle Volte">
+    <PointOfInterest id="53" name="Antica Osteria Delle Volte">
       <Coordinates latitude="44,8323482" longitude="11,6174861"/>
       <Category id="2"/>
       <ThematicScore category="2" value="70"/>
@@ -683,9 +683,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 52 -->
+    <!-- Nr. 54 -->
     <!-- Apelle -->
-    <PointOfInterest id="52" name="Apelle">
+    <PointOfInterest id="54" name="Apelle">
       <Coordinates latitude="44,832448" longitude="11,619078"/>
       <Category id="2"/>
       <ThematicScore category="2" value="75"/>
@@ -695,9 +695,9 @@
       <TimeVisit unit="min" duration="40"/>
     </PointOfInterest>
 
-    <!-- Nr. 53 -->
+    <!-- Nr. 55 -->
     <!-- Cusina e Butega -->
-    <PointOfInterest id="53" name="Cusina e Butega">
+    <PointOfInterest id="55" name="Cusina e Butega">
       <Coordinates latitude="44,8349425" longitude="11,6163628"/>
       <Category id="2"/>
       <ThematicScore category="2" value="90"/>
@@ -708,9 +708,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 54 -->
+    <!-- Nr. 56 -->
     <!-- Trattoria Le Nuvole -->
-    <PointOfInterest id="54" name="Trattoria Le Nuvole">
+    <PointOfInterest id="56" name="Trattoria Le Nuvole">
       <Coordinates latitude="44,831254" longitude="11,624742"/>
       <Category id="2"/>
       <ThematicScore category="2" value="45"/>
@@ -721,9 +721,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 55 -->
+    <!-- Nr. 57 -->
     <!-- I Tri Scalin -->
-    <PointOfInterest id="55" name="I Tri Scalin">
+    <PointOfInterest id="57" name="I Tri Scalin">
       <Coordinates latitude="44,8316203" longitude="11,6107881"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -733,9 +733,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 56 -->
+    <!-- Nr. 58 -->
     <!-- Regina di Cuori -->
-    <PointOfInterest id="56" name="Regina di Cuori">
+    <PointOfInterest id="58" name="Regina di Cuori">
       <Coordinates latitude="44,834240" longitude="11,619911"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -746,9 +746,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 57 -->
+    <!-- Nr. 59 -->
     <!-- Sapori di Via Mayr -->
-    <PointOfInterest id="57" name="Sapori di Via Mayr">
+    <PointOfInterest id="59" name="Sapori di Via Mayr">
       <Coordinates latitude="44,831645" longitude="11,620297"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -759,9 +759,9 @@
       <TimeVisit unit="min" duration="50"/>
     </PointOfInterest>
 
-    <!-- Nr. 58 -->
+    <!-- Nr. 60 -->
     <!-- Pizzeria Ristorante Partenope -->
-    <PointOfInterest id="58" name="Pizzeria Ristorante Partenope">
+    <PointOfInterest id="60" name="Pizzeria Ristorante Partenope">
       <Coordinates latitude="44,845867" longitude="11,614827"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -771,9 +771,9 @@
       <TimeVisit unit="min" duration="50"/>
     </PointOfInterest>
 
-    <!-- Nr. 59 -->
+    <!-- Nr. 61 -->
     <!-- I Sofisti -->
-    <PointOfInterest id="59" name="I Sofisti">
+    <PointOfInterest id="61" name="I Sofisti">
       <Coordinates latitude="44,834900" longitude="11,618526"/>
       <Category id="2"/>
       <ThematicScore category="2" value="75"/>
@@ -784,9 +784,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 60 -->
+    <!-- Nr. 62 -->
     <!-- Clandestino -->
-    <PointOfInterest id="60" name="Clandestino">
+    <PointOfInterest id="62" name="Clandestino">
       <Coordinates latitude="44,832842" longitude="11,619192"/>
       <Category id="2"/>
       <ThematicScore category="2" value="55"/>
@@ -796,9 +796,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 61 -->
+    <!-- Nr. 63 -->
     <!-- Sebastian Pub -->
-    <PointOfInterest id="61" name="Sebastian Pub">
+    <PointOfInterest id="63" name="Sebastian Pub">
       <Coordinates latitude="44,832080" longitude="11,611411"/>
       <Category id="2"/>
       <ThematicScore category="2" value="47"/>
@@ -808,9 +808,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 62 -->
+    <!-- Nr. 64 -->
     <!-- Da Pippo -->
-    <PointOfInterest id="62" name="Da Pippo">
+    <PointOfInterest id="64" name="Da Pippo">
       <Coordinates latitude="44,832715" longitude="11,624057"/>
       <Category id="2"/>
       <ThematicScore category="2" value="43"/>
@@ -821,9 +821,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 63 -->
+    <!-- Nr. 65 -->
     <!-- Este Bar -->
-    <PointOfInterest id="63" name="Este Bar">
+    <PointOfInterest id="65" name="Este Bar">
       <Coordinates latitude="44,833130" longitude="11,622058"/>
       <Category id="2"/>
       <ThematicScore category="2" value="50"/>
@@ -834,9 +834,9 @@
       <TimeVisit unit="min" duration="50"/>
     </PointOfInterest>
 
-    <!-- Nr. 64 -->
+    <!-- Nr. 66 -->
     <!-- 100 Montaditos -->
-    <PointOfInterest id="64" name="100 Montaditos">
+    <PointOfInterest id="66" name="100 Montaditos">
       <Coordinates latitude="44,833212" longitude="11,621971"/>
       <Category id="2"/>
       <ThematicScore category="2" value="40"/>
@@ -846,9 +846,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 65 -->
+    <!-- Nr. 67 -->
     <!-- La Creperie di Sara Bartolini -->
-    <PointOfInterest id="65" name="La Creperie di Sara Bartolini">
+    <PointOfInterest id="67" name="La Creperie di Sara Bartolini">
       <Coordinates latitude="44,835830" longitude="11,617555"/>
       <Category id="2"/>
       <ThematicScore category="2" value="30"/>
@@ -858,9 +858,9 @@
       <TimeVisit unit="min" duration="10"/>
     </PointOfInterest>
 
-    <!-- Nr. 66 -->
+    <!-- Nr. 68 -->
     <!-- Da Settimo -->
-    <PointOfInterest id="66" name="Da Settimo">
+    <PointOfInterest id="68" name="Da Settimo">
       <Coordinates latitude="44,835992" longitude="11,617803"/>
       <Category id="2"/>
       <ThematicScore category="2" value="40"/>
@@ -871,9 +871,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 67 -->
+    <!-- Nr. 69 -->
     <!-- Orsatti -->
-    <PointOfInterest id="67" name="Orsatti">
+    <PointOfInterest id="69" name="Orsatti">
       <Coordinates latitude="44,835888" longitude="11,618233"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -883,9 +883,9 @@
       <TimeVisit unit="min" duration="10"/>
     </PointOfInterest>
 
-    <!-- Nr. 68 -->
+    <!-- Nr. 70 -->
     <!-- Gatto Bianco -->
-    <PointOfInterest id="68" name="Gatto Bianco">
+    <PointOfInterest id="70" name="Gatto Bianco">
       <Coordinates latitude="44,832703" longitude="11,618762"/>
       <Category id="2"/>
       <ThematicScore category="2" value="50"/>
@@ -896,9 +896,9 @@
       <TimeVisit unit="min" duration="40"/>
     </PointOfInterest>
 
-    <!-- Nr. 69 -->
+    <!-- Nr. 71 -->
     <!-- La Cambusa -->
-    <PointOfInterest id="69" name="La Cambusa">
+    <PointOfInterest id="71" name="La Cambusa">
       <Coordinates latitude="44,831173" longitude="11,620995"/>
       <Category id="2"/>
       <ThematicScore category="2" value="50"/>
@@ -909,9 +909,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 70 -->
+    <!-- Nr. 72 -->
     <!-- Balebùste -->
-    <PointOfInterest id="70" name="Balebùste">
+    <PointOfInterest id="72" name="Balebùste">
       <Coordinates latitude="44,833584" longitude="11,620169"/>
       <Category id="2"/>
       <ThematicScore category="2" value="80"/>
@@ -922,9 +922,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 71 -->
+    <!-- Nr. 73 -->
     <!-- Osteria 2 Gobbi -->
-    <PointOfInterest id="71" name="Osteria 2 Gobbi">
+    <PointOfInterest id="73" name="Osteria 2 Gobbi">
       <Coordinates latitude="44,835993" longitude="11,620112"/>
       <Category id="2"/>
       <ThematicScore category="2" value="65"/>
@@ -934,9 +934,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 72 -->
+    <!-- Nr. 74 -->
     <!-- La Racchetta Ferrara Ristorante Pizzeria -->
-    <PointOfInterest id="72" name="La Racchetta Ferrara Ristorante Pizzeria">
+    <PointOfInterest id="74" name="La Racchetta Ferrara Ristorante Pizzeria">
       <Coordinates latitude="44,834025" longitude="11,618520"/>
       <Category id="2"/>
       <ThematicScore category="2" value="45"/>
@@ -947,9 +947,9 @@
       <TimeVisit unit="min" duration="40"/>
     </PointOfInterest>
 
-    <!-- Nr. 73 -->
+    <!-- Nr. 75 -->
     <!-- Ristorante Pizzeria Al Frattino -->
-    <PointOfInterest id="73" name="Ristorante Pizzeria Al Frattino">
+    <PointOfInterest id="75" name="Ristorante Pizzeria Al Frattino">
       <Coordinates latitude="44,830938" longitude="11,621476"/>
       <Category id="2"/>
       <ThematicScore category="2" value="70"/>
@@ -959,9 +959,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 74 -->
+    <!-- Nr. 76 -->
     <!-- Gelateria Baluardi Di Massimo Dallaga' -->
-    <PointOfInterest id="74" name="Gelateria Baluardi Di Massimo Dallaga'">
+    <PointOfInterest id="76" name="Gelateria Baluardi Di Massimo Dallaga'">
       <Coordinates latitude="44,831927" longitude="11,618009"/>
       <Category id="2"/>
       <ThematicScore category="2" value="65"/>
@@ -976,9 +976,9 @@
     <!-- Punti d'interesse Sportivi -->
     <!---->
 
-    <!-- Nr. 75 -->
+    <!-- Nr. 77 -->
     <!-- Centro Universitario Sportivo Di Ferrara (CUS) -->
-    <PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
+    <PointOfInterest id="77" name="Centro Universitario Sportivo Di Ferrara (CUS)">
       <Coordinates latitude="44,853446" longitude="11,631099"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100"/>
@@ -988,9 +988,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 76 -->
+    <!-- Nr. 78 -->
     <!-- Centro Sportivo Italiano -->
-    <PointOfInterest id="76" name="Centro Sportivo Italiano">
+    <PointOfInterest id="78" name="Centro Sportivo Italiano">
       <Coordinates latitude="44,833600" longitude="11,625474"/>
       <Category id="3"/>
       <ThematicScore category="3" value="55"/>
@@ -1001,9 +1001,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 77 -->
+    <!-- Nr. 79 -->
     <!-- Centro Sportivo Tennis Club Ferrara -->
-    <PointOfInterest id="77" name="Centro Sportivo Tennis Club Ferrara">
+    <PointOfInterest id="79" name="Centro Sportivo Tennis Club Ferrara">
       <Coordinates latitude="44,849885" longitude="11,613846"/>
       <Category id="3"/>
       <ThematicScore category="3" value="75"/>
@@ -1013,9 +1013,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 78 -->
+    <!-- Nr. 80 -->
     <!-- Paintball Ferrara -->
-    <PointOfInterest id="78" name="Paintball Ferrara">
+    <PointOfInterest id="80" name="Paintball Ferrara">
       <Coordinates latitude="44,837605" longitude="11,588271"/>
       <Category id="3"/>
       <ThematicScore category="3" value="65"/>
@@ -1025,9 +1025,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 79 -->
+    <!-- Nr. 81 -->
     <!-- Cus Ferrara Golf -->
-    <PointOfInterest id="79" name="Cus Ferrara Golf">
+    <PointOfInterest id="81" name="Cus Ferrara Golf">
       <Coordinates latitude="44,853365" longitude="11,631588"/>
       <Category id="3"/>
       <ThematicScore category="3" value="88"/>
@@ -1037,9 +1037,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 80 -->
+    <!-- Nr. 82 -->
     <!-- Cus Ferrara Rugby -->
-    <PointOfInterest id="80" name="Cus Ferrara Rugby">
+    <PointOfInterest id="82" name="Cus Ferrara Rugby">
       <Coordinates latitude="44,853353" longitude="11,631583"/>
       <Category id="3"/>
       <ThematicScore category="3" value="73"/>
@@ -1049,9 +1049,9 @@
       <TimeVisit unit="min" duration="20"/>
     </PointOfInterest>
 
-    <!-- Nr. 81 -->
+    <!-- Nr. 83 -->
     <!-- Ludovico Associazione Dilettantistica Sportiva -->
-    <PointOfInterest id="81" name="Ludovico Associazione Dilettantistica Sportiva">
+    <PointOfInterest id="83" name="Ludovico Associazione Dilettantistica Sportiva">
       <Coordinates latitude="44,844139" longitude="11,616941"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100"/>
@@ -1061,9 +1061,9 @@
       <TimeVisit unit="min" duration="10"/>
     </PointOfInterest>
 
-    <!-- Nr. 82 -->
+    <!-- Nr. 84 -->
     <!-- Centro Addestramento SPAL -->
-    <PointOfInterest id="82" name="Centro Addestramento SPAL">
+    <PointOfInterest id="84" name="Centro Addestramento SPAL">
       <Coordinates latitude="44,8458471" longitude="11,650829"/>
       <Category id="3"/>
       <ThematicScore category="3" value="76"/>
@@ -1073,9 +1073,9 @@
       <TimeVisit unit="min" duration="35"/>
     </PointOfInterest>
 
-    <!-- Nr. 83 -->
+    <!-- Nr. 85 -->
     <!-- La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale -->
-    <PointOfInterest id="83" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
+    <PointOfInterest id="85" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
       <Coordinates latitude="44,835498" longitude="11,611455"/>
       <Category id="3"/>
       <ThematicScore category="3" value="60"/>
@@ -1086,9 +1086,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 84 -->
+    <!-- Nr. 86 -->
     <!-- New Millenium -->
-    <PointOfInterest id="84" name="New Millenium">
+    <PointOfInterest id="86" name="New Millenium">
       <Coordinates latitude="44,832837" longitude="11,611851"/>
       <Category id="3"/>
       <ThematicScore category="3" value="50"/>
@@ -1098,9 +1098,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 85 -->
+    <!-- Nr. 87 -->
     <!-- Centro Sportivo Polivalente Parco 1° maggio -->
-    <PointOfInterest id="85" name="Centro Sportivo Polivalente Parco 1° maggio">
+    <PointOfInterest id="87" name="Centro Sportivo Polivalente Parco 1° maggio">
       <Coordinates latitude="44,8253869" longitude="11,608001"/>
       <Category id="3"/>
       <ThematicScore category="3" value="80"/>
@@ -1110,9 +1110,9 @@
       <TimeVisit unit="min" duration="120"/>
     </PointOfInterest>
 
-    <!-- Nr. 86 -->
+    <!-- Nr. 88 -->
     <!-- Synergy Lab -->
-    <PointOfInterest id="86" name="Synergy Lab">
+    <PointOfInterest id="88" name="Synergy Lab">
       <Coordinates latitude="44,832601" longitude="11,633633"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100"/>
@@ -1122,9 +1122,9 @@
       <TimeVisit unit="min" duration="120"/>
     </PointOfInterest>
 
-    <!-- Nr. 87 -->
+    <!-- Nr. 89 -->
     <!-- Palestra Ginnastica Ferrara Ass. Sportiva Dilettantistica -->
-    <PointOfInterest id="87" name="Palestra Ginnastica Ferrara Ass. Sportiva Dilettantistica">
+    <PointOfInterest id="89" name="Palestra Ginnastica Ferrara Ass. Sportiva Dilettantistica">
       <Coordinates latitude="44,820665" longitude="11,592129"/>
       <Category id="3"/>
       <ThematicScore category="3" value="94"/>
@@ -1134,9 +1134,9 @@
       <TimeVisit unit="min" duration="40"/>
     </PointOfInterest>
 
-    <!-- Nr. 88 -->
+    <!-- Nr. 90 -->
     <!-- A.S.D. Beach Volley Ferrara Associazione Sportiva Dilettantistica Beach Planet -->
-    <PointOfInterest id="88" name="Palestra Dock Sport Village Ferrara">
+    <PointOfInterest id="90" name="Palestra Dock Sport Village Ferrara">
       <Coordinates latitude="44,869544" longitude="11,603462"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />
@@ -1146,9 +1146,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 89 -->
+    <!-- Nr. 91 -->
     <!-- Palestra & Piscina Doro -->
-    <PointOfInterest id="89" name="Palestra e Piscina Doro">
+    <PointOfInterest id="91" name="Palestra e Piscina Doro">
       <Coordinates latitude="44,847822" longitude="11,600578"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100"/>
@@ -1158,9 +1158,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 90 -->
+    <!-- Nr. 92 -->
     <!-- Centro di Medicina dello Sport di Ferrara -->
-    <PointOfInterest id="90" name="Centro di Medicina dello Sport di Ferrara">
+    <PointOfInterest id="92" name="Centro di Medicina dello Sport di Ferrara">
       <Coordinates latitude="44,8498765" longitude="11,6098652"/>
       <Category id="3"/>
       <ThematicScore category="3" value="90"/>
@@ -1170,9 +1170,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 91 -->
+    <!-- Nr. 93 -->
     <!-- Spal Store -->
-    <PointOfInterest id="91" name="Spal Store">
+    <PointOfInterest id="93" name="Spal Store">
       <Coordinates latitude="44,835080" longitude="11,623077"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />
@@ -1183,9 +1183,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 92 -->
+    <!-- Nr. 94 -->
     <!-- Gelli Sport -->
-    <PointOfInterest id="92" name="Gelli Sport">
+    <PointOfInterest id="94" name="Gelli Sport">
       <Coordinates latitude="44,846598" longitude="11,597373"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />
@@ -1196,9 +1196,9 @@
     </PointOfInterest>
 
 
-    <!-- Nr. 93 -->
+    <!-- Nr. 95 -->
     <!-- Erregi Sport -->
-    <PointOfInterest id="93" name="Erregi Sport">
+    <PointOfInterest id="95" name="Erregi Sport">
       <Coordinates latitude="44,837229" longitude="11,608805"/>
       <Category id="3"/>
       <ThematicScore category="3" value="30"/>
@@ -1208,9 +1208,9 @@
       <TimeVisit unit="min" duration="20"/>
     </PointOfInterest>
 
-    <!-- Nr. 94 -->
+    <!-- Nr. 96 -->
     <!-- Sport Tech -->
-    <PointOfInterest id="94" name="Sport Tech">
+    <PointOfInterest id="96" name="Sport Tech">
       <Coordinates latitude="44,830012" longitude="11,613695"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100"/>
@@ -1221,9 +1221,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 95 -->
+    <!-- Nr. 97 -->
     <!-- Bruni Sport -->
-    <PointOfInterest id="95" name="Bruni Sport">
+    <PointOfInterest id="97" name="Bruni Sport">
       <Coordinates latitude="44,812543" longitude="11,595939"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />
@@ -1234,9 +1234,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 96 -->
+    <!-- Nr. 98 -->
     <!-- Cisalfa -->
-    <PointOfInterest id="96" name="Cisalfa">
+    <PointOfInterest id="98" name="Cisalfa">
       <Coordinates latitude="44,837127" longitude="11,620170"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />

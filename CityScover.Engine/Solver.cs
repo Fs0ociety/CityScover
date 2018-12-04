@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 04/12/2018
 //
 
 using CityScover.Data;
@@ -15,6 +15,7 @@ using CityScover.Engine.Workers;
 using CityScover.Entities;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,11 +54,9 @@ namespace CityScover.Engine
       {
          CityScoverRepository.LoadPoints(WorkingConfiguration.PointsFilename);
 
-         // Filtering points by tour category.
-         Points = from point in CityScoverRepository.Points
-                  where point.Category.Id == WorkingConfiguration.TourCategory ||
-                        point.Category.Id == TourCategoryType.None   // Hotel
-                  select point;
+         Points = (WorkingConfiguration.TourCategory == TourCategoryType.None) ? 
+            CityScoverRepository.Points : 
+            GetPointsByCategory(WorkingConfiguration.TourCategory);
 
          RoutesGenerator.GenerateRoutes(Points, Points.Count());
          CityScoverRepository.LoadRoutes(Points);
@@ -84,6 +83,10 @@ namespace CityScover.Engine
 
          CityMapGraph = cityGraph;
       }
+
+      private IEnumerable<InterestPoint> GetPointsByCategory(TourCategoryType category) => 
+         CityScoverRepository.Points.Where(point => 
+         point.Category.Id == category || point.Category.Id == TourCategoryType.None);
 
       /// <summary>
       /// Gets a new Solution from the _solutionsQueue and processes it.

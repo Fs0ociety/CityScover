@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 04/12/2018
 //
 
 using System;
@@ -127,7 +127,7 @@ namespace CityScover.Engine.Configurations
                      AlgorithmParameters =
                      {
                         [ParameterCodes.TABUmaxDeadlockIterations] = 18,
-                        [ParameterCodes.TABUtenureFactor] = 2,
+                        [ParameterCodes.TABUtenureFactor] = 4,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
                      }
                   }
@@ -140,7 +140,7 @@ namespace CityScover.Engine.Configurations
          Configuration c2Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.Sport,
+            TourCategory = TourCategoryType.None,
             PointsFilename = @"cityscover-points-90.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
@@ -204,7 +204,7 @@ namespace CityScover.Engine.Configurations
                      AlgorithmParameters =
                      {
                         [ParameterCodes.TABUmaxDeadlockIterations] = 18,
-                        [ParameterCodes.TABUtenureFactor] = 2,
+                        [ParameterCodes.TABUtenureFactor] = 4,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
                      }
                   }
