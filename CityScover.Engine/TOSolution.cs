@@ -64,6 +64,11 @@ namespace CityScover.Engine
       internal string Description { get; set; }
 
       /// <summary>
+      /// Property used to assign the algorithm move which has made this solution.
+      /// </summary>
+      internal Tuple<int, int> Move { get; set; }
+
+      /// <summary>
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
       internal CityMapGraph SolutionGraph {

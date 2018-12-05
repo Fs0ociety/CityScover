@@ -52,6 +52,8 @@
     <Compile Include="AlgorithmFactory.cs" />
     <Compile Include="AlgorithmStatus.cs" />
     <Compile Include="Algorithms\CustomAlgorithms\HybridCustomUpdate.cs" />
+    <Compile Include="Algorithms\Metaheuristics\TabuSearch2.cs" />
+    <Compile Include="Algorithms\Neighborhoods\TabuSearchNeighborhood2.cs" />
     <Compile Include="MessagesRepository.cs" />
     <Compile Include="Algorithms\CustomAlgorithms\HybridCustomInsertion.cs" />
     <Compile Include="Algorithms\Greedy\CheapestInsertion.cs" />

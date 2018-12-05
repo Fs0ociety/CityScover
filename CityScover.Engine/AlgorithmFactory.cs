@@ -63,7 +63,8 @@ namespace CityScover.Engine
 
             case AlgorithmType.TabuSearch:
                neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
-               algorithm = new TabuSearch(neighborhood);
+               //algorithm = new TabuSearch(neighborhood);
+               algorithm = new TabuSearch2(neighborhood);
                break;
 
             case AlgorithmType.HybridCustomInsertion:

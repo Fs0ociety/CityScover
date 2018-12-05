@@ -30,7 +30,8 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TabuSearch:
-               neighborhood = new TabuSearchNeighborhood();
+               //neighborhood = new TabuSearchNeighborhood();
+               neighborhood = new TabuSearchNeighborhood2();
                break;
 
             // Add new Algorithm types here for new Neighborhoods ...

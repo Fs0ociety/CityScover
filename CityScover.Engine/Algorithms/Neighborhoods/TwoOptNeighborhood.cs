@@ -207,9 +207,17 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          ToSolution newSolution = new ToSolution()
          {
-            SolutionGraph = newSolutionGraph            
+            SolutionGraph = newSolutionGraph,
+            Move = Tuple.Create(currentEdge.Entity.Id, candidateEdge.Entity.Id)
          };
 
+         string message = MessagesRepository.GetMessage(
+            MessageCode.LSNewNeighborhoodMoveDetails,
+            newSolution.Id,
+            $"({currentEdge.Entity.PointFrom.Id}, {currentEdge.Entity.PointTo.Id})",
+            $"({candidateEdge.Entity.PointFrom.Id}, {candidateEdge.Entity.PointTo.Id})");
+
+         newSolution.Description = message;
          return newSolution;
       }
       #endregion
