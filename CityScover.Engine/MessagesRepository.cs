@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 06/12/2018
 //
 
 using System.Collections.Generic;
@@ -51,8 +51,9 @@ namespace CityScover.Engine
             [MessageCode.LKFinish] = "Lin Kernighan algorithm finished successfully.",
             [MessageCode.TSStarting] = "Tabu Search starts with solution {0} with total cost {1}",
             [MessageCode.TSBestFound] = "Tabu Search has found a new best solution found with total cost: ({0}). Previous solution total cost: ({1}).",
-            [MessageCode.TSMovesLocked] = "Move locked -> Edge: {0}, Expiration: {1}, Tenure: {2}",
-            [MessageCode.TSMoveUnlocked] = "Move unlocked -> Edge: {0} with expiration of {1} removed from Tabu list",
+            [MessageCode.TSMoveLocked] = "Move -> First edge: {0} - Second edge: {1} added in Tabu List. Move locked.",
+            [MessageCode.TSMovesLocked] = "Tabu List status -> First edge: {0} - Second edge: {1} Expiration: {2}, Tenure: {3}",
+            [MessageCode.TSMoveUnlocked] = "Reverse move unlocked -> First edge: {0} - Second edge: {1} removed from Tabu List. Expiration {2}",
             [MessageCode.ALCompletionSummary] = "Execution summary:",
             [MessageCode.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
             [MessageCode.EXREPSolutionReceivedWithPenalty] = "Solution {0} has been marked with cost: {1} and penalty: {2}",
@@ -114,6 +115,7 @@ namespace CityScover.Engine
       LKFinish,
       TSStarting,
       TSBestFound,
+      TSMoveLocked,
       TSMovesLocked,
       TSMoveUnlocked,
       ALCompletionSummary,
