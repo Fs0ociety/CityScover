@@ -236,7 +236,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          }
 
          // Inserisco la mossa Best fornita dalla Local Search nella Tabu List.
-         LockMove(_innerAlgorithm.Move);
+         LockMove(_neighborhoodBestSolution.Move);
 
          _currentIteration++;
          _innerAlgorithm.ResetState();
