@@ -6,19 +6,17 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 09/12/2018
 //
 
-using CityScover.Engine.Algorithms.Neighborhoods;
-
-namespace CityScover.Engine
+namespace CityScover.Engine.Algorithms.Neighborhoods
 {
    internal static class NeighborhoodFactory
    {
       #region Internal static methods
-      internal static Neighborhood CreateNeighborhood(AlgorithmType algorithmType)
+      internal static Neighborhood<ToSolution> CreateNeighborhood(AlgorithmType algorithmType)
       {
-         Neighborhood neighborhood = default;
+         Neighborhood<ToSolution> neighborhood = default;
 
          switch (algorithmType)
          {
@@ -26,12 +24,8 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-               neighborhood = new TwoOptNeighborhood();
-               break;
-
             case AlgorithmType.TabuSearch:
-               //neighborhood = new TabuSearchNeighborhood();
-               neighborhood = new TabuSearchNeighborhood2();
+               neighborhood = new TwoOptNeighborhood();
                break;
 
             // Add new Algorithm types here for new Neighborhoods ...

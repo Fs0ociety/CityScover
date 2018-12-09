@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 09/12/2018
 //
 
 using System;
@@ -24,7 +24,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
    internal class LocalSearchTemplate : Algorithm
    {
       #region Private fields
-      private readonly NeighborhoodFacade _neighborhoodFacade;
+      private readonly NeighborhoodFacade<ToSolution> _neighborhoodFacade;
       private int _previousSolutionCost;
       private int _iterationsWithoutImprovement;
       private bool _shouldRunImprovementAlgorithm;
@@ -34,23 +34,17 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Constructors
-      internal LocalSearchTemplate(Neighborhood neighborhood, AlgorithmTracker provider = null)
+      internal LocalSearchTemplate(Neighborhood<ToSolution> neighborhood, AlgorithmTracker provider = null)
          : base(provider)
       {
          Type = neighborhood.Type;
-         _neighborhoodFacade = new NeighborhoodFacade(neighborhood, this);
+         _neighborhoodFacade = new NeighborhoodFacade<ToSolution>(neighborhood);
       }
       #endregion
 
       #region Internal properties
       internal ToSolution CurrentBestSolution { get; set; }
       private bool CanDoImprovements { get; set; }
-
-      /// <summary>
-      /// Property used to assign the local search move which has made this solution.
-      /// Used only by Tabu Search.
-      /// </summary>
-      internal Tuple<int, int> Move { get; set; }
       #endregion
 
       #region Internal methods
@@ -88,7 +82,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
                break;
             }
 
-            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, bestSolution.Cost);
+            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, bestSolution.Cost, true);
             if (isBetterThanCurrentBestSolution)
             {
                bestSolution = solution;
@@ -192,7 +186,9 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
       protected override async Task PerformStep()
       {
-         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution, NeighborhoodFacade.RunningMode.Parallel);
+         SendMessage(MessageCode.LSNewNeighborhood, CurrentStep);
+
+         var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution);
 
          foreach (var neighborSolution in currentNeighborhood)
          {

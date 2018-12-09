@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/12/2018
+// File update: 09/12/2018
 //
 
 using CityScover.Data;
@@ -202,7 +202,10 @@ namespace CityScover.Engine
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType);
 
-      internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood neighborhood) =>
+      //internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood neighborhood) =>
+      //   AlgorithmFactory.CreateAlgorithm(algorithmType, neighborhood);
+
+      internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood<ToSolution> neighborhood) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType, neighborhood);
 
       internal void EnqueueSolution(ToSolution solution) =>

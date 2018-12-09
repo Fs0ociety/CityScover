@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 09/12/2018
 //
 
 using CityScover.Engine.Algorithms.CustomAlgorithms;
@@ -32,8 +32,18 @@ namespace CityScover.Engine
       /// <returns> The Algorithm's instance to run. </returns>
       internal static Algorithm CreateAlgorithm(AlgorithmType algorithmType)
       {
+         return CreateAlgorithm(algorithmType, null);
+      }
+
+      /// <summary>
+      /// Create the concrete instance of the Algorithm with a specified Neighborhood as parameter.
+      /// </summary>
+      /// <param name="currentAlgorithm"> Algorithm type to create. </param>
+      /// <param name="neighborhood"> Neighborhood type to pass to the Algorithm. </param>
+      /// <returns> The Algorithm's instance to run. </returns>
+      internal static Algorithm CreateAlgorithm(AlgorithmType algorithmType, Neighborhood<ToSolution> neighborhood)
+      {
          Algorithm algorithm = default;
-         Neighborhood neighborhood;
 
          switch (algorithmType)
          {
@@ -53,7 +63,10 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TwoOpt:
-               neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
+               if (neighborhood == null)
+               {
+                  neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
+               }               
                algorithm = new LocalSearchTemplate(neighborhood);
                break;
 
@@ -62,9 +75,11 @@ namespace CityScover.Engine
                break;
 
             case AlgorithmType.TabuSearch:
-               neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
-               //algorithm = new TabuSearch(neighborhood);
-               algorithm = new TabuSearch2(neighborhood);
+               if (neighborhood == null)
+               {
+                  neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
+               }
+               algorithm = new TabuSearch(neighborhood);
                break;
 
             case AlgorithmType.HybridCustomInsertion:
@@ -79,39 +94,6 @@ namespace CityScover.Engine
             default:
                throw new ArgumentOutOfRangeException(nameof(algorithmType), algorithmType, null);
          }
-         return algorithm;
-      }
-
-      /// <summary>
-      /// Create the concrete instance of the Algorithm with a specified Neighborhood as parameter.
-      /// </summary>
-      /// <param name="currentAlgorithm"> Algorithm type to create. </param>
-      /// <param name="neighborhood"> Neighborhood type to pass to the Algorithm. </param>
-      /// <returns> The Algorithm's instance to run. </returns>
-      internal static Algorithm CreateAlgorithm(AlgorithmType currentAlgorithm, Neighborhood neighborhood)
-      {
-         if (neighborhood is null)
-         {
-            throw new ArgumentNullException(nameof(neighborhood));
-         }
-
-         Algorithm algorithm = default;
-
-         switch (currentAlgorithm)
-         {
-            case AlgorithmType.None:
-               break;
-
-            case AlgorithmType.TwoOpt:
-               algorithm = new LocalSearchTemplate(neighborhood);
-               break;
-            case AlgorithmType.TabuSearch:
-               algorithm = new TabuSearch(neighborhood);
-               break;
-            default:
-               throw new ArgumentOutOfRangeException(nameof(currentAlgorithm), currentAlgorithm, null);
-         }
-
          return algorithm;
       }
 

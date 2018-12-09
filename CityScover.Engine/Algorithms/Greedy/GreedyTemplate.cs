@@ -107,13 +107,17 @@ namespace CityScover.Engine.Algorithms.Greedy
                return;
             }
 
-            var deltaScore = Math.Abs(adjNode.Entity.Score.Value - interestPoint.Entity.Score.Value);
-            if (deltaScore > bestScore)
+            var adjNodeScore = adjNode.Entity.Score.Value;
+            //var deltaScore = Math.Abs(adjNode.Entity.Score.Value - interestPoint.Entity.Score.Value);
+            if (adjNodeScore > bestScore)
+            //if (deltaScore > bestScore)
             {
-               bestScore = deltaScore;
+               //bestScore = deltaScore;
+               bestScore = adjNodeScore;
                candidateNode = adjNode;
             }
-            else if (deltaScore == bestScore)
+            //else if (deltaScore == bestScore)
+            else if (adjNodeScore == bestScore)
             {
                CityMapGraph.SetRandomCandidateId(candidateNode, adjNode, out int pointId);
                candidateNode = CityMapClone[pointId];
@@ -173,7 +177,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnError(Exception exception)
       {
          CurrentStep = default;
-         //TOSolution lastProducedSolution = SolutionsHistory.Last();
          base.OnError(exception);
       }
 
@@ -186,7 +189,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnTerminated()
       {
          CityMapClone = null;
-         //TOSolution bestProducedSolution = SolutionsHistory.Last();
 
          SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
 

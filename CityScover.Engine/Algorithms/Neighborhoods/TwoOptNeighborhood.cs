@@ -6,219 +6,119 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 09/12/2018
 //
 
 using CityScover.Engine.Workers;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.Neighborhoods
 {
-   internal class TwoOptNeighborhood : Neighborhood
+   internal class TwoOptNeighborhood : Neighborhood<ToSolution>
    {
-      #region Private fields
-      private readonly CityMapGraph _cityMap;
-      private CityMapGraph _tour;
-      #endregion
-
       #region Constructors
       internal TwoOptNeighborhood()
       {
          Type = AlgorithmType.TwoOpt;
-         _cityMap = Solver.Instance.CityMapGraph;
       }
       #endregion
 
       #region Private methods
-      private void TwoOptSwap(in RouteWorker currentEdge, RouteWorker candidateEdge,
-         CityMapGraph newSolutionGraph, in int edge2PointFromId)
+      private CityMapGraph BuildSolutionGraph(IEnumerable<InterestPointWorker> newNodeSequence)
       {
-         int currentNodeId = currentEdge.Entity.PointTo.Id;
-
-         while (currentNodeId != edge2PointFromId)
+         CityMapGraph newSolutionGraph = new CityMapGraph();
+         foreach (var node in newNodeSequence)
          {
-            //var currNodeAdjNode = newSolutionGraph.GetAdjacentNodes(currentNodeId)
-            //   .Where(x => x != candidateEdge.Entity.PointTo.Id).FirstOrDefault();
-
-            var currNodeAdjNode = newSolutionGraph
-               .GetAdjacentNodes(currentNodeId)
-               .FirstOrDefault(x => x != candidateEdge.Entity.PointTo.Id);
-
-            if (currNodeAdjNode == 0)
-            {
-               throw new InvalidOperationException();
-            }
-
-            newSolutionGraph.RemoveEdge(currentNodeId, currNodeAdjNode);
-            newSolutionGraph.AddRouteFromGraph(_cityMap, currNodeAdjNode, currentNodeId);
-            currentNodeId = currNodeAdjNode;
-         }
-      }
-      #endregion
-
-      #region Internal methods
-
-      #region GetCandidates [Single-Threaded]
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidates(in ToSolution solution)
-      {
-         _tour = solution.SolutionGraph.DeepCopy();
-         var candidateEdges = new Dictionary<RouteWorker, IEnumerable<RouteWorker>>();
-
-         foreach (var node in _tour.Nodes)
-         {
-            int fixedNodeId = node.Entity.Id;
-            var itemNeighbors = _tour.GetAdjacentNodes(fixedNodeId);
-
-            foreach (var neighbor in itemNeighbors)
-            {
-               var candidateEdgesCurrentEdge = new Collection<RouteWorker>();
-               var currentEdge = _tour.GetEdge(fixedNodeId, neighbor);
-               if (currentEdge is null)
-               {
-                  continue;
-               }
-
-               currentEdge.IsVisited = true;
-               int processingNodeId = neighbor;
-               int previousProcessingNodeId = fixedNodeId;
-               int newProcessingNodeId = default;
-
-               while (processingNodeId != fixedNodeId)
-               {
-                  var nextNeighbors = _tour.GetAdjacentNodes(processingNodeId);
-
-                  foreach (var adjacentNodeId in nextNeighbors)
-                  {
-                     var procNodeAdjNodeEdge = _tour.GetEdge(processingNodeId, adjacentNodeId);
-                     if (procNodeAdjNodeEdge is null)
-                     {
-                        continue;
-                     }
-
-                     if (!_tour.AreAdjacentEdges(
-                           currentEdge.Entity.PointFrom.Id,
-                           currentEdge.Entity.PointTo.Id,
-                           procNodeAdjNodeEdge.Entity.PointFrom.Id,
-                           procNodeAdjNodeEdge.Entity.PointTo.Id))
-                     {
-                        candidateEdgesCurrentEdge.Add(procNodeAdjNodeEdge);
-                     }
-
-                     procNodeAdjNodeEdge.IsVisited = true;
-                     if (adjacentNodeId != previousProcessingNodeId)
-                     {
-                        previousProcessingNodeId = processingNodeId;
-                        newProcessingNodeId = adjacentNodeId;
-                     }
-                  }
-                  processingNodeId = newProcessingNodeId;
-               }
-
-               candidateEdges.Add(currentEdge, candidateEdgesCurrentEdge);
-            }
+            newSolutionGraph.AddNode(node.Entity.Id, node);
          }
 
-         return candidateEdges;
-      }
-      #endregion
-
-      #region GetCandidates [Multi-Threaded]
-      internal override IDictionary<RouteWorker, IEnumerable<RouteWorker>> GetCandidatesParallel(in ToSolution solution)
-      {
-         _tour = solution.SolutionGraph.DeepCopy();
-         var candidateEdges = new ConcurrentDictionary<RouteWorker, IEnumerable<RouteWorker>>();
-
-         Parallel.ForEach(_tour.Nodes, node =>
+         // Genero gli archi dopo aver creato tutti i nodi.
+         for (int i = 0; i < newNodeSequence.Count() - 1; i++)
          {
-            int fixedNodeId = node.Entity.Id;
-            var itemNeighbors = _tour.GetAdjacentNodes(fixedNodeId);
+            newSolutionGraph.AddRouteFromGraph(Solver.Instance.CityMapGraph, newNodeSequence.ElementAt(i).Entity.Id, newNodeSequence.ElementAt(i + 1).Entity.Id);
+         }
 
-            foreach (var neighbor in itemNeighbors)
-            {
-               var candidateEdgesCurrentEdge = new Collection<RouteWorker>();
-               var currentEdge = _tour.GetEdge(fixedNodeId, neighbor);
-
-               if (currentEdge is null)
-               {
-                  continue;
-               }
-               currentEdge.IsVisited = true;
-               int processingNodeId = neighbor;
-               int previousProcessingNodeId = fixedNodeId;
-               int newProcessingNodeId = default;
-
-               while (processingNodeId != fixedNodeId)
-               {
-                  var nextNeighbors = _tour.GetAdjacentNodes(processingNodeId);
-
-                  foreach (var adjacentNodeId in nextNeighbors)
-                  {
-                     var procNodeAdjNodeEdge = _tour.GetEdge(processingNodeId, adjacentNodeId);
-                     if (procNodeAdjNodeEdge is null)
-                     {
-                        continue;
-                     }
-
-                     if (!_tour.AreAdjacentEdges(currentEdge.Entity.PointFrom.Id, currentEdge.Entity.PointTo.Id, 
-                        procNodeAdjNodeEdge.Entity.PointFrom.Id, procNodeAdjNodeEdge.Entity.PointTo.Id))
-                     {
-                        candidateEdgesCurrentEdge.Add(procNodeAdjNodeEdge);
-                     }
-
-                     procNodeAdjNodeEdge.IsVisited = true;
-                     if (adjacentNodeId != previousProcessingNodeId)
-                     {
-                        previousProcessingNodeId = processingNodeId;
-                        newProcessingNodeId = adjacentNodeId;
-                     }
-                  }
-                  processingNodeId = newProcessingNodeId;
-               }
-               candidateEdges.TryAdd(currentEdge, candidateEdgesCurrentEdge);
-            }
-         });
-
-         return candidateEdges;
+         // Devo fare in modo che venga costruito un ciclo, perciò aggiungo l'arco che collega l'ultimo nodo creato al primo.
+         newSolutionGraph.AddRouteFromGraph(Solver.Instance.CityMapGraph, newNodeSequence.ElementAt(newNodeSequence.Count() - 1).Entity.Id, newNodeSequence.ElementAt(0).Entity.Id);
+         return newSolutionGraph;
       }
-      #endregion
-   
-      internal override ToSolution ProcessCandidate(RouteWorker currentEdge, RouteWorker candidateEdge)
+
+      private IEnumerable<InterestPointWorker> GenerateSequence(in IEnumerable<InterestPointWorker> solutionNodes, int i, int k)
       {
-         CityMapGraph newSolutionGraph = _tour.DeepCopy();
+         ICollection<InterestPointWorker> newSequence = new Collection<InterestPointWorker>();
 
-         int currentEdgePointFromId = currentEdge.Entity.PointFrom.Id;
-         int currentEdgePointToId = currentEdge.Entity.PointTo.Id;
-         int candidateEdgePointFromId = candidateEdge.Entity.PointFrom.Id;
-         int candidateEdgePointToId = candidateEdge.Entity.PointTo.Id;
-
-         newSolutionGraph.RemoveEdge(currentEdgePointFromId, currentEdgePointToId);
-         newSolutionGraph.RemoveEdge(candidateEdgePointFromId, candidateEdgePointToId);
-
-         newSolutionGraph.AddRouteFromGraph(_cityMap, currentEdgePointFromId, candidateEdgePointFromId);
-         newSolutionGraph.AddRouteFromGraph(_cityMap, currentEdgePointToId, candidateEdgePointToId);
-
-         // Nota: Affinchè l'algoritmo di merda della Nonato funzioni, dobbiamo cambiare il verso di diversi altri archi.
-         TwoOptSwap(currentEdge, candidateEdge, newSolutionGraph, candidateEdgePointFromId);
-
-         ToSolution newSolution = new ToSolution()
+         // 1. Prendi tutti gli elementi da solutionNodes[0] a solutionNodes[i-1] e aggiungili 
+         // nell'ordine di processing a newSequence.
+         for (int c = 0; c <= i - 1; c++)
          {
-            SolutionGraph = newSolutionGraph,
-            Move = Tuple.Create(currentEdge.Entity.Id, candidateEdge.Entity.Id)
-         };
+            newSequence.Add(solutionNodes.ElementAt(c));
+         }
 
-         string message = MessagesRepository.GetMessage(
+         // 2. Prendi gli elementi da solutionNodes[i] a solutionNodes[k] e aggiungili
+         // in ordine inverso a newSequence.
+         for (int c = k; c >= i; c--)
+         {
+            newSequence.Add(solutionNodes.ElementAt(c));
+         }
+
+         // 3. Prendi gli elementi da solutionNodes[k+1] all'ultimo e aggiungili
+         // nell'ordine di processing a newSequence.
+         for (int c = k + 1; c < solutionNodes.Count(); c++)
+         {
+            newSequence.Add(solutionNodes.ElementAt(c));
+         }
+         return newSequence;
+      }
+      
+      private Tuple<int, int> GetMove(in ToSolution solution, int iNodeId, int kNodeId)
+      {
+         RouteWorker firstEdge = solution.SolutionGraph.Edges.Where(edge => edge.Entity.PointTo.Id == iNodeId).FirstOrDefault();
+         RouteWorker secondEdge = solution.SolutionGraph.Edges.Where(edge => edge.Entity.PointFrom.Id == kNodeId).FirstOrDefault();
+         return Tuple.Create(firstEdge.Entity.Id, secondEdge.Entity.Id);
+      }
+
+      private string GetMoveDescription(in ToSolution startSolution, in ToSolution newSolution)
+      {
+         int firstEdgeId = newSolution.Move.Item1;
+         int secondEdgeId = newSolution.Move.Item2;
+
+         // Prendo giù i RouteWorker corrispondenti agli archi iniziali (quelli che ho tolto) 
+         // dalla soluzione di partenza.
+         RouteWorker firstEdge = startSolution.SolutionGraph.Edges.Where(edge => edge.Entity.Id == firstEdgeId).FirstOrDefault();
+         RouteWorker secondEdge = startSolution.SolutionGraph.Edges.Where(edge => edge.Entity.Id == secondEdgeId).FirstOrDefault();
+
+         return MessagesRepository.GetMessage(
             MessageCode.LSNewNeighborhoodMoveDetails,
             newSolution.Id,
-            $"({currentEdge.Entity.PointFrom.Id}, {currentEdge.Entity.PointTo.Id})",
-            $"({candidateEdge.Entity.PointFrom.Id}, {candidateEdge.Entity.PointTo.Id})");
+            $"({firstEdge.Entity.PointFrom.Id}, {firstEdge.Entity.PointTo.Id})",
+            $"({secondEdge.Entity.PointFrom.Id}, {secondEdge.Entity.PointTo.Id})");
+      }
+      #endregion
 
-         newSolution.Description = message;
-         return newSolution;
+      #region Overrides
+      internal override IEnumerable<ToSolution> GeneratingLogic(in ToSolution solution)
+      {
+         IEnumerable<InterestPointWorker> solutionNodes = solution.SolutionGraph.Nodes;
+         ICollection<ToSolution> neighborhood = new Collection<ToSolution>();
+         for (int i = 0; i < solutionNodes.Count() - 1; i++)
+         {
+            for (int k = i + 1; k < solutionNodes.Count(); k++)
+            {
+               IEnumerable<InterestPointWorker> newNodeSequence = GenerateSequence(solutionNodes, i, k);
+               CityMapGraph newSolutionGraph = BuildSolutionGraph(newNodeSequence);
+               ToSolution newSolution = new ToSolution()
+               {
+                  SolutionGraph = newSolutionGraph,
+                  Move = GetMove(solution, solutionNodes.ElementAt(i).Entity.Id, solutionNodes.ElementAt(k).Entity.Id)                  
+               };
+               newSolution.Description = GetMoveDescription(solution, newSolution);
+               neighborhood.Add(newSolution);
+            }
+         }
+         return neighborhood;
       }
       #endregion
    }

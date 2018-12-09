@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 04/12/2018
+// File update: 09/12/2018
 //
 
 using System;
@@ -141,7 +141,7 @@ namespace CityScover.Engine.Configurations
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.None,
-            PointsFilename = @"cityscover-points-90.xml",
+            PointsFilename = @"cityscover-points-30.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -170,7 +170,7 @@ namespace CityScover.Engine.Configurations
                },
                new Stage()
                {
-                  Description = StageType.StageThree,
+                  Description = StageType.StageTwo,
                   Category = AlgorithmFamily.MetaHeuristic,
                   Flow =
                   {
@@ -286,70 +286,68 @@ namespace CityScover.Engine.Configurations
          #endregion
 
          #region Configuration for Test 4 - NN + LS
-         //Configuration c4Test = new Configuration()
-         //{
-         //   CurrentProblem = ProblemFamily.TeamOrienteering,
-         //   TourCategory = TourCategoryType.HistoricalAndCultural,
-         //   PointsFilename = @"cityscover-points-90.xml",
-         //   StartingPointId = 1,
-         //   WalkingSpeed = 3.0 / 3.6,  // in m/s.
-         //   ArrivalTime = DateTime.Now.Date.AddHours(9),
-         //   TourDuration = new TimeSpan(10, 0, 0),
-         //   //RelaxedConstraints =
-         //   //{
-         //   //   Utils.TimeWindowsConstraint
-         //   //},
-         //   AlgorithmMonitoring = true,
-         //   Stages =
-         //   {
-         //      new Stage()
-         //      {
-         //         Description = StageType.StageOne,
-         //         Category = AlgorithmFamily.Greedy,
-         //         Flow =
-         //         {
-         //            CurrentAlgorithm = AlgorithmType.NearestNeighbor,
-         //            AlgorithmParameters =
-         //            {
-         //               [ParameterCodes.CanDoImprovements] = true,
-         //               [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
-         //               [ParameterCodes.RelaxedConstraints] =
-         //               {
-         //                  Utils.TimeWindowsConstraint
-         //               }
-         //            }
-         //         }
-         //      },
-         //      new Stage()
-         //      {
-         //         Description = StageType.StageTwo,
-         //         Category = AlgorithmFamily.LocalSearch,
-         //         Flow =
-         //         {
-         //            RunningCount = 3,
-         //            CurrentAlgorithm = AlgorithmType.TwoOpt,
-         //            AlgorithmParameters =
-         //            {
-         //               [ParameterCodes.CanDoImprovements] = true,
-         //               [ParameterCodes.LSimprovementThreshold] = 2000,
-         //               [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
-         //            },
-         //            ChildrenFlows =
-         //            {
-         //               new StageFlow(AlgorithmType.HybridCustomInsertion)
-         //               {
-         //                  AlgorithmParameters =
-         //                  {
-         //                     [ParameterCodes.CanDoImprovements] = true,
-         //                     [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-         //                     [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0)
-         //                  }
-         //               }
-         //            }
-         //         }
-         //      },
-         //   }
-         //};
+         Configuration c4Test = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"cityscover-points-90.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(10, 0, 0),            
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
+                     }
+                  }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageTwo,
+                  Category = AlgorithmFamily.LocalSearch,
+                  Flow =
+                  {
+                     RunningCount = 5,
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = false,
+                        [ParameterCodes.LSimprovementThreshold] = 2000,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                     }
+                     //ChildrenFlows =
+                     //{
+                     //   new StageFlow(AlgorithmType.HybridCustomInsertion)
+                     //   {
+                     //      AlgorithmParameters =
+                     //      {
+                     //         [ParameterCodes.CanDoImprovements] = true,
+                     //         [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
+                     //         [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0)
+                     //      }
+                     //   }
+                     //}
+                  }
+               },
+            }
+         };
          #endregion
 
          #region Configuration test 5 - HDI + HDU
@@ -394,7 +392,7 @@ namespace CityScover.Engine.Configurations
          //};
          #endregion
 
-         Configurations.Add(c2Test);
+         Configurations.Add(c1Test);
       }
       #endregion
 

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 06/12/2018
+// File update: 09/12/2018
 //
 
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ namespace CityScover.Engine
             [MessageCode.LSResumeSolution] = "Resume Local Search with solution {0} with total cost {1}.",
             [MessageCode.LSNewNeighborhood] = "Generating new neighborhood {0}.",
             [MessageCode.LSNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
-            [MessageCode.LSNewNeighborhoodMoveDetails] = "New solution {0} details: changed edge {1} with edge {2}.",
+            [MessageCode.LSNewNeighborhoodMoveDetails] = "New solution {0} details: swapping between edge {1} and edge {2}.",
             [MessageCode.LSNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with total cost: {1}.",
             [MessageCode.LSBestFound] = "Best solution found with total cost: ({0}). Previous solution total cost: ({1}).",
             [MessageCode.LSInvariateSolution] = "For this neighborhood a better solution of current best (id: {0} , total cost: {1}), hasn't found...",

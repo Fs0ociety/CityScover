@@ -3,7 +3,7 @@
 // Version 1.0
 //
 // Authors: Andrea Ritondale, Andrea Mingardo
-// File update: 09/11/2018
+// File update: 09/12/2018
 //
 
 using CityScover.Entities;
@@ -209,7 +209,8 @@ namespace CityScover.Data
                   continue;
                }
 
-               string pointId = default;
+               string xmlPointId = default;
+               int pointId = default;
                double distance = default;
                InterestPoint pointFrom = default;
                InterestPoint pointTo = default;
@@ -221,15 +222,15 @@ namespace CityScover.Data
                   switch (nestedChild.Name)
                   {
                      case "PointFrom":
-                        pointId = nestedChild.Attributes["id"].Value;
-                        routeId = ConvertAttributeId(pointId);
-                        pointFrom = (from p in points where p.Id == routeId select p).FirstOrDefault();
+                        xmlPointId = nestedChild.Attributes["id"].Value;
+                        pointId = ConvertAttributeId(xmlPointId);
+                        pointFrom = (from p in points where p.Id == pointId select p).FirstOrDefault();
                         break;
 
                      case "PointTo":
-                        pointId = nestedChild.Attributes["id"].Value;
-                        routeId = ConvertAttributeId(pointId);
-                        pointTo = (from p in points where p.Id == routeId select p).FirstOrDefault();
+                        xmlPointId = nestedChild.Attributes["id"].Value;
+                        pointId = ConvertAttributeId(xmlPointId);
+                        pointTo = (from p in points where p.Id == pointId select p).FirstOrDefault();
                         break;
 
                      case "Distance":

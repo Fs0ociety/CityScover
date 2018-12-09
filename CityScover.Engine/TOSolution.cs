@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 09/12/2018
 //
 
 using CityScover.Engine.Workers;
@@ -35,7 +35,7 @@ namespace CityScover.Engine
       /// <summary>
       /// Each Solution has an own ID.
       /// </summary>
-      internal int Id { get; }
+      internal int Id { get; set; }
 
       /// <summary>
       /// Property used from SolverEvaluator to set a Cost for the Solution.

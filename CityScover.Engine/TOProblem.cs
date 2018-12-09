@@ -71,6 +71,17 @@ namespace CityScover.Engine
          double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
 
          //Calcolo del termine della distanza.
+         //double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
+         //{
+         //   RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
+         //   if (edge is null)
+         //   {
+         //      return 0;
+         //   }
+         //   double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
+         //   return nodeDistScoreTerm / distanceWeightSum;
+         //});
+
          double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
          {
             RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
@@ -78,11 +89,10 @@ namespace CityScover.Engine
             {
                return 0;
             }
-            double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
-            return nodeDistScoreTerm / distanceWeightSum;
+            return node.Entity.Score.Value / edge.Weight.Invoke();            
          });
 
-         return (int)Math.Round((lambda * scoreTerm) + ((1 - lambda) * distanceTerm));
+         return (int)Math.Round((lambda * scoreTerm) + ((1 - lambda) * (distanceTerm / distanceWeightSum)));
       }
       #endregion
 

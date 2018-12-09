@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 09/12/2018
 //
 
 using CityScover.Commons;
@@ -33,7 +33,6 @@ namespace CityScover.Services
       private DateTime? _arrivalTime = default;
       private TimeSpan? _tourDuration = default;
       private bool? _algorithmMonitoring = default;
-      private double? _lambdaWeight = default;
       private TourCategoryType _tourCategory = default;
       private Collection<Stage> _stages = new Collection<Stage>();
 
