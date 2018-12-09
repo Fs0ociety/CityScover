@@ -47,19 +47,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       private bool CanDoImprovements { get; set; }
       #endregion
 
-      #region Internal methods
-      internal void ResetState()
-      {
-         _previousSolutionCost = default;
-         _iterationsWithoutImprovement = default;
-         _shouldRunImprovementAlgorithm = default;
-         _improvementThreshold = default;
-         _maxIterationsWithoutImprovements = default;
-         CurrentBestSolution = default;
-         _solutionsHistory.Clear();
-      }
-      #endregion
-
       #region Private methods
       private ToSolution GetBest(IEnumerable<ToSolution> neighborhood, ToSolution currentSolution, byte? maxImprovementsCount)
       {
@@ -145,17 +132,45 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             }
 
             Solver.CurrentAlgorithm = algorithm.Type;
-            await Task.Run(() => algorithm.Start());
-            Solver.CurrentAlgorithm = Type;
-            CurrentBestSolution = Solver.BestSolution;
-            _shouldRunImprovementAlgorithm = false;
-            _iterationsWithoutImprovement = 0;
+            Task improvementTask = Task.Run(algorithm.Start);
 
-            // Verificare se necessario eseguire i successivi algoritmi dello StageFlow presenti tra i ChildrenFlows.
-            // Usare un if-break per questo scopo sotto questo commento, dopo la terminazione dell'algoritmo.
-            // Senza questo if verrebbero eseguiti a prescindere in sequenza tutti gli algoritmi presenti tra i ChildrenFlows, 
-            // anche se non fosse necessario avviare i successivi.
+            try
+            {
+               await improvementTask.ConfigureAwait(false);
+            }
+            catch (AggregateException ae)
+            {
+               OnError(ae.InnerException);
+            }
+            finally
+            {
+               Solver.CurrentAlgorithm = Type;
+               CurrentBestSolution = Solver.BestSolution;
+               _shouldRunImprovementAlgorithm = false;
+               _iterationsWithoutImprovement = 0;
+            }
+
+            /* 
+             * TODO
+             * Verificare se necessario eseguire i successivi algoritmi dello StageFlow presenti tra i ChildrenFlows.
+             * Usare un if-break per questo scopo sotto questo commento, dopo la terminazione dell'algoritmo.
+             * Senza un eventuale controllo, verrebbero eseguiti in sequenza tutti gli algoritmi presenti tra i ChildrenFlows a prescindere, 
+             * anche se non fosse necessario eseguirli.
+             */
          }
+      }
+      #endregion
+
+      #region Internal methods
+      internal void ResetState()
+      {
+         _previousSolutionCost = default;
+         _iterationsWithoutImprovement = default;
+         _shouldRunImprovementAlgorithm = default;
+         _improvementThreshold = default;
+         _maxIterationsWithoutImprovements = default;
+         CurrentBestSolution = default;
+         _solutionsHistory.Clear();
       }
       #endregion
 
@@ -199,7 +214,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
             if (Solver.IsMonitoringEnabled)
             {
-               // Notifica gli observers.
                Provider.NotifyObservers(neighborSolution);
             }
          }
@@ -207,6 +221,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          // Cerco la migliore soluzione dell'intorno appena calcolato.
          var solution = GetBest(currentNeighborhood, CurrentBestSolution, null);
+      
          Console.ForegroundColor = ConsoleColor.DarkGreen;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
@@ -226,7 +241,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             Console.ForegroundColor = ConsoleColor.Gray;
             _solutionsHistory.Add(solution);
 
-            //E' migliore, ma di quanto? Se il delta è 0 comunque incremento l'iterationsWithoutImprovement.
+            // E' migliore, ma di quanto? Se il delta è 0 comunque incremento l'iterationsWithoutImprovement.
             var delta = CurrentBestSolution.Cost - _previousSolutionCost;
             if (delta < _improvementThreshold)
             {
@@ -243,15 +258,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          if (CanDoImprovements && _shouldRunImprovementAlgorithm)
          {
-            Task improvementTask = RunImprovementAlgorithms();
-            try
-            {
-               improvementTask.Wait();
-            }
-            catch (AggregateException ae)
-            {
-               OnError(ae.InnerException);
-            }
+            await RunImprovementAlgorithms();
             SendMessage(MessageCode.LSResumeSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
       }
@@ -268,7 +275,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == CurrentBestSolution.Cost || 
+         return _previousSolutionCost == CurrentBestSolution.Cost ||
                 base.StopConditions();
       }
       #endregion

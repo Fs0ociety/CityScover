@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 06/12/2018
+// File update: 09/12/2018
 //
 
 using CityScover.Engine.Algorithms.LocalSearches;
@@ -115,7 +115,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private void LockMove(Tuple<int, int> move)
       {
          var (firstEdgeId, secondEdgeId) = move;
-         //IncrementTabuMovesExpirations();
          _tabuList.Add(new TabuMove(firstEdgeId, secondEdgeId));
 
          var firstRoute = GetPointsKey(firstEdgeId);
@@ -157,20 +156,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          }
       }
 
-      private async Task RunLocalSearch()
-      {
-         Solver.CurrentAlgorithm = _innerAlgorithm.Type;
-         await Task.Run(() => _innerAlgorithm.Start());
-         Solver.CurrentAlgorithm = Type;
-      }
-
-      private void RunLocalSearch2()
+      private async Task StartLocalSearch()
       {
          Solver.CurrentAlgorithm = _innerAlgorithm.Type;
          Task localSearchTask = Task.Run(_innerAlgorithm.Start);
+
          try
          {
-            localSearchTask.Wait();
+            await localSearchTask.ConfigureAwait(false);
          }
          catch (AggregateException ae)
          {
@@ -220,9 +213,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       protected override async Task PerformStep()
       {
-         //RunLocalSearch2();
+         await StartLocalSearch();
 
-         await RunLocalSearch().ConfigureAwait(continueOnCapturedContext: false);
          ToSolution innerAlgorithmBestSolution = _innerAlgorithm.CurrentBestSolution;
          ToSolution neighborhoodBestSolution = new ToSolution()
          {
@@ -246,8 +238,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             _innerAlgorithm.CurrentBestSolution = neighborhoodBestSolution;
             _currentIteration++;
 
-            // If aspiration criteria is successful, 
-            // go straight on checking the stopping conditions and nothing more..
+            // If aspiration criteria is successful, go straight on 
+            // checking the stopping conditions and nothing more.
             return;
          }
          else
@@ -261,23 +253,26 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             .FirstOrDefault(move => move.FirstEdgeId == neighborhoodBestSolutionMove.Item1 &&
                                     move.SecondEdgeId == neighborhoodBestSolutionMove.Item2);
 
-         
          if (forbiddenMove == null)
          {
             _innerAlgorithm.CurrentBestSolution = neighborhoodBestSolution;
+            _tabuList.ToList().ForEach(move => move.Expiration++);
 
             // Insert the current move into tabu list.
             LockMove(neighborhoodBestSolution.Move);
          }
+         else
+         {
+            _tabuList.ToList().ForEach(move => move.Expiration++);
 
-         // Increment the expiration count of moves. If forbiddenMove is null, 
-         // move has just been inserted, and so don't increment expiration count
-         // for this move.
-         IncrementTabuMovesExpirations(forbiddenMove);
+            // Increment the expiration count of moves. If forbiddenMove is null, 
+            // move has just been inserted, and so don't increment expiration count
+            // for this move.
+            //IncrementTabuMovesExpirations(forbiddenMove);
+         }
 
          // Remove from Tabu List expired moves.
          UnlockExpiredMoves();
-
          _currentIteration++;
       }
 
