@@ -6,13 +6,14 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/12/2018
+// File update: 10/12/2018
 //
 
 using CityScover.Engine.Algorithms.LocalSearches;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private int _maxDeadlockIterations;
       private int _noImprovementsCount;
       private int _currentIteration;
-      //private ICollection<ToSolution> _solutionsHistory;
+      private ICollection<ToSolution> _solutionsHistory;
       #endregion
 
       #region Constructors
@@ -180,7 +181,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         //_solutionsHistory = new Collection<ToSolution>();
+         _solutionsHistory = new Collection<ToSolution>();
          _maxIterations = Solver.CurrentStage.Flow.RunningCount;
          _maxDeadlockIterations = Parameters[ParameterCodes.TABUmaxDeadlockIterations];
          int tabuTenureFactor = Parameters[ParameterCodes.TABUtenureFactor];
@@ -224,7 +225,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             Cost = innerAlgorithmBestSolution.Cost,
             Penalty = innerAlgorithmBestSolution.Penalty,            
             Description = innerAlgorithmBestSolution.Description,
-         }; 
+         };
+         _solutionsHistory.Add(neighborhoodBestSolution);
          _innerAlgorithm.ResetState();
 
          // Aspiration criteria
@@ -280,7 +282,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          base.OnTerminating();
          Solver.BestSolution = _tabuBestSolution;
-         //SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
+         SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
       }
 
       internal override bool StopConditions()
