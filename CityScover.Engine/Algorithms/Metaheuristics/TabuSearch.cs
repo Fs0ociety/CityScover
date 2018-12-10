@@ -9,8 +9,10 @@
 // File update: 10/12/2018
 //
 
+using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.LocalSearches;
 using CityScover.Engine.Algorithms.Neighborhoods;
+using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,6 +34,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       private int _maxDeadlockIterations;
       private int _noImprovementsCount;
       private int _currentIteration;
+      private bool _canDoImprovements;
+      private bool _shouldRunImprovement;
       private ICollection<ToSolution> _solutionsHistory;
       #endregion
 
@@ -157,14 +161,50 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          }
       }
 
-      private async Task StartLocalSearch()
+      private IEnumerable<Algorithm> GetLocalSearchImprovements()
       {
-         Solver.CurrentAlgorithm = _innerAlgorithm.Type;
-         Task localSearchTask = Task.Run(_innerAlgorithm.Start);
+         var childrenFlow = Solver.CurrentStage.Flow.ChildrenFlows;
+
+         foreach (var flow in childrenFlow)
+         {
+            foreach (var algorithm in _innerAlgorithm.GetImprovementAlgorithms(flow.ChildrenFlows))
+            {
+               yield return algorithm;
+            }
+         }
+      }
+
+      private async Task RunImprovement()
+      {
+         foreach (var algorithm in GetLocalSearchImprovements())
+         {
+            Algorithm improvementAlgorithm = default;
+
+            switch (algorithm)
+            {
+               case LinKernighan lk:
+                  improvementAlgorithm = lk;
+                  lk.CurrentBestSolution = _tabuBestSolution;
+                  break;
+
+               case HybridCustomInsertion hnd:
+                  improvementAlgorithm = hnd;
+                  hnd.CurrentBestSolution = _tabuBestSolution;
+                  break;
+            }
+
+            await StartAlgorithm(improvementAlgorithm);
+         }
+      }
+
+      private async Task StartAlgorithm(Algorithm algorithm)
+      {
+         Solver.CurrentAlgorithm = algorithm.Type;
+         Task algorithmTask = Task.Run(algorithm.Start);
 
          try
          {
-            await localSearchTask.ConfigureAwait(false);
+            await algorithmTask.ConfigureAwait(false);
          }
          catch (AggregateException ae)
          {
@@ -182,7 +222,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          base.OnInitializing();
          _solutionsHistory = new Collection<ToSolution>();
-         _maxIterations = Solver.CurrentStage.Flow.RunningCount;
+         _maxIterations = Parameters[ParameterCodes.MaxIterations];
+         _canDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
          _maxDeadlockIterations = Parameters[ParameterCodes.TABUmaxDeadlockIterations];
          int tabuTenureFactor = Parameters[ParameterCodes.TABUtenureFactor];
 
@@ -213,8 +254,9 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       }
 
       protected override async Task PerformStep()
-      {
-         await StartLocalSearch();
+      {        
+         // Runs the local search algorithm.
+         await StartAlgorithm(_innerAlgorithm);
 
          ToSolution innerAlgorithmBestSolution = _innerAlgorithm.CurrentBestSolution;
          ToSolution neighborhoodBestSolution = new ToSolution()
@@ -223,7 +265,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             SolutionGraph = innerAlgorithmBestSolution.SolutionGraph.DeepCopy(),
             Move = Tuple.Create(innerAlgorithmBestSolution.Move.Item1, innerAlgorithmBestSolution.Move.Item2),
             Cost = innerAlgorithmBestSolution.Cost,
-            Penalty = innerAlgorithmBestSolution.Penalty,            
+            Penalty = innerAlgorithmBestSolution.Penalty,
             Description = innerAlgorithmBestSolution.Description,
          };
          _solutionsHistory.Add(neighborhoodBestSolution);
@@ -247,6 +289,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          else
          {
             _noImprovementsCount++;
+            _shouldRunImprovement = _noImprovementsCount == _maxDeadlockIterations;
          }
 
          // If move is prohibited, do nothing.
@@ -276,6 +319,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          // Remove from Tabu List expired moves.
          UnlockExpiredMoves();
          _currentIteration++;
+
+        if (_canDoImprovements && _shouldRunImprovement)
+         {
+            await RunImprovement();
+            _shouldRunImprovement = default;
+            _noImprovementsCount = default;
+            _innerAlgorithm.CurrentBestSolution = Solver.BestSolution;
+         }
       }
 
       internal override void OnTerminating()

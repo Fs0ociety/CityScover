@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 10/12/2018
 //
 
 namespace CityScover.Engine
@@ -14,6 +14,11 @@ namespace CityScover.Engine
    #region ParameterCodes enumeration
    public enum ParameterCodes
    {
+      /// <summary>
+      /// Maximum iterations of an algorithm.
+      /// </summary>
+      MaxIterations,
+
       /// <summary>
       /// Flag that states if an algorithm can execute an improvement logic.
       /// </summary>

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 10/12/2018
 //
 
 using System.Collections.Generic;
@@ -26,10 +26,9 @@ namespace CityScover.Engine
       {
       }
 
-      public StageFlow(AlgorithmType algorithm, int runningCount = 1)
+      public StageFlow(AlgorithmType algorithm)
       {
          CurrentAlgorithm = algorithm;
-         RunningCount = runningCount;
          AlgorithmParameters = new Dictionary<ParameterCodes, dynamic>();
          ChildrenFlows = new Collection<StageFlow>();
       }
@@ -40,11 +39,6 @@ namespace CityScover.Engine
       /// Current algorithm type for the current flow of a stage.
       /// </summary>
       public AlgorithmType CurrentAlgorithm { get; set; }
-
-      /// <summary>
-      /// Maximum iterations for an algorithm.
-      /// </summary>
-      public int RunningCount { get; set; }
 
       /// <summary>
       /// Specific parameters of the algorithm.

@@ -80,7 +80,13 @@ namespace CityScover.Engine.Configurations
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         },
-                        new StageFlow(AlgorithmType.LinKernighan, runningCount: 10)
+                        new StageFlow(AlgorithmType.LinKernighan)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.MaxIterations] = 10
+                           }
+                        }
                      },
                      AlgorithmParameters =
                      {
@@ -98,7 +104,6 @@ namespace CityScover.Engine.Configurations
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
-                     RunningCount = 20,
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.TwoOpt)
@@ -114,7 +119,13 @@ namespace CityScover.Engine.Configurations
                                     [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                                  }
                               },
-                              new StageFlow(AlgorithmType.LinKernighan, 20)
+                              new StageFlow(AlgorithmType.LinKernighan)
+                              {
+                                 AlgorithmParameters =
+                                 {
+                                    [ParameterCodes.MaxIterations] = 20
+                                 }
+                              }
                            },
                            AlgorithmParameters =
                            {
@@ -126,8 +137,9 @@ namespace CityScover.Engine.Configurations
                      },
                      AlgorithmParameters =
                      {
+                        [ParameterCodes.MaxIterations] = 10,
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.TABUmaxDeadlockIterations] = 18,
+                        [ParameterCodes.TABUmaxDeadlockIterations] = 5,
                         [ParameterCodes.TABUtenureFactor] = 4,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
                      }
@@ -176,7 +188,6 @@ namespace CityScover.Engine.Configurations
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.TabuSearch,
-                     RunningCount = 30,
                      ChildrenFlows =
                      {
                         new StageFlow(AlgorithmType.TwoOpt)
@@ -192,7 +203,13 @@ namespace CityScover.Engine.Configurations
                                     [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                                  }
                               },
-                              new StageFlow(AlgorithmType.LinKernighan, 20)
+                              new StageFlow(AlgorithmType.LinKernighan)
+                              {
+                                 AlgorithmParameters =
+                                 {
+                                    [ParameterCodes.MaxIterations] = 20
+                                 }
+                              }
                            },
                            AlgorithmParameters =
                            {
@@ -204,6 +221,7 @@ namespace CityScover.Engine.Configurations
                      },
                      AlgorithmParameters =
                      {
+                        [ParameterCodes.MaxIterations] = 30,
                         [ParameterCodes.TABUmaxDeadlockIterations] = 18,
                         [ParameterCodes.TABUtenureFactor] = 4,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
@@ -324,10 +342,10 @@ namespace CityScover.Engine.Configurations
                   Category = AlgorithmFamily.LocalSearch,
                   Flow =
                   {
-                     RunningCount = 5,
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
                      AlgorithmParameters =
                      {
+                        [ParameterCodes.MaxIterations] = 5,
                         [ParameterCodes.CanDoImprovements] = false,
                         [ParameterCodes.LSimprovementThreshold] = 2000,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,

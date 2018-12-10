@@ -10,14 +10,14 @@
 // File update: 10/12/2018
 //
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using CityScover.Commons;
 using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace CityScover.Engine.Algorithms.LocalSearches
 {
@@ -27,7 +27,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       private readonly NeighborhoodFacade<ToSolution> _neighborhoodFacade;
       private int _previousSolutionCost;
       private int _iterationsWithoutImprovement;
-      private bool _shouldRunImprovementAlgorithm;
+      private bool _shouldRunImprovement;
       private int _improvementThreshold;
       private int _maxIterationsWithoutImprovements;
       private ICollection<ToSolution> _solutionsHistory;
@@ -50,10 +50,16 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #region Private methods
       private ToSolution GetBest(IEnumerable<ToSolution> neighborhood, ToSolution currentSolution, byte? maxImprovementsCount)
       {
-         if (neighborhood is null || currentSolution is null)
+         if (neighborhood is null)
          {
             throw new ArgumentNullException(nameof(neighborhood));
          }
+
+         if (currentSolution is null)
+         {
+            throw new ArgumentNullException(nameof(currentSolution));
+         }
+
          if (maxImprovementsCount.HasValue && maxImprovementsCount == 0)
          {
             throw new ArgumentException("maxImprovementsCount can not have value 0.");
@@ -80,69 +86,32 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          return bestSolution;
       }
 
-      private IEnumerable<Algorithm> GetImprovementAlgorithms()
+      private async Task RunImprovement()
       {
-         var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms is null)
-         {
-            yield return null;
-         }
+         var childrenFlow = Solver.CurrentStage.Flow.ChildrenFlows;
 
-         if (childrenAlgorithms is null)
+         foreach (var algorithm in GetImprovementAlgorithms(childrenFlow))
          {
-            yield break;
-         }
 
-         foreach (var child in childrenAlgorithms)
-         {
-            var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
-            if (algorithm is null)
-            {
-               throw new InvalidOperationException("Bad configuration format: " +
-                  $"{nameof(Solver.WorkingConfiguration)}.");
-            }
+            Algorithm improvementAlgorithm = default;
 
             switch (algorithm)
             {
                case LinKernighan lk:
-                  algorithm = lk;
-                  lk.MaxSteps = child.RunningCount;
+                  improvementAlgorithm = lk;
                   lk.CurrentBestSolution = CurrentBestSolution;
                   break;
+
                case HybridCustomInsertion hnd:
-                  algorithm = hnd;
+                  improvementAlgorithm = hnd;
                   hnd.CurrentBestSolution = CurrentBestSolution;
                   break;
             }
-            algorithm.Parameters = child.AlgorithmParameters;
-            algorithm.Provider = Provider;
 
-            yield return algorithm;
-         }
-      }
-
-      private async Task RunImprovementAlgorithms()
-      {
-         foreach (var algorithm in GetImprovementAlgorithms())
-         {
-            Solver.CurrentAlgorithm = algorithm.Type;
-            Task improvementTask = Task.Run(algorithm.Start);
-
-            try
-            {
-               await improvementTask.ConfigureAwait(false);
-            }
-            catch (AggregateException ae)
-            {
-               OnError(ae.InnerException);
-            }
-            finally
-            {
-               Solver.CurrentAlgorithm = Type;
-               CurrentBestSolution = Solver.BestSolution;
-               _shouldRunImprovementAlgorithm = false;
-               _iterationsWithoutImprovement = 0;
-            }
+            await StartAlgorithm(improvementAlgorithm);
+            CurrentBestSolution = Solver.BestSolution;
+            _iterationsWithoutImprovement = 0;
+            _shouldRunImprovement = false;
 
             /* 
              * TODO
@@ -153,14 +122,51 @@ namespace CityScover.Engine.Algorithms.LocalSearches
              */
          }
       }
+
+      private async Task StartAlgorithm(Algorithm algorithm)
+      {
+         Solver.CurrentAlgorithm = algorithm.Type;
+         Task algorithmTask = Task.Run(algorithm.Start);
+
+         try
+         {
+            await algorithmTask.ConfigureAwait(false);
+         }
+         catch (AggregateException ae)
+         {
+            OnError(ae.InnerException);
+         }
+         finally
+         {
+            Solver.CurrentAlgorithm = Type;
+         }
+      }
       #endregion
 
       #region Internal methods
+      internal IEnumerable<Algorithm> GetImprovementAlgorithms(IEnumerable<StageFlow> childrenFlows)
+      {
+         foreach (var child in childrenFlows)
+         {
+            var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
+
+            if (algorithm is null)
+            {
+               throw new InvalidOperationException("Bad configuration format: " +
+                  $"{nameof(Solver.WorkingConfiguration)}.");
+            }
+            algorithm.Parameters = child.AlgorithmParameters;
+            algorithm.Provider = Provider;
+
+            yield return algorithm;
+         }
+      }
+
       internal void ResetState()
       {
          _previousSolutionCost = default;
          _iterationsWithoutImprovement = default;
-         _shouldRunImprovementAlgorithm = default;
+         _shouldRunImprovement = default;
          _improvementThreshold = default;
          _maxIterationsWithoutImprovements = default;
          CurrentBestSolution = default;
@@ -190,7 +196,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          SendMessage(MessageCode.LSStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          _previousSolutionCost = default;
          _iterationsWithoutImprovement = default;
-         _shouldRunImprovementAlgorithm = default;
+         _shouldRunImprovement = default;
       }
 
       protected override async Task PerformStep()
@@ -215,7 +221,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          // Cerco la migliore soluzione dell'intorno appena calcolato.
          var solution = GetBest(currentNeighborhood, CurrentBestSolution, null);
-      
+
          Console.ForegroundColor = ConsoleColor.DarkGreen;
          SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
@@ -240,7 +246,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             if (delta < _improvementThreshold)
             {
                _iterationsWithoutImprovement++;
-               _shouldRunImprovementAlgorithm = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+               _shouldRunImprovement = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
             }
          }
          else
@@ -250,9 +256,9 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             Console.ForegroundColor = ConsoleColor.Gray;
          }
 
-         if (CanDoImprovements && _shouldRunImprovementAlgorithm)
+         if (CanDoImprovements && _shouldRunImprovement)
          {
-            await RunImprovementAlgorithms();
+            await RunImprovement();
             SendMessage(MessageCode.LSResumeSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
       }

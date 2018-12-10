@@ -137,6 +137,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          base.OnInitializing();
          AcceptImprovementsOnly = false;
+         MaxSteps = Parameters[ParameterCodes.MaxIterations];
+
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LKStarting);
          Console.ForegroundColor = ConsoleColor.Gray;

@@ -80,7 +80,16 @@ namespace CityScover.Services
       private void DisplayStageFlow(StageFlow flow, string tabulator = "\t")
       {
          WriteLine($"{tabulator}     Current algorithm:   \"{flow.CurrentAlgorithm}\"");
-         WriteLine($"{tabulator}     Max iterations:      \"{flow.RunningCount}\"");
+
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.MaxIterations))
+         {
+            int maxIterations = flow.AlgorithmParameters[ParameterCodes.MaxIterations];
+            if (maxIterations != default)
+            {
+               WriteLine($"{tabulator}     " +
+                  $"Max iterations:      \"{maxIterations}\"");
+            }
+         }
 
          if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.CanDoImprovements))
          {
@@ -871,7 +880,8 @@ namespace CityScover.Services
                var (maxDeadlockIterations, tenureFactor) = GetMetaHeuristicParameters(runningCount);
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations] = maxDeadlockIterations;
                stage.Flow.AlgorithmParameters[ParameterCodes.TABUtenureFactor] = tenureFactor;
-               StageFlow stageFlow = new StageFlow(lsAlgorithm, runningCount);
+               StageFlow stageFlow = new StageFlow(lsAlgorithm);
+               stageFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = runningCount;
                SetRelaxedConstraints(stageFlow);
                SetObjectiveFunctionWeight(stageFlow);
                bool canExecuteImprovements = GetCanDoImprovements();
@@ -1066,7 +1076,8 @@ namespace CityScover.Services
             {
                stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
                stage.Flow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
-               StageFlow childrenFlow = new StageFlow(improvementAlgorithm, runningCount);
+               StageFlow childrenFlow = new StageFlow(improvementAlgorithm);
+               childrenFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = runningCount;
                SetRelaxedConstraints(childrenFlow);
                SetObjectiveFunctionWeight(childrenFlow);
                stage.Flow.ChildrenFlows.Add(childrenFlow);
@@ -1077,7 +1088,8 @@ namespace CityScover.Services
                {
                   childFlow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
                   childFlow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
-                  StageFlow nephewFlow = new StageFlow(improvementAlgorithm, runningCount);
+                  StageFlow nephewFlow = new StageFlow(improvementAlgorithm);
+                  nephewFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = runningCount;
                   SetRelaxedConstraints(nephewFlow);
                   SetObjectiveFunctionWeight(nephewFlow);
                   childFlow.ChildrenFlows.Add(nephewFlow);
@@ -1090,9 +1102,10 @@ namespace CityScover.Services
 
             if (stage.Description == StageType.StageTwo)
             {
-               StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
+               StageFlow stageFlow = new StageFlow(improvementAlgorithm);
                SetRelaxedConstraints(stageFlow);
                SetObjectiveFunctionWeight(stageFlow);
+               stageFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = 1;
                stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
                stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                stage.Flow.ChildrenFlows.Add(stageFlow);
@@ -1101,9 +1114,10 @@ namespace CityScover.Services
             {
                foreach (var childFlow in stage.Flow.ChildrenFlows)
                {
-                  StageFlow stageFlow = new StageFlow(improvementAlgorithm, runningCount: 1);
+                  StageFlow stageFlow = new StageFlow(improvementAlgorithm);
                   SetRelaxedConstraints(stageFlow);
                   SetObjectiveFunctionWeight(stageFlow);
+                  stageFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = 1;
                   stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
                   stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
                   childFlow.ChildrenFlows.Add(stageFlow);
