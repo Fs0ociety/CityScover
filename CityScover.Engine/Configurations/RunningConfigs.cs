@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/12/2018
+// File update: 10/12/2018
 //
 
 using System;
@@ -126,6 +126,7 @@ namespace CityScover.Engine.Configurations
                      },
                      AlgorithmParameters =
                      {
+                        [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.TABUmaxDeadlockIterations] = 18,
                         [ParameterCodes.TABUtenureFactor] = 4,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3

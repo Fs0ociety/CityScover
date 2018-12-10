@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/12/2018
+// File update: 10/12/2018
 //
 
 using System;
@@ -96,6 +96,11 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          foreach (var child in childrenAlgorithms)
          {
             var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
+            if (algorithm is null)
+            {
+               throw new InvalidOperationException("Bad configuration format: " +
+                  $"{nameof(Solver.WorkingConfiguration)}.");
+            }
 
             switch (algorithm)
             {
@@ -109,11 +114,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
                   hnd.CurrentBestSolution = CurrentBestSolution;
                   break;
             }
-
-            if (algorithm is null)
-            {
-               throw new NullReferenceException(nameof(algorithm));
-            }
             algorithm.Parameters = child.AlgorithmParameters;
             algorithm.Provider = Provider;
 
@@ -125,12 +125,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       {
          foreach (var algorithm in GetImprovementAlgorithms())
          {
-            if (algorithm is null)
-            {
-               throw new InvalidOperationException("Bad configuration format: " +
-                  $"{nameof(Solver.WorkingConfiguration)}.");
-            }
-
             Solver.CurrentAlgorithm = algorithm.Type;
             Task improvementTask = Task.Run(algorithm.Start);
 
