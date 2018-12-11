@@ -77,6 +77,10 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       {
          RouteWorker firstEdge = solution.SolutionGraph.Edges.Where(edge => edge.Entity.PointTo.Id == iNodeId).FirstOrDefault();
          RouteWorker secondEdge = solution.SolutionGraph.Edges.Where(edge => edge.Entity.PointFrom.Id == kNodeId).FirstOrDefault();
+         if (firstEdge == null || secondEdge == null)
+         {
+            return null;
+         }
          return Tuple.Create(firstEdge.Entity.Id, secondEdge.Entity.Id);
       }
 
@@ -94,7 +98,9 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             MessageCode.LocalSearchNewNeighborhoodMoveDetails,
             newSolution.Id,
             $"({firstEdge.Entity.PointFrom.Id}, {firstEdge.Entity.PointTo.Id})",
-            $"({secondEdge.Entity.PointFrom.Id}, {secondEdge.Entity.PointTo.Id})");
+            $"({secondEdge.Entity.PointFrom.Id}, {secondEdge.Entity.PointTo.Id})",
+            $"({firstEdge.Entity.PointTo.Id}, {secondEdge.Entity.PointTo.Id})",
+            $"({firstEdge.Entity.PointFrom.Id}, {secondEdge.Entity.PointFrom.Id})");
       }
       #endregion
 
@@ -109,10 +115,15 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
             {
                IEnumerable<InterestPointWorker> newNodeSequence = GenerateSequence(solutionNodes, i, k);
                CityMapGraph newSolutionGraph = BuildSolutionGraph(newNodeSequence);
+               Tuple<int, int> move = GetMove(solution, solutionNodes.ElementAt(i).Entity.Id, solutionNodes.ElementAt(k).Entity.Id);
+               if (move is null)
+               {
+                  continue;
+               }
                ToSolution newSolution = new ToSolution()
                {
                   SolutionGraph = newSolutionGraph,
-                  Move = GetMove(solution, solutionNodes.ElementAt(i).Entity.Id, solutionNodes.ElementAt(k).Entity.Id)                  
+                  Move = move                  
                };
                newSolution.Description = GetMoveDescription(solution, newSolution);
                neighborhood.Add(newSolution);

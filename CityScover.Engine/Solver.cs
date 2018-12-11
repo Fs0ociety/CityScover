@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/12/2018
+// File update: 11/12/2018
 //
 
 using CityScover.Data;
@@ -42,6 +42,7 @@ namespace CityScover.Engine
             _solutionsQueue = new BlockingCollection<ToSolution>();
          }
 
+         ToSolution.ResetSequenceId();
          WorkingConfiguration = configuration;
          IsMonitoringEnabled = configuration.AlgorithmMonitoring;
          Problem = ProblemFactory.CreateProblem(configuration.CurrentProblem);

@@ -127,6 +127,11 @@ namespace CityScover.Engine
          message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, bestSolution.Cost, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
          return message;
       }
+
+      internal static void ResetSequenceId()
+      {
+         _sequenceId = 0;
+      }
       #endregion
 
       #region Private methods

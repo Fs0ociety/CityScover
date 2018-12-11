@@ -32,7 +32,7 @@ namespace CityScover.Engine
             [MessageCode.LocalSearchResumeSolution] = "Resume Local Search with solution {0} with total cost {1}.",
             [MessageCode.LocalSearchNewNeighborhood] = "Generating new neighborhood {0}.",
             [MessageCode.LocalSearchNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
-            [MessageCode.LocalSearchNewNeighborhoodMoveDetails] = "New solution {0} details: swapping between edge {1} and edge {2}.",
+            [MessageCode.LocalSearchNewNeighborhoodMoveDetails] = "New solution {0} details: swapping between edge {1} and edge {2}.\nSwap produces new edges {3} and {4}.",
             [MessageCode.LocalSearchNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with total cost: {1}.",
             [MessageCode.LocalSearchBestFound] = "Best solution found with total cost: ({0}). Previous solution total cost: ({1}).",
             [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution of current best (id: {0} , total cost: {1}), hasn't found...",
