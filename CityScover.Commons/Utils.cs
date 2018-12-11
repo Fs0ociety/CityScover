@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 25/11/2018
+// File update: 11/12/2018
 //
 
 
@@ -17,7 +17,8 @@ namespace CityScover.Commons
    /// </summary>
    public static class Utils
    {
-      public const int DelayTask = 350;
+      public const int ValidationDelay = 250;
+      public const int MinTabuTenureFactor = 1;
       public const string TMaxConstraint = "TMax";
       public const string TimeWindowsConstraint = "Time Windows";
       public const double ObjectiveFunctionWeightDefault = 1.0;

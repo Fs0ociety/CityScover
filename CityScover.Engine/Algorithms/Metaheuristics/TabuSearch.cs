@@ -6,9 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/12/2018
+// File update: 11/12/2018
 //
 
+using CityScover.Commons;
 using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.LocalSearches;
 using CityScover.Engine.Algorithms.Neighborhoods;
@@ -53,6 +54,10 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       }
       #endregion
 
+      #region Internal properties
+      public int ImprovementsCount { get; private set; }
+      #endregion
+
       #region Private methods
       private int CalculateTabuTenure(int problemSize, int factor)
          => (problemSize + factor - 1) / factor;
@@ -92,43 +97,39 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          return (edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
       }
 
-      private void IncrementTabuMovesExpirations(TabuMove insertedMove)
+      private void IncrementTabuMovesExpirations()
       {
-         _tabuList.ToList().ForEach(move =>
+         _tabuList.ToList().ForEach(reverseMove =>
          {
-            if (insertedMove is null)
-            {
-               return;
-            }
+            reverseMove.Expiration++;
 
-            move.Expiration++;
-            var firstRoute = GetPointsKey(move.FirstEdgeId);
-            var secondRoute = GetPointsKey(move.SecondEdgeId);
+            var firstRoute = GetPointsKey(reverseMove.FirstEdgeId);
+            var secondRoute = GetPointsKey(reverseMove.SecondEdgeId);
 
-            string message = MessagesRepository.GetMessage(MessageCode.TSMovesLocked,
+            string message = MessagesRepository.GetMessage(MessageCode.TabuSearchMovesLocked,
                $"({firstRoute.PointFrom}, {firstRoute.PointTo})",
                $"({secondRoute.PointFrom}, {secondRoute.PointTo})",
-               $"{move.Expiration}",
+               $"{reverseMove.Expiration}",
                $"{_tenure}");
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.Magenta;
             SendMessage(message);
             Console.ForegroundColor = ConsoleColor.Gray;
          });
       }
 
-      private void LockMove(Tuple<int, int> move)
+      private void LockMove(Tuple<int, int> reverseMove)
       {
-         var (firstEdgeId, secondEdgeId) = move;
+         var (firstEdgeId, secondEdgeId) = reverseMove;
          _tabuList.Add(new TabuMove(firstEdgeId, secondEdgeId));
 
          var firstRoute = GetPointsKey(firstEdgeId);
          var secondRoute = GetPointsKey(secondEdgeId);
-         string message = MessagesRepository.GetMessage(MessageCode.TSMoveLocked,
+         string message = MessagesRepository.GetMessage(MessageCode.TabuSearchMoveLocked,
             $"({firstRoute.PointFrom}, {firstRoute.PointTo})",
             $"({secondRoute.PointFrom}, {secondRoute.PointTo})");
 
-         Console.ForegroundColor = ConsoleColor.DarkYellow;
+         Console.ForegroundColor = ConsoleColor.Magenta;
          SendMessage(message);
          Console.ForegroundColor = ConsoleColor.Gray;
       }
@@ -149,7 +150,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
                var firstRoute = GetPointsKey(reverseMove.FirstEdgeId);
                var secondRoute = GetPointsKey(reverseMove.SecondEdgeId);
-               string message = MessagesRepository.GetMessage(MessageCode.TSMoveUnlocked,
+               string message = MessagesRepository.GetMessage(MessageCode.TabuSearchMoveUnlocked,
                   $"({firstRoute.PointFrom}, {firstRoute.PointTo})",
                   $"({secondRoute.PointFrom}, {secondRoute.PointTo})",
                   $"{reverseMove.Expiration}");
@@ -161,7 +162,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          }
       }
 
-      private IEnumerable<Algorithm> GetLocalSearchImprovements()
+      private IEnumerable<Algorithm> GetLocalSearchAlgorithms()
       {
          var childrenFlow = Solver.CurrentStage.Flow.ChildrenFlows;
 
@@ -176,7 +177,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       private async Task RunImprovement()
       {
-         foreach (var algorithm in GetLocalSearchImprovements())
+         foreach (var algorithm in GetLocalSearchAlgorithms())
          {
             Algorithm improvementAlgorithm = default;
 
@@ -193,14 +194,15 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
                   break;
             }
 
-            await StartAlgorithm(improvementAlgorithm);
+            await _innerAlgorithm.StartImprovementAlgorithm(improvementAlgorithm);
+            ImprovementsCount++;
          }
       }
 
-      private async Task StartAlgorithm(Algorithm algorithm)
+      private async Task StartLocalSearch()
       {
-         Solver.CurrentAlgorithm = algorithm.Type;
-         Task algorithmTask = Task.Run(algorithm.Start);
+         Solver.CurrentAlgorithm = _innerAlgorithm.Type;
+         Task algorithmTask = Task.Run(_innerAlgorithm.Start);
 
          try
          {
@@ -221,13 +223,12 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         _solutionsHistory = new Collection<ToSolution>();
          _maxIterations = Parameters[ParameterCodes.MaxIterations];
          _canDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
          _maxDeadlockIterations = Parameters[ParameterCodes.TABUmaxDeadlockIterations];
          int tabuTenureFactor = Parameters[ParameterCodes.TABUtenureFactor];
 
-         if (tabuTenureFactor <= 1)
+         if (tabuTenureFactor <= Utils.MinTabuTenureFactor)
          {
             throw new InvalidOperationException("Bad configuration format: " +
                $"{nameof(ParameterCodes.TABUtenureFactor)}.");
@@ -243,20 +244,26 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          }
 
          _tabuList = new List<TabuMove>();
+         _solutionsHistory = new Collection<ToSolution>();
+         ImprovementsCount = default;
          _innerAlgorithm.AcceptImprovementsOnly = false;
          _innerAlgorithm.Provider = Provider;
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
          _currentSolution = Solver.BestSolution;
          _tabuBestSolution = Solver.BestSolution;
-         Console.ForegroundColor = ConsoleColor.Magenta;
-         SendMessage(MessageCode.TSStarting, _currentSolution.Id, _currentSolution.Cost);
-         Console.ForegroundColor = ConsoleColor.Gray;
+
+         if (Solver.IsMonitoringEnabled)
+         {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            SendMessage(MessageCode.TabuSearchStart, _currentSolution.Id, _currentSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
+         }
       }
 
       protected override async Task PerformStep()
-      {        
+      {
          // Runs the local search algorithm.
-         await StartAlgorithm(_innerAlgorithm);
+         await StartLocalSearch();
 
          ToSolution innerAlgorithmBestSolution = _innerAlgorithm.CurrentBestSolution;
          ToSolution neighborhoodBestSolution = new ToSolution()
@@ -301,26 +308,19 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          if (forbiddenMove == null)
          {
             _innerAlgorithm.CurrentBestSolution = neighborhoodBestSolution;
-            _tabuList.ToList().ForEach(move => move.Expiration++);
-
-            // Insert the current move into tabu list.
+            IncrementTabuMovesExpirations();
             LockMove(neighborhoodBestSolution.Move);
          }
          else
          {
-            _tabuList.ToList().ForEach(move => move.Expiration++);
-
-            // Increment the expiration count of moves. If forbiddenMove is null, 
-            // move has just been inserted, and so don't increment expiration count
-            // for this move.
-            //IncrementTabuMovesExpirations(forbiddenMove);
+            IncrementTabuMovesExpirations();
          }
 
          // Remove from Tabu List expired moves.
          UnlockExpiredMoves();
          _currentIteration++;
 
-        if (_canDoImprovements && _shouldRunImprovement)
+         if (_canDoImprovements && _shouldRunImprovement)
          {
             await RunImprovement();
             _shouldRunImprovement = default;
@@ -333,19 +333,16 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       {
          base.OnTerminating();
          Solver.BestSolution = _tabuBestSolution;
+         Console.ForegroundColor = ConsoleColor.DarkMagenta;
+         SendMessage(MessageCode.TabuSearchImprovementsPerformed, ImprovementsCount);
+         SendMessage(MessageCode.TabuSearchStop, _tabuBestSolution.Id, _tabuBestSolution.Cost);
+         Console.ForegroundColor = ConsoleColor.Gray;
          SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
       }
 
       internal override bool StopConditions()
       {
-         bool shouldStop = _currentIteration == _maxIterations
-            || base.StopConditions();
-
-         if (_maxDeadlockIterations > 0)
-         {
-            shouldStop = shouldStop || _noImprovementsCount == _maxDeadlockIterations;
-         }
-         return shouldStop;
+         return _currentIteration == _maxIterations || base.StopConditions();
       }
       #endregion
    }

@@ -140,10 +140,10 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          MaxSteps = Parameters[ParameterCodes.MaxIterations];
 
          Console.ForegroundColor = ConsoleColor.Cyan;
-         SendMessage(MessageCode.LKStarting);
+         SendMessage(MessageCode.LinKernighanStart);
          Console.ForegroundColor = ConsoleColor.Gray;
 
-         SendMessage(MessageCode.LKStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+         SendMessage(MessageCode.LinKernighanStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
 
          _solutionsHistory = new Collection<ToSolution>();
          _cityMap = Solver.CityMapGraph.DeepCopy();
@@ -163,7 +163,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       protected override async Task PerformStep()
       {
          Console.ForegroundColor = ConsoleColor.Cyan;
-         SendMessage(MessageCode.LKHStepIncreased, CurrentStep, MaxSteps);
+         SendMessage(MessageCode.LinKernighanHStepIncreased, CurrentStep, MaxSteps);
          Console.ForegroundColor = ConsoleColor.Gray;
          
          InterestPointWorker sNode = default;
@@ -184,12 +184,12 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
                _executedMoves.Add(fromEndNodeToSNodeEdge);
                break;
             }
-            SendMessage(MessageCode.LKBlockedMove, $"(" + fromEndNodeToSNodeEdge.Entity.PointFrom.Id + "," + fromEndNodeToSNodeEdge.Entity.PointTo.Id + ")");
+            SendMessage(MessageCode.LinKernighanBlockedMove, $"(" + fromEndNodeToSNodeEdge.Entity.PointFrom.Id + "," + fromEndNodeToSNodeEdge.Entity.PointTo.Id + ")");
          }
 
          if (sNode is null)
          {
-            SendMessage(MessageCode.LKNoSNodeSelected);
+            SendMessage(MessageCode.LinKernighanNoSNodeSelected);
             ForceStop = true;
             return;
          }
@@ -208,7 +208,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          };
          _solutionsHistory.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
-         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(Utils.ValidationDelay).ConfigureAwait(continueOnCapturedContext: false);
 
          if (Solver.IsMonitoringEnabled)
          {
@@ -236,11 +236,11 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          
          if (CurrentBestSolution.Cost != bestSolution.Cost)
          {
-            SendMessage(MessageCode.LKBestFound, bestSolution.Cost);
+            SendMessage(MessageCode.LinKernighanBestFound, bestSolution.Cost);
          }
          else
          {
-            SendMessage(MessageCode.LKInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+            SendMessage(MessageCode.LinKernighanInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
 
          Solver.BestSolution = bestSolution;
@@ -249,7 +249,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       internal override void OnTerminated()
       {
          _cityMap = null;
-         SendMessage(MessageCode.LKFinish);
+         SendMessage(MessageCode.LinKernighanStop);
          base.OnTerminated();
       }
 

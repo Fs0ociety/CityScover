@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/12/2018
+// File update: 11/12/2018
 //
 
 using CityScover.Commons;
@@ -27,6 +27,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       private readonly NeighborhoodFacade<ToSolution> _neighborhoodFacade;
       private int _previousSolutionCost;
       private int _iterationsWithoutImprovement;
+      private bool _canDoImprovements;
       private bool _shouldRunImprovement;
       private int _improvementThreshold;
       private int _maxIterationsWithoutImprovements;
@@ -44,7 +45,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
       #region Internal properties
       internal ToSolution CurrentBestSolution { get; set; }
-      private bool CanDoImprovements { get; set; }
+      public int ImprovementsCount { get; private set; }
       #endregion
 
       #region Private methods
@@ -108,8 +109,9 @@ namespace CityScover.Engine.Algorithms.LocalSearches
                   break;
             }
 
-            await StartAlgorithm(improvementAlgorithm);
+            await StartImprovementAlgorithm(improvementAlgorithm);
             CurrentBestSolution = Solver.BestSolution;
+            ImprovementsCount++;
             _iterationsWithoutImprovement = 0;
             _shouldRunImprovement = false;
 
@@ -120,25 +122,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
              * Senza un eventuale controllo, verrebbero eseguiti in sequenza tutti gli algoritmi presenti tra i ChildrenFlows a prescindere, 
              * anche se non fosse necessario eseguirli.
              */
-         }
-      }
-
-      private async Task StartAlgorithm(Algorithm algorithm)
-      {
-         Solver.CurrentAlgorithm = algorithm.Type;
-         Task algorithmTask = Task.Run(algorithm.Start);
-
-         try
-         {
-            await algorithmTask.ConfigureAwait(false);
-         }
-         catch (AggregateException ae)
-         {
-            OnError(ae.InnerException);
-         }
-         finally
-         {
-            Solver.CurrentAlgorithm = Type;
          }
       }
       #endregion
@@ -162,6 +145,25 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          }
       }
 
+      internal async Task StartImprovementAlgorithm(Algorithm algorithm)
+      {
+         Solver.CurrentAlgorithm = algorithm.Type;
+         Task algorithmTask = Task.Run(algorithm.Start);
+
+         try
+         {
+            await algorithmTask.ConfigureAwait(false);
+         }
+         catch (AggregateException ae)
+         {
+            OnError(ae.InnerException);
+         }
+         finally
+         {
+            Solver.CurrentAlgorithm = Type;
+         }
+      }
+
       internal void ResetState()
       {
          _previousSolutionCost = default;
@@ -180,9 +182,9 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          base.OnInitializing();
          _solutionsHistory = new Collection<ToSolution>();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
-         CanDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
+         _canDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
 
-         if (CanDoImprovements)
+         if (_canDoImprovements)
          {
             _improvementThreshold = Parameters[ParameterCodes.LSimprovementThreshold];
             _maxIterationsWithoutImprovements = Parameters[ParameterCodes.LSmaxRunsWithNoImprovements];
@@ -193,37 +195,39 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             CurrentBestSolution = Solver.BestSolution;
          }
          _solutionsHistory.Add(CurrentBestSolution);
-         SendMessage(MessageCode.LSStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+         SendMessage(MessageCode.LocalSearchStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+         ImprovementsCount = default;
          _previousSolutionCost = default;
-         _iterationsWithoutImprovement = default;
          _shouldRunImprovement = default;
+         _iterationsWithoutImprovement = default;
       }
 
       protected override async Task PerformStep()
       {
-         SendMessage(MessageCode.LSNewNeighborhood, CurrentStep);
+         SendMessage(MessageCode.LocalSearchNewNeighborhood, CurrentStep);
 
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution);
 
          foreach (var neighborSolution in currentNeighborhood)
          {
-            SendMessage(MessageCode.LSNewNeighborhoodMove, neighborSolution.Id, CurrentStep);
+            SendMessage(MessageCode.LocalSearchNewNeighborhoodMove, neighborSolution.Id, CurrentStep);
             SendMessage(neighborSolution.Description);
             Solver.EnqueueSolution(neighborSolution);
-            await Task.Delay(Utils.DelayTask).ConfigureAwait(false);
+            await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
 
             if (Solver.IsMonitoringEnabled)
             {
                Provider.NotifyObservers(neighborSolution);
             }
          }
+
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
 
          // Cerco la migliore soluzione dell'intorno appena calcolato.
          var solution = GetBest(currentNeighborhood, CurrentBestSolution, null);
 
          Console.ForegroundColor = ConsoleColor.DarkGreen;
-         SendMessage(MessageCode.LSNeighborhoodBest, solution.Id, solution.Cost);
+         SendMessage(MessageCode.LocalSearchNeighborhoodBest, solution.Id, solution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
 
          _previousSolutionCost = CurrentBestSolution.Cost;
@@ -237,13 +241,14 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          if (isBetterThanCurrentBestSolution)
          {
             Console.ForegroundColor = ConsoleColor.Green;
-            SendMessage(MessageCode.LSBestFound, solution.Cost, _previousSolutionCost);
+            SendMessage(MessageCode.LocalSearchBestFound, solution.Cost, _previousSolutionCost);
             Console.ForegroundColor = ConsoleColor.Gray;
+
             _solutionsHistory.Add(solution);
 
-            // E' migliore, ma di quanto? Se il delta è 0 comunque incremento l'iterationsWithoutImprovement.
-            var delta = CurrentBestSolution.Cost - _previousSolutionCost;
-            if (delta < _improvementThreshold)
+            // E' migliore, ma di quanto? Se il delta di miglioramento è 0 comunque incremento l'iterationsWithoutImprovement.
+            var deltaImprovement = CurrentBestSolution.Cost - _previousSolutionCost;
+            if (deltaImprovement < _improvementThreshold)
             {
                _iterationsWithoutImprovement++;
                _shouldRunImprovement = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
@@ -252,14 +257,14 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          else
          {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.LSInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+            SendMessage(MessageCode.LocalSearchInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
 
-         if (CanDoImprovements && _shouldRunImprovement)
+         if (_canDoImprovements && _shouldRunImprovement)
          {
             await RunImprovement();
-            SendMessage(MessageCode.LSResumeSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+            SendMessage(MessageCode.LocalSearchResumeSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
       }
 
@@ -267,16 +272,17 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       {
          base.OnTerminating();
          Solver.BestSolution = CurrentBestSolution;
+
          Console.ForegroundColor = ConsoleColor.Yellow;
-         SendMessage(MessageCode.LSFinish, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+         SendMessage(MessageCode.LocalSearchImprovementsPerformed, ImprovementsCount);
+         SendMessage(MessageCode.LocalSearchStop, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
          SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
       }
 
       internal override bool StopConditions()
       {
-         return _previousSolutionCost == CurrentBestSolution.Cost ||
-                base.StopConditions();
+         return _previousSolutionCost == CurrentBestSolution.Cost || base.StopConditions();
       }
       #endregion
    }

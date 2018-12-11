@@ -49,7 +49,7 @@ namespace CityScover.Engine.Configurations
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,                     
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,

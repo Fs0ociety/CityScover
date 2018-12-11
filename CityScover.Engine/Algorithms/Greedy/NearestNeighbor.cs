@@ -75,7 +75,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          SendMessage(MessageCode.GreedyNodeAdded, candidatePoi.Entity.Name, newSolution.Id);
          SolutionsHistory.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
-         await Task.Delay(Utils.DelayTask).ConfigureAwait(false);
+         await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
          await Solver.AlgorithmTasks[newSolution.Id];
 
          if (!newSolution.IsValid)

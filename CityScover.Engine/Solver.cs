@@ -202,9 +202,6 @@ namespace CityScover.Engine
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType);
 
-      //internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood neighborhood) =>
-      //   AlgorithmFactory.CreateAlgorithm(algorithmType, neighborhood);
-
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood<ToSolution> neighborhood) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType, neighborhood);
 

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 30/11/2018
+// File update: 11/12/2018
 //
 
 using CityScover.Commons;
@@ -157,6 +157,15 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
+
+         if (Solver.IsMonitoringEnabled)
+         {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            SendMessage(MessageCode.HybridDistanceUpdateStart);
+            Console.ForegroundColor = ConsoleColor.Gray;
+         }
+
+         TourUpdated = default;
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          _candidateEdges = new Collection<(RouteWorker, TimeSpan)>();
          _candidateEdges = CalculateMaxEdgesTimeWalk();
@@ -178,26 +187,35 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          };
 
          TourUpdated = true;
+
          if (nodeToRemove != null)
          {
-            SendMessage(MessageCode.HDUTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
+            SendMessage(MessageCode.HybridDistanceUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
             Solver.EnqueueSolution(_currentSolution);
             SolutionsHistory.Add(_currentSolution);
-            await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+            await Task.Delay(Utils.ValidationDelay).ConfigureAwait(continueOnCapturedContext: false);
             await Solver.AlgorithmTasks[_currentSolution.Id];
 
             if (!_currentSolution.IsValid)
             {
                UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
-               SendMessage(MessageCode.HDUTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
+               SendMessage(MessageCode.HybridDistanceUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
                TourUpdated = false;
             }
          }
 
-         // Notify observers.
          if (Solver.IsMonitoringEnabled)
          {
             Provider.NotifyObservers(_currentSolution);
+         }
+      }
+
+      internal override void OnTerminating()
+      {
+         if (_currentSolution != null)
+         {
+            SendMessage(MessageCode.HybridDistanceUpdateStopWithSolution,
+               _currentSolution.Id, _currentSolution.Cost);
          }
       }
 

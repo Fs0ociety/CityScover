@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 11/12/2018
 //
 
 using CityScover.Engine.Workers;
@@ -20,7 +20,6 @@ namespace CityScover.Engine.Algorithms.Greedy
 {
    internal abstract class GreedyTemplate : Algorithm
    {
-      //private double _averageSpeedWalk;
       private DateTime _timeSpent;
       private bool _canDoImprovements;
 
@@ -44,12 +43,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       private IEnumerable<Algorithm> GetImprovementAlgorithms()
       {
          var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms is null)
-         {
-            yield return null;
-         }
-
-         if (childrenAlgorithms is null)
+         if (childrenAlgorithms is null || !childrenAlgorithms.Any())
          {
             yield break;
          }
@@ -59,7 +53,8 @@ namespace CityScover.Engine.Algorithms.Greedy
             var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
             if (algorithm is null)
             {
-               throw new NullReferenceException(nameof(algorithm));
+               throw new InvalidOperationException("Bad configuration format: " +
+                  $"{nameof(Solver.WorkingConfiguration)}.");
             }
 
             algorithm.Parameters = child.AlgorithmParameters;
@@ -73,12 +68,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          foreach (var algorithm in GetImprovementAlgorithms())
          {
-            if (algorithm is null)
-            {
-               throw new InvalidOperationException("Bad configuration format: " +
-                  $"{nameof(Solver.WorkingConfiguration)}.");
-            }
-
             Solver.CurrentAlgorithm = algorithm.Type;
             await Task.Run(() => algorithm.Start());
             Solver.CurrentAlgorithm = Type;
@@ -132,7 +121,11 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         //_averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
+
+         Console.ForegroundColor = ConsoleColor.Green;
+         SendMessage(MessageCode.GreedyStart, Type);
+         Console.ForegroundColor = ConsoleColor.Gray;
+
          Tour = new CityMapGraph();
          ProcessingNodes = new Queue<int>();
          SolutionsHistory = new Collection<ToSolution>();
@@ -193,7 +186,11 @@ namespace CityScover.Engine.Algorithms.Greedy
          SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
 
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
-         SendMessage(MessageCode.GreedyFinish);
+
+         Console.ForegroundColor = ConsoleColor.Green;
+         SendMessage(MessageCode.GreedyStop);
+         Console.ForegroundColor = ConsoleColor.Gray;
+
          base.OnTerminated();
 
          if (!_canDoImprovements)

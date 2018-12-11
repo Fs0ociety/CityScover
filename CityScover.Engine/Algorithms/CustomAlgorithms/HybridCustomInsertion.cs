@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 30/11/2018
+// File update: 11/12/2018
 //
 
 using CityScover.Commons;
@@ -89,11 +89,18 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       private HybridCustomUpdate RunUpdateTour()
       {
-         HybridCustomUpdate updateAlgorithm = (HybridCustomUpdate)Solver
-            .GetAlgorithm(AlgorithmType.HybridCustomUpdate);
+         var updateAlgorithm = (HybridCustomUpdate)Solver.GetAlgorithm(
+            AlgorithmType.HybridCustomUpdate);
+
+         if (updateAlgorithm is null)
+         {
+            throw new NullReferenceException(nameof(updateAlgorithm));
+         }
+
          updateAlgorithm.Provider = Provider;
          updateAlgorithm.Parameters = Parameters;
 
+         Solver.CurrentAlgorithm = updateAlgorithm.Type;
          Task updateTask = Task.Run(updateAlgorithm.Start);
          try
          {
@@ -108,6 +115,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             ProcessingNodes.Clear();
             ProcessingNodes = null;
+            Solver.CurrentAlgorithm = Type;
          }
 
          return updateAlgorithm;
@@ -116,6 +124,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private void Restart()
       {
          Algorithm algorithm = Solver.GetAlgorithm(AlgorithmType.HybridCustomInsertion);
+
+         if (algorithm is null)
+         {
+            throw new NullReferenceException(nameof(algorithm));
+         }
+
          algorithm.Provider = Provider;
          algorithm.Parameters = Parameters;
 
@@ -143,8 +157,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
          if (Solver.IsMonitoringEnabled && Type == AlgorithmType.HybridCustomInsertion)
          {
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            SendMessage(MessageCode.HDIStarting);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            SendMessage(MessageCode.HybridDistanceInsertionStart);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
          if (CurrentBestSolution is null)
@@ -185,9 +199,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          };
 
          Solver.EnqueueSolution(_currentSolution);
-         await Task.Delay(Utils.DelayTask).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(Utils.ValidationDelay).ConfigureAwait(continueOnCapturedContext: false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
-         SendMessage(MessageCode.HDINewNodeAdded, point.Entity.Name);
+         SendMessage(MessageCode.HybridDistanceInsertionNewNodeAdded, point.Entity.Name);
          SolutionsHistory.Add(_currentSolution);
 
          if (!_currentSolution.IsValid)
@@ -195,7 +209,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             UndoAdditionPoint(point.Entity.Id, _previousEndPoiKey, StartPoi.Entity.Id);
             _addedNodesCount--;
             EndPoi = Tour.GetEndPoint();
-            SendMessage(MessageCode.HDINewNodeRemoved, point.Entity.Name);
+            SendMessage(MessageCode.HybridDistanceInsertionNewNodeRemoved, point.Entity.Name);
          }
 
          // Notify observers.
@@ -219,20 +233,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          if (_addedNodesCount == 0)
          {
-            if (Solver.IsMonitoringEnabled)
-            {
-               Console.ForegroundColor = ConsoleColor.DarkMagenta;
-               SendMessage(MessageCode.HDUStarting);
-               Console.ForegroundColor = ConsoleColor.Gray;
-            }
-
             var updateAlgorithm = RunUpdateTour();
-            if (updateAlgorithm is null)
-            {
-               return;
-            }
             if (updateAlgorithm.TourUpdated == false)
             {
+               Console.ForegroundColor = ConsoleColor.Yellow;
+               SendMessage(MessageCode.HybridDistanceInsertionStopWithoutSolution);
+               Console.ForegroundColor = ConsoleColor.Gray;
                return;
             }
 
@@ -241,6 +247,10 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             if (!isBetterThanCurrentBestSolution)
             {
+               Console.ForegroundColor = ConsoleColor.Yellow;
+               SendMessage(MessageCode.HybridDistanceUpdateStopWithSolution,
+                  updateAlgorithm.CurrentSolution.Id, updateAlgorithm.CurrentSolution.Cost);
+               Console.ForegroundColor = ConsoleColor.Gray;
                return;
             }
             Solver.BestSolution = updateAlgorithm.CurrentSolution;
@@ -249,6 +259,20 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          else
          {
             Solver.BestSolution = _currentSolution;
+         }
+
+         if (_currentSolution != null)
+         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            SendMessage(MessageCode.HybridDistanceInsertionStopWithSolution,
+               _currentSolution.Id, _currentSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
+         }
+         else
+         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            SendMessage(MessageCode.HybridDistanceInsertionStopWithoutSolution);
+            Console.ForegroundColor = ConsoleColor.Gray;
          }
       }
 

@@ -91,7 +91,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          RouteWorker secondEdge = startSolution.SolutionGraph.Edges.Where(edge => edge.Entity.Id == secondEdgeId).FirstOrDefault();
 
          return MessagesRepository.GetMessage(
-            MessageCode.LSNewNeighborhoodMoveDetails,
+            MessageCode.LocalSearchNewNeighborhoodMoveDetails,
             newSolution.Id,
             $"({firstEdge.Entity.PointFrom.Id}, {firstEdge.Entity.PointTo.Id})",
             $"({secondEdge.Entity.PointFrom.Id}, {secondEdge.Entity.PointTo.Id})");
