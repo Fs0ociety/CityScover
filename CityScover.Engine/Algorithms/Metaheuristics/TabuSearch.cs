@@ -217,6 +217,27 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             Solver.CurrentAlgorithm = Type;
          }
       }
+
+      private bool AspirationCriteria(in ToSolution neighborhoodSolution)
+      {
+         // Aspiration criteria
+         bool isBetterThanCurrentBestSolution = Solver.Problem
+            .CompareSolutionsCost(neighborhoodSolution.Cost, _tabuBestSolution.Cost);
+
+         if (!isBetterThanCurrentBestSolution)
+         {
+            _noImprovementsCount++;
+            _shouldRunImprovement = _noImprovementsCount == _maxDeadlockIterations;
+
+            return false;
+         }
+
+         _tabuBestSolution = neighborhoodSolution;
+         _innerAlgorithm.CurrentBestSolution = neighborhoodSolution;
+         _currentIteration++;
+
+         return true;
+      }
       #endregion
 
       #region Overrides
@@ -278,25 +299,32 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          _solutionsHistory.Add(neighborhoodBestSolution);
          _innerAlgorithm.ResetState();
 
+         #region Aspiration Criteria (Old)
          // Aspiration criteria
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
-            neighborhoodBestSolution.Cost,
-            _tabuBestSolution.Cost);
+         //bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
+         //   neighborhoodBestSolution.Cost,
+         //   _tabuBestSolution.Cost);
 
-         if (isBetterThanCurrentBestSolution)
+         //if (isBetterThanCurrentBestSolution)
+         //{
+         //   _tabuBestSolution = neighborhoodBestSolution;
+         //   _innerAlgorithm.CurrentBestSolution = neighborhoodBestSolution;
+         //   _currentIteration++;
+
+         //   // If aspiration criteria is successful, go straight on 
+         //   // checking the stopping conditions and nothing more.
+         //   return;
+         //}
+         //else
+         //{
+         //   _noImprovementsCount++;
+         //   _shouldRunImprovement = _noImprovementsCount == _maxDeadlockIterations;
+         //}
+         #endregion
+
+         if (AspirationCriteria(neighborhoodBestSolution))
          {
-            _tabuBestSolution = neighborhoodBestSolution;
-            _innerAlgorithm.CurrentBestSolution = neighborhoodBestSolution;
-            _currentIteration++;
-
-            // If aspiration criteria is successful, go straight on 
-            // checking the stopping conditions and nothing more.
             return;
-         }
-         else
-         {
-            _noImprovementsCount++;
-            _shouldRunImprovement = _noImprovementsCount == _maxDeadlockIterations;
          }
 
          // If move is prohibited, do nothing.
@@ -318,7 +346,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          // Remove from Tabu List expired moves.
          UnlockExpiredMoves();
-         _currentIteration++;
 
          if (_canDoImprovements && _shouldRunImprovement)
          {
@@ -327,6 +354,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             _noImprovementsCount = default;
             _innerAlgorithm.CurrentBestSolution = Solver.BestSolution;
          }
+         _currentIteration++;
       }
 
       internal override void OnTerminating()
