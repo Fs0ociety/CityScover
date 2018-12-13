@@ -221,7 +221,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       internal override bool StopConditions()
       {
-         bool shouldStop = !_candidateEdges.Any() || TourUpdated || base.StopConditions();
+         bool shouldStop = !_candidateEdges.Any() || base.StopConditions();
          return shouldStop;
       }
       #endregion

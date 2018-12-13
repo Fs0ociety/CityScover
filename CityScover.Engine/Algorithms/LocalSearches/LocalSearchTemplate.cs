@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/12/2018
+// File update: 13/12/2018
 //
 
 using CityScover.Commons;
@@ -15,6 +15,7 @@ using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -49,43 +50,8 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Private methods
-      private ToSolution GetBest(IEnumerable<ToSolution> neighborhood, ToSolution currentSolution, byte? maxImprovementsCount)
-      {
-         if (neighborhood is null)
-         {
-            throw new ArgumentNullException(nameof(neighborhood));
-         }
-
-         if (currentSolution is null)
-         {
-            throw new ArgumentNullException(nameof(currentSolution));
-         }
-
-         if (maxImprovementsCount.HasValue && maxImprovementsCount == 0)
-         {
-            throw new ArgumentException("maxImprovementsCount can not have value 0.");
-         }
-
-         ToSolution bestSolution = currentSolution;
-         byte currentImprovement = default;
-
-         foreach (var solution in neighborhood)
-         {
-            if (maxImprovementsCount.HasValue && currentImprovement > maxImprovementsCount)
-            {
-               break;
-            }
-
-            bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, bestSolution.Cost, true);
-            if (isBetterThanCurrentBestSolution)
-            {
-               bestSolution = solution;
-               currentImprovement++;
-            }
-         }
-
-         return bestSolution;
-      }
+      private ToSolution GetBest(IEnumerable<ToSolution> neighborhood) => 
+         neighborhood.Aggregate((left, right) => left.Cost > right.Cost ? left : right);
 
       private async Task RunImprovement()
       {
@@ -224,7 +190,12 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
 
          // Cerco la migliore soluzione dell'intorno appena calcolato.
-         var solution = GetBest(currentNeighborhood, CurrentBestSolution, null);
+         if (!currentNeighborhood.Any())
+         {
+            return;
+         }
+
+         var solution = GetBest(currentNeighborhood);
 
          Console.ForegroundColor = ConsoleColor.DarkGreen;
          SendMessage(MessageCode.LocalSearchNeighborhoodBest, solution.Id, solution.Cost);

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/12/2018
+// File update: 13/12/2018
 //
 
 using System.Collections.Generic;
@@ -33,11 +33,11 @@ namespace CityScover.Engine
             [MessageCode.LocalSearchNewNeighborhood] = "Generating new neighborhood {0}.",
             [MessageCode.LocalSearchNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
             [MessageCode.LocalSearchNewNeighborhoodMoveDetails] = "New solution {0} details: swapping between edge {1} and edge {2}.\nSwap produces new edges {3} and {4}.",
-            [MessageCode.LocalSearchNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with total cost: {1}.",
-            [MessageCode.LocalSearchBestFound] = "Best solution found with total cost: ({0}). Previous solution total cost: ({1}).",
-            [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution of current best (id: {0} , total cost: {1}), hasn't found...",
+            [MessageCode.LocalSearchNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with cost --> {1}.",
+            [MessageCode.LocalSearchBestFound] = "Best solution found with total cost: ({0}). Previous solution cost --> ({1}).",
+            [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution of current best (id: {0} , cost: {1}), hasn't found...",
             [MessageCode.LocalSearchImprovementsPerformed] = "Local Search has performed a total of {0} improvements.",
-            [MessageCode.LocalSearchStop] = "Local Search STOP condition occurred with solution {0} with total cost --> {1}",
+            [MessageCode.LocalSearchStop] = "Local Search didn't find a better solution and it stops with current solution {0} with cost --> {1}",
 
             [MessageCode.HybridDistanceInsertionStart] = "Hybrid Distance Insertion improvement algorithm starts...",
             [MessageCode.HybridDistanceInsertionNewNodeAdded] = "Point of interest \"{0}\" added successfully to the tour.",

@@ -34,8 +34,8 @@ namespace CityScover.Engine.Configurations
          Configuration c1Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsFilename = @"cityscover-points-45.xml",
+            TourCategory = TourCategoryType.None,
+            PointsFilename = @"cityscover-points-90.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -92,7 +92,7 @@ namespace CityScover.Engine.Configurations
                      {
                         [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3,
-                        [ParameterCodes.LSimprovementThreshold] = 2000,
+                        [ParameterCodes.LSimprovementThreshold] = 200,
                         [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                      }
                   }
