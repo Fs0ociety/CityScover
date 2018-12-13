@@ -218,9 +218,10 @@ namespace CityScover.Engine.Workers
             {
                if (edge.Entity.PointTo.Id != startPoiId)
                {
-                  result += " --> ";
+                  result += "\n";
                }
             });
+         result += "\n";
 
          return result;
       } 

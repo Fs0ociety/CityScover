@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/12/2018
+// File update: 13/12/2018
 //
 
 using CityScover.Commons;
@@ -216,6 +216,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             SendMessage(MessageCode.HybridDistanceUpdateStopWithSolution,
                _currentSolution.Id, _currentSolution.Cost);
+
+            _currentSolution = SolutionsHistory
+               .Aggregate((left, right) => left.Cost > right.Cost ? left : right);
          }
       }
 

@@ -68,7 +68,7 @@ namespace CityScover.Engine
             [MessageCode.TabuSearchImprovementsPerformed] = "Tabu Search has performed a total of {0} improvements.",
             [MessageCode.TabuSearchStop] = "Tabu Search STOP condition occurred with solution {0} with total cost --> {1}",
 
-            [MessageCode.ALCompletionSummary] = "Execution summary:",
+            [MessageCode.ALCompletionSummary] = "EXECUTION SUMMARY\n",
             [MessageCode.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
             [MessageCode.EXREPSolutionReceivedWithPenalty] = "Solution {0} has been marked with cost: {1} and penalty: {2}",
             [MessageCode.EXREPAlgorithmPerformance] = "The algorithm {0} performed in {1}.",
@@ -79,7 +79,7 @@ namespace CityScover.Engine
             [MessageCode.SolverStageStart] = "Starting Stage \"{0}\"...",
             [MessageCode.SolverStageEnd] = "Stage \"{0}\" completed.\n",
             [MessageCode.SolverGraphCreationError] = "Empty graph. Error during creation of the graph in method \"{0}\".",
-            [MessageCode.TOSolutionCollectionId] = "Solution {0}:",
+            [MessageCode.TOSolutionCollectionId] = "Solution {0}\n",
             [MessageCode.CMGraphNodeToString] = "{0} at {1}",
             [MessageCode.TOSolutionFinalTour] = "The final best tour is solution \"{0}\":\n{1}",
             [MessageCode.TOSolutionTotalTimeAndValidity] = "Cost: {0}. Tour time: {1} hours and {2} minutes. Admissible: {3}."
