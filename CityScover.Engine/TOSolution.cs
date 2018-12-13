@@ -114,18 +114,18 @@ namespace CityScover.Engine
             return message;
          }
 
-         message += $"{MessagesRepository.GetMessage(MessageCode.ALCompletionSummary)}\n";
+         message += $"\t{MessagesRepository.GetMessage(MessageCode.ALCompletionSummary)}\n\n";
 
          solutions.ToList().ForEach(solution =>
          {
-            message += $"{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.ToString()}\n";
+            message += $"\t{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.ToString()}\n";
          });
          ToSolution bestSolution = solutions
             .Aggregate((left, right) => left.Cost > right.Cost ? left : right);
-         message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
+         message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
 
          TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;
-         message += $"\n{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, bestSolution.Cost, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
+         message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, bestSolution.Cost, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
          return message;
       }
 

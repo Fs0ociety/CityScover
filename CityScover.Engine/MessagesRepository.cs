@@ -68,7 +68,7 @@ namespace CityScover.Engine
             [MessageCode.TabuSearchImprovementsPerformed] = "Tabu Search has performed a total of {0} improvements.",
             [MessageCode.TabuSearchStop] = "Tabu Search STOP condition occurred with solution {0} with total cost --> {1}",
 
-            [MessageCode.ALCompletionSummary] = "EXECUTION SUMMARY\n",
+            [MessageCode.ALCompletionSummary] = "EXECUTION SUMMARY",
             [MessageCode.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
             [MessageCode.EXREPSolutionReceivedWithPenalty] = "Solution {0} has been marked with cost: {1} and penalty: {2}",
             [MessageCode.EXREPAlgorithmPerformance] = "The algorithm {0} performed in {1}.",

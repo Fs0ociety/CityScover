@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 13/12/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -212,7 +212,7 @@ namespace CityScover.Engine.Workers
             (node) => node.IsVisited,
             node => {
                string message = MessagesRepository.GetMessage(MessageCode.CMGraphNodeToString, node.Entity.Name, node.ArrivalTime.ToString("HH:mm"));
-               result += $"({node.Entity.Id} - {message})";
+               result += $"\t({node.Entity.Id} - {message})";
             },
             edge =>
             {
