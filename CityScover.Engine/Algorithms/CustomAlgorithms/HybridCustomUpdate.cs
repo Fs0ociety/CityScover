@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/12/2018
+// File update: 14/12/2018
 //
 
 using CityScover.Commons;
@@ -64,9 +64,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          return removalEdgesCandidates;
       }
 
-      private int FindPointToRemove(int candidateNodeKey)
+      private InterestPointWorker FindPointToRemove(int candidateNodeKey)
       {
-         int nodeKeyToRemove = default;
+         InterestPointWorker nodeKeyToRemove = default;
          int currentPointScore = int.MaxValue;
 
          foreach (var (edge, tWalk) in _candidateEdges.ToList())
@@ -76,6 +76,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                break;
             }
 
+            int currentPointToId = edge.Entity.PointTo.Id;
             var newEdge = Solver.CityMapGraph
                .GetEdge(edge.Entity.PointFrom.Id, candidateNodeKey);
             if (newEdge is null)
@@ -88,21 +89,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             if (tEdgeWalk < tWalk)
             {
-               int currentPointToId = Tour.Edges
-                  .Where(e => e.Entity.PointFrom.Id == edge.Entity.PointFrom.Id)
-                  .Select(e => e.Entity.PointTo.Id)
-                  .FirstOrDefault();
-
                if (!Tour.ContainsNode(currentPointToId))
                {
                   throw new NullReferenceException(nameof(currentPointToId));
                }
 
-               InterestPointWorker currentPointTo = Tour[currentPointToId];
+               var currentPointTo = Tour[currentPointToId];
                int pointToScore = currentPointTo.Entity.Score.Value;
                if (pointToScore < currentPointScore)
                {
-                  nodeKeyToRemove = currentPointTo.Entity.Id;
+                  nodeKeyToRemove = currentPointTo;
                   currentPointScore = pointToScore;
                   _candidateEdges.Remove((edge, tWalk));
                }
@@ -110,7 +106,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                {
                   // Random choose
                   nodeKeyToRemove = (new Random().Next(2) == 0)
-                     ? nodeKeyToRemove : currentPointTo.Entity.Id;
+                     ? nodeKeyToRemove : currentPointTo;
                }
             }
          }
@@ -181,14 +177,14 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       protected override async Task PerformStep()
       {
          var candidateNode = ProcessingNodes.Dequeue();
-         int nodeKeyToRemove = FindPointToRemove(candidateNode.Entity.Id);
-         if (nodeKeyToRemove == default)
+         var nodeToRemove = FindPointToRemove(candidateNode.Entity.Id);
+         if (nodeToRemove == default)
          {
             return;
          }
 
+         int nodeKeyToRemove = nodeToRemove.Entity.Id;
          var (predecessorNodeKey, successorNodeKey) = GetBorderPoints(nodeKeyToRemove);
-         var nodeToRemove = Tour[nodeKeyToRemove];
          UpdateTour(candidateNode, nodeKeyToRemove, predecessorNodeKey, successorNodeKey);
 
          _currentSolution = new ToSolution()
@@ -197,26 +193,23 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          };
 
          TourUpdated = true;
+         SendMessage(MessageCode.HybridDistanceUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
+         Solver.EnqueueSolution(_currentSolution);
+         SolutionsHistory.Add(_currentSolution);
 
-         if (nodeToRemove != null)
+         await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
+         await Solver.AlgorithmTasks[_currentSolution.Id];
+
+         if (!_currentSolution.IsValid)
          {
-            SendMessage(MessageCode.HybridDistanceUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
-            Solver.EnqueueSolution(_currentSolution);
-            SolutionsHistory.Add(_currentSolution);
-            await Task.Delay(Utils.ValidationDelay).ConfigureAwait(continueOnCapturedContext: false);
-            await Solver.AlgorithmTasks[_currentSolution.Id];
-
-            if (!_currentSolution.IsValid)
-            {
-               UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
-               SendMessage(MessageCode.HybridDistanceUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
-               TourUpdated = false;
-            }
-            else
-            {
-               _candidateEdges.Clear();
-               _candidateEdges = CalculateMaxEdgesTimeWalk();
-            }
+            UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
+            SendMessage(MessageCode.HybridDistanceUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
+            TourUpdated = false;
+         }
+         else
+         {
+            _candidateEdges.Clear();
+            _candidateEdges = CalculateMaxEdgesTimeWalk();
          }
 
          if (Solver.IsMonitoringEnabled)
@@ -241,12 +234,15 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                Solver.BestSolution = _currentSolution;
             }
          }
-         SendMessage(MessageCode.HybridDistanceUpdateStopWithoutSolution);
+         else
+         {
+            SendMessage(MessageCode.HybridDistanceUpdateStopWithoutSolution);
+         }
       }
 
       internal override bool StopConditions()
       {
-            bool shouldStop = !_candidateEdges.Any() || base.StopConditions();
+         bool shouldStop = !_candidateEdges.Any() || base.StopConditions();
          return shouldStop;
       }
       #endregion

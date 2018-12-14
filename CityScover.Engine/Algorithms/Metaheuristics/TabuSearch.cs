@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/12/2018
+// File update: 14/12/2018
 //
 
 using CityScover.Commons;
@@ -306,29 +306,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          };
          _solutionsHistory.Add(neighborhoodBestSolution);
          _innerAlgorithm.ResetState();
-
-         #region Aspiration Criteria (Old)
-         // Aspiration criteria
-         //bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
-         //   neighborhoodBestSolution.Cost,
-         //   _tabuBestSolution.Cost);
-
-         //if (isBetterThanCurrentBestSolution)
-         //{
-         //   _tabuBestSolution = neighborhoodBestSolution;
-         //   _innerAlgorithm.CurrentBestSolution = neighborhoodBestSolution;
-         //   _currentIteration++;
-
-         //   // If aspiration criteria is successful, go straight on 
-         //   // checking the stopping conditions and nothing more.
-         //   return;
-         //}
-         //else
-         //{
-         //   _noImprovementsCount++;
-         //   _shouldRunImprovement = _noImprovementsCount == _maxDeadlockIterations;
-         //}
-         #endregion
 
          if (AspirationCriteria(neighborhoodBestSolution))
          {

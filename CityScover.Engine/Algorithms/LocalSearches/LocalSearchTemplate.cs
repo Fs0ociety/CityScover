@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/12/2018
+// File update: 14/12/2018
 //
 
 using CityScover.Commons;
@@ -37,8 +37,8 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Constructors
-      internal LocalSearchTemplate(Neighborhood<ToSolution> neighborhood, AlgorithmTracker provider = null)
-         : base(provider)
+      internal LocalSearchTemplate(Neighborhood<ToSolution> neighborhood, 
+         AlgorithmTracker provider = null) : base(provider)
       {
          Type = neighborhood.Type;
          _neighborhoodFacade = new NeighborhoodFacade<ToSolution>(neighborhood);
@@ -99,24 +99,6 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Internal methods
-      //internal IEnumerable<Algorithm> GetImprovementAlgorithms(IEnumerable<StageFlow> childrenFlows)
-      //{
-      //   foreach (var child in childrenFlows)
-      //   {
-      //      var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
-
-      //      if (algorithm is null)
-      //      {
-      //         throw new InvalidOperationException("Bad configuration format: " +
-      //            $"{nameof(Solver.WorkingConfiguration)}.");
-      //      }
-      //      algorithm.Parameters = child.AlgorithmParameters;
-      //      algorithm.Provider = Provider;
-
-      //      yield return algorithm;
-      //   }
-      //}
-
       internal async Task StartImprovementAlgorithm(Algorithm algorithm)
       {
          Solver.CurrentAlgorithm = algorithm.Type;
