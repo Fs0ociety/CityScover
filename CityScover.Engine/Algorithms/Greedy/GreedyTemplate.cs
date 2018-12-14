@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/12/2018
+// File update: 14/12/2018
 //
 
 using CityScover.Engine.Workers;
@@ -40,40 +40,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
-      //private IEnumerable<Algorithm> GetImprovementAlgorithms()
-      //{
-      //   var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-      //   if (childrenAlgorithms is null || !childrenAlgorithms.Any())
-      //   {
-      //      yield break;
-      //   }
-
-      //   foreach (var child in childrenAlgorithms)
-      //   {
-      //      var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
-      //      if (algorithm is null)
-      //      {
-      //         throw new InvalidOperationException("Bad configuration format: " +
-      //            $"{nameof(Solver.WorkingConfiguration)}.");
-      //      }
-
-      //      algorithm.Parameters = child.AlgorithmParameters;
-      //      algorithm.Provider = Provider;
-
-      //      yield return algorithm;
-      //   }
-      //}
-
-      //private async Task RunImprovementAlgorithms()
-      //{
-      //   foreach (var algorithm in GetImprovementAlgorithms())
-      //   {
-      //      Solver.CurrentAlgorithm = algorithm.Type;
-      //      await Task.Run(() => algorithm.Start());
-      //      Solver.CurrentAlgorithm = Type;
-      //   }
-      //}
-
       private async Task RunImprovementAlgorithms()
       {
          var childrenFlows = Solver.CurrentStage.Flow.ChildrenFlows;

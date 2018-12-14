@@ -54,38 +54,15 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       private ToSolution GetBest(IEnumerable<ToSolution> neighborhood) => 
          neighborhood.MaxBy(solution => solution.Cost);
 
-      private async Task RunImprovement()
+      private async Task RunImprovementsInternal()
       {
          var childrenFlow = Solver.CurrentStage.Flow.ChildrenFlows;
 
          foreach (var algorithm in Solver.GetImprovementAlgorithms(childrenFlow))
          {
             algorithm.Provider = Provider;
-            Algorithm improvementAlgorithm = default;
-
-            switch (algorithm)
-            {
-               case HybridCustomUpdate hcu:
-                  improvementAlgorithm = hcu;
-                  hcu.CurrentBestSolution = CurrentBestSolution;
-                  break;
-
-               case HybridCustomInsertion hci:
-                  improvementAlgorithm = hci;
-                  hci.CurrentBestSolution = CurrentBestSolution;
-                  break;
-
-               case LinKernighan lk:
-                  improvementAlgorithm = lk;
-                  lk.CurrentBestSolution = CurrentBestSolution;
-                  break;
-            }
-
-            await StartImprovementAlgorithm(improvementAlgorithm);
-            CurrentBestSolution = Solver.BestSolution;
+            await RunImprovement(algorithm, CurrentBestSolution, Type);
             ImprovementsCount++;
-            _iterationsWithoutImprovement = 0;
-            _shouldRunImprovement = false;
 
             /* 
              * TODO
@@ -99,7 +76,32 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Internal methods
-      internal async Task StartImprovementAlgorithm(Algorithm algorithm)
+      internal async Task RunImprovement(Algorithm algorithm, ToSolution startingSolution, AlgorithmType typeToRestart)
+      {
+         Algorithm improvementAlgorithm = default;
+
+         switch (algorithm)
+         {
+            case HybridCustomUpdate hcu:
+               improvementAlgorithm = hcu;
+               hcu.CurrentBestSolution = startingSolution;
+               break;
+
+            case HybridCustomInsertion hci:
+               improvementAlgorithm = hci;
+               hci.CurrentBestSolution = startingSolution;
+               break;
+
+            case LinKernighan lk:
+               improvementAlgorithm = lk;
+               lk.CurrentBestSolution = startingSolution;
+               break;
+         }
+
+         await StartImprovementAlgorithm(improvementAlgorithm, typeToRestart);
+      }
+
+      internal async Task StartImprovementAlgorithm(Algorithm algorithm, AlgorithmType typeToRestart)
       {
          Solver.CurrentAlgorithm = algorithm.Type;
          Task algorithmTask = Task.Run(algorithm.Start);
@@ -114,7 +116,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          }
          finally
          {
-            Solver.CurrentAlgorithm = Type;
+            Solver.CurrentAlgorithm = typeToRestart;
          }
       }
 
@@ -177,12 +179,10 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
 
-         // Cerco la migliore soluzione dell'intorno appena calcolato.
          if (!currentNeighborhood.Any())
          {
             return;
          }
-
          var solution = GetBest(currentNeighborhood);
 
          Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -191,8 +191,11 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          _previousSolutionCost = CurrentBestSolution.Cost;
 
-         bool isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
-         if (!AcceptImprovementsOnly || (AcceptImprovementsOnly && isBetterThanCurrentBestSolution))
+         bool isBetterThanCurrentBestSolution = Solver.Problem
+            .CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
+
+         if (!AcceptImprovementsOnly || 
+            (AcceptImprovementsOnly && isBetterThanCurrentBestSolution))
          {
             CurrentBestSolution = solution;
          }
@@ -225,7 +228,10 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          if (_canDoImprovements && _shouldRunImprovement)
          {
-            await RunImprovement();
+            await RunImprovementsInternal();
+            _shouldRunImprovement = default;
+            _iterationsWithoutImprovement = default;
+            CurrentBestSolution = Solver.BestSolution;
             SendMessage(MessageCode.LocalSearchResumeSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
       }
