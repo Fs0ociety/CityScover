@@ -11,6 +11,7 @@
 
 using CityScover.Commons;
 using CityScover.Engine.Workers;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -242,8 +243,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                return;
             }
 
-            var isBetterThanCurrentBestSolution = Solver.Problem.CompareSolutionsCost(
-               updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, true);
+            var isBetterThanCurrentBestSolution = Solver.Problem
+               .CompareSolutionsCost(updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, true);
 
             if (!isBetterThanCurrentBestSolution)
             {
@@ -258,8 +259,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
          else
          {
-            Solver.BestSolution = SolutionsHistory
-               .Aggregate((left, right) => left.Cost > right.Cost ? left : right);
+            Solver.BestSolution = SolutionsHistory.MaxBy(solution => solution.Cost);
          }
 
          if (_currentSolution != null)

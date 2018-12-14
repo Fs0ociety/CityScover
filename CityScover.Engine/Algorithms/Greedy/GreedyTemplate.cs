@@ -40,36 +40,49 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
-      private IEnumerable<Algorithm> GetImprovementAlgorithms()
-      {
-         var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
-         if (childrenAlgorithms is null || !childrenAlgorithms.Any())
-         {
-            yield break;
-         }
+      //private IEnumerable<Algorithm> GetImprovementAlgorithms()
+      //{
+      //   var childrenAlgorithms = Solver.CurrentStage.Flow.ChildrenFlows;
+      //   if (childrenAlgorithms is null || !childrenAlgorithms.Any())
+      //   {
+      //      yield break;
+      //   }
 
-         foreach (var child in childrenAlgorithms)
-         {
-            var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
-            if (algorithm is null)
-            {
-               throw new InvalidOperationException("Bad configuration format: " +
-                  $"{nameof(Solver.WorkingConfiguration)}.");
-            }
+      //   foreach (var child in childrenAlgorithms)
+      //   {
+      //      var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
+      //      if (algorithm is null)
+      //      {
+      //         throw new InvalidOperationException("Bad configuration format: " +
+      //            $"{nameof(Solver.WorkingConfiguration)}.");
+      //      }
 
-            algorithm.Parameters = child.AlgorithmParameters;
-            algorithm.Provider = Provider;
+      //      algorithm.Parameters = child.AlgorithmParameters;
+      //      algorithm.Provider = Provider;
 
-            yield return algorithm;
-         }
-      }
+      //      yield return algorithm;
+      //   }
+      //}
+
+      //private async Task RunImprovementAlgorithms()
+      //{
+      //   foreach (var algorithm in GetImprovementAlgorithms())
+      //   {
+      //      Solver.CurrentAlgorithm = algorithm.Type;
+      //      await Task.Run(() => algorithm.Start());
+      //      Solver.CurrentAlgorithm = Type;
+      //   }
+      //}
 
       private async Task RunImprovementAlgorithms()
       {
-         foreach (var algorithm in GetImprovementAlgorithms())
+         var childrenFlows = Solver.CurrentStage.Flow.ChildrenFlows;
+
+         foreach (var algorithm in Solver.GetImprovementAlgorithms(childrenFlows))
          {
+            algorithm.Provider = Provider;
             Solver.CurrentAlgorithm = algorithm.Type;
-            await Task.Run(() => algorithm.Start());
+            await Task.Run(algorithm.Start);
             Solver.CurrentAlgorithm = Type;
          }
       }
@@ -178,9 +191,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnTerminated()
       {
          CityMapClone = null;
-
          SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
-
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
 
          Console.ForegroundColor = ConsoleColor.Green;

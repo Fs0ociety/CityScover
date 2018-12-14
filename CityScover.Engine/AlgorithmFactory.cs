@@ -16,6 +16,8 @@ using CityScover.Engine.Algorithms.Metaheuristics;
 using CityScover.Engine.Algorithms.Neighborhoods;
 using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CityScover.Engine
 {
@@ -69,17 +71,9 @@ namespace CityScover.Engine
                }               
                algorithm = new LocalSearchTemplate(neighborhood);
                break;
-
+            
             case AlgorithmType.LinKernighan:
                algorithm = new LinKernighan();
-               break;
-
-            case AlgorithmType.TabuSearch:
-               if (neighborhood == null)
-               {
-                  neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
-               }
-               algorithm = new TabuSearch(neighborhood);
                break;
 
             case AlgorithmType.HybridCustomInsertion:
@@ -90,11 +84,41 @@ namespace CityScover.Engine
                algorithm = new HybridCustomUpdate();
                break;
 
+            case AlgorithmType.TabuSearch:
+               if (neighborhood == null)
+               {
+                  neighborhood = NeighborhoodFactory.CreateNeighborhood(algorithmType);
+               }
+               algorithm = new TabuSearch(neighborhood);
+               break;
+
             // Add new Algorithm types here ...
             default:
                throw new ArgumentOutOfRangeException(nameof(algorithmType), algorithmType, null);
          }
          return algorithm;
+      }
+
+      internal static IEnumerable<Algorithm> GetImprovementAlgorithms(IEnumerable<StageFlow> childrenFlows)
+      {
+         if (!childrenFlows.Any())
+         {
+            yield break;
+         }
+
+         foreach (var child in childrenFlows)
+         {
+            var algorithm = CreateAlgorithm(child.CurrentAlgorithm);
+
+            if (algorithm is null)
+            {
+               throw new InvalidOperationException("Bad configuration format: " +
+                  $"{nameof(Solver.WorkingConfiguration)}.");
+            }
+
+            algorithm.Parameters = child.AlgorithmParameters;
+            yield return algorithm;
+         }
       }
 
       #region Generic version
@@ -136,7 +160,7 @@ namespace CityScover.Engine
       //   return algorithm;
       //}
       #endregion
-      
+
       #endregion
    }
 }

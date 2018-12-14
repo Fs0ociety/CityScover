@@ -50,6 +50,18 @@ namespace CityScover.Engine.Configurations
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.HybridCustomUpdate)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                           }
+                        }
+                     },
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,

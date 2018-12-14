@@ -10,6 +10,7 @@
 //
 
 using CityScover.Engine.Workers;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,8 +121,7 @@ namespace CityScover.Engine
          {
             message += $"\t{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.ToString()}\n";
          });
-         ToSolution bestSolution = solutions
-            .Aggregate((left, right) => left.Cost > right.Cost ? left : right);
+         ToSolution bestSolution = solutions.MaxBy(solution => solution.Cost);
          message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
 
          TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;

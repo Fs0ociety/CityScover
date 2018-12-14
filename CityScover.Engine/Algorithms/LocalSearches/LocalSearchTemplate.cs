@@ -19,6 +19,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using MoreLinq;
 
 namespace CityScover.Engine.Algorithms.LocalSearches
 {
@@ -51,27 +52,32 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
       #region Private methods
       private ToSolution GetBest(IEnumerable<ToSolution> neighborhood) => 
-         neighborhood.Aggregate((left, right) => left.Cost > right.Cost ? left : right);
+         neighborhood.MaxBy(solution => solution.Cost);
 
       private async Task RunImprovement()
       {
          var childrenFlow = Solver.CurrentStage.Flow.ChildrenFlows;
 
-         foreach (var algorithm in GetImprovementAlgorithms(childrenFlow))
+         foreach (var algorithm in Solver.GetImprovementAlgorithms(childrenFlow))
          {
-
+            algorithm.Provider = Provider;
             Algorithm improvementAlgorithm = default;
 
             switch (algorithm)
             {
+               case HybridCustomUpdate hcu:
+                  improvementAlgorithm = hcu;
+                  hcu.CurrentBestSolution = CurrentBestSolution;
+                  break;
+
+               case HybridCustomInsertion hci:
+                  improvementAlgorithm = hci;
+                  hci.CurrentBestSolution = CurrentBestSolution;
+                  break;
+
                case LinKernighan lk:
                   improvementAlgorithm = lk;
                   lk.CurrentBestSolution = CurrentBestSolution;
-                  break;
-
-               case HybridCustomInsertion hnd:
-                  improvementAlgorithm = hnd;
-                  hnd.CurrentBestSolution = CurrentBestSolution;
                   break;
             }
 
@@ -93,23 +99,23 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Internal methods
-      internal IEnumerable<Algorithm> GetImprovementAlgorithms(IEnumerable<StageFlow> childrenFlows)
-      {
-         foreach (var child in childrenFlows)
-         {
-            var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
+      //internal IEnumerable<Algorithm> GetImprovementAlgorithms(IEnumerable<StageFlow> childrenFlows)
+      //{
+      //   foreach (var child in childrenFlows)
+      //   {
+      //      var algorithm = Solver.GetAlgorithm(child.CurrentAlgorithm);
 
-            if (algorithm is null)
-            {
-               throw new InvalidOperationException("Bad configuration format: " +
-                  $"{nameof(Solver.WorkingConfiguration)}.");
-            }
-            algorithm.Parameters = child.AlgorithmParameters;
-            algorithm.Provider = Provider;
+      //      if (algorithm is null)
+      //      {
+      //         throw new InvalidOperationException("Bad configuration format: " +
+      //            $"{nameof(Solver.WorkingConfiguration)}.");
+      //      }
+      //      algorithm.Parameters = child.AlgorithmParameters;
+      //      algorithm.Provider = Provider;
 
-            yield return algorithm;
-         }
-      }
+      //      yield return algorithm;
+      //   }
+      //}
 
       internal async Task StartImprovementAlgorithm(Algorithm algorithm)
       {
@@ -227,9 +233,12 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          }
          else
          {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.LocalSearchInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            if (AcceptImprovementsOnly)
+            {
+               Console.ForegroundColor = ConsoleColor.Yellow;
+               SendMessage(MessageCode.LocalSearchInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+               Console.ForegroundColor = ConsoleColor.Gray;
+            }
          }
 
          if (_canDoImprovements && _shouldRunImprovement)

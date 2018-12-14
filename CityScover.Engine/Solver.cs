@@ -206,6 +206,9 @@ namespace CityScover.Engine
       internal Algorithm GetAlgorithm(AlgorithmType algorithmType, Neighborhood<ToSolution> neighborhood) =>
          AlgorithmFactory.CreateAlgorithm(algorithmType, neighborhood);
 
+      internal IEnumerable<Algorithm> GetImprovementAlgorithms(IEnumerable<StageFlow> childrenFlows) =>
+         AlgorithmFactory.GetImprovementAlgorithms(childrenFlows);
+
       internal void EnqueueSolution(ToSolution solution) =>
          _solutionsQueue.Add(solution);
       #endregion

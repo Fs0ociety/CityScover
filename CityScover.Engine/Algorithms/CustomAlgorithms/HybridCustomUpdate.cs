@@ -11,6 +11,7 @@
 
 using CityScover.Commons;
 using CityScover.Engine.Workers;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +24,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
    {
       private double _averageSpeedWalk;
       private ToSolution _currentSolution;
-      private IEnumerable<(RouteWorker, TimeSpan)> _candidateEdges;
+      private ICollection<(RouteWorker, TimeSpan)> _candidateEdges;
 
       #region Constructors
       internal HybridCustomUpdate() : this(null)
@@ -39,7 +40,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Private methods
-      private IEnumerable<(RouteWorker edge, TimeSpan tWalk)> CalculateMaxEdgesTimeWalk()
+      private ICollection<(RouteWorker edge, TimeSpan tWalk)> CalculateMaxEdgesTimeWalk()
       {
          // Set of tuples containing infos: (Route, Travel time)
          Collection<(RouteWorker, TimeSpan)> removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
@@ -68,8 +69,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          int nodeKeyToRemove = default;
          int currentPointScore = int.MaxValue;
 
-         foreach (var (edge, tWalk) in _candidateEdges)
+         foreach (var (edge, tWalk) in _candidateEdges.ToList())
          {
+            if (nodeKeyToRemove != default)
+            {
+               break;
+            }
+
             var newEdge = Solver.CityMapGraph
                .GetEdge(edge.Entity.PointFrom.Id, candidateNodeKey);
             if (newEdge is null)
@@ -83,7 +89,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             if (tEdgeWalk < tWalk)
             {
                int currentPointToId = Tour.Edges
-                  .Where(e => e.Entity.PointFrom.Id == edge.Entity.PointTo.Id)
+                  .Where(e => e.Entity.PointFrom.Id == edge.Entity.PointFrom.Id)
                   .Select(e => e.Entity.PointTo.Id)
                   .FirstOrDefault();
 
@@ -98,6 +104,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                {
                   nodeKeyToRemove = currentPointTo.Entity.Id;
                   currentPointScore = pointToScore;
+                  _candidateEdges.Remove((edge, tWalk));
                }
                else if (pointToScore == currentPointScore)
                {
@@ -173,13 +180,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       protected override async Task PerformStep()
       {
-         InterestPointWorker candidateNode = ProcessingNodes.Dequeue();
+         var candidateNode = ProcessingNodes.Dequeue();
          int nodeKeyToRemove = FindPointToRemove(candidateNode.Entity.Id);
-         var (predecessorNodeKey, successorNodeKey) = GetBorderPoints(nodeKeyToRemove);
-         UpdateTour(candidateNode, nodeKeyToRemove, predecessorNodeKey, successorNodeKey);
+         if (nodeKeyToRemove == default)
+         {
+            return;
+         }
 
-         InterestPointWorker nodeToRemove = Tour.TourPoints
-            .FirstOrDefault(point => point.Entity.Id == nodeKeyToRemove);
+         var (predecessorNodeKey, successorNodeKey) = GetBorderPoints(nodeKeyToRemove);
+         var nodeToRemove = Tour[nodeKeyToRemove];
+         UpdateTour(candidateNode, nodeKeyToRemove, predecessorNodeKey, successorNodeKey);
 
          _currentSolution = new ToSolution()
          {
@@ -202,6 +212,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                SendMessage(MessageCode.HybridDistanceUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
                TourUpdated = false;
             }
+            else
+            {
+               _candidateEdges.Clear();
+               _candidateEdges = CalculateMaxEdgesTimeWalk();
+            }
          }
 
          if (Solver.IsMonitoringEnabled)
@@ -217,14 +232,21 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SendMessage(MessageCode.HybridDistanceUpdateStopWithSolution,
                _currentSolution.Id, _currentSolution.Cost);
 
-            _currentSolution = SolutionsHistory
-               .Aggregate((left, right) => left.Cost > right.Cost ? left : right);
+            _currentSolution = SolutionsHistory.MaxBy(solution => solution.Cost);
+
+            var isBetterThanCurrentBestSolution = Solver.Problem
+               .CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost, true);
+            if (isBetterThanCurrentBestSolution)
+            {
+               Solver.BestSolution = _currentSolution;
+            }
          }
+         SendMessage(MessageCode.HybridDistanceUpdateStopWithoutSolution);
       }
 
       internal override bool StopConditions()
       {
-         bool shouldStop = !_candidateEdges.Any() || base.StopConditions();
+            bool shouldStop = !_candidateEdges.Any() || base.StopConditions();
          return shouldStop;
       }
       #endregion

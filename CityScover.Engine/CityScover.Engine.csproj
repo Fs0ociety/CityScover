@@ -64,6 +64,7 @@
     <Compile Include="Algorithms\Greedy\NearestNeighbor.cs" />
     <Compile Include="Algorithms\Greedy\NearestNeighborKnapsack.cs" />
     <Compile Include="Algorithms\Metaheuristics\TabuMove.cs" />
+    <Compile Include="MoreLinq\MoreEnumerable.MaxBy.cs" />
     <Compile Include="ParameterCodeType.cs" />
     <Compile Include="Algorithms\LocalSearches\LocalSearchTemplate.cs" />
     <Compile Include="Algorithms\VariableDepthSearch\LinKernighan.cs" />

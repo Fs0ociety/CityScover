@@ -43,13 +43,13 @@ namespace CityScover.Engine
             [MessageCode.HybridDistanceInsertionNewNodeAdded] = "Point of interest \"{0}\" added successfully to the tour.",
             [MessageCode.HybridDistanceInsertionNewNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
             [MessageCode.HybridDistanceInsertionStopWithSolution] = "Hybrid Distance Insertion STOP condition occurred with solution {0} with total cost --> {1}",
-            [MessageCode.HybridDistanceInsertionStopWithoutSolution] = "Hybrid Distance Insertion STOP condition occurred. Exit.",
+            [MessageCode.HybridDistanceInsertionStopWithoutSolution] = "Hybrid Distance Insertion STOP condition occurred immediately. Exit.",
 
             [MessageCode.HybridDistanceUpdateStart] = "Hybrid Distance Update improvement algorithm starts...",
             [MessageCode.HybridDistanceUpdateTourUpdated] = "Point of interest \"{0}\" replaced with point of interest \"{1}\".",
             [MessageCode.HybridDistanceUpdateTourRestored] = "Point of interest \"{0}\" removed. Tour restored with \"{1}\".",
             [MessageCode.HybridDistanceUpdateStopWithSolution] = "Hybrid Distance Update STOP condition occurred with solution {0} with total cost --> {1}",
-            [MessageCode.HybridDistanceUpdateStopWithoutSolution] = "Hybrid Distance Update STOP condition occurred. Tour not updated! Exit.",
+            [MessageCode.HybridDistanceUpdateStopWithoutSolution] = "Hybrid Distance Update STOP condition occurred immediately. Tour not updated! Exit.",
 
             [MessageCode.LinKernighanStartSolution] = "Lin Kernighan starting with current Local Search Best Solution {0} with cost {1}.",
             [MessageCode.LinKernighanHStepIncreased] = "Lin Kernighan Step {0} of {1}.",

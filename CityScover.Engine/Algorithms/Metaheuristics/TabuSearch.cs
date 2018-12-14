@@ -168,7 +168,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          foreach (var flow in childrenFlow)
          {
-            foreach (var algorithm in _innerAlgorithm.GetImprovementAlgorithms(flow.ChildrenFlows))
+            foreach (var algorithm in Solver.GetImprovementAlgorithms(flow.ChildrenFlows))
             {
                yield return algorithm;
             }
@@ -177,20 +177,28 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
       private async Task RunImprovement()
       {
+         var childrenFlows = Solver.CurrentStage.Flow.ChildrenFlows;
+
          foreach (var algorithm in GetLocalSearchAlgorithms())
          {
+            algorithm.Provider = Provider;
             Algorithm improvementAlgorithm = default;
 
             switch (algorithm)
             {
+               case HybridCustomUpdate hcu:
+                  improvementAlgorithm = hcu;
+                  hcu.CurrentBestSolution = _tabuBestSolution;
+                  break;
+
+               case HybridCustomInsertion hci:
+                  improvementAlgorithm = hci;
+                  hci.CurrentBestSolution = _tabuBestSolution;
+                  break;
+
                case LinKernighan lk:
                   improvementAlgorithm = lk;
                   lk.CurrentBestSolution = _tabuBestSolution;
-                  break;
-
-               case HybridCustomInsertion hnd:
-                  improvementAlgorithm = hnd;
-                  hnd.CurrentBestSolution = _tabuBestSolution;
                   break;
             }
 
