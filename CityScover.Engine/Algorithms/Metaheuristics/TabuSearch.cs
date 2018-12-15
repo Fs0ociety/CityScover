@@ -6,14 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/12/2018
+// File update: 15/12/2018
 //
 
 using CityScover.Commons;
-using CityScover.Engine.Algorithms.CustomAlgorithms;
 using CityScover.Engine.Algorithms.LocalSearches;
 using CityScover.Engine.Algorithms.Neighborhoods;
-using CityScover.Engine.Algorithms.VariableDepthSearch;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -180,14 +178,12 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          foreach (var algorithm in GetLocalSearchAlgorithms())
          {
             algorithm.Provider = Provider;
-            if (_tabuBestSolution.Cost < Solver.BestSolution.Cost)
-            {
-               await _innerAlgorithm.RunImprovement(algorithm, Solver.BestSolution, Type);
-            }
-            else
-            {
-               await _innerAlgorithm.RunImprovement(algorithm, _tabuBestSolution, Type);
-            }
+
+            var solutionToImprove = (_tabuBestSolution.Cost < Solver.BestSolution.Cost)
+               ? Solver.BestSolution
+               : _tabuBestSolution;
+
+            await _innerAlgorithm.RunImprovement(algorithm, solutionToImprove, Type);
             ImprovementsCount++;
          }
       }
