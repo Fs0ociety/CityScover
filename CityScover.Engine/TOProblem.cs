@@ -66,22 +66,9 @@ namespace CityScover.Engine
          // Il peso che determina l'importanza dei termini dell'equazione.
          double lambda = Solver.Instance.CurrentObjectiveFunctionWeight;
 
-         // Se il grafo è un ciclo, qua tengo conto anche dell'arco di ritorno che va dall'ultimo POI
-         // all'hotel. Se è un cammino, il termine non c'è e l'espressione funziona lo stesso.
-         double distanceWeightSum = solution.SolutionGraph.Edges.Sum(edge => 1 / edge.Weight.Invoke());
-
-         //Calcolo del termine della distanza.
-         //double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
-         //{
-         //   RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
-         //   if (edge is null)
-         //   {
-         //      return 0;
-         //   }
-         //   double nodeDistScoreTerm = node.Entity.Score.Value / edge.Weight.Invoke();
-         //   return nodeDistScoreTerm / distanceWeightSum;
-         //});
-
+         // Calcolo del termine che da peso alla distanza tra il nodo corrente e quello precedente.
+         // In particolare, vengono privilegati i nodi molto vicini con un peso molto alto
+         // che darà quindi un maggior gradimento.
          double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
          {
             RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
@@ -89,10 +76,50 @@ namespace CityScover.Engine
             {
                return 0;
             }
-            return node.Entity.Score.Value / edge.Weight.Invoke();            
+            double distanceWeight = GetDistanceTermWeight(edge.Weight.Invoke());
+            return distanceWeight * node.Entity.Score.Value;
          });
 
-         return (int)Math.Round((lambda * scoreTerm) + ((1 - lambda) * (distanceTerm / distanceWeightSum)));
+         return (int)Math.Round(lambda * scoreTerm + (1 - lambda) * distanceTerm);
+      }
+
+      private double GetDistanceTermWeight(double distanceNode)
+      {
+         double weight = default;
+         if (distanceNode >= 0 && distanceNode <= 50)
+         {
+            weight = 12;
+         }
+         else if (distanceNode >= 51 && distanceNode <= 100)
+         {
+            weight = 10;
+         }
+         else if (distanceNode >= 101 && distanceNode <= 200)
+         {
+            weight = 9;
+         }
+         else if (distanceNode >= 201 && distanceNode <= 300)
+         {
+            weight = 8;
+         }
+         else if (distanceNode >= 301 && distanceNode <= 500)
+         {
+            weight = 7;
+         }
+         else if (distanceNode >= 501 && distanceNode <= 1000)
+         {
+            weight = 3.5;
+         }
+         else if (distanceNode >= 1001 && distanceNode <= 1500)
+         {
+            weight = 1;
+         }
+         else if (distanceNode > 1501)
+         {
+            weight = 0.25;
+         }
+             
+         return weight;
       }
       #endregion
 

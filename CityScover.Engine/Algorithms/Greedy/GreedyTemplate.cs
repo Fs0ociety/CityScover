@@ -10,6 +10,7 @@
 //
 
 using CityScover.Engine.Workers;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -151,7 +152,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         Solver.BestSolution = SolutionsHistory.Last();
+         Solver.BestSolution = SolutionsHistory.Where(solution => solution.IsValid).MaxBy(solution => solution.Cost);
       }
 
       internal override void OnTerminated()

@@ -52,7 +52,7 @@
     <PointOfInterest id="4" name="Cattedrale di San Giorgio">
       <Coordinates latitude="44,835639" longitude="11,620273"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="97"/>
       <OpeningTimes>
         <OpeningTime from="7:30" to="12:30"/>
         <OpeningTime from="15:00" to="19:00"/>
@@ -89,7 +89,7 @@
     <PointOfInterest id="7" name="Piazza Ariostea">
       <Coordinates latitude="44,8413142" longitude="11,6241956"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="70"/>
       <OpeningTimes>
         <OpeningTime from="" to=""/>
         <!-- Aperto 24 ore su 24 -->
@@ -102,7 +102,7 @@
     <PointOfInterest id="8" name="Parco Massari">
       <Coordinates latitude="44,842355" longitude="11,623098"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="90"/>
       <OpeningTimes>
         <OpeningTime from="" to=""/>
         <!-- Aperto 24 ore su 24 -->
@@ -115,7 +115,7 @@
     <PointOfInterest id="9" name="Museo della Cattedrale">
       <Coordinates latitude="44,8344424" longitude="11,6128774"/>
       <Category id="1"/>
-      <ThematicScore category="1" value="100"/>
+      <ThematicScore category="1" value="87"/>
       <OpeningTimes>
         <OpeningTime from="09:30" to="13:00"/>
         <OpeningTime from="15:00" to="18:00"/>

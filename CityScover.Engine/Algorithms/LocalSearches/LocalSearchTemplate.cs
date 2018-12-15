@@ -61,7 +61,15 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          foreach (var algorithm in Solver.GetImprovementAlgorithms(childrenFlow))
          {
             algorithm.Provider = Provider;
-            await RunImprovement(algorithm, CurrentBestSolution, Type);
+            if (CurrentBestSolution.Cost < Solver.BestSolution.Cost)
+            {
+               await RunImprovement(algorithm, Solver.BestSolution, Type);
+            }
+            else
+            {
+               await RunImprovement(algorithm, CurrentBestSolution, Type);
+            }
+            
             ImprovementsCount++;
 
             /* 

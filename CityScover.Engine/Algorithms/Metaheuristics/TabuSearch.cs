@@ -180,7 +180,14 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          foreach (var algorithm in GetLocalSearchAlgorithms())
          {
             algorithm.Provider = Provider;
-            await _innerAlgorithm.RunImprovement(algorithm, _tabuBestSolution, Type);
+            if (_tabuBestSolution.Cost < Solver.BestSolution.Cost)
+            {
+               await _innerAlgorithm.RunImprovement(algorithm, Solver.BestSolution, Type);
+            }
+            else
+            {
+               await _innerAlgorithm.RunImprovement(algorithm, _tabuBestSolution, Type);
+            }
             ImprovementsCount++;
          }
       }
