@@ -223,7 +223,6 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          _tabuBestSolution = neighborhoodSolution;
          _innerAlgorithm.CurrentBestSolution = neighborhoodSolution;
-         _currentIteration++;
 
          return true;
       }
@@ -290,6 +289,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          if (AspirationCriteria(neighborhoodBestSolution))
          {
+            _currentIteration++;
             return;
          }
 
