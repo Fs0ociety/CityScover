@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/12/2018
+// File update: 16/12/2018
 //
 
 using CityScover.Commons;
@@ -225,10 +225,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SendMessage(MessageCode.HybridDistanceUpdateStopWithSolution,
                _currentSolution.Id, _currentSolution.Cost);
 
-            _currentSolution = SolutionsHistory.MaxBy(solution => solution.Cost);
+            _currentSolution = SolutionsHistory
+               .Where(solution => solution.IsValid)
+               .MaxBy(solution => solution.Cost);
 
             var isBetterThanCurrentBestSolution = Solver.Problem
                .CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost, true);
+
             if (isBetterThanCurrentBestSolution)
             {
                Solver.BestSolution = _currentSolution;

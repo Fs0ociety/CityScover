@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/12/2018
+// File update: 16/12/2018
 //
 
 using CityScover.Engine.Workers;
@@ -152,7 +152,9 @@ namespace CityScover.Engine.Algorithms.Greedy
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         Solver.BestSolution = SolutionsHistory.Where(solution => solution.IsValid).MaxBy(solution => solution.Cost);
+         Solver.BestSolution = SolutionsHistory
+            .Where(solution => solution.IsValid)
+            .MaxBy(solution => solution.Cost);
       }
 
       internal override void OnTerminated()

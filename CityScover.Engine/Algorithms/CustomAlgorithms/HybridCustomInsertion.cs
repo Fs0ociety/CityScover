@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/12/2018
+// File update: 16/12/2018
 //
 
 using CityScover.Commons;
@@ -23,12 +23,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
    internal class HybridCustomInsertion : Algorithm
    {
       #region Private fields
-      private int _addedNodesCount;
-      private int _previousEndPoiKey;
       private DateTime _tMax;
       private DateTime _tMaxThresholdTime;
       private TimeSpan _tMaxThreshold;
       private ToSolution _currentSolution;
+      private int _addedNodesCount;
       #endregion
 
       #region Constructors
@@ -190,30 +189,30 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          InterestPointWorker point = ProcessingNodes.Dequeue();
 
          TryAddNode(point, EndPoi.Entity.Id, StartPoi.Entity.Id);
-         _previousEndPoiKey = EndPoi.Entity.Id;
+         var previousEndPoiKey = EndPoi.Entity.Id;
          EndPoi = Tour.GetEndPoint();
          _addedNodesCount++;
-
          _currentSolution = new ToSolution()
          {
             SolutionGraph = Tour.DeepCopy()
          };
 
          Solver.EnqueueSolution(_currentSolution);
-         await Task.Delay(Utils.ValidationDelay).ConfigureAwait(continueOnCapturedContext: false);
+         await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
-         SendMessage(MessageCode.HybridDistanceInsertionNewNodeAdded, point.Entity.Name);
+         SendMessage(MessageCode.HybridDistanceInsertionNewNodeAdded, 
+            point.Entity.Name);
          SolutionsHistory.Add(_currentSolution);
 
          if (!_currentSolution.IsValid)
          {
-            UndoAdditionPoint(point.Entity.Id, _previousEndPoiKey, StartPoi.Entity.Id);
-            _addedNodesCount--;
+            UndoAdditionPoint(point.Entity.Id, previousEndPoiKey, StartPoi.Entity.Id);
             EndPoi = Tour.GetEndPoint();
-            SendMessage(MessageCode.HybridDistanceInsertionNewNodeRemoved, point.Entity.Name);
+            _addedNodesCount--;
+            SendMessage(MessageCode.HybridDistanceInsertionNewNodeRemoved, 
+               point.Entity.Name);
          }
 
-         // Notify observers.
          if (Solver.IsMonitoringEnabled)
          {
             Provider.NotifyObservers(_currentSolution);
@@ -244,7 +243,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             }
 
             var isBetterThanCurrentBestSolution = Solver.Problem
-               .CompareSolutionsCost(updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, true);
+               .CompareSolutionsCost(updateAlgorithm.CurrentSolution.Cost, 
+               Solver.BestSolution.Cost, true);
 
             if (!isBetterThanCurrentBestSolution)
             {
@@ -259,7 +259,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
          else
          {
-            Solver.BestSolution = SolutionsHistory.MaxBy(solution => solution.Cost);
+            Solver.BestSolution = SolutionsHistory
+               .Where(solution => solution.IsValid)
+               .MaxBy(solution => solution.Cost);
          }
 
          if (_currentSolution != null)
