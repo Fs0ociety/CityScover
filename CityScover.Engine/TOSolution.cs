@@ -121,7 +121,7 @@ namespace CityScover.Engine
          {
             message += $"\t{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.ToString()}\n";
          });
-         ToSolution bestSolution = solutions.MaxBy(solution => solution.Cost);
+         ToSolution bestSolution = solutions.Where(solution => solution.IsValid).MaxBy(solution => solution.Cost);
          message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.ToString())}";
 
          TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;
