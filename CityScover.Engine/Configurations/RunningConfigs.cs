@@ -350,8 +350,8 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         #region Configuration for Test 4 - NN + LS
-         Configuration c4Test = new Configuration()
+         #region Test Screenshot NN + LS
+         Configuration testScrNNLS = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
@@ -359,7 +359,7 @@ namespace CityScover.Engine.Configurations
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
-            TourDuration = new TimeSpan(10, 0, 0),
+            TourDuration = new TimeSpan(6, 0, 0),
             AlgorithmMonitoring = true,
             Stages =
             {
@@ -372,8 +372,7 @@ namespace CityScover.Engine.Configurations
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
-                        [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
+                        [ParameterCodes.CanDoImprovements] = false,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
                         [ParameterCodes.RelaxedConstraints] = new Collection<string>()
                         {
@@ -397,18 +396,6 @@ namespace CityScover.Engine.Configurations
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
                         [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
                      }
-                     //ChildrenFlows =
-                     //{
-                     //   new StageFlow(AlgorithmType.HybridCustomInsertion)
-                     //   {
-                     //      AlgorithmParameters =
-                     //      {
-                     //         [ParameterCodes.CanDoImprovements] = true,
-                     //         [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-                     //         [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0)
-                     //      }
-                     //   }
-                     //}
                   }
                },
             }
@@ -457,7 +444,7 @@ namespace CityScover.Engine.Configurations
          //};
          #endregion
 
-         Configurations.Add(c1Test);
+         Configurations.Add(testScrNNLS);
       }
       #endregion
 
