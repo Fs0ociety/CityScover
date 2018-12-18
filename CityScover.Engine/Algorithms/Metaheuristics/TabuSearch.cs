@@ -234,13 +234,13 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          base.OnInitializing();
          _maxIterations = Parameters[ParameterCodes.MaxIterations];
          _canDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
-         _maxDeadlockIterations = Parameters[ParameterCodes.TABUmaxDeadlockIterations];
-         int tabuTenureFactor = Parameters[ParameterCodes.TABUtenureFactor];
+         _maxDeadlockIterations = Parameters[ParameterCodes.TabuDeadlockIterations];
+         int tabuTenureFactor = Parameters[ParameterCodes.TabuTenureFactor];
 
          if (tabuTenureFactor <= Utils.MinTabuTenureFactor)
          {
             throw new InvalidOperationException("Bad configuration format: " +
-               $"{nameof(ParameterCodes.TABUtenureFactor)}.");
+               $"{nameof(ParameterCodes.TabuTenureFactor)}.");
          }
 
          _tenure = CalculateTabuTenure(Solver.ProblemSize, tabuTenureFactor);

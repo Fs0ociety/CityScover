@@ -44,8 +44,8 @@ namespace CityScover.Engine
       #endregion
 
       #region Overrides
-      internal sealed override Func<ToSolution, int> ObjectiveFunc { get; set; }
-      internal sealed override Func<ToSolution, int> PenaltyFunc { get; set; }
+      internal sealed override Func<ToSolution, int> ObjectiveFunc { get; }
+      internal sealed override Func<ToSolution, int> PenaltyFunc { get; }
       #endregion
 
       #region Objective Function delegates

@@ -147,8 +147,8 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          if (_canDoImprovements)
          {
-            _improvementThreshold = Parameters[ParameterCodes.LSimprovementThreshold];
-            _maxIterationsWithoutImprovements = Parameters[ParameterCodes.LSmaxRunsWithNoImprovements];
+            _improvementThreshold = Parameters[ParameterCodes.LocalSearchImprovementThreshold];
+            _maxIterationsWithoutImprovements = Parameters[ParameterCodes.LocalSearchMaxRunsWithNoImprovements];
          }
 
          if (CurrentBestSolution is null)

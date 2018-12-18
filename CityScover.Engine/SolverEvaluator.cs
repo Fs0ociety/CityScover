@@ -39,16 +39,16 @@ namespace CityScover.Engine
 
          // Get the violated constraints to invoke the PenaltyFunc delegate.
          var violatedConstraints = solution.ProblemConstraints
-            .Where(constraint => constraint.Value == false);
+            .Where(constraint => constraint.Value == false)
+            .ToList();
 
-         violatedConstraints.ToList()
-            .ForEach(
-               delegate
-               {
-                  int penalty = penaltyFunc.Invoke(solution);
-                  solution.Cost += penalty;
-                  solution.Penalty = penalty < 0 ? -penalty : penalty;
-               });
+         violatedConstraints.ForEach(
+            delegate
+            {
+               int penalty = penaltyFunc.Invoke(solution);
+               solution.Cost += penalty;
+               solution.Penalty = penalty < 0 ? -penalty : penalty;
+            });
       }
       #endregion
    }

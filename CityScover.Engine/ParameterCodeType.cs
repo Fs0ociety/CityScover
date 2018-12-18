@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/12/2018
+// File update: 18/12/2018
 //
 
 namespace CityScover.Engine
@@ -39,35 +39,35 @@ namespace CityScover.Engine
       /// <summary>
       /// Maximum number of nodes to add to the tour for Greedy algorithms.
       /// </summary>
-      GREEDYmaxNodesToAdd,
+      GreedyMaxNodesToAdd,
 
       /// <summary>
       /// Stopping condition for Local Search algorithm. 
       /// It verifies if there are one or more iterations without 
       /// solution cost improvements during algorithm's execution.
       /// </summary>
-      LSmaxRunsWithNoImprovements,
+      LocalSearchMaxRunsWithNoImprovements,
 
       /// <summary>
       /// Lin Kernighan threshold to trigger improvement logic.
       /// </summary>
-      LSimprovementThreshold,
+      LocalSearchImprovementThreshold,
 
       /// <summary>
       /// Hybrid Distance Insertion algorithm's threshold for Tmax constraint.
       /// </summary>
-      HDIthresholdToTmax,
+      HciTimeThresholdToTmax,
 
       /// <summary>
       /// Hybrid Distance Insertion algorithm's threshold for time walk.
       /// </summary>
-      HDItimeWalkThreshold,
+      HcuTimeWalkThreshold,
 
       /// <summary>
       /// Stopping condition for MetaHeuristic algorithm. 
       /// It verifies if there is a deadlock in the algorithm's execution.
       /// </summary>
-      TABUmaxDeadlockIterations,
+      TabuDeadlockIterations,
 
       /// <summary>
       /// Divisor used to calculate the real tabu tenure parameter in Tabu Search algorithm.
@@ -76,7 +76,7 @@ namespace CityScover.Engine
       /// Best range for this parameter is in range [2 - 4] for 2-Opt moves 
       /// and [8 - 16] for 3-Opt moves.
       /// </summary>
-      TABUtenureFactor
+      TabuTenureFactor
    }
    #endregion
 }

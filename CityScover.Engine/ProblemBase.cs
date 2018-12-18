@@ -31,9 +31,9 @@ namespace CityScover.Engine
       /// <summary>
       /// Abstract automatic properties doesn't create a private backing field.
       /// </summary>
-      internal abstract Func<ToSolution, int> ObjectiveFunc { get; set; }
+      internal abstract Func<ToSolution, int> ObjectiveFunc { get; }
 
-      internal abstract Func<ToSolution, int> PenaltyFunc { get; set; }
+      internal abstract Func<ToSolution, int> PenaltyFunc { get; }
       #endregion
 
       #region Internal properties

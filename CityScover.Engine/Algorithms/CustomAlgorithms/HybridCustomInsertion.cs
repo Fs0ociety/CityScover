@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/12/2018
+// File update: 18/12/2018
 //
 
 using CityScover.Commons;
@@ -25,7 +25,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #region Private fields
       private DateTime _tMax;
       private DateTime _tMaxThresholdTime;
-      private TimeSpan _tMaxThreshold;
+      private TimeSpan _timeThresholdToTmax;
       private ToSolution _currentSolution;
       private int _addedNodesCount;
       #endregion
@@ -43,7 +43,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private protected CityMapGraph Tour;
       private protected InterestPointWorker StartPoi;
       private protected InterestPointWorker EndPoi;
-      private protected TimeSpan TimeWalkThreshold;
       private protected Queue<InterestPointWorker> ProcessingNodes;
       private protected ICollection<ToSolution> SolutionsHistory;
       #endregion
@@ -113,8 +112,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
          finally
          {
-            ProcessingNodes.Clear();
-            ProcessingNodes = null;
             Solver.CurrentAlgorithm = Type;
          }
 
@@ -143,6 +140,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             OnError(ae.InnerException);
          }
       }
+
+      private bool IsTimeThresholdToTmaxSatisfied(ToSolution solution)
+      {
+         var endPoint = solution.SolutionGraph.GetEndPoint();
+         bool isSatisfied = endPoint.TotalTime <= _tMaxThresholdTime;
+         return isSatisfied;
+      }
       #endregion
 
       #region Overrides
@@ -157,31 +161,36 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
          if (Solver.IsMonitoringEnabled && Type == AlgorithmType.HybridCustomInsertion)
          {
+            if (!Parameters.ContainsKey(ParameterCodes.HciTimeThresholdToTmax))
+            {
+               throw new KeyNotFoundException(nameof(ParameterCodes.HciTimeThresholdToTmax));
+            }
+
+            _timeThresholdToTmax = Parameters[ParameterCodes.HciTimeThresholdToTmax];
+            _tMax = Solver.WorkingConfiguration.ArrivalTime.Add(Solver.WorkingConfiguration.TourDuration);
+            _tMaxThresholdTime = _tMax - _timeThresholdToTmax;
+
+            //Solver.Problem.Constraints.Add(
+            //   new KeyValuePair<string, Func<ToSolution, bool>>(
+            //      "TimeThresholdToTmax", IsTimeThresholdToTmaxSatisfied));
+
             Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.HybridDistanceInsertionStart);
+            SendMessage(MessageCode.HybridCustomInsertionStart);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
+
          if (CurrentBestSolution is null)
          {
             CurrentBestSolution = Solver.BestSolution;
          }
 
-         ProcessingNodes = new Queue<InterestPointWorker>();
-         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
-         Tour = CurrentBestSolution.SolutionGraph.DeepCopy();
-         _tMaxThreshold = Parameters[ParameterCodes.HDIthresholdToTmax];
-         TimeWalkThreshold = Parameters[ParameterCodes.HDItimeWalkThreshold];
-         _tMax = Solver.WorkingConfiguration.ArrivalTime
-            .Add(Solver.WorkingConfiguration.TourDuration);
-         _tMaxThresholdTime = _tMax - _tMaxThreshold;
-
-         StartPoi = Tour.GetStartPoint() ?? throw
-            new NullReferenceException(nameof(StartPoi));
-         EndPoi = Tour.GetEndPoint() ?? throw
-            new NullReferenceException(nameof(EndPoi));
-
-         AddPointsNotInTour();
          _addedNodesCount = default;
+         ProcessingNodes = new Queue<InterestPointWorker>();
+         Tour = CurrentBestSolution.SolutionGraph.DeepCopy();
+         StartPoi = Tour.GetStartPoint() ?? throw new NullReferenceException(nameof(StartPoi));
+         EndPoi = Tour.GetEndPoint() ?? throw new NullReferenceException(nameof(EndPoi));
+         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
+         AddPointsNotInTour();
       }
 
       protected override async Task PerformStep()
@@ -200,7 +209,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          Solver.EnqueueSolution(_currentSolution);
          await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
          await Solver.AlgorithmTasks[_currentSolution.Id];
-         SendMessage(MessageCode.HybridDistanceInsertionNewNodeAdded, 
+         SendMessage(MessageCode.HybridCustomInsertionNewNodeAdded,
             point.Entity.Name);
          SolutionsHistory.Add(_currentSolution);
 
@@ -209,7 +218,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             UndoAdditionPoint(point.Entity.Id, previousEndPoiKey, StartPoi.Entity.Id);
             EndPoi = Tour.GetEndPoint();
             _addedNodesCount--;
-            SendMessage(MessageCode.HybridDistanceInsertionNewNodeRemoved, 
+            SendMessage(MessageCode.HybridCustomInsertionNewNodeRemoved,
                point.Entity.Name);
          }
 
@@ -221,7 +230,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       internal override void OnError(Exception exception)
       {
-         ProcessingNodes.Clear();
+         ProcessingNodes?.Clear();
          ProcessingNodes = null;
          base.OnError(exception);
       }
@@ -229,7 +238,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
+
+         // TODO
+         // Remove the "timeThresholdToTmax" constraint from Constraints collection of Problem.
 
          if (_addedNodesCount == 0)
          {
@@ -237,55 +248,76 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             if (updateAlgorithm.TourUpdated == false)
             {
                Console.ForegroundColor = ConsoleColor.Yellow;
-               SendMessage(MessageCode.HybridDistanceInsertionStopWithoutSolution);
+               SendMessage(MessageCode.HybridCustomInsertionStopWithoutSolution);
                Console.ForegroundColor = ConsoleColor.Gray;
+
                return;
             }
 
             var isBetterThanCurrentBestSolution = Solver.Problem
-               .CompareSolutionsCost(updateAlgorithm.CurrentSolution.Cost, 
-               Solver.BestSolution.Cost, true);
+               .CompareSolutionsCost(updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, true);
 
             if (!isBetterThanCurrentBestSolution)
             {
                Console.ForegroundColor = ConsoleColor.Yellow;
-               SendMessage(MessageCode.HybridDistanceUpdateStopWithSolution,
+               SendMessage(MessageCode.HybridCustomUpdateStopWithSolution,
                   updateAlgorithm.CurrentSolution.Id, updateAlgorithm.CurrentSolution.Cost);
                Console.ForegroundColor = ConsoleColor.Gray;
+
                return;
             }
-            Solver.BestSolution = updateAlgorithm.CurrentSolution;
+
             Restart();
          }
          else
          {
-            Solver.BestSolution = SolutionsHistory
+            // Surely exists valid solutions here!
+            var bestSolution = SolutionsHistory
                .Where(solution => solution.IsValid)
                .MaxBy(solution => solution.Cost);
+
+            Solver.BestSolution = bestSolution;
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            SendMessage(MessageCode.HybridCustomInsertionFinalSolution, bestSolution.Id, bestSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
          }
 
          if (_currentSolution != null)
          {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.HybridDistanceInsertionStopWithSolution,
+            SendMessage(MessageCode.HybridCustomInsertionStopWithSolution,
                _currentSolution.Id, _currentSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
          else
          {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.HybridDistanceInsertionStopWithoutSolution);
+            SendMessage(MessageCode.HybridCustomInsertionStopWithoutSolution);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
       }
 
+      internal override void OnTerminated()
+      {
+         //if (SolutionsHistory != null && SolutionsHistory.Any())
+         //{
+         //   SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
+         //}
+         SolutionsHistory?.Clear();
+         ProcessingNodes?.Clear();
+         SolutionsHistory = null;
+         ProcessingNodes = null;
+         base.OnTerminated();
+      }
+
       internal override bool StopConditions()
       {
-         bool isGreaterThanTmaxThreshold = EndPoi.TotalTime > _tMaxThresholdTime;
+         //bool isGreaterThanTmaxThreshold = EndPoi.TotalTime > _tMaxThresholdTime;
+         //bool shouldStop = isGreaterThanTmaxThreshold || !ProcessingNodes.Any() ||
+         //   Status == AlgorithmStatus.Error;
 
-         bool shouldStop = isGreaterThanTmaxThreshold || !ProcessingNodes.Any() ||
-            Status == AlgorithmStatus.Error;
-
+         bool shouldStop = !ProcessingNodes.Any() || Status == AlgorithmStatus.Error;
          return shouldStop;
       }
       #endregion

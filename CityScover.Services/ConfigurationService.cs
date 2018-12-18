@@ -101,9 +101,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.GREEDYmaxNodesToAdd))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.GreedyMaxNodesToAdd))
          {
-            int maxNodesToAdd = flow.AlgorithmParameters[ParameterCodes.GREEDYmaxNodesToAdd];
+            int maxNodesToAdd = flow.AlgorithmParameters[ParameterCodes.GreedyMaxNodesToAdd];
             if (maxNodesToAdd != default)
             {
                WriteLine($"{tabulator}     " +
@@ -134,9 +134,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LSimprovementThreshold))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LocalSearchImprovementThreshold))
          {
-            int lkImprovementThreshold = flow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold];
+            int lkImprovementThreshold = flow.AlgorithmParameters[ParameterCodes.LocalSearchImprovementThreshold];
             if (lkImprovementThreshold != default)
             {
                WriteLine($"{tabulator}     " +
@@ -144,9 +144,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LSmaxRunsWithNoImprovements))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.LocalSearchMaxRunsWithNoImprovements))
          {
-            int maxIterationsWithNoImprovements = flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements];
+            int maxIterationsWithNoImprovements = flow.AlgorithmParameters[ParameterCodes.LocalSearchMaxRunsWithNoImprovements];
             if (maxIterationsWithNoImprovements != default)
             {
                WriteLine($"{tabulator}     " +
@@ -154,9 +154,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.TABUmaxDeadlockIterations))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.TabuDeadlockIterations))
          {
-            int maxDeadlockIterations = flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations];
+            int maxDeadlockIterations = flow.AlgorithmParameters[ParameterCodes.TabuDeadlockIterations];
             if (maxDeadlockIterations != default)
             {
                WriteLine($"{tabulator}     " +
@@ -164,9 +164,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HDIthresholdToTmax))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HciTimeThresholdToTmax))
          {
-            TimeSpan hndTmaxThreshold = flow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax];
+            TimeSpan hndTmaxThreshold = flow.AlgorithmParameters[ParameterCodes.HciTimeThresholdToTmax];
             if (hndTmaxThreshold != default)
             {
                WriteLine($"{tabulator}     " +
@@ -176,9 +176,9 @@ namespace CityScover.Services
             }
          }
 
-         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HDItimeWalkThreshold))
+         if (flow.AlgorithmParameters.ContainsKey(ParameterCodes.HcuTimeWalkThreshold))
          {
-            TimeSpan hndTimeWalkThreshold = flow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold];
+            TimeSpan hndTimeWalkThreshold = flow.AlgorithmParameters[ParameterCodes.HcuTimeWalkThreshold];
             if (hndTimeWalkThreshold != default)
             {
                WriteLine($"{tabulator}     " +
@@ -800,10 +800,10 @@ namespace CityScover.Services
                int maxNodesToAdd = GetGreedyParameters();
                var (tMaxThreshold, timeWalkThreshold) = GetCustomAlgorithmParameters();
                stage.Flow.AlgorithmParameters[ParameterCodes.CanDoImprovements] = true;               
-               stage.Flow.AlgorithmParameters[ParameterCodes.GREEDYmaxNodesToAdd] = maxNodesToAdd;
+               stage.Flow.AlgorithmParameters[ParameterCodes.GreedyMaxNodesToAdd] = maxNodesToAdd;
                StageFlow stageFlow = new StageFlow(AlgorithmType.HybridCustomInsertion);
-               stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
-               stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HciTimeThresholdToTmax] = tMaxThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HcuTimeWalkThreshold] = timeWalkThreshold;
                SetRelaxedConstraints(stageFlow);
                SetObjectiveFunctionWeight(stageFlow);
                stage.Flow.ChildrenFlows.Add(stageFlow);
@@ -878,8 +878,8 @@ namespace CityScover.Services
             {
                int runningCount = GetAlgorithmIterations();
                var (maxDeadlockIterations, tenureFactor) = GetMetaHeuristicParameters(runningCount);
-               stage.Flow.AlgorithmParameters[ParameterCodes.TABUmaxDeadlockIterations] = maxDeadlockIterations;
-               stage.Flow.AlgorithmParameters[ParameterCodes.TABUtenureFactor] = tenureFactor;
+               stage.Flow.AlgorithmParameters[ParameterCodes.TabuDeadlockIterations] = maxDeadlockIterations;
+               stage.Flow.AlgorithmParameters[ParameterCodes.TabuTenureFactor] = tenureFactor;
                StageFlow stageFlow = new StageFlow(lsAlgorithm);
                stageFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = runningCount;
                SetRelaxedConstraints(stageFlow);
@@ -1074,8 +1074,8 @@ namespace CityScover.Services
 
             if (stage.Description == StageType.StageTwo)
             {
-               stage.Flow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
-               stage.Flow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
+               stage.Flow.AlgorithmParameters[ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
+               stage.Flow.AlgorithmParameters[ParameterCodes.LocalSearchImprovementThreshold] = improvementThreshold;
                StageFlow childrenFlow = new StageFlow(improvementAlgorithm);
                childrenFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = runningCount;
                SetRelaxedConstraints(childrenFlow);
@@ -1086,8 +1086,8 @@ namespace CityScover.Services
             {
                foreach (var childFlow in stage.Flow.ChildrenFlows)
                {
-                  childFlow.AlgorithmParameters[ParameterCodes.LSmaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
-                  childFlow.AlgorithmParameters[ParameterCodes.LSimprovementThreshold] = improvementThreshold;
+                  childFlow.AlgorithmParameters[ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = maxRunsWithNoImprovements;
+                  childFlow.AlgorithmParameters[ParameterCodes.LocalSearchImprovementThreshold] = improvementThreshold;
                   StageFlow nephewFlow = new StageFlow(improvementAlgorithm);
                   nephewFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = runningCount;
                   SetRelaxedConstraints(nephewFlow);
@@ -1106,8 +1106,8 @@ namespace CityScover.Services
                SetRelaxedConstraints(stageFlow);
                SetObjectiveFunctionWeight(stageFlow);
                stageFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = 1;
-               stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
-               stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HciTimeThresholdToTmax] = tMaxThreshold;
+               stageFlow.AlgorithmParameters[ParameterCodes.HcuTimeWalkThreshold] = timeWalkThreshold;
                stage.Flow.ChildrenFlows.Add(stageFlow);
             }
             else if (stage.Description == StageType.StageThree)
@@ -1118,8 +1118,8 @@ namespace CityScover.Services
                   SetRelaxedConstraints(stageFlow);
                   SetObjectiveFunctionWeight(stageFlow);
                   stageFlow.AlgorithmParameters[ParameterCodes.MaxIterations] = 1;
-                  stageFlow.AlgorithmParameters[ParameterCodes.HDIthresholdToTmax] = tMaxThreshold;
-                  stageFlow.AlgorithmParameters[ParameterCodes.HDItimeWalkThreshold] = timeWalkThreshold;
+                  stageFlow.AlgorithmParameters[ParameterCodes.HciTimeThresholdToTmax] = tMaxThreshold;
+                  stageFlow.AlgorithmParameters[ParameterCodes.HcuTimeWalkThreshold] = timeWalkThreshold;
                   childFlow.ChildrenFlows.Add(stageFlow);
                }
             }

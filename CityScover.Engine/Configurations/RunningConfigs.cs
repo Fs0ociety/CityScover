@@ -107,9 +107,9 @@ namespace CityScover.Engine.Configurations
                      {
                         [ParameterCodes.MaxIterations] = 5,
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.LSimprovementThreshold] = 2000,
+                        [ParameterCodes.LocalSearchImprovementThreshold] = 2000,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
-                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 2
                      },
                      ChildrenFlows =
                      {
@@ -117,8 +117,8 @@ namespace CityScover.Engine.Configurations
                         {
                            AlgorithmParameters =
                            {
-                              [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         },
@@ -162,8 +162,8 @@ namespace CityScover.Engine.Configurations
                         {
                            AlgorithmParameters =
                            {
-                              [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         }
@@ -171,7 +171,7 @@ namespace CityScover.Engine.Configurations
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
+                        [ParameterCodes.GreedyMaxNodesToAdd] = 6,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
                         [ParameterCodes.RelaxedConstraints] = new Collection<string>()
                         {
@@ -193,8 +193,8 @@ namespace CityScover.Engine.Configurations
                         {
                            AlgorithmParameters =
                            {
-                              [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         },
@@ -210,8 +210,8 @@ namespace CityScover.Engine.Configurations
                      {
                         [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
-                        [ParameterCodes.LSimprovementThreshold] = 200,
-                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                        [ParameterCodes.LocalSearchImprovementThreshold] = 200,
+                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 2
                      }
                   }
                },
@@ -232,8 +232,8 @@ namespace CityScover.Engine.Configurations
                               {
                                  AlgorithmParameters =
                                  {
-                                    [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-                                    [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                                    [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                                    [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
                                     [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                                  }
                               },
@@ -248,8 +248,8 @@ namespace CityScover.Engine.Configurations
                            AlgorithmParameters =
                            {
                               [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.LSimprovementThreshold] = 2000,
-                              [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                              [ParameterCodes.LocalSearchImprovementThreshold] = 2000,
+                              [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 2
                            }
                         }
                      },
@@ -257,8 +257,8 @@ namespace CityScover.Engine.Configurations
                      {
                         [ParameterCodes.MaxIterations] = 10,
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.TABUmaxDeadlockIterations] = 5,
-                        [ParameterCodes.TABUtenureFactor] = 4,
+                        [ParameterCodes.TabuDeadlockIterations] = 5,
+                        [ParameterCodes.TabuTenureFactor] = 4,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                      }
                   }
@@ -290,7 +290,7 @@ namespace CityScover.Engine.Configurations
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
+                        [ParameterCodes.GreedyMaxNodesToAdd] = 6,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
                         [ParameterCodes.RelaxedConstraints] = new Collection<string>()
                         {
@@ -316,8 +316,8 @@ namespace CityScover.Engine.Configurations
                               {
                                  AlgorithmParameters =
                                  {
-                                    [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-                                    [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 30, 0),
+                                    [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                                    [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 30, 0),
                                     [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                                  }
                               },
@@ -332,16 +332,16 @@ namespace CityScover.Engine.Configurations
                            AlgorithmParameters =
                            {
                               [ParameterCodes.CanDoImprovements] = true,
-                              [ParameterCodes.LSimprovementThreshold] = 2000,
-                              [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                              [ParameterCodes.LocalSearchImprovementThreshold] = 2000,
+                              [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 2
                            }
                         }
                      },
                      AlgorithmParameters =
                      {
                         [ParameterCodes.MaxIterations] = 30,
-                        [ParameterCodes.TABUmaxDeadlockIterations] = 18,
-                        [ParameterCodes.TABUtenureFactor] = 4,
+                        [ParameterCodes.TabuDeadlockIterations] = 18,
+                        [ParameterCodes.TabuTenureFactor] = 4,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
                      }
                   }
@@ -373,7 +373,7 @@ namespace CityScover.Engine.Configurations
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
-                        [ParameterCodes.GREEDYmaxNodesToAdd] = 6,
+                        [ParameterCodes.GreedyMaxNodesToAdd] = 6,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
                         [ParameterCodes.RelaxedConstraints] = new Collection<string>()
                         {
@@ -393,9 +393,9 @@ namespace CityScover.Engine.Configurations
                      {
                         [ParameterCodes.MaxIterations] = 5,
                         [ParameterCodes.CanDoImprovements] = false,
-                        [ParameterCodes.LSimprovementThreshold] = 2000,
+                        [ParameterCodes.LocalSearchImprovementThreshold] = 2000,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
-                        [ParameterCodes.LSmaxRunsWithNoImprovements] = 2
+                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 2
                      }
                      //ChildrenFlows =
                      //{
@@ -415,49 +415,54 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         #region Configuration test 5 - HDI + HDU
-         //Configuration c5 = new Configuration()
-         //{
-         //   CurrentProblem = ProblemFamily.TeamOrienteering,
-         //   TourCategory = TourCategoryType.HistoricalAndCultural,
-         //   PointsFilename = @"cityscover-points-30.xml",
-         //   StartingPointId = 1,
-         //   WalkingSpeed = 3.0 / 3.6,  // in m/s.
-         //   ArrivalTime = DateTime.Now.Date.AddHours(9),
-         //   TourDuration = new TimeSpan(10, 0, 0),
-         //   AlgorithmMonitoring = true,
-         //   Stages =
-         //   {
-         //      new Stage()
-         //      {
-         //         Description = StageType.StageOne,
-         //         Category = AlgorithmFamily.Greedy,
-         //         Flow =
-         //         {
-         //            CurrentAlgorithm = AlgorithmType.NearestNeighbor,
-         //            AlgorithmParameters =
-         //            {
-         //               [ParameterCodes.CanDoImprovements] = true,
-         //               [ParameterCodes.GREEDYmaxNodesToAdd] = 6
-         //            },
-         //            ChildrenFlows =
-         //            {
-         //               new StageFlow(AlgorithmType.HybridCustomInsertion)
-         //               {
-         //                  AlgorithmParameters =
-         //                  {
-         //                     [ParameterCodes.HDIthresholdToTmax] = new TimeSpan(1, 0, 0),
-         //                     [ParameterCodes.HDItimeWalkThreshold] = new TimeSpan(0, 20, 0)
-         //                  }
-         //               }
-         //            }
-         //         }
-         //      }
-         //   }
-         //};
+         #region Test - Configuration 5 - NN + HCI/HCU
+         Configuration c5Test = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"cityscover-points-30.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(6, 0, 0),
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         };
          #endregion
 
-         Configurations.Add(c1Test);
+         Configurations.Add(c5Test);
       }
       #endregion
 

@@ -114,7 +114,10 @@ namespace CityScover.Engine.Algorithms.Greedy
             _canDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
             if (_canDoImprovements)
             {
-               maxNodesToAdd = Parameters[ParameterCodes.GREEDYmaxNodesToAdd];
+               if (Parameters.ContainsKey(ParameterCodes.GreedyMaxNodesToAdd))
+               {
+                  maxNodesToAdd = Parameters[ParameterCodes.GreedyMaxNodesToAdd];
+               }
             }
          }
 

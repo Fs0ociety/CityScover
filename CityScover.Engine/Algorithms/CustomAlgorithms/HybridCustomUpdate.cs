@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/12/2018
+// File update: 18/12/2018
 //
 
 using CityScover.Commons;
@@ -24,7 +24,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
    {
       private double _averageSpeedWalk;
       private ToSolution _currentSolution;
+      private TimeSpan _timeWalkThreshold;
       private ICollection<(RouteWorker, TimeSpan)> _candidateEdges;
+      private ICollection<(int nodeKeyRemoved, int nodeKeyAdded)> _replacedPoints;
 
       #region Constructors
       internal HybridCustomUpdate() : this(null)
@@ -43,7 +45,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private ICollection<(RouteWorker edge, TimeSpan tWalk)> CalculateMaxEdgesTimeWalk()
       {
          // Set of tuples containing infos: (Route, Travel time)
-         Collection<(RouteWorker, TimeSpan)> removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
+         var removalEdgesCandidates = new Collection<(RouteWorker, TimeSpan)>();
 
          var centralTourRoutes = Tour.Edges
             .Where(edge => edge.Entity.PointFrom.Id != StartPoi.Entity.Id &&
@@ -54,7 +56,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             double tWalkMinutes = (route.Weight.Invoke() / _averageSpeedWalk) / 60.0;
             TimeSpan timeRouteWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
-            if (timeRouteWalk > TimeWalkThreshold)
+            if (timeRouteWalk > _timeWalkThreshold)
             {
                var removalEdgeCandidate = (route, timeRouteWalk);
                removalEdgesCandidates.Add(removalEdgeCandidate);
@@ -164,13 +166,20 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (Solver.IsMonitoringEnabled)
          {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            SendMessage(MessageCode.HybridDistanceUpdateStart);
+            SendMessage(MessageCode.HybridCustomUpdateStart);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
 
+         if (!Parameters.ContainsKey(ParameterCodes.HcuTimeWalkThreshold))
+         {
+            throw new KeyNotFoundException(nameof(ParameterCodes.HcuTimeWalkThreshold));
+         }
+
+         _timeWalkThreshold = Parameters[ParameterCodes.HcuTimeWalkThreshold];
          TourUpdated = default;
          _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
          _candidateEdges = new Collection<(RouteWorker, TimeSpan)>();
+         _replacedPoints = new Collection<(int, int)>();
          _candidateEdges = CalculateMaxEdgesTimeWalk();
       }
 
@@ -193,7 +202,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          };
 
          TourUpdated = true;
-         SendMessage(MessageCode.HybridDistanceUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
+         SendMessage(MessageCode.HybridCustomUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
          SolutionsHistory.Add(_currentSolution);
 
@@ -203,11 +212,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (!_currentSolution.IsValid)
          {
             UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
-            SendMessage(MessageCode.HybridDistanceUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
+            SendMessage(MessageCode.HybridCustomUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
             TourUpdated = false;
          }
          else
          {
+            var (nodeKeyRemoved, nodeKeyAdded) = ValueTuple.Create(nodeKeyToRemove, candidateNode.Entity.Id);
+            _replacedPoints.Add((nodeKeyRemoved, nodeKeyAdded));
             _candidateEdges.Clear();
             _candidateEdges = CalculateMaxEdgesTimeWalk();
          }
@@ -222,12 +233,17 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          if (_currentSolution != null)
          {
-            SendMessage(MessageCode.HybridDistanceUpdateStopWithSolution,
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution,
                _currentSolution.Id, _currentSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
 
-            _currentSolution = SolutionsHistory
-               .Where(solution => solution.IsValid)
-               .MaxBy(solution => solution.Cost);
+            var validSolutions = SolutionsHistory.Where(solution => solution.IsValid);
+            TourUpdated = validSolutions.Any();
+            if (TourUpdated)
+            {
+               _currentSolution = validSolutions.MaxBy(solution => solution.Cost);
+            }
 
             var isBetterThanCurrentBestSolution = Solver.Problem
                .CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost, true);
@@ -235,12 +251,38 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             if (isBetterThanCurrentBestSolution)
             {
                Solver.BestSolution = _currentSolution;
+
+               Console.ForegroundColor = ConsoleColor.DarkMagenta;
+               SendMessage(MessageCode.HybridCustomUpdateFinalSolution, _currentSolution.Id, _currentSolution.Cost);
+               Console.ForegroundColor = ConsoleColor.Gray;
             }
          }
          else
          {
-            SendMessage(MessageCode.HybridDistanceUpdateStopWithoutSolution);
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            SendMessage(MessageCode.HybridCustomUpdateStopWithoutSolution);
+            Console.ForegroundColor = ConsoleColor.Gray;
          }
+      }
+
+      internal override void OnTerminated()
+      {
+         foreach (var point in _replacedPoints)
+         {
+            SendMessage(MessageCode.HybridCustomUpdatePointsReplaced, point.nodeKeyRemoved, point.nodeKeyAdded);
+         }
+
+         // if PROVVISORIO.
+         if (TourUpdated)
+         {
+            SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
+         }
+         SolutionsHistory.Clear();
+         _replacedPoints.Clear();
+         _candidateEdges.Clear();
+         _replacedPoints = null;
+         _candidateEdges = null;
+         SolutionsHistory = null;
       }
 
       internal override bool StopConditions()
