@@ -118,28 +118,30 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          return updateAlgorithm;
       }
 
-      private void Restart()
-      {
-         Algorithm algorithm = Solver.GetAlgorithm(AlgorithmType.HybridCustomInsertion);
+      #region TODO: Remove method Restart()
+      //private void Restart()
+      //{
+      //   Algorithm algorithm = Solver.GetAlgorithm(AlgorithmType.HybridCustomInsertion);
 
-         if (algorithm is null)
-         {
-            throw new NullReferenceException(nameof(algorithm));
-         }
+      //   if (algorithm is null)
+      //   {
+      //      throw new NullReferenceException(nameof(algorithm));
+      //   }
+   
+      //   algorithm.Provider = Provider;
+      //   algorithm.Parameters = Parameters;
 
-         algorithm.Provider = Provider;
-         algorithm.Parameters = Parameters;
-
-         Task algorithmTask = Task.Run(() => algorithm.Start());
-         try
-         {
-            algorithmTask.Wait();
-         }
-         catch (AggregateException ae)
-         {
-            OnError(ae.InnerException);
-         }
-      }
+      //   Task algorithmTask = Task.Run(() => algorithm.Start());
+      //   try
+      //   {
+      //      algorithmTask.Wait();
+      //   }
+      //   catch (AggregateException ae)
+      //   {
+      //      OnError(ae.InnerException);
+      //   }
+      //}
+      #endregion
 
       private bool IsTimeThresholdToTmaxSatisfied(ToSolution solution)
       {
@@ -201,6 +203,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          var previousEndPoiKey = EndPoi.Entity.Id;
          EndPoi = Tour.GetEndPoint();
          _addedNodesCount++;
+
          _currentSolution = new ToSolution()
          {
             SolutionGraph = Tour.DeepCopy()
@@ -242,6 +245,10 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          // TODO
          // Remove the "timeThresholdToTmax" constraint from Constraints collection of Problem.
 
+         Console.ForegroundColor = ConsoleColor.Yellow;
+         SendMessage(MessageCode.HybridCustomInsertionStopWithSolution, _currentSolution.Id, _currentSolution.Cost);
+         Console.ForegroundColor = ConsoleColor.Gray;
+
          if (_addedNodesCount == 0)
          {
             var updateAlgorithm = RunUpdateTour();
@@ -266,8 +273,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
                return;
             }
-
-            Restart();
          }
          else
          {
@@ -276,34 +281,19 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                .Where(solution => solution.IsValid)
                .MaxBy(solution => solution.Cost);
 
+            var (PreviousSolutionId, PreviousSolutionCost) = (Solver.BestSolution.Id, Solver.BestSolution.Cost);
             Solver.BestSolution = bestSolution;
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.HybridCustomInsertionFinalSolution, bestSolution.Id, bestSolution.Cost);
+            SendMessage(MessageCode.HybridCustomInsertionFinalSolution, 
+               bestSolution.Id, bestSolution.Cost, PreviousSolutionId, PreviousSolutionCost);
             Console.ForegroundColor = ConsoleColor.Gray;
-         }
-
-         if (_currentSolution != null)
-         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.HybridCustomInsertionStopWithSolution,
-               _currentSolution.Id, _currentSolution.Cost);
-            Console.ForegroundColor = ConsoleColor.Gray;
-         }
-         else
-         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.HybridCustomInsertionStopWithoutSolution);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
          }
       }
 
       internal override void OnTerminated()
       {
-         //if (SolutionsHistory != null && SolutionsHistory.Any())
-         //{
-         //   SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
-         //}
          SolutionsHistory?.Clear();
          ProcessingNodes?.Clear();
          SolutionsHistory = null;

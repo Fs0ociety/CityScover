@@ -42,17 +42,19 @@ namespace CityScover.Engine
             [MessageCode.HybridCustomInsertionStart] = "Hybrid Custom Insertion improvement algorithm starts...",
             [MessageCode.HybridCustomInsertionNewNodeAdded] = "Point of interest \"{0}\" added successfully to the tour.",
             [MessageCode.HybridCustomInsertionNewNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
-            [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}",
             [MessageCode.HybridCustomInsertionStopWithSolution] = "Hybrid Custom Insertion STOP condition occurred with solution {0} with total cost --> {1}",
             [MessageCode.HybridCustomInsertionStopWithoutSolution] = "Hybrid Custom Insertion STOP condition occurred immediately. Exit.",
+            [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
+                                                               "Solver's previous best solution ID: {2} with COST: {3}",
 
             [MessageCode.HybridCustomUpdateStart] = "Hybrid Custom Update improvement algorithm starts...",
             [MessageCode.HybridCustomUpdateTourUpdated] = "Point of interest \"{0}\" replaced with point of interest \"{1}\".",
             [MessageCode.HybridCustomUpdateTourRestored] = "Point of interest \"{0}\" removed. Tour restored with \"{1}\".",
-            [MessageCode.HybridCustomUpdateFinalSolution] = "HCU has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}",
             [MessageCode.HybridCustomUpdatePointsReplaced] = "Point ID {0} removed from the tour and Point ID {1} added to the tour.",
             [MessageCode.HybridCustomUpdateStopWithSolution] = "Hybrid Custom Update STOP condition occurred with solution {0} with total cost --> {1}",
             [MessageCode.HybridCustomUpdateStopWithoutSolution] = "Hybrid Custom Update STOP condition occurred immediately. Tour not updated! Exit.",
+            [MessageCode.HybridCustomUpdateFinalSolution] = "HCU has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
+                                                            "Solver's previous best solution ID: {2} with COST: {3}",
 
             [MessageCode.LinKernighanStartSolution] = "Lin Kernighan starting with current Local Search Best Solution {0} with cost {1}.",
             [MessageCode.LinKernighanHStepIncreased] = "Lin Kernighan Step {0} of {1}.",

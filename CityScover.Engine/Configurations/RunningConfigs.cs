@@ -433,7 +433,7 @@ namespace CityScover.Engine.Configurations
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridCustomInsertion)
+                        new StageFlow(AlgorithmType.HybridCustomUpdate)
                         {
                            AlgorithmParameters =
                            {

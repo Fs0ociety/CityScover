@@ -201,7 +201,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SolutionGraph = Tour.DeepCopy()
          };
 
-         TourUpdated = true;
          SendMessage(MessageCode.HybridCustomUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
          Solver.EnqueueSolution(_currentSolution);
          SolutionsHistory.Add(_currentSolution);
@@ -213,7 +212,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
             SendMessage(MessageCode.HybridCustomUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
-            TourUpdated = false;
          }
          else
          {
@@ -234,8 +232,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (_currentSolution != null)
          {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution,
-               _currentSolution.Id, _currentSolution.Cost);
+            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution, _currentSolution.Id, _currentSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
 
             var validSolutions = SolutionsHistory.Where(solution => solution.IsValid);
@@ -250,10 +247,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             if (isBetterThanCurrentBestSolution)
             {
+               var (PreviousSolutionId, PreviousSolutionCost) = (Solver.BestSolution.Id, Solver.BestSolution.Cost);
                Solver.BestSolution = _currentSolution;
 
                Console.ForegroundColor = ConsoleColor.DarkMagenta;
-               SendMessage(MessageCode.HybridCustomUpdateFinalSolution, _currentSolution.Id, _currentSolution.Cost);
+               SendMessage(MessageCode.HybridCustomUpdateFinalSolution, 
+                  _currentSolution.Id, _currentSolution.Cost, PreviousSolutionId, PreviousSolutionCost);
                Console.ForegroundColor = ConsoleColor.Gray;
             }
          }
@@ -272,11 +271,11 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             SendMessage(MessageCode.HybridCustomUpdatePointsReplaced, point.nodeKeyRemoved, point.nodeKeyAdded);
          }
 
-         // if PROVVISORIO.
          if (TourUpdated)
          {
             SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
          }
+
          SolutionsHistory.Clear();
          _replacedPoints.Clear();
          _candidateEdges.Clear();
