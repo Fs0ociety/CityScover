@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/12/2018
+// File update: 19/12/2018
 //
 
 using System;
@@ -433,13 +433,17 @@ namespace CityScover.Engine.Configurations
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridCustomUpdate)
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
                         {
                            AlgorithmParameters =
                            {
                               [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
                               [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
-                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                              [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                              {
+                                 Utils.TMaxConstraint
+                              }
                            }
                         }
                      }

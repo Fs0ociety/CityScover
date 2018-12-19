@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/12/2018
+// File update: 19/12/2018
 //
 
 using CityScover.Commons;
@@ -22,7 +22,14 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 {
    internal class HybridCustomInsertion : Algorithm
    {
+
       #region Private fields
+
+      #region Constants
+      private const string TimeThresholdToTmaxConstraint = 
+         "TimeThresholdToTmax";
+      #endregion
+
       private DateTime _tMax;
       private DateTime _tMaxThresholdTime;
       private TimeSpan _timeThresholdToTmax;
@@ -39,12 +46,25 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          => Type = AlgorithmType.HybridCustomInsertion;
       #endregion
 
-      #region Private Protected members
+      #region Private Protected fields
       private protected CityMapGraph Tour;
       private protected InterestPointWorker StartPoi;
       private protected InterestPointWorker EndPoi;
       private protected Queue<InterestPointWorker> ProcessingNodes;
       private protected ICollection<ToSolution> SolutionsHistory;
+      #endregion
+
+      #region Private protected methods
+      private protected void UpdateSolver(ToSolution newSolution, ConsoleColor color)
+      {
+         var (previousSolutionId, previousSolutionCost) = (Solver.BestSolution.Id, Solver.BestSolution.Cost);
+         Solver.BestSolution = newSolution;
+
+         Console.ForegroundColor = color;
+         SendMessage(MessageCode.HybridCustomInsertionFinalSolution,
+            newSolution.Id, newSolution.Cost, previousSolutionId, previousSolutionCost);
+         Console.ForegroundColor = ConsoleColor.Gray;
+      }
       #endregion
 
       #region Internal properties
@@ -68,7 +88,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          orderedFilteredNodes.ToList().ForEach(node => ProcessingNodes.Enqueue(node));
       }
 
-      private void TryAddNode(InterestPointWorker nodeToAdd, int fromNodeKey, int toNodeKey)
+      private void AddNode(InterestPointWorker nodeToAdd, int fromNodeKey, int toNodeKey)
       {
          int nodeKeyToAdd = nodeToAdd.Entity.Id;
 
@@ -78,7 +98,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          Tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, toNodeKey);
       }
 
-      private void UndoAdditionPoint(int nodeKeyToRemove, int fromNodeKey, int toNodeKey)
+      private void UndoNodeAdditon(int nodeKeyToRemove, int fromNodeKey, int toNodeKey)
       {
          Tour.RemoveEdge(nodeKeyToRemove, toNodeKey);
          Tour.RemoveEdge(fromNodeKey, nodeKeyToRemove);
@@ -155,12 +175,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnInitializing()
       {
          base.OnInitializing();
-         SolutionsHistory = new Collection<ToSolution>();
 
          if (!Parameters.Any())
          {
             throw new KeyNotFoundException(nameof(Parameters));
          }
+
          if (Solver.IsMonitoringEnabled && Type == AlgorithmType.HybridCustomInsertion)
          {
             if (!Parameters.ContainsKey(ParameterCodes.HciTimeThresholdToTmax))
@@ -168,13 +188,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                throw new KeyNotFoundException(nameof(ParameterCodes.HciTimeThresholdToTmax));
             }
 
+            Solver.Problem.Constraints.Add(new KeyValuePair<string, Func<ToSolution, bool>>(
+                  TimeThresholdToTmaxConstraint, IsTimeThresholdToTmaxSatisfied));
+
             _timeThresholdToTmax = Parameters[ParameterCodes.HciTimeThresholdToTmax];
             _tMax = Solver.WorkingConfiguration.ArrivalTime.Add(Solver.WorkingConfiguration.TourDuration);
             _tMaxThresholdTime = _tMax - _timeThresholdToTmax;
-
-            //Solver.Problem.Constraints.Add(
-            //   new KeyValuePair<string, Func<ToSolution, bool>>(
-            //      "TimeThresholdToTmax", IsTimeThresholdToTmaxSatisfied));
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             SendMessage(MessageCode.HybridCustomInsertionStart);
@@ -187,6 +206,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
 
          _addedNodesCount = default;
+         SolutionsHistory = new Collection<ToSolution>();
          ProcessingNodes = new Queue<InterestPointWorker>();
          Tour = CurrentBestSolution.SolutionGraph.DeepCopy();
          StartPoi = Tour.GetStartPoint() ?? throw new NullReferenceException(nameof(StartPoi));
@@ -199,7 +219,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          InterestPointWorker point = ProcessingNodes.Dequeue();
 
-         TryAddNode(point, EndPoi.Entity.Id, StartPoi.Entity.Id);
+         AddNode(point, EndPoi.Entity.Id, StartPoi.Entity.Id);
          var previousEndPoiKey = EndPoi.Entity.Id;
          EndPoi = Tour.GetEndPoint();
          _addedNodesCount++;
@@ -218,11 +238,10 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          if (!_currentSolution.IsValid)
          {
-            UndoAdditionPoint(point.Entity.Id, previousEndPoiKey, StartPoi.Entity.Id);
+            UndoNodeAdditon(point.Entity.Id, previousEndPoiKey, StartPoi.Entity.Id);
             EndPoi = Tour.GetEndPoint();
             _addedNodesCount--;
-            SendMessage(MessageCode.HybridCustomInsertionNewNodeRemoved,
-               point.Entity.Name);
+            SendMessage(MessageCode.HybridCustomInsertionNewNodeRemoved, point.Entity.Name);
          }
 
          if (Solver.IsMonitoringEnabled)
@@ -241,9 +260,20 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       internal override void OnTerminating()
       {
          base.OnTerminating();
+         /*
+          * TODO
+          * Add two methods on Solver: AddConstraint and RemoveConstraint.
+          * These methods can be called from an Algorithm to customize his work.
+          */
 
-         // TODO
-         // Remove the "timeThresholdToTmax" constraint from Constraints collection of Problem.
+         Solver.Problem.Constraints.Remove(
+            Solver.Problem.Constraints.FirstOrDefault(constraint =>
+               constraint.Key.Equals(TimeThresholdToTmaxConstraint)));
+
+         // Remove only Tmax constraint from ConstraintsToRelax collection.
+         Solver.ConstraintsToRelax.Remove(
+            Solver.ConstraintsToRelax.FirstOrDefault(constraint =>
+               constraint.Equals(Utils.TMaxConstraint)));
 
          Console.ForegroundColor = ConsoleColor.Yellow;
          SendMessage(MessageCode.HybridCustomInsertionStopWithSolution, _currentSolution.Id, _currentSolution.Cost);
@@ -252,26 +282,18 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (_addedNodesCount == 0)
          {
             var updateAlgorithm = RunUpdateTour();
-            if (updateAlgorithm.TourUpdated == false)
+
+            if (updateAlgorithm.TourUpdated)
             {
                Console.ForegroundColor = ConsoleColor.Yellow;
-               SendMessage(MessageCode.HybridCustomInsertionStopWithoutSolution);
+               SendMessage(MessageCode.HybridCustomInsertionTourUpdated);
                Console.ForegroundColor = ConsoleColor.Gray;
-
-               return;
             }
-
-            var isBetterThanCurrentBestSolution = Solver.Problem
-               .CompareSolutionsCost(updateAlgorithm.CurrentSolution.Cost, Solver.BestSolution.Cost, true);
-
-            if (!isBetterThanCurrentBestSolution)
+            else
             {
                Console.ForegroundColor = ConsoleColor.Yellow;
-               SendMessage(MessageCode.HybridCustomUpdateStopWithSolution,
-                  updateAlgorithm.CurrentSolution.Id, updateAlgorithm.CurrentSolution.Cost);
+               SendMessage(MessageCode.HybridCustomInsertionTourNotUpdated);
                Console.ForegroundColor = ConsoleColor.Gray;
-
-               return;
             }
          }
          else
@@ -281,13 +303,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                .Where(solution => solution.IsValid)
                .MaxBy(solution => solution.Cost);
 
-            var (PreviousSolutionId, PreviousSolutionCost) = (Solver.BestSolution.Id, Solver.BestSolution.Cost);
-            Solver.BestSolution = bestSolution;
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            SendMessage(MessageCode.HybridCustomInsertionFinalSolution, 
-               bestSolution.Id, bestSolution.Cost, PreviousSolutionId, PreviousSolutionCost);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            UpdateSolver(bestSolution, ConsoleColor.Yellow);
             SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
          }
       }
@@ -303,12 +319,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       internal override bool StopConditions()
       {
-         //bool isGreaterThanTmaxThreshold = EndPoi.TotalTime > _tMaxThresholdTime;
-         //bool shouldStop = isGreaterThanTmaxThreshold || !ProcessingNodes.Any() ||
-         //   Status == AlgorithmStatus.Error;
-
-         bool shouldStop = !ProcessingNodes.Any() || Status == AlgorithmStatus.Error;
-         return shouldStop;
+         return !ProcessingNodes.Any() || Status == AlgorithmStatus.Error;
       }
       #endregion
    }

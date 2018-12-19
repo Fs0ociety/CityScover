@@ -43,7 +43,8 @@ namespace CityScover.Engine
             [MessageCode.HybridCustomInsertionNewNodeAdded] = "Point of interest \"{0}\" added successfully to the tour.",
             [MessageCode.HybridCustomInsertionNewNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
             [MessageCode.HybridCustomInsertionStopWithSolution] = "Hybrid Custom Insertion STOP condition occurred with solution {0} with total cost --> {1}",
-            [MessageCode.HybridCustomInsertionStopWithoutSolution] = "Hybrid Custom Insertion STOP condition occurred immediately. Exit.",
+            [MessageCode.HybridCustomInsertionTourUpdated] = "Hybrid Custom Update algorithm has finished with the tour UPDATED!",
+            [MessageCode.HybridCustomInsertionTourNotUpdated] = "Hybrid Custom Update algorithm has finished with the tour NOT UPDATED!",
             [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
                                                                "Solver's previous best solution ID: {2} with COST: {3}",
 
@@ -115,7 +116,8 @@ namespace CityScover.Engine
       HybridCustomInsertionNewNodeRemoved,
       HybridCustomInsertionFinalSolution,
       HybridCustomInsertionStopWithSolution,
-      HybridCustomInsertionStopWithoutSolution,
+      HybridCustomInsertionTourUpdated,
+      HybridCustomInsertionTourNotUpdated,
       HybridCustomUpdateStart,
       HybridCustomUpdateTourUpdated,
       HybridCustomUpdateTourRestored,

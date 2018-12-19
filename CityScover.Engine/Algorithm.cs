@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 19/12/2018
 //
 
 using CityScover.Commons;
@@ -43,8 +43,8 @@ namespace CityScover.Engine
       /// See the AlgorithmStatus types for details.
       /// </summary>
       private protected AlgorithmStatus Status { get; private set; }
-
-      internal ushort CurrentStep { get; set; }
+   
+      private protected ushort CurrentStep { get; set; }
 
       private protected bool ForceStop { get; set; }
       #endregion
@@ -118,12 +118,13 @@ namespace CityScover.Engine
          if (Parameters.ContainsKey(ParameterCodes.RelaxedConstraints))
          {
             Solver.ConstraintsToRelax.Clear();
-            foreach (string relaxedConstraint in Parameters[ParameterCodes.RelaxedConstraints])
+            foreach (var relaxedConstraint in Parameters[ParameterCodes.RelaxedConstraints])
             {
                Solver.ConstraintsToRelax.Add(relaxedConstraint);
             }
          }
 
+         //Solver.InitConstraintsToValidate();
          _startingTime = DateTime.Now;
       }
 

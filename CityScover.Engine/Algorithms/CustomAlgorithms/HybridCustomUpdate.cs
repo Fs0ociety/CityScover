@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 18/12/2018
+// File update: 19/12/2018
 //
 
 using CityScover.Commons;
@@ -131,7 +131,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          return (predecessorNodeKey, successorNodeKey);
       }
 
-      private void UpdateTour(InterestPointWorker nodeToAdd, int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
+      private void UpdateTour(InterestPointWorker nodeToAdd,
+         int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToAdd = nodeToAdd.Entity.Id;
 
@@ -144,7 +145,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          Tour.AddRouteFromGraph(Solver.CityMapGraph, nodeKeyToAdd, successorNodeKey);
       }
 
-      private void UndoUpdate(InterestPointWorker nodeToRestore, int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
+      private void UndoUpdate(InterestPointWorker nodeToRestore,
+         int nodeKeyToRemove, int predecessorNodeKey, int successorNodeKey)
       {
          int nodeKeyToRestore = nodeToRestore.Entity.Id;
 
@@ -237,24 +239,20 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             var validSolutions = SolutionsHistory.Where(solution => solution.IsValid);
             TourUpdated = validSolutions.Any();
-            if (TourUpdated)
+
+            if (!TourUpdated)
             {
-               _currentSolution = validSolutions.MaxBy(solution => solution.Cost);
+               return;
             }
 
-            var isBetterThanCurrentBestSolution = Solver.Problem
-               .CompareSolutionsCost(_currentSolution.Cost, Solver.BestSolution.Cost, true);
+            // Se capita che il costo totale della CurrentSolution calcolata da HCU è inferiore rispetto
+            // alla BestSolution precedente del Solver, aggiorno comunque la BestSolution del Solver
+            // con la CurrentSolution di HCU, poiché esso da più priorità alla distanza che al gradimento.
+            // Quindi gli algoritmi di ricerca locale nello Stage 2 potrebbero partire da una soluzione a costo peggiore.
+            // (SCELTA IMPLEMENTATIVA)
 
-            if (isBetterThanCurrentBestSolution)
-            {
-               var (PreviousSolutionId, PreviousSolutionCost) = (Solver.BestSolution.Id, Solver.BestSolution.Cost);
-               Solver.BestSolution = _currentSolution;
-
-               Console.ForegroundColor = ConsoleColor.DarkMagenta;
-               SendMessage(MessageCode.HybridCustomUpdateFinalSolution, 
-                  _currentSolution.Id, _currentSolution.Cost, PreviousSolutionId, PreviousSolutionCost);
-               Console.ForegroundColor = ConsoleColor.Gray;
-            }
+            _currentSolution = validSolutions.MaxBy(solution => solution.Cost);
+            UpdateSolver(_currentSolution, ConsoleColor.DarkMagenta);
          }
          else
          {
@@ -266,9 +264,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       internal override void OnTerminated()
       {
-         foreach (var point in _replacedPoints)
+         foreach (var (nodeKeyRemoved, nodeKeyAdded) in _replacedPoints)
          {
-            SendMessage(MessageCode.HybridCustomUpdatePointsReplaced, point.nodeKeyRemoved, point.nodeKeyAdded);
+            SendMessage(MessageCode.HybridCustomUpdatePointsReplaced, nodeKeyRemoved, nodeKeyAdded);
          }
 
          if (TourUpdated)
@@ -282,12 +280,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          _replacedPoints = null;
          _candidateEdges = null;
          SolutionsHistory = null;
+         base.OnTerminated();
       }
 
       internal override bool StopConditions()
       {
-         bool shouldStop = !_candidateEdges.Any() || base.StopConditions();
-         return shouldStop;
+         return !_candidateEdges.Any() || base.StopConditions();
       }
       #endregion
    }

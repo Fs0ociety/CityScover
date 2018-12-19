@@ -26,8 +26,8 @@ namespace CityScover
          await configService.ShowConfigurationsMenu();
          //ISolverService solverService = SolverService.Instance;
          //await solverService.Run();
-         WriteLine("\nPress any key to continue...");
-         ReadKey();
+         //WriteLine("\nPress any key to continue...");
+         //ReadKey();
       }
 
       #region Private static methods

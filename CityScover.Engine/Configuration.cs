@@ -25,7 +25,6 @@ namespace CityScover.Engine
       public Configuration()
       {
          Stages = new Collection<Stage>();
-         //RelaxedConstraints = new Collection<string>();
       }
       #endregion
 
@@ -39,7 +38,6 @@ namespace CityScover.Engine
       public ProblemFamily CurrentProblem { get; set; }
       public bool AlgorithmMonitoring { get; set; }
       public ICollection<Stage> Stages { get; set; }
-      //public ICollection<string> RelaxedConstraints { get; set; }
       #endregion
    }
 }

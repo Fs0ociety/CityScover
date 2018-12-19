@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 11/12/2018
+// File update: 19/12/2018
 //
 
 using CityScover.Data;
@@ -211,6 +211,8 @@ namespace CityScover.Engine
 
       internal void EnqueueSolution(ToSolution solution) =>
          _solutionsQueue.Add(solution);
+
+      internal void InitConstraintsToValidate() => SolverValidator.InitializeProblemConstraints();
       #endregion
 
       #region Public methods

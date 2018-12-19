@@ -6,10 +6,12 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/11/2018
+// File update: 19/12/2018
 //
 
 using CityScover.Commons;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CityScover.Engine
@@ -19,6 +21,8 @@ namespace CityScover.Engine
    /// </summary>
    internal sealed class SolverValidator : Singleton<SolverValidator>
    {
+      IEnumerable<KeyValuePair<string, Func<ToSolution, bool>>> _checkingConstraints;
+
       #region Constructors
       private SolverValidator()
       {
@@ -48,5 +52,14 @@ namespace CityScover.Engine
          }
       }
       #endregion
+
+      internal void InitializeProblemConstraints()
+      {
+         _checkingConstraints = from problemConstraint in Solver.Problem.Constraints
+                                where !(from relaxedConstraint in Solver.ConstraintsToRelax
+                                        where relaxedConstraint.Equals(problemConstraint.Key)
+                                        select relaxedConstraint).Any() && problemConstraint.Value != null
+                                select problemConstraint;
+      }
    }
 }
