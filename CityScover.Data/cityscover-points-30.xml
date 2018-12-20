@@ -96,9 +96,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 9 -->
+    <!-- Nr. 8 -->
     <!-- Museo della Cattedrale -->
-    <PointOfInterest id="9" name="Museo della Cattedrale">
+    <PointOfInterest id="8" name="Museo della Cattedrale">
       <Coordinates latitude="44,8344424" longitude="11,6128774"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
@@ -109,9 +109,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 10 -->
+    <!-- Nr. 9 -->
     <!-- Palazzina di Marfisa d'Este -->
-    <PointOfInterest id="10" name="Palazzina di Marfisa d'Este">
+    <PointOfInterest id="9" name="Palazzina di Marfisa d'Este">
       <Coordinates latitude="44,8331" longitude="11,6276862"/>
       <Category id="1"/>
       <ThematicScore category="1" value="100"/>
@@ -122,9 +122,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 14-->
+    <!-- Nr. 10-->
     <!-- Corso Ercole I d'Este -->
-    <PointOfInterest id="14" name="Corso Ercole I d'Este">
+    <PointOfInterest id="10" name="Corso Ercole I d'Este">
       <Coordinates latitude="44,8439315" longitude="11,6199775"/>
       <Category id="1"/>
       <ThematicScore category="1" value="98"/>
@@ -135,9 +135,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 22 -->
+    <!-- Nr. 11 -->
     <!-- Monastero del Corpus Domini -->
-    <PointOfInterest id="22" name="Monastero del Corpus Domini">
+    <PointOfInterest id="11" name="Monastero del Corpus Domini">
       <Coordinates latitude="44,8318359" longitude="11,623786"/>
       <Category id="1"/>
       <ThematicScore category="1" value="85"/>
@@ -152,9 +152,9 @@
     <!-- Punti d'interesse Gastronomici -->
     <!---->
 
-    <!-- Nr. 31 -->
+    <!-- Nr. 12 -->
     <!-- Il Don Giovanni -->
-    <PointOfInterest id="31" name="Il Don Giovanni">
+    <PointOfInterest id="12" name="Il Don Giovanni">
       <Coordinates latitude="44,838670" longitude="11,619772"/>
       <Category id="2"/>
       <ThematicScore category="2" value="90"/>
@@ -165,9 +165,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 32 -->
+    <!-- Nr. 13 -->
     <!-- Makorè -->
-    <PointOfInterest id="32" name="Makorè">
+    <PointOfInterest id="13" name="Makorè">
       <Coordinates latitude="44,837429" longitude="11,622981"/>
       <Category id="2"/>
       <ThematicScore category="2" value="80"/>
@@ -178,9 +178,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 33 -->
+    <!-- Nr. 14 -->
     <!-- Fuori Porta -->
-    <PointOfInterest id="33" name="Fuori Porta">
+    <PointOfInterest id="14" name="Fuori Porta">
       <Coordinates latitude="44,832623" longitude="11,636595"/>
       <Category id="2"/>
       <ThematicScore category="2" value="75"/>
@@ -190,9 +190,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 34 -->
+    <!-- Nr. 15 -->
     <!-- XI Comandamento -->
-    <PointOfInterest id="34" name="XI Comandamento">
+    <PointOfInterest id="15" name="XI Comandamento">
       <Coordinates latitude="44,832788" longitude="11,618828"/>
       <Category id="2"/>
       <ThematicScore category="2" value="65"/>
@@ -202,9 +202,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 35 -->
+    <!-- Nr. 16 -->
     <!-- Osteria I Quattro Angeli -->
-    <PointOfInterest id="35" name="Osteria I Quattro Angeli">
+    <PointOfInterest id="16" name="Osteria I Quattro Angeli">
       <Coordinates latitude="44,837011" longitude="11,618615"/>
       <Category id="2"/>
       <ThematicScore category="2" value="70"/>
@@ -215,9 +215,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 36 -->
+    <!-- Nr. 17 -->
     <!-- I Piaceri di Lucrezia -->
-    <PointOfInterest id="36" name="I Piaceri di Lucrezia">
+    <PointOfInterest id="17" name="I Piaceri di Lucrezia">
       <Coordinates latitude="44,828753" longitude="11,624123"/>
       <Category id="2"/>
       <ThematicScore category="2" value="85"/>
@@ -227,9 +227,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 49 -->
+    <!-- Nr. 18 -->
     <!-- Rifugio Degli Artisti -->
-    <PointOfInterest id="49" name="Rifugio Degli Artisti">
+    <PointOfInterest id="18" name="Rifugio Degli Artisti">
       <Coordinates latitude="44,7723155" longitude="11,3443391"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100" />
@@ -239,9 +239,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 51 -->
+    <!-- Nr. 19 -->
     <!-- Antica Osteria Delle Volte -->
-    <PointOfInterest id="51" name="Antica Osteria Delle Volte">
+    <PointOfInterest id="19" name="Antica Osteria Delle Volte">
       <Coordinates latitude="44,8323482" longitude="11,6174861"/>
       <Category id="2"/>
       <ThematicScore category="2" value="70" />
@@ -252,9 +252,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 53 -->
+    <!-- Nr. 20 -->
     <!-- Cusina e Butega -->
-    <PointOfInterest id="53" name="Cusina e Butega">
+    <PointOfInterest id="20" name="Cusina e Butega">
       <Coordinates latitude="44,8349425" longitude="11,6163628"/>
       <Category id="2"/>
       <ThematicScore category="2" value="90" />
@@ -265,9 +265,9 @@
       <TimeVisit unit="min" duration="60"/>
     </PointOfInterest>
 
-    <!-- Nr. 55 -->
+    <!-- Nr. 21 -->
     <!-- I Tri Scalin -->
-    <PointOfInterest id="55" name="I Tri Scalin">
+    <PointOfInterest id="21" name="I Tri Scalin">
       <Coordinates latitude="44,8316203" longitude="11,6107881"/>
       <Category id="2"/>
       <ThematicScore category="2" value="100"/>
@@ -282,9 +282,9 @@
     <!-- Punti d'interesse Sportivi -->
     <!---->
 
-    <!-- Nr. 75 -->
+    <!-- Nr. 22 -->
     <!-- Centro Universitario Sportivo Di Ferrara (CUS) -->
-    <PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
+    <PointOfInterest id="22" name="Centro Universitario Sportivo Di Ferrara (CUS)">
       <Coordinates latitude="44,853446" longitude="11,631099"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100"/>
@@ -294,9 +294,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 76 -->
+    <!-- Nr. 23 -->
     <!-- Centro Sportivo Italiano -->
-    <PointOfInterest id="76" name="Centro Sportivo Italiano">
+    <PointOfInterest id="23" name="Centro Sportivo Italiano">
       <Coordinates latitude="44,833600" longitude="11,625474"/>
       <Category id="3"/>
       <ThematicScore category="3" value="55"/>
@@ -307,9 +307,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 77 -->
+    <!-- Nr. 24 -->
     <!-- Centro Sportivo Tennis Club Ferrara -->
-    <PointOfInterest id="77" name="Centro Sportivo Tennis Club Ferrara">
+    <PointOfInterest id="24" name="Centro Sportivo Tennis Club Ferrara">
       <Coordinates latitude="44,849885" longitude="11,613846"/>
       <Category id="3"/>
       <ThematicScore category="3" value="75"/>
@@ -319,9 +319,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 78 -->
+    <!-- Nr. 25 -->
     <!-- Paintball Ferrara -->
-    <PointOfInterest id="78" name="Paintball Ferrara">
+    <PointOfInterest id="25" name="Paintball Ferrara">
       <Coordinates latitude="44,837605" longitude="11,588271"/>
       <Category id="3"/>
       <ThematicScore category="3" value="65" />
@@ -331,9 +331,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 82 -->
+    <!-- Nr. 26 -->
     <!-- Centro Addestramento SPAL -->
-    <PointOfInterest id="82" name="Centro Addestramento SPAL">
+    <PointOfInterest id="26" name="Centro Addestramento SPAL">
       <Coordinates latitude="44,8458471" longitude="11,650829"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />
@@ -343,9 +343,9 @@
       <TimeVisit unit="min" duration="35"/>
     </PointOfInterest>
 
-    <!-- Nr. 83 -->
+    <!-- Nr. 27 -->
     <!-- La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale -->
-    <PointOfInterest id="83" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
+    <PointOfInterest id="27" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
       <Coordinates latitude="44,835498" longitude="11,611455"/>
       <Category id="3"/>
       <ThematicScore category="3" value="60"/>
@@ -356,9 +356,9 @@
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
 
-    <!-- Nr. 85 -->
+    <!-- Nr. 28 -->
     <!-- Centro Sportivo Polivalente Parco 1° maggio -->
-    <PointOfInterest id="85" name="Centro Sportivo Polivalente Parco 1° maggio">
+    <PointOfInterest id="28" name="Centro Sportivo Polivalente Parco 1° maggio">
       <Coordinates latitude="44,8253869" longitude="11,608001"/>
       <Category id="3"/>
       <ThematicScore category="3" value="80" />
@@ -368,9 +368,9 @@
       <TimeVisit unit="min" duration="120"/>
     </PointOfInterest>
 
-    <!-- Nr. 86 -->
+    <!-- Nr. 29 -->
     <!-- Synergy Lab -->
-    <PointOfInterest id="86" name="Synergy Lab">
+    <PointOfInterest id="29" name="Synergy Lab">
       <Coordinates latitude="44,832601" longitude="11,633633"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />
@@ -380,9 +380,9 @@
       <TimeVisit unit="min" duration="120"/>
     </PointOfInterest>
 
-    <!-- Nr. 89 -->
+    <!-- Nr. 30 -->
     <!-- Palestra & Piscina Doro -->
-    <PointOfInterest id="89" name="Palestra e Piscina Doro">
+    <PointOfInterest id="30" name="Palestra e Piscina Doro">
       <Coordinates latitude="44,847822" longitude="11,600578"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100" />
@@ -392,9 +392,9 @@
       <TimeVisit unit="min" duration="120"/>
     </PointOfInterest>
 
-    <!-- Nr. 90 -->
+    <!-- Nr. 31 -->
     <!-- Centro di Medicina dello Sport di Ferrara -->
-    <PointOfInterest id="90" name="Centro di Medicina dello Sport di Ferrara">
+    <PointOfInterest id="31" name="Centro di Medicina dello Sport di Ferrara">
       <Coordinates latitude="44,8498765" longitude="11,6098652"/>
       <Category id="3"/>
       <ThematicScore category="3" value="90" />
