@@ -182,7 +182,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
          if (Solver.IsMonitoringEnabled)
          {
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.ForegroundColor = ConsoleColor.Magenta;
             SendMessage(MessageCode.HybridCustomUpdateStart);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
@@ -236,8 +236,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       {
          if (CurrentSolution != null)
          {
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution, CurrentSolution.Id, CurrentSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution, 
+               CurrentSolution.Id, CurrentSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
 
             var validSolutions = SolutionsHistory.Where(solution => solution.IsValid);
@@ -255,11 +256,25 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             // (SCELTA IMPLEMENTATIVA)
 
             CurrentSolution = validSolutions.MaxBy(solution => solution.Cost);
-            UpdateSolver(CurrentSolution, ConsoleColor.DarkMagenta);
+
+            if (CurrentSolution.Cost > Solver.BestSolution.Cost)
+            {
+               UpdateSolver(CurrentSolution, MessageCode.HybridCustomUpdateBestFinalTour, ConsoleColor.Magenta);
+            }
+            else if (CurrentSolution.Cost < Solver.BestSolution.Cost)
+            {
+               UpdateSolver(CurrentSolution, MessageCode.HybridCustomUpdateWorseFinalTour, ConsoleColor.Magenta);
+            }
+            else
+            {
+               Console.ForegroundColor = ConsoleColor.Magenta;
+               SendMessage(MessageCode.HybridCustomUpdateUnchangedTour);
+               Console.ForegroundColor = ConsoleColor.Gray;
+            }
          }
          else
          {
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.ForegroundColor = ConsoleColor.Magenta;
             SendMessage(MessageCode.HybridCustomUpdateStopWithoutSolution);
             Console.ForegroundColor = ConsoleColor.Gray;
          }

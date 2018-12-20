@@ -421,7 +421,7 @@ namespace CityScover.Engine.Configurations
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     CurrentAlgorithm = AlgorithmType.CheapestInsertion,
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
@@ -433,17 +433,13 @@ namespace CityScover.Engine.Configurations
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridCustomInsertion)
+                        new StageFlow(AlgorithmType.HybridCustomUpdate)
                         {
                            AlgorithmParameters =
                            {
                               [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
                               [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
-                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
-                              [ParameterCodes.RelaxedConstraints] = new Collection<string>()
-                              {
-                                 Utils.TMaxConstraint
-                              }
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         }
                      }

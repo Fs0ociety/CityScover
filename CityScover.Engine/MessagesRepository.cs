@@ -54,8 +54,11 @@ namespace CityScover.Engine
             [MessageCode.HybridCustomUpdatePointsReplaced] = "Point ID {0} removed from the tour and Point ID {1} added to the tour.",
             [MessageCode.HybridCustomUpdateStopWithSolution] = "Hybrid Custom Update STOP condition occurred with solution {0} with total cost --> {1}",
             [MessageCode.HybridCustomUpdateStopWithoutSolution] = "Hybrid Custom Update STOP condition occurred immediately. Tour not updated! Exit.",
-            [MessageCode.HybridCustomUpdateFinalSolution] = "HCU has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
+            [MessageCode.HybridCustomUpdateBestFinalTour] = "HCU has found a new BEST solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
                                                             "Solver's previous best solution ID: {2} with COST: {3}",
+            [MessageCode.HybridCustomUpdateWorseFinalTour] = "HCU has found a new WORSE solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
+                                                            "Solver's previous best solution ID: {2} with COST: {3}",
+            [MessageCode.HybridCustomUpdateUnchangedTour] = "HCU has found a new solution with cost equals to previous Solver's best solution.",
 
             [MessageCode.LinKernighanStartSolution] = "Lin Kernighan starting with current Local Search Best Solution {0} with cost {1}.",
             [MessageCode.LinKernighanHStepIncreased] = "Lin Kernighan Step {0} of {1}.",
@@ -121,7 +124,9 @@ namespace CityScover.Engine
       HybridCustomUpdateStart,
       HybridCustomUpdateTourUpdated,
       HybridCustomUpdateTourRestored,
-      HybridCustomUpdateFinalSolution,
+      HybridCustomUpdateBestFinalTour,
+      HybridCustomUpdateWorseFinalTour,
+      HybridCustomUpdateUnchangedTour,
       HybridCustomUpdatePointsReplaced,
       HybridCustomUpdateStopWithSolution,
       HybridCustomUpdateStopWithoutSolution,

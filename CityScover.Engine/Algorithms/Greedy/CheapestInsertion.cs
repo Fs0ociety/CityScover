@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 30/11/2018
+// File update: 20/12/2018
 //
 
 using CityScover.Commons;
@@ -32,7 +32,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       }
 
       internal CheapestInsertion(AlgorithmTracker provider) : base(provider)
-         => Type = AlgorithmType.NearestNeighbor;
+         => Type = AlgorithmType.CheapestInsertion;
       #endregion
 
       #region Private methods
@@ -118,7 +118,8 @@ namespace CityScover.Engine.Algorithms.Greedy
 
             InterestPointWorker neighbor = CityMapClone[neighborId];
             int neighborScore = neighbor.Entity.Score.Value;
-            int pNodeToNeighborScore = Math.Abs(processingNodeScore - neighborScore);
+            //int pNodeToNeighborScore = Math.Abs(processingNodeScore - neighborScore);
+            int pNodeToNeighborScore = neighborScore;
 
             foreach (var node in CityMapClone.Nodes)
             {
@@ -202,7 +203,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             SolutionGraph = Tour
          };
 
-         SendMessage(MessageCode.GreedyNodeAdded, candidateNode.Entity.Name);
+         SendMessage(MessageCode.GreedyNodeAdded, candidateNode.Entity.Name, newSolution.Id);
          SolutionsHistory.Add(newSolution);
          Solver.EnqueueSolution(newSolution);
          await Task.Delay(Utils.ValidationDelay).ConfigureAwait(continueOnCapturedContext: false);

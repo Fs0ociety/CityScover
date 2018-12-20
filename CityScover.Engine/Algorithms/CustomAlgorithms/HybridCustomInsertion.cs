@@ -55,14 +55,13 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Private protected methods
-      private protected void UpdateSolver(ToSolution newSolution, ConsoleColor color)
+      private protected void UpdateSolver(ToSolution newSolution, MessageCode messageCode, ConsoleColor color)
       {
          var (previousSolutionId, previousSolutionCost) = (Solver.BestSolution.Id, Solver.BestSolution.Cost);
          Solver.BestSolution = newSolution;
 
          Console.ForegroundColor = color;
-         SendMessage(MessageCode.HybridCustomInsertionFinalSolution,
-            newSolution.Id, newSolution.Cost, previousSolutionId, previousSolutionCost);
+         SendMessage(messageCode, newSolution.Id, newSolution.Cost, previousSolutionId, previousSolutionCost);
          Console.ForegroundColor = ConsoleColor.Gray;
       }
       #endregion
@@ -296,7 +295,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                .Where(solution => solution.IsValid)
                .MaxBy(solution => solution.Cost);
 
-            UpdateSolver(bestSolution, ConsoleColor.Yellow);
+            UpdateSolver(bestSolution, MessageCode.HybridCustomInsertionFinalSolution, ConsoleColor.Yellow);
 
             // Remove only Tmax constraint from ConstraintsToRelax collection.
             Solver.ConstraintsToRelax.Remove(Utils.TMaxConstraint);
