@@ -124,7 +124,7 @@ namespace CityScover.Engine
             }
          }
 
-         //Solver.InitConstraintsToValidate();
+         Solver.InitConstraintsToValidate();
          _startingTime = DateTime.Now;
       }
 

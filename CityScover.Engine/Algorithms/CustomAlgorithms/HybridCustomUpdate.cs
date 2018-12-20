@@ -39,6 +39,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #region Internal properties
       internal bool TourUpdated { get; private set; }
       internal ToSolution CurrentSolution => _currentSolution;
+      internal bool CanContinueToRelaxConstraints { get; set; } = true;
       #endregion
 
       #region Private methods
@@ -163,18 +164,24 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #region Overrides
       internal override void OnInitializing()
       {
+         if (!Parameters.ContainsKey(ParameterCodes.HcuTimeWalkThreshold))
+         {
+            throw new KeyNotFoundException(nameof(ParameterCodes.HcuTimeWalkThreshold));
+         }
+
          base.OnInitializing();
+         Solver.ConstraintsToRelax.Remove(Utils.TMaxConstraint);
+
+         if (!CanContinueToRelaxConstraints)
+         {
+            Solver.ConstraintsToRelax.Clear();
+         }
 
          if (Solver.IsMonitoringEnabled)
          {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             SendMessage(MessageCode.HybridCustomUpdateStart);
             Console.ForegroundColor = ConsoleColor.Gray;
-         }
-
-         if (!Parameters.ContainsKey(ParameterCodes.HcuTimeWalkThreshold))
-         {
-            throw new KeyNotFoundException(nameof(ParameterCodes.HcuTimeWalkThreshold));
          }
 
          _timeWalkThreshold = Parameters[ParameterCodes.HcuTimeWalkThreshold];

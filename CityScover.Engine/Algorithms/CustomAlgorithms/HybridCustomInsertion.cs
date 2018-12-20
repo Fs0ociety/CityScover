@@ -26,7 +26,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #region Private fields
 
       #region Constants
-      private const string TimeThresholdToTmaxConstraint = 
+      private const string TimeThresholdToTmaxConstraint =
          "TimeThresholdToTmax";
       #endregion
 
@@ -147,7 +147,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       //   {
       //      throw new NullReferenceException(nameof(algorithm));
       //   }
-   
+
       //   algorithm.Provider = Provider;
       //   algorithm.Parameters = Parameters;
 
@@ -174,12 +174,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #region Overrides
       internal override void OnInitializing()
       {
-         base.OnInitializing();
-
          if (!Parameters.Any())
          {
             throw new KeyNotFoundException(nameof(Parameters));
          }
+
+         base.OnInitializing();
 
          if (Solver.IsMonitoringEnabled && Type == AlgorithmType.HybridCustomInsertion)
          {
@@ -270,11 +270,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             Solver.Problem.Constraints.FirstOrDefault(constraint =>
                constraint.Key.Equals(TimeThresholdToTmaxConstraint)));
 
-         // Remove only Tmax constraint from ConstraintsToRelax collection.
-         Solver.ConstraintsToRelax.Remove(
-            Solver.ConstraintsToRelax.FirstOrDefault(constraint =>
-               constraint.Equals(Utils.TMaxConstraint)));
-
          Console.ForegroundColor = ConsoleColor.Yellow;
          SendMessage(MessageCode.HybridCustomInsertionStopWithSolution, _currentSolution.Id, _currentSolution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
@@ -304,6 +299,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                .MaxBy(solution => solution.Cost);
 
             UpdateSolver(bestSolution, ConsoleColor.Yellow);
+
+            // Remove only Tmax constraint from ConstraintsToRelax collection.
+            Solver.ConstraintsToRelax.Remove(Utils.TMaxConstraint);
             SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
          }
       }

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/12/2018
+// File update: 20/12/2018
 //
 
 using CityScover.Commons;
@@ -21,7 +21,7 @@ namespace CityScover.Engine
    /// </summary>
    internal sealed class SolverValidator : Singleton<SolverValidator>
    {
-      IEnumerable<KeyValuePair<string, Func<ToSolution, bool>>> _checkingConstraints;
+      IEnumerable<KeyValuePair<string, Func<ToSolution, bool>>> _constraintsToValidate;
 
       #region Constructors
       private SolverValidator()
@@ -34,32 +34,25 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal methods
+      internal void InitializeProblemConstraints()
+      {
+         // Get the constraints delegates to be invoked.
+         _constraintsToValidate =
+            from problemConstraint in Solver.Problem.Constraints
+            where !(from relaxedConstraint in Solver.ConstraintsToRelax
+                    where relaxedConstraint.Equals(problemConstraint.Key)
+                    select relaxedConstraint).Any() && problemConstraint.Value != null
+            select problemConstraint;
+      }
+   
       internal void Validate(ToSolution solution)
       {
-         var problemConstraints = Solver.Problem.Constraints;
-
-         // Get the constraints delegates to be invoked.
-         var checkingConstraints = from problemConstraint in problemConstraints
-                                   where !(from relaxedConstraint in Solver.ConstraintsToRelax
-                                           where relaxedConstraint.Equals(problemConstraint.Key)
-                                           select relaxedConstraint).Any() && problemConstraint.Value != null
-                                   select problemConstraint;
-
-         foreach (var constraint in checkingConstraints)
+         foreach (var constraint in _constraintsToValidate)
          {
             bool isValid = constraint.Value.Invoke(solution);
             solution.ProblemConstraints.Add(constraint.Key, isValid);
          }
       }
       #endregion
-
-      internal void InitializeProblemConstraints()
-      {
-         _checkingConstraints = from problemConstraint in Solver.Problem.Constraints
-                                where !(from relaxedConstraint in Solver.ConstraintsToRelax
-                                        where relaxedConstraint.Equals(problemConstraint.Key)
-                                        select relaxedConstraint).Any() && problemConstraint.Value != null
-                                select problemConstraint;
-      }
    }
 }

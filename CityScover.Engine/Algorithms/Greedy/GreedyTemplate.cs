@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 16/12/2018
+// File update: 20/12/2018
 //
 
 using CityScover.Engine.Workers;
@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CityScover.Engine.Algorithms.CustomAlgorithms;
 
 namespace CityScover.Engine.Algorithms.Greedy
 {
@@ -25,7 +26,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       private bool _canDoImprovements;
 
       #region Protected fields
-
       protected CityMapGraph CityMapClone;
       protected InterestPointWorker StartingPoint;
       protected CityMapGraph Tour;
@@ -41,15 +41,23 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
-      private async Task RunImprovementAlgorithms()
+      private async Task RunImprovementAlgorithm()
       {
          var childrenFlows = Solver.CurrentStage.Flow.ChildrenFlows;
 
          foreach (var algorithm in Solver.GetImprovementAlgorithms(childrenFlows))
          {
+            Algorithm improvementAlgorithm = algorithm;
             algorithm.Provider = Provider;
+
+            if (algorithm is HybridCustomUpdate hcu)
+            {
+               improvementAlgorithm = hcu;
+               hcu.CanContinueToRelaxConstraints = true;
+            }
+
             Solver.CurrentAlgorithm = algorithm.Type;
-            await Task.Run(algorithm.Start);
+            await Task.Run(improvementAlgorithm.Start);
             Solver.CurrentAlgorithm = Type;
          }
       }
@@ -146,18 +154,17 @@ namespace CityScover.Engine.Algorithms.Greedy
          StartingPoint.IsVisited = true;
       }
 
-      internal override void OnError(Exception exception)
-      {
-         CurrentStep = default;
-         base.OnError(exception);
-      }
-
       internal override void OnTerminating()
       {
          base.OnTerminating();
-         Solver.BestSolution = SolutionsHistory
-            .Where(solution => solution.IsValid)
-            .MaxBy(solution => solution.Cost);
+         var validSolutions = SolutionsHistory.Where(solution => solution.IsValid);
+
+         if (validSolutions.Any())
+         {
+            Solver.BestSolution = validSolutions.MaxBy(solution => solution.Cost);
+            return;
+         }
+         Solver.BestSolution = SolutionsHistory.MaxBy(solution => solution.Cost);
       }
 
       internal override void OnTerminated()
@@ -177,7 +184,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             return;
          }
 
-         Task improvementTask = RunImprovementAlgorithms();
+         Task improvementTask = RunImprovementAlgorithm();
          try
          {
             improvementTask.Wait();
