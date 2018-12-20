@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/12/2018
+// File update: 20/12/2018
 //
 
 using CityScover.Commons;
@@ -204,14 +204,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          {
             CurrentBestSolution = Solver.BestSolution;
          }
-
-         _addedNodesCount = default;
-         SolutionsHistory = new Collection<ToSolution>();
-         ProcessingNodes = new Queue<InterestPointWorker>();
+         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
          Tour = CurrentBestSolution.SolutionGraph.DeepCopy();
          StartPoi = Tour.GetStartPoint() ?? throw new NullReferenceException(nameof(StartPoi));
          EndPoi = Tour.GetEndPoint() ?? throw new NullReferenceException(nameof(EndPoi));
-         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
+         SolutionsHistory = new Collection<ToSolution>();
+         ProcessingNodes = new Queue<InterestPointWorker>();
          AddPointsNotInTour();
       }
 

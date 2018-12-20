@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/12/2018
+// File update: 20/12/2018
 //
 
 using CityScover.Commons;
@@ -23,7 +23,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
    internal class HybridCustomUpdate : HybridCustomInsertion
    {
       private double _averageSpeedWalk;
-      private ToSolution _currentSolution;
       private TimeSpan _timeWalkThreshold;
       private ICollection<(RouteWorker, TimeSpan)> _candidateEdges;
       private ICollection<(int nodeKeyRemoved, int nodeKeyAdded)> _replacedPoints;
@@ -38,7 +37,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       #region Internal properties
       internal bool TourUpdated { get; private set; }
-      internal ToSolution CurrentSolution => _currentSolution;
+      internal ToSolution CurrentSolution { get; private set; }
       internal bool CanContinueToRelaxConstraints { get; set; } = true;
       #endregion
 
@@ -170,26 +169,23 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
 
          base.OnInitializing();
+         _timeWalkThreshold = Parameters[ParameterCodes.HcuTimeWalkThreshold];
+         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
+         _candidateEdges = new Collection<(RouteWorker, TimeSpan)>();
+         _replacedPoints = new Collection<(int, int)>();
+         _candidateEdges = CalculateMaxEdgesTimeWalk();
          Solver.ConstraintsToRelax.Remove(Utils.TMaxConstraint);
 
          if (!CanContinueToRelaxConstraints)
          {
             Solver.ConstraintsToRelax.Clear();
          }
-
          if (Solver.IsMonitoringEnabled)
          {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             SendMessage(MessageCode.HybridCustomUpdateStart);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
-
-         _timeWalkThreshold = Parameters[ParameterCodes.HcuTimeWalkThreshold];
-         TourUpdated = default;
-         _averageSpeedWalk = Solver.WorkingConfiguration.WalkingSpeed;
-         _candidateEdges = new Collection<(RouteWorker, TimeSpan)>();
-         _replacedPoints = new Collection<(int, int)>();
-         _candidateEdges = CalculateMaxEdgesTimeWalk();
       }
 
       protected override async Task PerformStep()
@@ -205,19 +201,19 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          var (predecessorNodeKey, successorNodeKey) = GetBorderPoints(nodeKeyToRemove);
          UpdateTour(candidateNode, nodeKeyToRemove, predecessorNodeKey, successorNodeKey);
 
-         _currentSolution = new ToSolution()
+         CurrentSolution = new ToSolution()
          {
             SolutionGraph = Tour.DeepCopy()
          };
 
          SendMessage(MessageCode.HybridCustomUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
-         Solver.EnqueueSolution(_currentSolution);
-         SolutionsHistory.Add(_currentSolution);
+         Solver.EnqueueSolution(CurrentSolution);
+         SolutionsHistory.Add(CurrentSolution);
 
          await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
-         await Solver.AlgorithmTasks[_currentSolution.Id];
+         await Solver.AlgorithmTasks[CurrentSolution.Id];
 
-         if (!_currentSolution.IsValid)
+         if (!CurrentSolution.IsValid)
          {
             UndoUpdate(nodeToRemove, candidateNode.Entity.Id, predecessorNodeKey, successorNodeKey);
             SendMessage(MessageCode.HybridCustomUpdateTourRestored, candidateNode.Entity.Name, nodeToRemove.Entity.Name);
@@ -232,16 +228,16 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          if (Solver.IsMonitoringEnabled)
          {
-            Provider.NotifyObservers(_currentSolution);
+            Provider.NotifyObservers(CurrentSolution);
          }
       }
 
       internal override void OnTerminating()
       {
-         if (_currentSolution != null)
+         if (CurrentSolution != null)
          {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution, _currentSolution.Id, _currentSolution.Cost);
+            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution, CurrentSolution.Id, CurrentSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
 
             var validSolutions = SolutionsHistory.Where(solution => solution.IsValid);
@@ -258,8 +254,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             // Quindi gli algoritmi di ricerca locale nello Stage 2 potrebbero partire da una soluzione a costo peggiore.
             // (SCELTA IMPLEMENTATIVA)
 
-            _currentSolution = validSolutions.MaxBy(solution => solution.Cost);
-            UpdateSolver(_currentSolution, ConsoleColor.DarkMagenta);
+            CurrentSolution = validSolutions.MaxBy(solution => solution.Cost);
+            UpdateSolver(CurrentSolution, ConsoleColor.DarkMagenta);
          }
          else
          {

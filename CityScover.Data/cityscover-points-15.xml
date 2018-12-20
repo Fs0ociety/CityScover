@@ -88,9 +88,9 @@
     <!-- Punti d'interesse Gastronomici -->
     <!---->
 
-    <!-- Nr. 31 -->
+    <!-- Nr. 7 -->
     <!-- Il Don Giovanni -->
-    <PointOfInterest id="31" name="Il Don Giovanni">
+    <PointOfInterest id="7" name="Il Don Giovanni">
       <Coordinates latitude="44,838670" longitude="11,619772"/>
       <Category id="2"/>
       <ThematicScore category="2" value="90"/>
@@ -101,9 +101,9 @@
       <TimeVisit unit="min" duration="20"/>
     </PointOfInterest>
 
-    <!-- Nr. 32 -->
+    <!-- Nr. 8 -->
     <!-- Makorè -->
-    <PointOfInterest id="32" name="Makorè">
+    <PointOfInterest id="8" name="Makorè">
       <Coordinates latitude="44,837429" longitude="11,622981"/>
       <Category id="2"/>
       <ThematicScore category="2" value="80"/>
@@ -114,9 +114,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 33 -->
+    <!-- Nr. 9 -->
     <!-- Fuori Porta -->    
-    <PointOfInterest id="33" name="Fuori Porta">
+    <PointOfInterest id="9" name="Fuori Porta">
       <Coordinates latitude="44,832623" longitude="11,636595"/>
       <Category id="2"/>
       <ThematicScore category="2" value="75"/>
@@ -126,9 +126,9 @@
       <TimeVisit unit="min" duration="10"/>
     </PointOfInterest>
 
-    <!-- Nr. 34 -->
+    <!-- Nr. 10 -->
     <!-- XI Comandamento -->
-    <PointOfInterest id="34" name="XI Comandamento">
+    <PointOfInterest id="10" name="XI Comandamento">
       <Coordinates latitude="44,832788" longitude="11,618828"/>
       <Category id="2"/>
       <ThematicScore category="2" value="65"/>
@@ -138,9 +138,9 @@
       <TimeVisit unit="min" duration="10"/>
     </PointOfInterest>
 
-    <!-- Nr. 35 -->
+    <!-- Nr. 11 -->
     <!-- Osteria I Quattro Angeli -->
-    <PointOfInterest id="35" name="Osteria I Quattro Angeli">
+    <PointOfInterest id="11" name="Osteria I Quattro Angeli">
       <Coordinates latitude="44,837011" longitude="11,618615"/>
       <Category id="2"/>
       <ThematicScore category="2" value="70"/>
@@ -150,27 +150,15 @@
       </OpeningTimes>
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
-
-    <!-- Nr. 36 -->
-    <!-- I Piaceri di Lucrezia -->
-    <PointOfInterest id="36" name="I Piaceri di Lucrezia">
-      <Coordinates latitude="44,828753" longitude="11,624123"/>
-      <Category id="2"/>
-      <ThematicScore category="2" value="85"/>
-      <OpeningTimes>
-        <OpeningTime from="19:00" to="00:00"/>
-      </OpeningTimes>
-      <TimeVisit unit="min" duration="10"/>
-    </PointOfInterest>
     
     
     <!---->
     <!-- Punti d'interesse Sportivi -->
     <!---->
 
-    <!-- Nr. 75 -->
+    <!-- Nr. 12 -->
     <!-- Centro Universitario Sportivo Di Ferrara (CUS) -->
-    <PointOfInterest id="75" name="Centro Universitario Sportivo Di Ferrara (CUS)">
+    <PointOfInterest id="12" name="Centro Universitario Sportivo Di Ferrara (CUS)">
       <Coordinates latitude="44,853446" longitude="11,631099"/>
       <Category id="3"/>
       <ThematicScore category="3" value="100"/>
@@ -180,9 +168,9 @@
       <TimeVisit unit="min" duration="90"/>
     </PointOfInterest>
 
-    <!-- Nr. 76 -->
+    <!-- Nr. 13 -->
     <!-- Centro Sportivo Italiano -->
-    <PointOfInterest id="76" name="Centro Sportivo Italiano">
+    <PointOfInterest id="13" name="Centro Sportivo Italiano">
       <Coordinates latitude="44,833600" longitude="11,625474"/>
       <Category id="3"/>
       <ThematicScore category="3" value="55"/>
@@ -193,9 +181,9 @@
       <TimeVisit unit="min" duration="45"/>
     </PointOfInterest>
 
-    <!-- Nr. 77 -->
+    <!-- Nr. 14 -->
     <!-- Centro Sportivo Tennis Club Ferrara -->
-    <PointOfInterest id="77" name="Centro Sportivo Tennis Club Ferrara">
+    <PointOfInterest id="14" name="Centro Sportivo Tennis Club Ferrara">
       <Coordinates latitude="44,849885" longitude="11,613846"/>
       <Category id="3"/>
       <ThematicScore category="3" value="75"/>
@@ -205,9 +193,9 @@
       <TimeVisit unit="min" duration="15"/>
     </PointOfInterest>
 
-    <!-- Nr. 83 -->
+    <!-- Nr. 15 -->
     <!-- La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale -->
-    <PointOfInterest id="83" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
+    <PointOfInterest id="15" name="La Palestra Sas di Maurizio Vandelli - Centro di Rieducazione Funzionale">
       <Coordinates latitude="44,835498" longitude="11,611455"/>
       <Category id="3"/>
       <ThematicScore category="3" value="60"/>
@@ -217,6 +205,18 @@
       </OpeningTimes>
       <TimeVisit unit="min" duration="30"/>
     </PointOfInterest>
-    
+
+    <!-- Nr. 16 -->
+    <!-- New Millenium -->
+    <PointOfInterest id="16" name="New Millenium">
+      <Coordinates latitude="44,832837" longitude="11,611851"/>
+      <Category id="3"/>
+      <ThematicScore category="3" value="50"/>
+      <OpeningTimes>
+        <OpeningTime from="09:30" to="21:30"/>
+      </OpeningTimes>
+      <TimeVisit unit="min" duration="15"/>
+    </PointOfInterest>
+
   </PointOfInterests>
 </root>

@@ -433,17 +433,17 @@ namespace CityScover.Engine.Configurations
                      },
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridCustomUpdate)
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
                         {
                            AlgorithmParameters =
                            {
                               [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
                               [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
-                              //[ParameterCodes.RelaxedConstraints] = new Collection<string>()
-                              //{
-                              //   Utils.TMaxConstraint
-                              //}
+                              [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                              {
+                                 Utils.TMaxConstraint
+                              }
                            }
                         }
                      }
