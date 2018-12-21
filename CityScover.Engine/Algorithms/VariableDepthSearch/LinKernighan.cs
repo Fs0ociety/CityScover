@@ -198,7 +198,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          solutionNodes.Append(firstNode);
 
          ICollection<ToSolution> stepSolutions = new Collection<ToSolution>();
-         for (int j = 0; i < solutionNodes.Count() - 1; j++)
+         for (int j = 0; j < solutionNodes.Count() - 1; j++)
          {
             for (int i = j + 1; i < solutionNodes.Count(); i++)
             {
