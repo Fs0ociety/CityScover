@@ -64,9 +64,13 @@ namespace CityScover.Engine
 
          // Creation of the Graph.
          CityMapGraph cityGraph = new CityMapGraph();
+         //var nodes = Points.Select(point => new InterestPointWorker(point));
+         //nodes.ToList().ForEach(point => cityGraph.AddNode(point.Entity.Id, point));
          foreach (var point in Points)
          {
-            cityGraph.AddNode(point.Id, new InterestPointWorker(point));
+            InterestPointWorker pointWorker = new InterestPointWorker(point);
+            pointWorker.IsVisited = false;
+            cityGraph.AddNode(point.Id, pointWorker);
          }
 
          var routes = CityScoverRepository.Routes;

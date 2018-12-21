@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/12/2018
+// File update: 22/12/2018
 //
 
 using CityScover.ADT.Graphs;
@@ -184,26 +184,8 @@ namespace CityScover.Engine.Workers
                }
             });         
       }
-      #endregion
 
-      #region Internal static methods
-      internal static void SetRandomCandidateId(InterestPointWorker candidateNode, InterestPointWorker adjNode, out int id)
-      {
-         if (candidateNode is null)
-         {
-            id = adjNode.Entity.Id;
-         }
-         else
-         {
-            id = (new Random().Next(2) != 0)
-               ? candidateNode.Entity.Id
-               : adjNode.Entity.Id;
-         }
-      }
-      #endregion
-
-      #region Overrides
-      public override string ToString()
+      public string PrintGraph()
       {
          string result = string.Empty;
          int startPoiId = Solver.Instance.WorkingConfiguration.StartingPointId;
@@ -223,8 +205,25 @@ namespace CityScover.Engine.Workers
             });
          result += "\n";
 
+         Nodes.ToList().ForEach(node => node.IsVisited = default);
          return result;
-      } 
+      }
+      #endregion
+
+      #region Internal static methods
+      internal static void SetRandomCandidateId(InterestPointWorker candidateNode, InterestPointWorker adjNode, out int id)
+      {
+         if (candidateNode is null)
+         {
+            id = adjNode.Entity.Id;
+         }
+         else
+         {
+            id = (new Random().Next(2) != 0)
+               ? candidateNode.Entity.Id
+               : adjNode.Entity.Id;
+         }
+      }
       #endregion
    }
 }

@@ -152,8 +152,6 @@ namespace CityScover.Engine.Algorithms.Greedy
 
             _timeSpent = DateTime.Now;
             StartingPoint.IsVisited = true;
-            Action resetPoints = () => CityMapClone.Nodes.ToList().ForEach(node => node.IsVisited = false);
-            resetPoints.Invoke();
         }
 
         internal override void OnTerminating()
