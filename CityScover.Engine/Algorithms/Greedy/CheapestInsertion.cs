@@ -118,8 +118,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
             InterestPointWorker neighbor = CityMapClone[neighborId];
             int neighborScore = neighbor.Entity.Score.Value;
-            //int pNodeToNeighborScore = Math.Abs(processingNodeScore - neighborScore);
-            int pNodeToNeighborScore = neighborScore;
+            int pNodeToNeighborScore = Math.Abs(processingNodeScore - neighborScore);
 
             foreach (var node in CityMapClone.Nodes)
             {
@@ -185,7 +184,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
       protected override async Task PerformStep()
       {
-         int processingNodeKey = ProcessingNodes.Dequeue();
+         int processingNodeKey = NodesQueue.Dequeue();
          InterestPointWorker candidateNode = GetCheapestBestNeighbor(processingNodeKey);
          if (candidateNode is null)
          {
