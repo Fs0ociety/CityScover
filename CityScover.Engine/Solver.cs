@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 19/12/2018
+// File update: 22/12/2018
 //
 
 using CityScover.Data;
@@ -64,13 +64,9 @@ namespace CityScover.Engine
 
          // Creation of the Graph.
          CityMapGraph cityGraph = new CityMapGraph();
-         //var nodes = Points.Select(point => new InterestPointWorker(point));
-         //nodes.ToList().ForEach(point => cityGraph.AddNode(point.Entity.Id, point));
          foreach (var point in Points)
          {
-            InterestPointWorker pointWorker = new InterestPointWorker(point);
-            pointWorker.IsVisited = false;
-            cityGraph.AddNode(point.Id, pointWorker);
+            cityGraph.AddNode(point.Id, new InterestPointWorker(point));
          }
 
          var routes = CityScoverRepository.Routes;
@@ -81,8 +77,8 @@ namespace CityScover.Engine
 
          if (cityGraph.NodeCount == 0)
          {
-            string message = MessagesRepository
-               .GetMessage(MessageCode.SolverGraphCreationError, nameof(InitializeTour));
+            string message = MessagesRepository.GetMessage(
+                MessageCode.SolverGraphCreationError, nameof(InitializeTour));
             throw new Exception(message);
          }
 
@@ -90,8 +86,8 @@ namespace CityScover.Engine
       }
 
       private IEnumerable<InterestPoint> GetPointsByCategory(TourCategoryType category) => 
-         CityScoverRepository.Points.Where(point => 
-         point.Category.Id == category || point.Category.Id == TourCategoryType.None);
+         CityScoverRepository.Points.Where(point => point.Category.Id == category || 
+                                                    point.Category.Id == TourCategoryType.None);
 
       /// <summary>
       /// Gets a new Solution from the _solutionsQueue and processes it.
