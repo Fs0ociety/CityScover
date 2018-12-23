@@ -53,7 +53,7 @@ namespace CityScover.Engine.Algorithms.Greedy
       protected override async Task PerformStep()
       {
          Tour.RemoveEdge(_previousCandidateId, StartingPoint.Entity.Id);
-         var newStartPoi = CityMapClone[ProcessingNodes.Dequeue()];
+         var newStartPoi = CityMapClone[NodesQueue.Dequeue()];
 
          var candidatePoi = GetBestNeighbor(newStartPoi);
          if (candidatePoi is null)

@@ -469,7 +469,7 @@ namespace CityScover.Engine.Configurations
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsFilename = @"cityscover-points-30.xml",
+            PointsFilename = @"cityscover-points-15.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
