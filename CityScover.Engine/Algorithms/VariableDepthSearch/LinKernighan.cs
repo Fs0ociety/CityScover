@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/12/2018
+// File update: 23/12/2018
 //
 
 using CityScover.Commons;
@@ -77,25 +77,57 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
       {
          ICollection<InterestPointWorker> newSequence = new Collection<InterestPointWorker>();
 
-         // 1. Prendi tutti gli elementi da solutionNodes[0] a solutionNodes[i-1] e aggiungili 
-         // nell'ordine di processing a newSequence.
-         for (int c = 0; c <= i - 1; c++)
+         if (s < i)
          {
-            newSequence.Add(solutionNodes.ElementAt(c));
-         }
+            // 1. Mi copio in parte tutti gli elementi prima di s, più s compreso.
+            Collection<InterestPointWorker> beforeSNodes = new Collection<InterestPointWorker>();
+            for (int c = 0; c <= s; c++)
+            {
+               beforeSNodes.Add(solutionNodes.ElementAt(c));
+            }
 
-         // 2. Prendi gli elementi da solutionNodes[i] a solutionNodes[s] e aggiungili
-         // in ordine inverso a newSequence.
-         for (int c = s; c >= i; c--)
-         {
-            newSequence.Add(solutionNodes.ElementAt(c));
-         }
+            // 2. Prendi gli elementi da solutionNodes[s+1] a solutionNodes[i] escluso, e aggiungili
+            // nell'ordine di processing a newSequence.
+            for (int c = s + 1; c < i; c++)
+            {
+               newSequence.Add(solutionNodes.ElementAt(c));
+            }
 
-         // 3. Prendi gli elementi da solutionNodes[s+1] all'ultimo e aggiungili
-         // nell'ordine di processing a newSequence.
-         for (int c = s + 1; c < solutionNodes.Count(); c++)
+            // 3. Inserisco in ordine inverso gli elementi tenuti in parte prima.
+            for (int c = beforeSNodes.Count() - 1; c >= 0; c--)
+            {
+               newSequence.Add(beforeSNodes.ElementAt(c));
+            }
+
+            // 4. Prendi gli elementi da solutionNodes[i] a solutionNodes[solutionCount - 1] e aggiungili
+            // in ordine inverso a newSequence.
+            for (int c = solutionNodes.Count() - 1; c >= i; c--)
+            {
+               newSequence.Add(solutionNodes.ElementAt(c));
+            }
+         }
+         else
          {
-            newSequence.Add(solutionNodes.ElementAt(c));
+            // 1. Prendi tutti gli elementi da solutionNodes[0] a solutionNodes[i-1] e aggiungili 
+            // nell'ordine di processing a newSequence.
+            for (int c = 0; c <= i - 1; c++)
+            {
+               newSequence.Add(solutionNodes.ElementAt(c));
+            }
+
+            // 2. Prendi gli elementi da solutionNodes[i] a solutionNodes[s] e aggiungili
+            // in ordine inverso a newSequence.
+            for (int c = s; c >= i; c--)
+            {
+               newSequence.Add(solutionNodes.ElementAt(c));
+            }
+
+            // 3. Prendi gli elementi da solutionNodes[s+1] all'ultimo e aggiungili
+            // nell'ordine di processing a newSequence.
+            for (int c = s + 1; c < solutionNodes.Count(); c++)
+            {
+               newSequence.Add(solutionNodes.ElementAt(c));
+            }
          }
          return newSequence;
       }
@@ -140,18 +172,13 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LinKernighanHStepIncreased, CurrentStep, MaxSteps);
          Console.ForegroundColor = ConsoleColor.Gray;
-
-         // Metto il primo nodo della sequenza in fondo.
-         ICollection<InterestPointWorker> solutionNodes = CurrentBestStepSolution.SolutionGraph.Nodes.ToList();
-         InterestPointWorker firstNode = solutionNodes.FirstOrDefault();
-         solutionNodes.Remove(firstNode);
-         solutionNodes.Add(firstNode);
-
-
+                  
+         IEnumerable<InterestPointWorker> solutionNodes = CurrentBestStepSolution.SolutionGraph.Nodes;
+         
          ICollection<ToSolution> stepSolutions = new Collection<ToSolution>();
          for (int j = 0, i = j + 1; j < solutionNodes.Count(); j++, i++)
          {
-            if (j == solutionNodes.Count - 1)
+            if (j == solutionNodes.Count() - 1)
             {
                i = 0;
             }
@@ -252,7 +279,6 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       internal override void OnTerminated()
       {
-         //_cityMap = null;
          SendMessage(MessageCode.LinKernighanStop);
          base.OnTerminated();
       }
