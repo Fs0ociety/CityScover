@@ -402,6 +402,68 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
+         #region Test NN + LS + LK
+         Configuration testScrNNLSLK = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"cityscover-points-30.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(6, 0, 0),
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = false,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
+                     }
+                  }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageTwo,
+                  Category = AlgorithmFamily.LocalSearch,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.MaxIterations] = 5,
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.LocalSearchImprovementThreshold] = 2000,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 1
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.LinKernighan)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.MaxIterations] = 10
+                           }
+                        }
+                     }
+                  }
+               },
+            }
+         };
+         #endregion
+
          #region Test - Configuration 5 - NN + HCI/HCU
          Configuration c5Test = new Configuration()
          {
@@ -449,7 +511,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(c5Test);
+         Configurations.Add(testScrNNLSLK);
       }
       #endregion
 
