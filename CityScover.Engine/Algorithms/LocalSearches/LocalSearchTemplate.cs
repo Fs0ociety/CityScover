@@ -182,7 +182,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             }
          }
 
-         await Task.WhenAll(Solver.AlgorithmTasks.Values);
+         await Task.WhenAll(Solver.AlgorithmTasks.Values).ConfigureAwait(false);
 
          if (!currentNeighborhood.Any())
          {

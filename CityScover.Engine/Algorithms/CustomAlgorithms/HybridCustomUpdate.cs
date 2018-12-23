@@ -211,7 +211,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          SolutionsHistory.Add(CurrentSolution);
 
          await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
-         await Solver.AlgorithmTasks[CurrentSolution.Id];
+         await Solver.AlgorithmTasks[CurrentSolution.Id].ConfigureAwait(false);
 
          if (!CurrentSolution.IsValid)
          {

@@ -17,7 +17,7 @@ namespace CityScover.Commons
    /// </summary>
    public static class Utils
    {
-      public const int ValidationDelay = 250;
+      public const int ValidationDelay = 500;
       public const int MinTabuTenureFactor = 1;
       public const string TMaxConstraint = "TMax";
       public const string TimeWindowsConstraint = "Time Windows";

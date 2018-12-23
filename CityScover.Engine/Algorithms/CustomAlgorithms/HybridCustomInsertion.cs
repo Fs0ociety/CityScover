@@ -228,7 +228,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
             Solver.EnqueueSolution(_currentSolution);
             await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
-            await Solver.AlgorithmTasks[_currentSolution.Id];
+            await Solver.AlgorithmTasks[_currentSolution.Id].ConfigureAwait(false);
             SendMessage(MessageCode.HybridCustomInsertionNewNodeAdded,
                point.Entity.Name);
             SolutionsHistory.Add(_currentSolution);

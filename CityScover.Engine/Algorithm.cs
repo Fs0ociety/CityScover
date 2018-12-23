@@ -96,7 +96,6 @@ namespace CityScover.Engine
       #endregion
 
       #region Internal abstract methods
-
       protected abstract Task PerformStep();
       #endregion
 

@@ -407,7 +407,7 @@ namespace CityScover.Engine.Configurations
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsFilename = @"cityscover-points-15.xml",
+            PointsFilename = @"cityscover-points-60.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -438,7 +438,7 @@ namespace CityScover.Engine.Configurations
                            AlgorithmParameters =
                            {
                               [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 15, 0),
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         }
