@@ -36,68 +36,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       #endregion
 
       #region Private methods
-      //private InterestPointWorker GetCheapestBestNeighbor()
-      //{
-      //   int bestScore = default;
-      //   InterestPointWorker candidateNode = default;
-      //   Collection<InterestPointWorker> candidateNodes = new Collection<InterestPointWorker>();
-
-      //   foreach (var currentPoint in Tour.Nodes)
-      //   {
-      //      int currentPointId = currentPoint.Entity.Id;
-      //      int currentPointScore = currentPoint.Entity.Score.Value;
-      //      var neighborPoints = Tour.GetAdjacentNodes(currentPointId);
-
-      //      foreach (var neighborPointId in neighborPoints)
-      //      {
-      //         var processingEdge = CityMapClone.GetEdge(currentPointId, neighborPointId);
-      //         if (processingEdge is null)
-      //         {
-      //            return null;
-      //         }
-
-      //         InterestPointWorker neighborPoint = CityMapClone[neighborPointId];
-      //         int neighborPointScore = neighborPoint.Entity.Score.Value;
-      //         int currPointToNeighborScore = Math.Abs(currentPointScore - neighborPointScore);
-
-      //         foreach (var node in CityMapClone.Nodes)
-      //         {
-      //            int nodeId = node.Entity.Id;
-      //            int nodeScore = node.Entity.Score.Value;
-      //            bool canCompareCosts = !Tour.ContainsNode(nodeId) &&
-      //               nodeId != neighborPointId &&
-      //               !node.IsVisited;
-
-      //            if (canCompareCosts)
-      //            {
-      //               int currPointToNodeScore = Math.Abs(currentPointScore - nodeScore);
-      //               int nodeToNeighborScore = Math.Abs(nodeScore - neighborPointScore);
-      //               int deltaScore = currPointToNodeScore + nodeToNeighborScore - currPointToNeighborScore;
-
-      //               if (deltaScore > bestScore)
-      //               {
-      //                  bestScore = deltaScore;
-      //                  candidateNode = node;
-      //               }
-      //               else if (deltaScore == 0 || deltaScore == bestScore)
-      //               {
-      //                  candidateNodes.Add(node);
-      //               }
-      //            }
-      //         }
-
-      //         if (HasToBeSetCandidateNode(candidateNode, candidateNodes))
-      //         {
-      //            var nodeIndex = new Random().Next(0, candidateNodes.Count);
-      //            candidateNode = candidateNodes[nodeIndex];
-      //            candidateNodes.Clear();
-      //         }
-      //      }
-      //   }
-
-      //   return candidateNode;
-      //}
-
       private InterestPointWorker GetCheapestBestNeighbor(int nodeKey)
       {
          int bestScore = default;
@@ -157,8 +95,92 @@ namespace CityScover.Engine.Algorithms.Greedy
       private bool CanCompareCosts(InterestPointWorker node, int nodeId, int neighborId) =>
          !node.IsVisited && nodeId != neighborId && !Tour.ContainsNode(nodeId);
 
-      //private bool HasToBeSetCandidateNode(InterestPointWorker node, IEnumerable<InterestPointWorker> candidates) =>
-      //   node is null || candidates.Any();
+      private (int fromNodeKey, int toNodeKey, int kCandidate) GetCheapestBestNeighbor()
+      {
+         int fromNodeKey = default;
+         int toNodeKey = default;
+         int kCandidate = default;
+         int smallestDelta = int.MaxValue;
+
+         foreach (var edge in Tour.Edges)
+         {
+            foreach (var kNode in NodesQueue)
+            {
+               var edgeik = CityMapClone.GetEdge(edge.Entity.PointFrom.Id, kNode);
+               var edgekj = CityMapClone.GetEdge(kNode, edge.Entity.PointTo.Id);
+               var edgeij = CityMapClone.GetEdge(edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id);
+
+               if (edgeik is null || edgekj is null || edgeij is null)
+               {
+                  return (default, default, default);
+               }
+
+               int deltaCost;
+               var cik = edgeik.Weight.Invoke();
+               var ckj = edgekj.Weight.Invoke();
+               var cij = edgeij.Weight.Invoke();
+
+               try
+               {
+                  deltaCost = Convert.ToInt32(cik + ckj - cij);
+               }
+               catch
+               {
+                  return (default, default, default);
+               }
+
+               if (deltaCost < smallestDelta)
+               {
+                  smallestDelta = deltaCost;
+                  fromNodeKey = edge.Entity.PointFrom.Id;
+                  toNodeKey = edge.Entity.PointTo.Id;
+                  kCandidate = kNode;
+               }
+               else if (deltaCost == smallestDelta)
+               {
+                  var kNodePoi = CityMapClone[kNode];
+                  var kCandidatePoi = CityMapClone[kCandidate];
+                  var kNodePoiScore = kNodePoi.Entity.Score.Value;
+                  var kCandidatePoiScore = kCandidatePoi.Entity.Score.Value;
+                  var areScoreEquals = kNodePoiScore == kCandidatePoiScore;
+
+                  if (areScoreEquals)
+                  {
+                     CityMapGraph.SetRandomCandidateId(kCandidatePoi, kNodePoi, out kCandidate);
+                  }
+                  else
+                  {
+                     kCandidate = kCandidatePoiScore > kNodePoiScore 
+                        ? kCandidatePoi.Entity.Id 
+                        : kNodePoi.Entity.Id;
+                  }
+               }
+            }
+         }
+
+         return (fromNodeKey, toNodeKey, kCandidate);
+      }
+
+      private void AddPointsNotInTour()
+      {
+         #region Method 1: LINQ with Except
+         var tourNodesId = Tour.Nodes.Select(node => node.Entity.Id);
+         var cityMapNodes = CityMapClone.Nodes.Select(node => node.Entity.Id);
+         var nodesNotInTour = cityMapNodes.Except(tourNodesId);
+
+         NodesQueue.Clear();
+         nodesNotInTour.ToList().ForEach(node => NodesQueue.Enqueue(node));
+         #endregion
+
+         #region Method 2: LINQ with Where & Select
+         //NodesQueue.Clear();
+         //CityMapClone.Nodes
+         //   .Where(node => !Tour.ContainsNode(node.Entity.Id))
+         //   .Select(node => node.Entity.Id)
+         //   .ToList()
+         //   .ForEach(node => NodesQueue.Enqueue(node));
+         #endregion
+      }
       #endregion
 
       #region Overrides
@@ -166,7 +188,6 @@ namespace CityScover.Engine.Algorithms.Greedy
       {
          base.OnInitializing();
          int startingPointId = StartingPoint.Entity.Id;
-         Tour.AddNode(startingPointId, StartingPoint);
          InterestPointWorker bestNeighbor = GetBestNeighbor(StartingPoint);
          if (bestNeighbor is null)
          {
@@ -175,9 +196,11 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          bestNeighbor.IsVisited = true;
          int bestNeighborId = bestNeighbor.Entity.Id;
+         Tour.AddNode(startingPointId, StartingPoint);
          Tour.AddNode(bestNeighborId, bestNeighbor);
          Tour.AddRouteFromGraph(CityMapClone, startingPointId, bestNeighborId);
          Tour.AddRouteFromGraph(CityMapClone, bestNeighborId, startingPointId);
+         AddPointsNotInTour();
          _newStartingPoint = StartingPoint;
          _endPoint = bestNeighbor;
       }
