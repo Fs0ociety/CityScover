@@ -511,7 +511,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(testScrNNLSLK);
+         Configurations.Add(c1Test);
       }
       #endregion
 
