@@ -67,7 +67,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          Tour.AddRouteFromGraph(CityMapClone, _previousCandidateId, candidatePoi.Entity.Id);
          Tour.AddRouteFromGraph(CityMapClone, candidatePoi.Entity.Id, StartingPoint.Entity.Id);
          
-         ToSolution newSolution = new ToSolution()
+         var newSolution = new ToSolution()
          {
             SolutionGraph = Tour.DeepCopy()
          };

@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/12/2018
+// File update: 26/12/2018
 //
 
 using CityScover.Engine.Workers;
@@ -106,9 +106,31 @@ namespace CityScover.Engine
       }
       #endregion
 
+      #region Private methods
+      private DateTime CalculateTotalTime()
+      {
+         var solver = Solver.Instance;
+         InterestPointWorker startPoi = _solutionGraph.GetStartPoint();
+         InterestPointWorker endPoi = _solutionGraph.GetEndPoint();
+         DateTime endPoiTotalTime = endPoi.TotalTime;
+
+         var returnEdge = solver.CityMapGraph.GetEdge(endPoi.Entity.Id, startPoi.Entity.Id);
+         if (returnEdge is null)
+         {
+            throw new NullReferenceException(nameof(returnEdge));
+         }
+
+         double averageSpeedWalk = solver.WorkingConfiguration.WalkingSpeed;
+         TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
+         DateTime timeSpent = endPoiTotalTime.Add(timeReturn);
+         return timeSpent;
+      }
+      #endregion
+
       #region Internal static methods
       internal static string SolutionCollectionToString(IEnumerable<ToSolution> solutions)
       {
+         var solver = Solver.Instance;
          string message = string.Empty;
          if (solutions is null || !solutions.Any())
          {
@@ -121,10 +143,10 @@ namespace CityScover.Engine
          {
             message += $"\t{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.PrintGraph()}\n";
          });
-         ToSolution bestSolution = solutions.Where(solution => solution.IsValid).MaxBy(solution => solution.Cost);
+         var bestSolution = solutions.Where(solution => solution.IsValid).MaxBy(solution => solution.Cost);
          message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.PrintGraph())}";
 
-         TimeSpan tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - Solver.Instance.WorkingConfiguration.ArrivalTime;
+         var tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - solver.WorkingConfiguration.ArrivalTime;
          message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, bestSolution.Cost, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
          return message;
       }
@@ -132,26 +154,6 @@ namespace CityScover.Engine
       internal static void ResetSequenceId()
       {
          _sequenceId = 0;
-      }
-      #endregion
-
-      #region Private methods
-      private DateTime CalculateTotalTime()
-      {
-         InterestPointWorker startPoi = _solutionGraph.GetStartPoint();
-         InterestPointWorker endPoi = _solutionGraph.GetEndPoint();
-         DateTime endPoiTotalTime = endPoi.TotalTime;
-
-         RouteWorker returnEdge = Solver.Instance.CityMapGraph.GetEdge(endPoi.Entity.Id, startPoi.Entity.Id);
-         if (returnEdge is null)
-         {
-            throw new NullReferenceException(nameof(returnEdge));
-         }
-
-         double averageSpeedWalk = Solver.Instance.WorkingConfiguration.WalkingSpeed;
-         TimeSpan timeReturn = TimeSpan.FromSeconds(returnEdge.Weight() / averageSpeedWalk);
-         DateTime timeSpent = endPoiTotalTime.Add(timeReturn);
-         return timeSpent;
       }
       #endregion
    }

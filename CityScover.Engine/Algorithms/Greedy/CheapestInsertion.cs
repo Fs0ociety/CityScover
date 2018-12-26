@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/12/2018
+// File update: 26/12/2018
 //
 
 using CityScover.Commons;
@@ -163,7 +163,7 @@ namespace CityScover.Engine.Algorithms.Greedy
 
          var newSolution = new ToSolution()
          {
-            SolutionGraph = Tour
+            SolutionGraph = Tour.DeepCopy()
          };
 
          SendMessage(MessageCode.GreedyNodeAdded, candidateNode.Entity.Name, newSolution.Id);
