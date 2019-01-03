@@ -454,7 +454,8 @@ namespace CityScover.Engine.Configurations
                         {
                            AlgorithmParameters =
                            {
-                              [ParameterCodes.MaxIterations] = 10
+                              [ParameterCodes.MaxIterations] = 10,
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         }
                      }
@@ -511,7 +512,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(c5Test);
+         Configurations.Add(testScrNNLSLK);
       }
       #endregion
 

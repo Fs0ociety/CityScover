@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 23/12/2018
+// File update: 03/01/2019
 //
 
 using CityScover.Commons;
@@ -38,20 +38,45 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       #region Internal properties
       internal ToSolution CurrentBestSolution { get; set; }
-      internal ToSolution CurrentBestStepSolution { get; set; }
+      //internal ToSolution CurrentBestStepSolution { get; set; }
       internal int MaxSteps { get; set; }
       #endregion
 
       #region Private methods
-      private IEnumerable<InterestPointWorker> GetClosestSNeighbors(CityMapGraph workingGraph, int jNodeId, int iNodeId)
+      private InterestPointWorker GetClosestSNeighbor(CityMapGraph workingGraph, int jNodeId, int iNodeId)
       {
-         int predEndPoiNodeId = workingGraph.GetPredecessorNodes(jNodeId).FirstOrDefault();
-         IEnumerable<InterestPointWorker> sCandidates = workingGraph.Nodes
-            .Where(node => node.Entity.Id != predEndPoiNodeId &&
-                           node.Entity.Id != iNodeId &&
-                           node.Entity.Id != jNodeId)
-            .OrderByDescending(node => node.Entity.Score.Value);
-         return sCandidates;
+         // Mi ricavo il predecessore di j.
+         int predecessorOfJNodeId = workingGraph.GetPredecessorNodes(jNodeId).FirstOrDefault();
+         if (predecessorOfJNodeId == 0)
+         {
+            return null;
+         }
+
+         // Mi ricavo l'insieme dei nodi del grafo corrente della soluzione, che esclude i nodi i e il
+         // predecessore di j (per sicurezza anche j stesso).
+         InterestPointWorker predecessorJNode = workingGraph[predecessorOfJNodeId];
+         InterestPointWorker iNode = workingGraph[iNodeId];
+         InterestPointWorker jNode = workingGraph[jNodeId];
+
+         InterestPointWorker[] notPermittedNodes = { iNode, jNode, predecessorJNode };
+         IEnumerable<InterestPointWorker> permittedNodes = workingGraph.Nodes.Except(notPermittedNodes);
+         if (!permittedNodes.Any())
+         {
+            return null;
+         }
+
+         var sCandidateEdges = Solver.CityMapGraph.Edges.Where(edge => permittedNodes.Where(
+            node => node.Entity.Id == edge.Entity.PointTo.Id &&
+            edge.Entity.PointFrom.Id == jNodeId).Any());
+
+         var sCandidateEdge = sCandidateEdges.OrderBy(edge => edge.Weight.Invoke()).FirstOrDefault();
+
+         if (sCandidateEdge is null)
+         {
+            return null;
+         }
+
+         return workingGraph[sCandidateEdge.Entity.PointTo.Id];
       }
 
       private CityMapGraph BuildSolutionGraph(IEnumerable<InterestPointWorker> newNodeSequence)
@@ -146,6 +171,24 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          _executedMoves.Add(edgeMove);
       }
 
+      private string GetMoveDescription(in ToSolution startSolution, in ToSolution newSolution)
+      {
+         int removedEdgePointFromId = newSolution.Move.Item1;
+         int removedEdgePointToId = newSolution.Move.Item2;
+
+         // Prendo giù il RouteWorker corrispondente all'arco che ho cancellato 
+         // dalla soluzione di partenza.
+         RouteWorker removedEdge = startSolution.SolutionGraph.GetEdge(removedEdgePointFromId, removedEdgePointToId);
+         if (removedEdge is null)
+         {
+            return string.Empty;
+         }
+
+         return MessagesRepository.GetMessage(
+            MessageCode.LinKernighanMoveDetails,
+            newSolution.Id,
+            $"({removedEdge.Entity.PointFrom.Id}, {removedEdge.Entity.PointTo.Id})");
+      }
       #endregion
 
       #region Overrides
@@ -164,7 +207,8 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          _solutionsHistory = new Collection<ToSolution>();
          _executedMoves = new Collection<RouteWorker>();
 
-         CurrentBestStepSolution = CurrentBestSolution;
+         //CurrentBestStepSolution = CurrentBestSolution;
+         _solutionsHistory.Add(CurrentBestSolution);
       }
 
       protected override async Task PerformStep()
@@ -172,8 +216,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          Console.ForegroundColor = ConsoleColor.Cyan;
          SendMessage(MessageCode.LinKernighanHStepIncreased, CurrentStep, MaxSteps);
          Console.ForegroundColor = ConsoleColor.Gray;
-                  
-         IEnumerable<InterestPointWorker> solutionNodes = CurrentBestStepSolution.SolutionGraph.Nodes;
+
+         ToSolution startStepSolution = _solutionsHistory.Last();
+         IEnumerable<InterestPointWorker> solutionNodes = startStepSolution.SolutionGraph.Nodes;
          
          ICollection<ToSolution> stepSolutions = new Collection<ToSolution>();
          for (int j = 0, i = j + 1; j < solutionNodes.Count(); j++, i++)
@@ -186,29 +231,23 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             // Rimuovo l'arco (j,i).
             InterestPointWorker jNode = solutionNodes.ElementAt(j);
             InterestPointWorker iNode = solutionNodes.ElementAt(i);
-            CityMapGraph workingGraph = CurrentBestStepSolution.SolutionGraph.DeepCopy();
+            CityMapGraph workingGraph = startStepSolution.SolutionGraph.DeepCopy();
             workingGraph.RemoveEdge(jNode.Entity.Id, iNode.Entity.Id);
 
-            InterestPointWorker sNode = default;
-            var sNodeCandidates = GetClosestSNeighbors(workingGraph, jNode.Entity.Id, iNode.Entity.Id);
-            foreach (var sNodeCandidate in sNodeCandidates)
-            {
-               RouteWorker forbiddenMove = _executedMoves.FirstOrDefault(move => move.Entity.PointFrom.Id == jNode.Entity.Id &&
-                                 move.Entity.PointTo.Id == sNodeCandidate.Entity.Id);
-                                    
-               if (forbiddenMove is null)
-               {
-                  sNode = sNodeCandidate;
-                  break;
-               }
-               //SendMessage(MessageCode.LinKernighanBlockedMove, $"(" + fromEndNodeToSNodeEdge.Entity.PointFrom.Id + "," + fromEndNodeToSNodeEdge.Entity.PointTo.Id + ")");
-            }
-
+            InterestPointWorker sNode = GetClosestSNeighbor(workingGraph, jNode.Entity.Id, iNode.Entity.Id);
             if (sNode is null)
             {
                SendMessage(MessageCode.LinKernighanNoSNodeSelected);
-               ForceStop = true;
-               return;
+               continue;
+            }
+
+            RouteWorker forbiddenMove = _executedMoves.FirstOrDefault(move => move.Entity.PointFrom.Id == jNode.Entity.Id &&
+                              move.Entity.PointTo.Id == sNode.Entity.Id);
+                                    
+            if (forbiddenMove != null)
+            {
+               SendMessage(MessageCode.LinKernighanBlockedMove, $"(" + forbiddenMove.Entity.PointFrom.Id + "," + forbiddenMove.Entity.PointTo.Id + ")");
+               continue;
             }
 
             int sIndex = solutionNodes.ToList().FindIndex(node => node.Entity.Id == sNode.Entity.Id);
@@ -224,13 +263,21 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
                SolutionGraph = newSolutionGraph,
                Move = newSolutionMove
             };
-            //newSolution.Description = GetMoveDescription(solution, newSolution);
+            newSolution.Description = GetMoveDescription(startStepSolution, newSolution);
             stepSolutions.Add(newSolution);            
+         }
+
+         // Se non ho soluzioni nel mio insieme da validare, ritorno la soluzione corrente con
+         // un messaggio.
+         if (!stepSolutions.Any())
+         {
+            return;
          }
 
          // Valido le soluzioni
          foreach (var solution in stepSolutions)
          {
+            SendMessage(solution.Description);
             Solver.EnqueueSolution(solution);
             await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
 
@@ -243,10 +290,11 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          await Task.WhenAll(Solver.AlgorithmTasks.Values);
 
          // Seleziono la migliore soluzione della collezione solutions.
-         CurrentBestStepSolution = GetBest(stepSolutions);
+         ToSolution newBestStepSolution = GetBest(stepSolutions);
+         _solutionsHistory.Add(newBestStepSolution);
 
          // Blocco la mossa della best appena selezionata.
-         LockMove(CurrentBestStepSolution.Move);
+         LockMove(newBestStepSolution.Move);
       }
 
       internal override void OnTerminating()
@@ -265,13 +313,17 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             }
          });
          
-         if (CurrentBestSolution.Cost != bestSolution.Cost)
+         if (CurrentBestSolution.Cost < bestSolution.Cost)
          {
+            Console.ForegroundColor = ConsoleColor.Green;
             SendMessage(MessageCode.LinKernighanBestFound, bestSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
          }
          else
          {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             SendMessage(MessageCode.LinKernighanInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+            Console.ForegroundColor = ConsoleColor.Gray;
          }
 
          Solver.BestSolution = bestSolution;

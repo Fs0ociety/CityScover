@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/12/2018
+// File update: 03/01/2019
 //
 
 using System.Collections.Generic;
@@ -62,6 +62,7 @@ namespace CityScover.Engine
 
             [MessageCode.LinKernighanStartSolution] = "Lin Kernighan starting with current Local Search Best Solution {0} with cost {1}.",
             [MessageCode.LinKernighanHStepIncreased] = "Lin Kernighan Step {0} of {1}.",
+            [MessageCode.LinKernighanMoveDetails] = "New solution {0} details: removed edge {1}.",
             [MessageCode.LinKernighanStart] = "Max iterations with no improvements reached. Starting Lin Kernighan...",
             [MessageCode.LinKernighanBlockedMove] = "Move {0} already selected! Continue searching...",
             [MessageCode.LinKernighanNoSNodeSelected] = "No one move can be selected! Terminating...",
@@ -143,6 +144,7 @@ namespace CityScover.Engine
       LinKernighanStartSolution,
       LinKernighanHStepIncreased,
       LinKernighanStart,
+      LinKernighanMoveDetails,
       LinKernighanBlockedMove,
       LinKernighanNoSNodeSelected,
       LinKernighanBestFound,
