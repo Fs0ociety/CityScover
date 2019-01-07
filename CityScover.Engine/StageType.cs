@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/11/2018
+// File update: 07/01/2019
 //
 
 namespace CityScover.Engine
@@ -32,12 +32,7 @@ namespace CityScover.Engine
       /// <summary>
       /// Stage for Metaheuristic algorithms.
       /// </summary>
-      StageThree,
-
-      /// <summary>
-      /// Stage for Improvement algorithms.
-      /// </summary>
-      StageImprovement
+      StageThree
    }
    #endregion
 }

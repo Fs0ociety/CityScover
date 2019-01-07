@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/12/2018
+// File update: 07/01/2019
 //
 
 using CityScover.ADT.Graphs;
@@ -43,25 +43,25 @@ namespace CityScover.Engine.Workers
          AddEdge(fromPoiKey, toPoiKey, edge);
       }
 
-      internal void AddNodeFromGraph(CityMapGraph source, int nodeKey)
-      {
-         if (ContainsNode(nodeKey))
-         {
-            return;
-         }
+      //internal void AddNodeFromGraph(CityMapGraph source, int nodeKey)
+      //{
+      //   if (ContainsNode(nodeKey))
+      //   {
+      //      return;
+      //   }
 
-         if (source is null)
-         {
-            throw new ArgumentNullException();
-         }
+      //   if (source is null)
+      //   {
+      //      throw new ArgumentNullException();
+      //   }
 
-         if (!source.ContainsNode(nodeKey))
-         {
-            throw new InvalidOperationException();
-         }
+      //   if (!source.ContainsNode(nodeKey))
+      //   {
+      //      throw new InvalidOperationException();
+      //   }
 
-         AddNode(nodeKey, source[nodeKey]);
-      }
+      //   AddNode(nodeKey, source[nodeKey]);
+      //}
 
       internal InterestPointWorker GetStartPoint()
       {

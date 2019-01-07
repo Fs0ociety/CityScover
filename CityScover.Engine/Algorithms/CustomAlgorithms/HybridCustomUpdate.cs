@@ -66,7 +66,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          return removalEdgesCandidates;
       }
 
-      private InterestPointWorker FindPointToRemove(int candidateNodeKey)
+      private InterestPointWorker GetPointToRemove(int candidateNodeKey)
       {
          InterestPointWorker nodeKeyToRemove = default;
          int currentPointScore = int.MaxValue;
@@ -107,7 +107,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                else if (pointToScore == currentPointScore)
                {
                   // Random choose
-                  nodeKeyToRemove = (new Random().Next(2) == 0)
+                  nodeKeyToRemove = new Random().Next(2) == 0
                      ? nodeKeyToRemove : currentPointTo;
                }
             }
@@ -191,7 +191,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       protected override async Task PerformStep()
       {
          var candidateNode = ProcessingNodes.Dequeue();
-         var nodeToRemove = FindPointToRemove(candidateNode.Entity.Id);
+         var nodeToRemove = GetPointToRemove(candidateNode.Entity.Id);
          if (nodeToRemove == default)
          {
             return;

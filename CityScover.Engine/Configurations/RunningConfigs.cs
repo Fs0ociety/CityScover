@@ -484,7 +484,7 @@ namespace CityScover.Engine.Configurations
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.CheapestInsertion,
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
@@ -512,7 +512,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(testScrNNLSLK);
+         Configurations.Add(c5Test);
       }
       #endregion
 
