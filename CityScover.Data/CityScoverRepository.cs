@@ -110,7 +110,7 @@ namespace CityScover.Data
                         void SetCategory()
                         {
                            string categoryId = nestedChild.Attributes["id"].Value;
-                           TourCategory category = default;
+                           TourCategory category;
                            switch (categoryId)
                            {
                               case "1":
@@ -179,13 +179,11 @@ namespace CityScover.Data
 
                         void SetTimeVisit()
                         {
-                           string measureUnit = nestedChild.Attributes["unit"].Value;
-                           string duration = nestedChild.Attributes["duration"].Value;
-                           pointBuilder.SetTimeVisit((!string.Empty.Equals(duration)) ? new TimeSpan(0, int.Parse(duration), 0) : (TimeSpan?)null);
+                           string duration = nestedChild.Attributes?["duration"].Value;
+                           pointBuilder.SetTimeVisit(!string.Empty.Equals(duration) 
+                              ? new TimeSpan(0, int.Parse(duration ?? throw new InvalidOperationException(nameof(duration))), 0) 
+                              : (TimeSpan?)null);
                         }
-                        break;
-
-                     default:
                         break;
                   }
                }
@@ -209,8 +207,6 @@ namespace CityScover.Data
                   continue;
                }
 
-               string xmlPointId = default;
-               int pointId = default;
                double distance = default;
                InterestPoint pointFrom = default;
                InterestPoint pointTo = default;
@@ -219,6 +215,8 @@ namespace CityScover.Data
 
                foreach (XmlNode nestedChild in childNode.ChildNodes)
                {
+                  string xmlPointId;
+                  int pointId;
                   switch (nestedChild.Name)
                   {
                      case "PointFrom":
@@ -241,9 +239,6 @@ namespace CityScover.Data
                            throw new FormatException(nameof(distance));
                         }
                         distance = fDistance;
-                        break;
-
-                     default:
                         break;
                   }
                }

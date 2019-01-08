@@ -17,7 +17,7 @@ namespace CityScover.Entities
 {
    public class InterestPointBuilder
    {
-      private int _id;
+      private readonly int _id;
       private double _latitude;
       private double _longitude;
       private string _name;
@@ -41,7 +41,8 @@ namespace CityScover.Entities
       #endregion
 
       #region Public properties
-      public TourCategory Category { get { return _category; } }
+      public TourCategory Category => _category;
+
       #endregion
 
       #region Public methods

@@ -18,14 +18,14 @@ namespace CityScover.Data
 {
    public static class RoutesGenerator
    {
-      private static string _rootDirectory;
+      private static readonly string RootDirectory;
       private static string _filename;
 
       #region Static Constructors
       static RoutesGenerator()
       {
-         _rootDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\.."));
-         _rootDirectory = Path.Combine(_rootDirectory, "CityScover.Data");
+         RootDirectory = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, @"..\..\.."));
+         RootDirectory = Path.Combine(RootDirectory, "CityScover.Data");
       }
       #endregion
 
@@ -36,7 +36,7 @@ namespace CityScover.Data
          {
             return;
          }
-         _filename = _rootDirectory + Path.DirectorySeparatorChar.ToString() + 
+         _filename = RootDirectory + Path.DirectorySeparatorChar.ToString() + 
             "cityscover-routes-" + pointsCount + ".xml";
 
          if (File.Exists(_filename))
@@ -94,8 +94,8 @@ namespace CityScover.Data
 
          void ComputeDistance(int pointFromId, int pointToId, out double distance, out MeasureUnit measureUnit)
          {
-            var pointFrom = points.Where(point => point.Id == pointFromId).FirstOrDefault();
-            var pointTo = points.Where(point => point.Id == pointToId).FirstOrDefault();
+            var pointFrom = points.FirstOrDefault(point => point.Id == pointFromId);
+            var pointTo = points.FirstOrDefault(point => point.Id == pointToId);
 
             Location locationFrom = new Location(pointFrom.Latitude, pointFrom.Longitude);
             Location locationTo = new Location(pointTo.Latitude, pointTo.Longitude);
@@ -103,7 +103,7 @@ namespace CityScover.Data
             Distance pointsDistance = locationFrom.DistanceBetween(locationTo, DistanceUnits.Kilometers);
 
             distance = pointsDistance.Value * 1000.0;
-            measureUnit = measureUnits.Where(code => code.Code.Equals("m")).FirstOrDefault();
+            measureUnit = measureUnits.FirstOrDefault(code => code.Code.Equals("m"));
          }
       }
       #endregion

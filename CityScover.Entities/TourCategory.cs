@@ -22,7 +22,7 @@ namespace CityScover.Entities
       #endregion
 
       #region Public properties
-      public TourCategoryType Id { get; private set; }
+      public TourCategoryType Id { get; }
       public string Description { get; private set; }
       #endregion
 
