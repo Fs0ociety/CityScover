@@ -71,13 +71,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          InterestPointWorker nodeKeyToRemove = default;
          int currentPointScore = int.MaxValue;
 
-         foreach (var (edge, tWalk) in _candidateEdges.ToList())
+         foreach (var (edge, tWalk) in _candidateEdges)
          {
-            if (nodeKeyToRemove != default)
-            {
-               break;
-            }
-
             int currentPointToId = edge.Entity.PointTo.Id;
             var newEdge = Solver.CityMapGraph
                .GetEdge(edge.Entity.PointFrom.Id, candidateNodeKey);
@@ -102,11 +97,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                {
                   nodeKeyToRemove = currentPointTo;
                   currentPointScore = pointToScore;
-                  _candidateEdges.Remove((edge, tWalk));
                }
                else if (pointToScore == currentPointScore)
                {
-                  // Random choose
                   nodeKeyToRemove = new Random().Next(2) == 0
                      ? nodeKeyToRemove : currentPointTo;
                }
@@ -237,7 +230,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          if (CurrentSolution != null)
          {
             Console.ForegroundColor = ConsoleColor.Magenta;
-            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution, 
+            SendMessage(MessageCode.HybridCustomUpdateStopWithSolution,
                CurrentSolution.Id, CurrentSolution.Cost);
             Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -249,11 +242,15 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                return;
             }
 
-            // Se capita che il costo totale della CurrentSolution calcolata da HCU è inferiore rispetto
-            // alla BestSolution precedente del Solver, aggiorno comunque la BestSolution del Solver
-            // con la CurrentSolution di HCU, poiché esso da più priorità alla distanza che al gradimento.
-            // Quindi gli algoritmi di ricerca locale nello Stage 2 potrebbero partire da una soluzione a costo peggiore.
-            // (SCELTA IMPLEMENTATIVA)
+            /*
+             * SCELTA IMPLEMENTATIVA
+             *
+             * Se capita che il costo totale della CurrentSolution calcolata da HCU è inferiore rispetto
+             * alla BestSolution precedente del Solver, aggiorno comunque la BestSolution del Solver
+             * con la CurrentSolution di HCU, poiché esso da più priorità alla distanza che al gradimento.
+             * Quindi gli algoritmi di ricerca locale del secondo Stage potrebbero partire da una soluzione
+             * con costo inferiore.
+             */
 
             CurrentSolution = validSolutions.MaxBy(solution => solution.Cost);
 

@@ -91,16 +91,16 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          // Prendo giù i RouteWorker corrispondenti agli archi iniziali (quelli che ho tolto) 
          // dalla soluzione di partenza.
-         RouteWorker firstEdge = startSolution.SolutionGraph.Edges.Where(edge => edge.Entity.Id == firstEdgeId).FirstOrDefault();
-         RouteWorker secondEdge = startSolution.SolutionGraph.Edges.Where(edge => edge.Entity.Id == secondEdgeId).FirstOrDefault();
+         RouteWorker firstEdge = startSolution.SolutionGraph.Edges.FirstOrDefault(edge => edge.Entity.Id == firstEdgeId);
+         RouteWorker secondEdge = startSolution.SolutionGraph.Edges.FirstOrDefault(edge => edge.Entity.Id == secondEdgeId);
 
          return MessagesRepository.GetMessage(
             MessageCode.LocalSearchNewNeighborhoodMoveDetails,
             newSolution.Id,
-            $"({firstEdge.Entity.PointFrom.Id}, {firstEdge.Entity.PointTo.Id})",
-            $"({secondEdge.Entity.PointFrom.Id}, {secondEdge.Entity.PointTo.Id})",
-            $"({firstEdge.Entity.PointTo.Id}, {secondEdge.Entity.PointTo.Id})",
-            $"({firstEdge.Entity.PointFrom.Id}, {secondEdge.Entity.PointFrom.Id})");
+            $"({firstEdge?.Entity.PointFrom.Id}, {firstEdge?.Entity.PointTo.Id})",
+            $"({secondEdge?.Entity.PointFrom.Id}, {secondEdge?.Entity.PointTo.Id})",
+            $"({firstEdge?.Entity.PointTo.Id}, {secondEdge?.Entity.PointTo.Id})",
+            $"({firstEdge?.Entity.PointFrom.Id}, {secondEdge?.Entity.PointFrom.Id})");
       }
       #endregion
 
