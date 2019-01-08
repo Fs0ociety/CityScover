@@ -84,25 +84,27 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             double tWalkMinutes = (newEdge.Weight.Invoke() / _averageSpeedWalk) / 60.0;
             TimeSpan tEdgeWalk = TimeSpan.FromMinutes(tWalkMinutes);
 
-            if (tEdgeWalk < tWalk)
+            if (tEdgeWalk >= tWalk)
             {
-               if (!Tour.ContainsNode(currentPointToId))
-               {
-                  throw new NullReferenceException(nameof(currentPointToId));
-               }
+               continue;
+            }
 
-               var currentPointTo = Tour[currentPointToId];
-               int pointToScore = currentPointTo.Entity.Score.Value;
-               if (pointToScore < currentPointScore)
-               {
-                  nodeKeyToRemove = currentPointTo;
-                  currentPointScore = pointToScore;
-               }
-               else if (pointToScore == currentPointScore)
-               {
-                  nodeKeyToRemove = new Random().Next(2) == 0
-                     ? nodeKeyToRemove : currentPointTo;
-               }
+            if (!Tour.ContainsNode(currentPointToId))
+            {
+               throw new NullReferenceException(nameof(currentPointToId));
+            }
+
+            var currentPointTo = Tour[currentPointToId];
+            int pointToScore = currentPointTo.Entity.Score.Value;
+            if (pointToScore < currentPointScore)
+            {
+               nodeKeyToRemove = currentPointTo;
+               currentPointScore = pointToScore;
+            }
+            else if (pointToScore == currentPointScore)
+            {
+               nodeKeyToRemove = new Random().Next(2) == 0
+                  ? nodeKeyToRemove : currentPointTo;
             }
          }
 
