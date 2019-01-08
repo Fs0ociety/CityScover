@@ -512,7 +512,68 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(c5Test);
+         #region Test NN + LS + LK
+         Configuration c1TestLK = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"cityscover-points-60.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(6, 0, 0),
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,                     
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
+                     }
+                  }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageTwo,
+                  Category = AlgorithmFamily.LocalSearch,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     ChildrenFlows =
+                     {                        
+                        new StageFlow(AlgorithmType.LinKernighan)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.MaxIterations] = 10,
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                           }
+                        }
+                     },
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.LocalSearchImprovementThreshold] = 200,
+                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 2
+                     }
+                  }
+               }               
+            }
+         };
+         #endregion
+
+         Configurations.Add(c1TestLK);
       }
       #endregion
 
