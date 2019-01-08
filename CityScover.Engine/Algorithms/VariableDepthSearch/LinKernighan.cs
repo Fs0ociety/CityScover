@@ -253,11 +253,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             int sIndex = solutionNodes.ToList().FindIndex(node => node.Entity.Id == sNode.Entity.Id);
             IEnumerable<InterestPointWorker> newNodeSequence = GenerateSequence(solutionNodes, i, sIndex);
             CityMapGraph newSolutionGraph = BuildSolutionGraph(newNodeSequence);
-            Tuple<int, int> newSolutionMove = Tuple.Create(jNode.Entity.Id, iNode.Entity.Id);
-            if (newSolutionMove is null)
-            {
-               continue;
-            }
+            Tuple<int, int> newSolutionMove = Tuple.Create(jNode.Entity.Id, iNode.Entity.Id);            
             ToSolution newSolution = new ToSolution()
             {
                SolutionGraph = newSolutionGraph,
