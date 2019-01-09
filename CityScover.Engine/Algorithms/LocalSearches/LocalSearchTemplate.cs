@@ -37,7 +37,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Constructors
-      internal LocalSearchTemplate(Neighborhood<ToSolution> neighborhood, 
+      internal LocalSearchTemplate(Neighborhood<ToSolution> neighborhood,
          AlgorithmTracker provider = null) : base(provider)
       {
          Type = neighborhood.Type;
@@ -51,7 +51,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Private methods
-      private ToSolution GetBest(IEnumerable<ToSolution> neighborhood) => 
+      private ToSolution GetBest(IEnumerable<ToSolution> neighborhood) =>
          neighborhood.MaxBy(solution => solution.Cost);
 
       private async Task RunImprovementsInternal()
@@ -63,7 +63,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             algorithm.Provider = Provider;
 
             var solutionToImprove = (CurrentBestSolution.Cost < Solver.BestSolution.Cost)
-               ? Solver.BestSolution 
+               ? Solver.BestSolution
                : CurrentBestSolution;
 
             await RunImprovement(algorithm, solutionToImprove, Type);
@@ -106,7 +106,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          await StartImprovementAlgorithm(improvementAlgorithm, typeToRestart);
       }
 
-      internal async Task StartImprovementAlgorithm(Algorithm algorithm, AlgorithmType typeToRestart)
+      private async Task StartImprovementAlgorithm(Algorithm algorithm, AlgorithmType typeToRestart)
       {
          Solver.CurrentAlgorithm = algorithm.Type;
          Task algorithmTask = Task.Run(algorithm.Start);
@@ -217,21 +217,21 @@ namespace CityScover.Engine.Algorithms.LocalSearches
                var deltaImprovement = solution.Cost - _previousSolutionCost;
                if (deltaImprovement < _improvementThreshold)
                {
+                  _iterationsWithoutImprovement++;
+                  _shouldRunImprovement = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
                   Console.ForegroundColor = ConsoleColor.Yellow;
                   SendMessage(MessageCode.LocalSearchNeighborhoodBestUnderThreshold, solution.Id, solution.Cost);
                   Console.ForegroundColor = ConsoleColor.Gray;
-                  _iterationsWithoutImprovement++;
-                  _shouldRunImprovement = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
                }
                else
                {
-                  // C'è stato un miglioramento, perciò devo resettare il contatore. Le iterazioni senza miglioramenti
-                  // devono essere contigue.               
+                  // C'è stato un miglioramento, perciò devo resettare il contatore.
+                  // Le iterazioni senza miglioramenti devono essere contigue.               
                   _iterationsWithoutImprovement = default;
                   _shouldRunImprovement = default;
 
-                  // SOLO IN QUESTO CASO la currentBestSolution = solution, perchè c'è stato un effettivo miglioramento.
-                  // (Ha passato anche la soglia).
+                  // SOLO IN QUESTO CASO la currentBestSolution = solution,
+                  // perché c'è stato un effettivo miglioramento. Ha superato anche la soglia.
                   CurrentBestSolution = solution;
                   _solutionsHistory.Add(solution);
                }
@@ -240,12 +240,9 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             {
                _iterationsWithoutImprovement++;
                _shouldRunImprovement = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-               if (AcceptImprovementsOnly)
-               {
-                  Console.ForegroundColor = ConsoleColor.Yellow;
-                  SendMessage(MessageCode.LocalSearchInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
-                  Console.ForegroundColor = ConsoleColor.Gray;
-               }
+               Console.ForegroundColor = ConsoleColor.Yellow;
+               SendMessage(MessageCode.LocalSearchInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+               Console.ForegroundColor = ConsoleColor.Gray;
             }
          }
 
