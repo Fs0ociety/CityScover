@@ -564,8 +564,8 @@ namespace CityScover.Engine.Configurations
                      {
                         [ParameterCodes.CanDoImprovements] = true,
                         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
-                        [ParameterCodes.LocalSearchImprovementThreshold] = 200,
-                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 2
+                        [ParameterCodes.LocalSearchImprovementThreshold] = 10,
+                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 1
                      }
                   }
                }               

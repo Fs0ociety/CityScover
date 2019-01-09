@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 15/12/2018
+// File update: 09/01/2018
 //
 
 using CityScover.Commons;
@@ -199,35 +199,53 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          bool isBetterThanCurrentBestSolution = Solver.Problem
             .CompareSolutionsCost(solution.Cost, CurrentBestSolution.Cost);
 
-         if (!AcceptImprovementsOnly || 
-            (AcceptImprovementsOnly && isBetterThanCurrentBestSolution))
+         // Caso utilizzato da metaeuristiche come Tabu Search. Se accetto peggioramenti, non m'importa
+         // che sia migliore della best corrente, diventa la mia best. E non controllo neanche la soglia.
+         if (!AcceptImprovementsOnly)
          {
             CurrentBestSolution = solution;
          }
-
-         if (isBetterThanCurrentBestSolution)
+         else
          {
-            Console.ForegroundColor = ConsoleColor.Green;
-            SendMessage(MessageCode.LocalSearchBestFound, solution.Cost, _previousSolutionCost);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            if (isBetterThanCurrentBestSolution)
+            {
+               Console.ForegroundColor = ConsoleColor.Green;
+               SendMessage(MessageCode.LocalSearchBestFound, solution.Cost, _previousSolutionCost);
+               Console.ForegroundColor = ConsoleColor.Gray;
 
-            _solutionsHistory.Add(solution);
+               // E' migliore, ma di quanto? Se il delta di miglioramento è 0 comunque incremento l'iterationsWithoutImprovement.
+               var deltaImprovement = solution.Cost - _previousSolutionCost;
+               if (deltaImprovement < _improvementThreshold)
+               {
+                  Console.ForegroundColor = ConsoleColor.Yellow;
+                  SendMessage(MessageCode.LocalSearchNeighborhoodBestUnderThreshold, solution.Id, solution.Cost);
+                  Console.ForegroundColor = ConsoleColor.Gray;
+                  _iterationsWithoutImprovement++;
+                  _shouldRunImprovement = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
+               }
+               else
+               {
+                  // C'è stato un miglioramento, perciò devo resettare il contatore. Le iterazioni senza miglioramenti
+                  // devono essere contigue.               
+                  _iterationsWithoutImprovement = default;
+                  _shouldRunImprovement = default;
 
-            // E' migliore, ma di quanto? Se il delta di miglioramento è 0 comunque incremento l'iterationsWithoutImprovement.
-            var deltaImprovement = CurrentBestSolution.Cost - _previousSolutionCost;
-            if (deltaImprovement < _improvementThreshold)
+                  // SOLO IN QUESTO CASO la currentBestSolution = solution, perchè c'è stato un effettivo miglioramento.
+                  // (Ha passato anche la soglia).
+                  CurrentBestSolution = solution;
+                  _solutionsHistory.Add(solution);
+               }
+            }
+            else
             {
                _iterationsWithoutImprovement++;
                _shouldRunImprovement = _iterationsWithoutImprovement >= _maxIterationsWithoutImprovements;
-            }
-         }
-         else
-         {
-            if (AcceptImprovementsOnly)
-            {
-               Console.ForegroundColor = ConsoleColor.Yellow;
-               SendMessage(MessageCode.LocalSearchInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
-               Console.ForegroundColor = ConsoleColor.Gray;
+               if (AcceptImprovementsOnly)
+               {
+                  Console.ForegroundColor = ConsoleColor.Yellow;
+                  SendMessage(MessageCode.LocalSearchInvariateSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+                  Console.ForegroundColor = ConsoleColor.Gray;
+               }
             }
          }
 

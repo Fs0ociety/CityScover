@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/01/2019
+// File update: 09/01/2019
 //
 
 using System.Collections.Generic;
@@ -34,6 +34,7 @@ namespace CityScover.Engine
             [MessageCode.LocalSearchNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
             [MessageCode.LocalSearchNewNeighborhoodMoveDetails] = "New solution {0} details: swapping between edge {1} and edge {2}.\nSwap produces new edges {3} and {4}.",
             [MessageCode.LocalSearchNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with cost --> {1}.",
+            [MessageCode.LocalSearchNeighborhoodBestUnderThreshold] = "The best neighborhood move {0} of cost {1} isn't so good. Not considered an improvement.",
             [MessageCode.LocalSearchBestFound] = "Best solution found with total cost: ({0}). Previous solution cost --> ({1}).",
             [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution of current best (id: {0} , cost: {1}), hasn't found...",
             [MessageCode.LocalSearchImprovementsPerformed] = "Local Search has performed a total of {0} improvements.",
@@ -135,6 +136,7 @@ namespace CityScover.Engine
       LocalSearchResumeSolution,
       LocalSearchNewNeighborhood,
       LocalSearchNewNeighborhoodMove,
+      LocalSearchNeighborhoodBestUnderThreshold,
       LocalSearchNewNeighborhoodMoveDetails,
       LocalSearchNeighborhoodBest,
       LocalSearchBestFound,

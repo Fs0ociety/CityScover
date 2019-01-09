@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 03/01/2019
+// File update: 09/01/2019
 //
 
 using CityScover.Commons;
@@ -38,7 +38,6 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       #region Internal properties
       internal ToSolution CurrentBestSolution { get; set; }
-      //internal ToSolution CurrentBestStepSolution { get; set; }
       internal int MaxSteps { get; set; }
       #endregion
 
@@ -206,8 +205,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          _solutionsHistory = new Collection<ToSolution>();
          _executedMoves = new Collection<RouteWorker>();
-
-         //CurrentBestStepSolution = CurrentBestSolution;
+         
          _solutionsHistory.Add(CurrentBestSolution);
       }
 
@@ -327,7 +325,9 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
       internal override void OnTerminated()
       {
+         Console.ForegroundColor = ConsoleColor.Green;
          SendMessage(MessageCode.LinKernighanStop);
+         Console.ForegroundColor = ConsoleColor.Gray;
          base.OnTerminated();
       }
 
