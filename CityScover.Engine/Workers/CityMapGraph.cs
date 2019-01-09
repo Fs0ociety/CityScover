@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 07/01/2019
+// File update: 09/01/2019
 //
 
 using CityScover.ADT.Graphs;
@@ -23,7 +23,9 @@ namespace CityScover.Engine.Workers
    {
       #region Internal properties
       internal IEnumerable<InterestPointWorker> TourPoints => Nodes
-         .Where(node => node.Entity.Id != Solver.Instance.WorkingConfiguration.StartingPointId);      
+         .Where(node => node.Entity.Id != Solver.Instance.WorkingConfiguration.StartingPointId);
+      
+      internal DateTime TimeSpent { get; set; }
       #endregion
 
       #region Internal methods
@@ -42,26 +44,6 @@ namespace CityScover.Engine.Workers
 
          AddEdge(fromPoiKey, toPoiKey, edge);
       }
-
-      //internal void AddNodeFromGraph(CityMapGraph source, int nodeKey)
-      //{
-      //   if (ContainsNode(nodeKey))
-      //   {
-      //      return;
-      //   }
-
-      //   if (source is null)
-      //   {
-      //      throw new ArgumentNullException();
-      //   }
-
-      //   if (!source.ContainsNode(nodeKey))
-      //   {
-      //      throw new InvalidOperationException();
-      //   }
-
-      //   AddNode(nodeKey, source[nodeKey]);
-      //}
 
       internal InterestPointWorker GetStartPoint()
       {
@@ -201,6 +183,12 @@ namespace CityScover.Engine.Workers
                if (edge.Entity.PointTo.Id != startPoiId)
                {
                   result += "\n";
+               }
+               else
+               {
+                  InterestPointWorker startPoi = this[startPoiId];
+                  string message = MessagesRepository.GetMessage(MessageCode.CMGraphNodeToString, startPoi.Entity.Name, TimeSpent.ToString("HH:mm"));
+                  result += $"\n\t({startPoi.Entity.Id} - {message})";
                }
             });
          result += "\n";

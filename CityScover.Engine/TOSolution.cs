@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 26/12/2018
+// File update: 09/01/2019
 //
 
 using CityScover.Engine.Workers;
@@ -81,6 +81,7 @@ namespace CityScover.Engine
             {
                _solutionGraph.CalculateTimes();
                TimeSpent = CalculateTotalTime();
+               _solutionGraph.TimeSpent = TimeSpent;
             }
          }
       }
@@ -125,6 +126,21 @@ namespace CityScover.Engine
          DateTime timeSpent = endPoiTotalTime.Add(timeReturn);
          return timeSpent;
       }
+
+      private double GetTotalDistance()
+      {
+         double totalDistance = _solutionGraph.Edges.Sum(edge => edge.Weight.Invoke());
+         InterestPointWorker startPoi = _solutionGraph.GetStartPoint();
+         InterestPointWorker endPoi = _solutionGraph.GetEndPoint();
+         var returnEdge = Solver.Instance.CityMapGraph.GetEdge(endPoi.Entity.Id, startPoi.Entity.Id);
+         if (returnEdge is null)
+         {
+            throw new NullReferenceException(nameof(returnEdge));
+         }
+
+         totalDistance += returnEdge.Weight.Invoke();
+         return totalDistance;
+      }
       #endregion
 
       #region Internal static methods
@@ -148,6 +164,7 @@ namespace CityScover.Engine
 
          var tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - solver.WorkingConfiguration.ArrivalTime;
          message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, bestSolution.Cost, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
+         message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalDistance, bestSolution.GetTotalDistance() / 1000)}";
          return message;
       }
 

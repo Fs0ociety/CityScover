@@ -93,7 +93,8 @@ namespace CityScover.Engine
             [MessageCode.TOSolutionCollectionId] = "Solution {0}\n",
             [MessageCode.CMGraphNodeToString] = "{0} at {1}",
             [MessageCode.TOSolutionFinalTour] = "The final best tour is solution \"{0}\":\n{1}",
-            [MessageCode.TOSolutionTotalTimeAndValidity] = "Cost: {0}. Tour time: {1} hours and {2} minutes. Admissible: {3}."
+            [MessageCode.TOSolutionTotalTimeAndValidity] = "Cost: {0}. Tour time: {1} hours and {2} minutes. Admissible: {3}.",
+            [MessageCode.TOSolutionTotalDistance] = "Tour distance: {0} kilometers."
          };
       }
       #endregion
@@ -173,7 +174,8 @@ namespace CityScover.Engine
       TOSolutionCollectionId,
       CMGraphNodeToString,
       TOSolutionFinalTour,
-      TOSolutionTotalTimeAndValidity
+      TOSolutionTotalTimeAndValidity,
+      TOSolutionTotalDistance
    }
    #endregion
 }
