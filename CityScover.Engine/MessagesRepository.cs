@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/01/2019
+// File update: 10/01/2019
 //
 
 using System.Collections.Generic;
@@ -35,15 +35,15 @@ namespace CityScover.Engine
             [MessageCode.LocalSearchNewNeighborhoodMoveDetails] = "New solution {0} details: swapping between edge {1} and edge {2}.\nSwap produces new edges {3} and {4}.",
             [MessageCode.LocalSearchNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with cost --> {1}.",
             [MessageCode.LocalSearchNeighborhoodBestUnderThreshold] = "The best neighborhood move {0} of cost {1} isn't so good. Not considered an improvement.",
-            [MessageCode.LocalSearchBestFound] = "Best solution found with total cost: ({0}). Previous solution cost --> ({1}).",
-            [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution of current best (id: {0} , cost: {1}), hasn't found...",
+            [MessageCode.LocalSearchBestFound] = "Best solution found with COST: {0}. Previous solution COST: {1}.",
+            [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution than current best hasn't found. Current best solution --> ID: {0}, COST: {1}.",
             [MessageCode.LocalSearchImprovementsPerformed] = "Local Search has performed a total of {0} improvements.",
-            [MessageCode.LocalSearchStop] = "Local Search didn't find a better solution and it stops with current solution {0} with cost --> {1}",
+            [MessageCode.LocalSearchStop] = "Local Search has not found a better solution and it stops with current solution ID: {0} and COST: {1}",
 
             [MessageCode.HybridCustomInsertionStart] = "Hybrid Custom Insertion improvement algorithm starts...",
             [MessageCode.HybridCustomInsertionNewNodeAdded] = "Point of interest \"{0}\" added successfully to the tour.",
             [MessageCode.HybridCustomInsertionNewNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
-            [MessageCode.HybridCustomInsertionStopWithSolution] = "Hybrid Custom Insertion STOP condition occurred with solution {0} with total cost --> {1}",
+            [MessageCode.HybridCustomInsertionStopWithSolution] = "Hybrid Custom Insertion STOP condition occurred with solution ID: {0} and COST: {1}",
             [MessageCode.HybridCustomInsertionTourUpdated] = "Hybrid Custom Update algorithm has finished with the tour UPDATED!",
             [MessageCode.HybridCustomInsertionTourNotUpdated] = "Hybrid Custom Update algorithm has finished with the tour NOT UPDATED!",
             [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
@@ -68,16 +68,16 @@ namespace CityScover.Engine
             [MessageCode.LinKernighanBlockedMove] = "Move {0} already selected! Continue searching...",
             [MessageCode.LinKernighanNoSNodeSelected] = "No one move can be selected! Terminating...",
             [MessageCode.LinKernighanBestFound] = "Best solution found with total cost: ({0}).",
-            [MessageCode.LinKernighanInvariateSolution] = "A better solution of current best (id: {0} , total cost: {1}), hasn't found. Terminating...",
+            [MessageCode.LinKernighanInvariateSolution] = "A better solution than current best (ID: {0}, COST: {1}), hasn't found. Terminating...",
             [MessageCode.LinKernighanStop] = "Lin Kernighan algorithm finished successfully.",
 
             [MessageCode.TabuSearchStart] = "Tabu Search starts with solution {0} with cost: {1}",
-            [MessageCode.TabuSearchBestFound] = "Tabu Search has found a new best solution found with total cost: ({0}). Previous solution total cost: ({1}).",
+            [MessageCode.TabuSearchBestFound] = "Tabu Search has found a new best solution with COST: {0}. Previous solution COST: {1}.",
             [MessageCode.TabuSearchMoveLocked] = "Move -> First edge: {0} - Second edge: {1} added in Tabu List. Move locked.",
             [MessageCode.TabuSearchMovesLocked] = "Tabu List status -> First edge: {0} - Second edge: {1} Expiration: {2}, Tenure: {3}",
             [MessageCode.TabuSearchMoveUnlocked] = "Reverse move unlocked -> First edge: {0} - Second edge: {1} removed from Tabu List. Expiration {2}",
             [MessageCode.TabuSearchImprovementsPerformed] = "Tabu Search has performed a total of {0} improvements.",
-            [MessageCode.TabuSearchStop] = "Tabu Search STOP condition occurred with solution {0} with total cost --> {1}",
+            [MessageCode.TabuSearchStop] = "Tabu Search STOP condition occurred with solution ID: {0} with COST: {1}",
 
             [MessageCode.ALCompletionSummary] = "EXECUTION SUMMARY",
             [MessageCode.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
@@ -94,7 +94,7 @@ namespace CityScover.Engine
             [MessageCode.CMGraphNodeToString] = "{0} at {1}",
             [MessageCode.TOSolutionFinalTour] = "The final best tour is solution \"{0}\":\n{1}",
             [MessageCode.TOSolutionTotalTimeAndValidity] = "Cost: {0}. Tour time: {1} hours and {2} minutes. Admissible: {3}.",
-            [MessageCode.TOSolutionTotalDistance] = "Tour distance: {0} kilometers."
+            [MessageCode.TOSolutionTotalDistance] = "Tour distance: {0:0.##} kilometers."
          };
       }
       #endregion
