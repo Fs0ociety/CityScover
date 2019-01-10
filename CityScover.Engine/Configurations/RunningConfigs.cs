@@ -469,8 +469,8 @@ namespace CityScover.Engine.Configurations
          Configuration c5Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsFilename = @"cityscover-points-60.xml",
+            TourCategory = TourCategoryType.Sport,
+            PointsFilename = @"cityscover-points-30.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -484,7 +484,7 @@ namespace CityScover.Engine.Configurations
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     CurrentAlgorithm = AlgorithmType.CheapestInsertion,
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
@@ -501,7 +501,7 @@ namespace CityScover.Engine.Configurations
                            AlgorithmParameters =
                            {
                               [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 15, 0),
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         }
@@ -573,7 +573,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(c1TestLK);
+         Configurations.Add(c5Test);
       }
       #endregion
 

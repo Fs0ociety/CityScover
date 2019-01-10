@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 22/12/2018
+// File update: 10/01/2019
 //
 
 using CityScover.Engine.Workers;
@@ -164,19 +164,24 @@ namespace CityScover.Engine.Algorithms.Greedy
          if (validSolutions.Any())
          {
             Solver.BestSolution = validSolutions.MaxBy(solution => solution.Cost);
+            SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
             return;
          }
+
          Solver.BestSolution = SolutionsHistory.MaxBy(solution => solution.Cost);
+         Console.ForegroundColor = ConsoleColor.Green;
+         SendMessage(MessageCode.GreedyNotFoundValidSolutions, Type);
+         Console.ForegroundColor = ConsoleColor.Gray;
       }
 
       internal override void OnTerminated()
       {
          CityMapClone = null;
-         SendMessage(ToSolution.SolutionCollectionToString(SolutionsHistory));
          Task.WaitAll(Solver.AlgorithmTasks.Values.ToArray());
 
          Console.ForegroundColor = ConsoleColor.Green;
          SendMessage(MessageCode.GreedyStop);
+         SendMessage(MessageCode.SolverUpdatedSolution, Solver.BestSolution.Id, Solver.BestSolution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
 
          base.OnTerminated();
