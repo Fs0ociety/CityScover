@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 10/01/2019
+// File update: 12/01/2019
 //
 
 using System.Collections.Generic;
@@ -44,23 +44,31 @@ namespace CityScover.Engine
             [MessageCode.HybridCustomInsertionStart] = "Hybrid Custom Insertion improvement algorithm starts...",
             [MessageCode.HybridCustomInsertionNewNodeAdded] = "Point of interest \"{0}\" added successfully to the tour.",
             [MessageCode.HybridCustomInsertionNewNodeRemoved] = "Point of interest \"{0}\" removed from the Tour.",
-            [MessageCode.HybridCustomInsertionStopWithSolution] = "Hybrid Custom Insertion STOP condition occurred with solution ID: {0} and COST: {1}",
-            [MessageCode.HybridCustomInsertionTourUpdated] = "Hybrid Custom Update algorithm has finished with the tour UPDATED!",
-            [MessageCode.HybridCustomInsertionTourNotUpdated] = "Hybrid Custom Update algorithm has finished with the tour NOT UPDATED!",
-            [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
-                                                               "Solver's previous best solution ID: {2} with COST: {3}",
+            [MessageCode.HybridCustomInsertionStopWithSolution] = "HCI STOP condition occurred with solution ID: {0} and COST: {1}",
+            [MessageCode.HybridCustomInsertionTourUpdated] = "HCU algorithm has finished with the tour UPDATED!",
+            [MessageCode.HybridCustomInsertionTourNotUpdated] = "HCU algorithm has finished with the tour NOT UPDATED!",
+            [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                               "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
 
             [MessageCode.HybridCustomUpdateStart] = "Hybrid Custom Update improvement algorithm starts...",
             [MessageCode.HybridCustomUpdateTourUpdated] = "Point of interest \"{0}\" replaced with point of interest \"{1}\".",
             [MessageCode.HybridCustomUpdateTourRestored] = "Point of interest \"{0}\" removed. Tour restored with \"{1}\".",
             [MessageCode.HybridCustomUpdatePointsReplaced] = "Point ID {0} removed from the tour and Point ID {1} added to the tour.",
-            [MessageCode.HybridCustomUpdateStopWithSolution] = "Hybrid Custom Update STOP condition occurred with solution {0} with total cost --> {1}",
-            [MessageCode.HybridCustomUpdateStopWithoutSolution] = "Hybrid Custom Update STOP condition occurred immediately. Tour not updated! Exit.",
-            [MessageCode.HybridCustomUpdateBestFinalTour] = "HCU has found a new BEST solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
-                                                            "Solver's previous best solution ID: {2} with COST: {3}",
-            [MessageCode.HybridCustomUpdateWorseFinalTour] = "HCU has found a new WORSE solution! Solver's best solution updated with solution ID: {0} and COST: {1}. " +
-                                                            "Solver's previous best solution ID: {2} with COST: {3}",
-            [MessageCode.HybridCustomUpdateUnchangedTour] = "HCU has found a new solution with cost equals to previous Solver's best solution.",
+            [MessageCode.HybridCustomUpdateStopWithSolution] = "HCU STOP condition occurred with solution {0} with total cost --> {1}",
+            [MessageCode.HybridCustomUpdateStopWithoutSolution] = "HCU STOP condition occurred immediately. Tour NOT updated! Exiting...",
+            [MessageCode.HybridCustomUpdateFailed] = "HCU failed to update the tour. Exiting...",
+            [MessageCode.HybridCustomUpdateBestFinalTour] = "HCU has found a solution with BEST cost! Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                            "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
+
+            [MessageCode.HybridCustomUpdateWorseFinalTour] = "HCU has found a solution with WORSE cost! Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                             "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
+
+            [MessageCode.HybridCustomUpdateSolutionNotUpdated] = "HCU has found a solution with WORSE tour distance! Solution ID: {0}, COST: {1}, Tour distance: {2:0.##} kilometers.\n" +
+                                                                 "Solver's best solution not updated.",
+
+            [MessageCode.HybridCustomUpdateCostUnchanged] = "HCU has found a solution with cost EQUALS TO previous Solver's best solution.\n" +
+                                                            "Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                            "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
 
             [MessageCode.LinKernighanStartSolution] = "Lin Kernighan starting with current Local Search Best Solution ID: {0} and COST: {1}.",
             [MessageCode.LinKernighanHStepIncreased] = "Lin Kernighan Step {0} of {1}.",
@@ -128,14 +136,16 @@ namespace CityScover.Engine
       HybridCustomInsertionTourUpdated,
       HybridCustomInsertionTourNotUpdated,
       HybridCustomUpdateStart,
+      HybridCustomUpdatePointsReplaced,
       HybridCustomUpdateTourUpdated,
       HybridCustomUpdateTourRestored,
       HybridCustomUpdateBestFinalTour,
       HybridCustomUpdateWorseFinalTour,
-      HybridCustomUpdateUnchangedTour,
-      HybridCustomUpdatePointsReplaced,
+      HybridCustomUpdateSolutionNotUpdated,
+      HybridCustomUpdateCostUnchanged,
       HybridCustomUpdateStopWithSolution,
       HybridCustomUpdateStopWithoutSolution,
+      HybridCustomUpdateFailed,
       LocalSearchStartSolution,
       LocalSearchResumeSolution,
       LocalSearchNewNeighborhood,

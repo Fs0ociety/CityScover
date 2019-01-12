@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/01/2019
+// File update: 11/01/2019
 //
 
 using CityScover.ADT.Graphs;
@@ -21,6 +21,8 @@ namespace CityScover.Engine.Workers
 {
    internal sealed class CityMapGraph : Graph<int, InterestPointWorker, RouteWorker>
    {
+      private const int MaxRoundDigits = 2;
+
       #region Internal properties
       internal IEnumerable<InterestPointWorker> TourPoints => Nodes
          .Where(node => node.Entity.Id != Solver.Instance.WorkingConfiguration.StartingPointId);
@@ -73,29 +75,21 @@ namespace CityScover.Engine.Workers
          return endPoint;
       }
 
-      /// <summary>
-      /// A deep copy of the current CityMapGraph object.
-      /// </summary>
-      /// <returns>A CityMapGraph object</returns>
-      internal CityMapGraph DeepCopy()
+      internal double GetTotalDistance()
       {
-         CityMapGraph copy = new CityMapGraph();
-         foreach (var node in Nodes)
+         double totalDistance = Edges.Sum(edge => edge.Weight.Invoke());
+         InterestPointWorker startPoi = GetStartPoint();
+         InterestPointWorker endPoi = GetEndPoint();
+
+         var returnEdge = GetEdge(endPoi.Entity.Id, startPoi.Entity.Id);
+         if (returnEdge is null)
          {
-            InterestPointWorker copyInterestPointWorker = node.DeepCopy();
-            copy.AddNode(node.Entity.Id, copyInterestPointWorker);
+            throw new NullReferenceException(nameof(returnEdge));
          }
 
-         foreach (var node in Nodes)
-         {
-            var edges = GetEdges(node.Entity.Id);
-            foreach (var edge in edges)
-            {
-               RouteWorker copyRouteWorker = edge.DeepCopy();
-               copy.AddEdge(edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id, copyRouteWorker);
-            }
-         }
-         return copy;
+         totalDistance += returnEdge.Weight.Invoke();
+
+         return Math.Round(totalDistance, MaxRoundDigits);
       }
 
       internal void CalculateTimes()
@@ -167,7 +161,7 @@ namespace CityScover.Engine.Workers
             });         
       }
 
-      public string PrintGraph()
+      internal string PrintGraph()
       {
          string result = string.Empty;
          int startPoiId = Solver.Instance.WorkingConfiguration.StartingPointId;
@@ -195,6 +189,31 @@ namespace CityScover.Engine.Workers
 
          Nodes.ToList().ForEach(node => node.IsVisited = default);
          return result;
+      }
+
+      /// <summary>
+      /// A deep copy of the current CityMapGraph object.
+      /// </summary>
+      /// <returns>A CityMapGraph object</returns>
+      internal CityMapGraph DeepCopy()
+      {
+         CityMapGraph copy = new CityMapGraph();
+         foreach (var node in Nodes)
+         {
+            InterestPointWorker copyInterestPointWorker = node.DeepCopy();
+            copy.AddNode(node.Entity.Id, copyInterestPointWorker);
+         }
+
+         foreach (var node in Nodes)
+         {
+            var edges = GetEdges(node.Entity.Id);
+            foreach (var edge in edges)
+            {
+               RouteWorker copyRouteWorker = edge.DeepCopy();
+               copy.AddEdge(edge.Entity.PointFrom.Id, edge.Entity.PointTo.Id, copyRouteWorker);
+            }
+         }
+         return copy;
       }
       #endregion
 

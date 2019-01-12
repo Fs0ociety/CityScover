@@ -14,9 +14,9 @@ namespace CityScover.Tests
          bool result = value1.Equals3DigitPrecision(value2);
          Assert.AreNotEqual(value1, value2);
          Assert.IsTrue(result == true);
-         result = value1.IsGreather3DigitPrecision(value2);
+         result = value1.IsApproximatelyEqualTo(value2);
          Assert.IsTrue(result == false);
-         result = value2.IsGreather4DigitPrecision(value1);
+         result = value2.IsApproximatelyEqualTo(value1);
          Assert.IsTrue(result == true);
       }
    }

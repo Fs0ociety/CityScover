@@ -469,7 +469,7 @@ namespace CityScover.Engine.Configurations
          Configuration c5Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.Sport,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsFilename = @"cityscover-points-30.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
@@ -484,7 +484,7 @@ namespace CityScover.Engine.Configurations
                   Category = AlgorithmFamily.Greedy,
                   Flow =
                   {
-                     CurrentAlgorithm = AlgorithmType.CheapestInsertion,
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
