@@ -7,7 +7,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/01/2018
+// File update: 13/01/2019
 //
 
 using CityScover.Commons;
@@ -81,7 +81,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       #endregion
 
       #region Internal methods
-      internal async Task RunImprovement(Algorithm algorithm, ToSolution startingSolution, AlgorithmType typeToRestart)
+      internal async Task RunImprovement(Algorithm algorithm, ToSolution solution, AlgorithmType typeToRestart)
       {
          Algorithm improvementAlgorithm = default;
 
@@ -89,17 +89,18 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          {
             case HybridCustomUpdate hcu:
                improvementAlgorithm = hcu;
-               hcu.CurrentBestSolution = startingSolution;
+               hcu.StartingSolution = solution;
+               // hcu.CanContinueToRelaxConstraints = ??;   TODO
                break;
 
             case HybridCustomInsertion hci:
                improvementAlgorithm = hci;
-               hci.CurrentBestSolution = startingSolution;
+               hci.StartingSolution = solution;
                break;
 
             case LinKernighan lk:
                improvementAlgorithm = lk;
-               lk.CurrentBestSolution = startingSolution;
+               lk.CurrentBestSolution = solution;
                break;
          }
 
@@ -248,10 +249,15 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          if (_canDoImprovements && _shouldRunImprovement)
          {
+            var currentSolverBestSolutionId = Solver.BestSolution.Id;
             await RunImprovementsInternal();
             _shouldRunImprovement = default;
             _iterationsWithoutImprovement = default;
-            CurrentBestSolution = Solver.BestSolution;
+
+            if (Solver.BestSolution.Id != currentSolverBestSolutionId)
+            {
+               CurrentBestSolution = Solver.BestSolution;
+            }
             SendMessage(MessageCode.LocalSearchResumeSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
          }
       }

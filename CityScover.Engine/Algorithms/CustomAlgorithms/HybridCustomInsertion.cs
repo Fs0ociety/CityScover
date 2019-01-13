@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/01/2019
+// File update: 13/01/2019
 //
 
 using CityScover.Commons;
@@ -22,7 +22,6 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 {
    internal class HybridCustomInsertion : Algorithm
    {
-
       #region Private fields
 
       #region Constants
@@ -70,7 +69,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       #endregion
 
       #region Internal properties
-      internal ToSolution CurrentBestSolution { get; set; }
+      internal ToSolution StartingSolution { get; set; }
       #endregion
 
       #region Private methods
@@ -202,12 +201,12 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             Console.ForegroundColor = ConsoleColor.Gray;
          }
 
-         if (CurrentBestSolution is null)
+         if (StartingSolution is null)
          {
-            CurrentBestSolution = Solver.BestSolution;
+            StartingSolution = Solver.BestSolution;
          }
-         Solver.PreviousStageSolutionCost = CurrentBestSolution.Cost;
-         Tour = CurrentBestSolution.SolutionGraph.DeepCopy();
+         Solver.PreviousStageSolutionCost = StartingSolution.Cost;
+         Tour = StartingSolution.SolutionGraph.DeepCopy();
          StartPoi = Tour.GetStartPoint() ?? throw new NullReferenceException(nameof(StartPoi));
          EndPoi = Tour.GetEndPoint() ?? throw new NullReferenceException(nameof(EndPoi));
          SolutionsHistory = new Collection<ToSolution>();

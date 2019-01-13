@@ -271,6 +271,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             return;
          }
 
+         // TODO
+         // Correggere logica di confronto usando la StartingSolution e non Solver.BestSolution
+         // e sistemare le stampe di conseguenza.
          if (CurrentSolution.Cost > Solver.BestSolution.Cost)
          {
             UpdateSolver(CurrentSolution, hcuTourDistance, solverTourDistance,
