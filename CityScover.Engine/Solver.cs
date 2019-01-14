@@ -174,6 +174,10 @@ namespace CityScover.Engine
             CurrentStageExecutionTime = default;
             Console.WriteLine(MessagesRepository.GetMessage(MessageCode.SolverStageEnd, CurrentStage.Description));
          }
+
+         Console.WriteLine(MessagesRepository.GetMessage(
+            MessageCode.SolverEndConfiguration, BestSolution.Id, BestSolution.Cost, 
+            BestSolution.SolutionGraph.GetTotalDistance() * 0.001));
       }
 
       private async Task ResetSolverState()
