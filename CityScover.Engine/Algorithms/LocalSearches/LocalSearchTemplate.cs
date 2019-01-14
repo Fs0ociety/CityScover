@@ -58,10 +58,10 @@ namespace CityScover.Engine.Algorithms.LocalSearches
       {
          if (_canDoImprovements && _shouldRunImprovement)
          {
-            var currentSolverBestSolutionId = Solver.BestSolution.Id;
+            var previousSolverBestSolutionId = Solver.BestSolution.Id;
             await RunImprovementsInternal();
 
-            if (Solver.BestSolution.Id != currentSolverBestSolutionId)
+            if (Solver.BestSolution.Id != previousSolverBestSolutionId)
             {
                CurrentBestSolution = Solver.BestSolution;
             }
