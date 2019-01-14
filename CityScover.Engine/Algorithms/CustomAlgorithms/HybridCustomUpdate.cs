@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/01/2019
+// File update: 14/01/2019
 //
 
 using CityScover.Commons;
@@ -257,42 +257,46 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          CurrentSolution = validSolutions.MaxBy(solution => solution.Cost);
          var hcuTourDistance = CurrentSolution.SolutionGraph.GetTotalDistance();
-         var solverTourDistance = Solver.BestSolution.SolutionGraph.GetTotalDistance();
+         var previousTourDistance = StartingSolution.SolutionGraph.GetTotalDistance();
 
-         bool canUpdate = hcuTourDistance < solverTourDistance || 
-                          hcuTourDistance.IsApproximatelyEqualTo(solverTourDistance);
+         bool canUpdate = hcuTourDistance < previousTourDistance || 
+                          hcuTourDistance.IsApproximatelyEqualTo(previousTourDistance);
          if (!canUpdate)
          {
             Console.ForegroundColor = ConsoleColor.Magenta;
             SendMessage(MessageCode.HybridCustomUpdateSolutionNotUpdated,
-               CurrentSolution.Id, CurrentSolution.Cost, hcuTourDistance * 0.001);
+               CurrentSolution.Id, CurrentSolution.Cost, 
+               hcuTourDistance * 0.001, previousTourDistance * 0.001);
             Console.ForegroundColor = ConsoleColor.Gray;
 
             return;
          }
 
-         if (CurrentSolution.Cost > Solver.BestSolution.Cost)
+         MessageCode message;
+
+         if (CurrentSolution.Cost > StartingSolution.Cost)
          {
-            UpdateSolver(CurrentSolution, hcuTourDistance, solverTourDistance,
-               MessageCode.HybridCustomUpdateBestFinalTour, ConsoleColor.Magenta);
+            message = MessageCode.HybridCustomUpdateBestFinalTour;
          }
-         else if (CurrentSolution.Cost < Solver.BestSolution.Cost)
+         else if (CurrentSolution.Cost < StartingSolution.Cost)
          {
-            UpdateSolver(CurrentSolution, hcuTourDistance, solverTourDistance,
-               MessageCode.HybridCustomUpdateWorseFinalTour, ConsoleColor.Magenta);
+            message = MessageCode.HybridCustomUpdateWorseFinalTour;
          }
          else
          {
-            UpdateSolver(CurrentSolution, hcuTourDistance, solverTourDistance,
-               MessageCode.HybridCustomUpdateCostUnchanged, ConsoleColor.Magenta);
+            message = MessageCode.HybridCustomUpdateCostUnchanged;
          }
+
+         UpdateSolver(CurrentSolution, hcuTourDistance, previousTourDistance, 
+            message, ConsoleColor.Magenta);
       }
 
       internal override void OnTerminated()
       {
          foreach (var (nodeKeyRemoved, nodeKeyAdded) in _replacedPoints)
          {
-            SendMessage(MessageCode.HybridCustomUpdatePointsReplaced, nodeKeyRemoved, nodeKeyAdded);
+            SendMessage(MessageCode.HybridCustomUpdatePointsReplaced, 
+               nodeKeyRemoved, nodeKeyAdded);
          }
 
          if (TourUpdated)

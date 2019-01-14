@@ -71,6 +71,7 @@ namespace CityScover.Engine.Algorithms.Greedy
             if (algorithm is HybridCustomUpdate hcu)
             {
                improvementAlgorithm = hcu;
+               hcu.StartingSolution = Solver.BestSolution;
                hcu.CanContinueToRelaxConstraints = true;
             }
 

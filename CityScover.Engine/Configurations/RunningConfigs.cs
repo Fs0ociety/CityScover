@@ -512,11 +512,11 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         #region Test NN + LS + LK
-         Configuration c1TestLK = new Configuration()
+         #region Test NN + LS + HCU
+         Configuration c6Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.HistoricalAndCultural,
+            TourCategory = TourCategoryType.Sport,
             PointsFilename = @"cityscover-points-60.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
@@ -551,11 +551,11 @@ namespace CityScover.Engine.Configurations
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
                      ChildrenFlows =
                      {                        
-                        new StageFlow(AlgorithmType.LinKernighan)
+                        new StageFlow(AlgorithmType.HybridCustomUpdate)
                         {
                            AlgorithmParameters =
                            {
-                              [ParameterCodes.MaxIterations] = 10,
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
                               [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                            }
                         }
