@@ -65,12 +65,47 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
+         #region Test Screenshot Cheapest Insertion - NN (NN)
+         Configuration testScreenshotCINN = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"cityscover-points-60.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(9),
+            TourDuration = new TimeSpan(6, 0, 0),
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = false,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
+                     }
+                  }
+               }
+            }
+         };
+         #endregion
+
          #region Test Screenshot Cheapest Insertion - NN Knapsack (Cheapest)
          Configuration testScreenshotCI = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsFilename = @"cityscover-points-30.xml",
+            PointsFilename = @"cityscover-points-60.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -105,7 +140,7 @@ namespace CityScover.Engine.Configurations
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
             TourCategory = TourCategoryType.HistoricalAndCultural,
-            PointsFilename = @"cityscover-points-30.xml",
+            PointsFilename = @"cityscover-points-60.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
@@ -707,7 +742,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(testScreenshotCI);
+         Configurations.Add(testHCI1);
       }
       #endregion
 
