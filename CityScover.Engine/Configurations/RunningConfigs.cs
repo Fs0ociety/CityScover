@@ -140,7 +140,7 @@ namespace CityScover.Engine.Configurations
          Configuration c1Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.None,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
             PointsFilename = @"cityscover-points-90.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
@@ -156,18 +156,18 @@ namespace CityScover.Engine.Configurations
                   Flow =
                   {
                      CurrentAlgorithm = AlgorithmType.NearestNeighbor,
-                     ChildrenFlows =
-                     {
-                        new StageFlow(AlgorithmType.HybridCustomUpdate)
-                        {
-                           AlgorithmParameters =
-                           {
-                              [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
-                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
-                           }
-                        }
-                     },
+                     //ChildrenFlows =
+                     //{
+                     //   new StageFlow(AlgorithmType.HybridCustomUpdate)
+                     //   {
+                     //      AlgorithmParameters =
+                     //      {
+                     //         [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                     //         [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                     //         [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                     //      }
+                     //   }
+                     //},
                      AlgorithmParameters =
                      {
                         [ParameterCodes.CanDoImprovements] = true,
@@ -189,15 +189,15 @@ namespace CityScover.Engine.Configurations
                      CurrentAlgorithm = AlgorithmType.TwoOpt,
                      ChildrenFlows =
                      {
-                        new StageFlow(AlgorithmType.HybridCustomInsertion)
-                        {
-                           AlgorithmParameters =
-                           {
-                              [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
-                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
-                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
-                           }
-                        },
+                        //new StageFlow(AlgorithmType.HybridCustomInsertion)
+                        //{
+                        //   AlgorithmParameters =
+                        //   {
+                        //      [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
+                        //      [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 20, 0),
+                        //      [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
+                        //   }
+                        //},
                         new StageFlow(AlgorithmType.LinKernighan)
                         {
                            AlgorithmParameters =
@@ -228,7 +228,7 @@ namespace CityScover.Engine.Configurations
                         {
                            ChildrenFlows =
                            {
-                              new StageFlow(AlgorithmType.HybridCustomInsertion)
+                              new StageFlow(AlgorithmType.HybridCustomUpdate)
                               {
                                  AlgorithmParameters =
                                  {
@@ -573,7 +573,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(c6Test);
+         Configurations.Add(c5Test);
       }
       #endregion
 

@@ -86,7 +86,7 @@ namespace CityScover.Engine
             [MessageCode.TabuSearchMovesLocked] = "Tabu List status -> First edge: {0} - Second edge: {1} Expiration: {2}, Tenure: {3}",
             [MessageCode.TabuSearchMoveUnlocked] = "Reverse move unlocked -> First edge: {0} - Second edge: {1} removed from Tabu List. Expiration {2}",
             [MessageCode.TabuSearchImprovementsPerformed] = "Tabu Search has performed a total of {0} improvements.",
-            [MessageCode.TabuSearchStop] = "Tabu Search STOP condition occurred with solution ID: {0} and COST: {1}",
+            [MessageCode.TabuSearchStop] = "Tabu Search STOP condition occurred with solution ID: {0} and COST: {1}. Max iterations reached equals to: {2}",
 
             [MessageCode.ALCompletionSummary] = "EXECUTION SUMMARY",
             [MessageCode.EXREPSolutionReceived] = "Solution {0} has been marked with cost: {1}",
@@ -104,7 +104,9 @@ namespace CityScover.Engine
             [MessageCode.CMGraphNodeToString] = "{0} at {1}",
             [MessageCode.TOSolutionFinalTour] = "The final best tour is solution \"{0}\":\n{1}",
             [MessageCode.TOSolutionTotalTimeAndValidity] = "Cost: {0}. Tour time: {1} hours and {2} minutes. Admissible: {3}.",
-            [MessageCode.TOSolutionTotalDistance] = "Tour distance: {0:0.##} kilometers."
+            [MessageCode.TOSolutionTotalDistance] = "Tour distance: {0:0.##} kilometers.",
+            [MessageCode.SolverEndConfiguration] = "Report of Configuration with final Solver results\n\n" +
+                                                   "Solver best solution ID: {0}\nSolver best solution COST: {1}\nTour distance: {2:0.##}"
          };
       }
       #endregion
@@ -189,7 +191,8 @@ namespace CityScover.Engine
       CMGraphNodeToString,
       TOSolutionFinalTour,
       TOSolutionTotalTimeAndValidity,
-      TOSolutionTotalDistance
+      TOSolutionTotalDistance,
+      SolverEndConfiguration
    }
    #endregion
 }

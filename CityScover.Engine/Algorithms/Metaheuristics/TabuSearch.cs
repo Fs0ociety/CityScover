@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 15/12/2018
+// File update: 14/01/2019
 //
 
 using CityScover.Commons;
@@ -53,7 +53,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
       #endregion
 
       #region Internal properties
-      public int ImprovementsCount { get; private set; }
+      internal int ImprovementsCount { get; private set; }
       #endregion
 
       #region Private methods
@@ -329,7 +329,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          Solver.BestSolution = _tabuBestSolution;
          Console.ForegroundColor = ConsoleColor.DarkMagenta;
          SendMessage(MessageCode.TabuSearchImprovementsPerformed, ImprovementsCount);
-         SendMessage(MessageCode.TabuSearchStop, _tabuBestSolution.Id, _tabuBestSolution.Cost);
+         SendMessage(MessageCode.TabuSearchStop, 
+            _tabuBestSolution.Id, _tabuBestSolution.Cost, _currentIteration);
          Console.ForegroundColor = ConsoleColor.Gray;
          SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
       }
