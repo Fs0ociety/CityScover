@@ -573,7 +573,70 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(c5Test);
+         #region Test HCI
+         Configuration testHCI1 = new Configuration()
+         {
+            CurrentProblem = ProblemFamily.TeamOrienteering,
+            TourCategory = TourCategoryType.HistoricalAndCultural,
+            PointsFilename = @"cityscover-points-90.xml",
+            StartingPointId = 1,
+            WalkingSpeed = 3.0 / 3.6,  // in m/s.
+            ArrivalTime = DateTime.Now.Date.AddHours(10),
+            TourDuration = new TimeSpan(10, 0, 0),
+            AlgorithmMonitoring = true,
+            Stages =
+            {
+               new Stage()
+               {
+                  Description = StageType.StageOne,
+                  Category = AlgorithmFamily.Greedy,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.NearestNeighbor,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.CanDoImprovements] = false,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.7,
+                        [ParameterCodes.RelaxedConstraints] = new Collection<string>()
+                        {
+                           Utils.TimeWindowsConstraint
+                        }
+                     }
+                  }
+               },
+               new Stage()
+               {
+                  Description = StageType.StageTwo,
+                  Category = AlgorithmFamily.LocalSearch,
+                  Flow =
+                  {
+                     CurrentAlgorithm = AlgorithmType.TwoOpt,
+                     AlgorithmParameters =
+                     {
+                        [ParameterCodes.MaxIterations] = 5,
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.LocalSearchImprovementThreshold] = 2000,
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.7,
+                        [ParameterCodes.LocalSearchMaxRunsWithNoImprovements] = 1
+                     },
+                     ChildrenFlows =
+                     {
+                        new StageFlow(AlgorithmType.HybridCustomInsertion)
+                        {
+                           AlgorithmParameters =
+                           {
+                              [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(0, 20, 0),
+                              [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 30, 0),
+                              [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.7
+                           }
+                        }
+                     }
+                  }
+               },
+            }
+         };
+         #endregion
+         Configurations.Add(testHCI1);
       }
       #endregion
 
