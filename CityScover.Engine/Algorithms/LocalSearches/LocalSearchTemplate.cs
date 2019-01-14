@@ -1,5 +1,4 @@
-﻿
-//
+﻿//
 // CityScover
 // Version 1.0
 //

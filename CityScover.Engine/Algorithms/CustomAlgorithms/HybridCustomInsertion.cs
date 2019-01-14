@@ -264,7 +264,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                constraint.Key.Equals(TimeThresholdToTmaxConstraint)));
 
          Console.ForegroundColor = ConsoleColor.Yellow;
-         SendMessage(MessageCode.HybridCustomInsertionStopWithSolution, _currentSolution.Id, _currentSolution.Cost);
+         SendMessage(MessageCode.HybridCustomInsertionStopWithSolution, 
+            _currentSolution.Id, _currentSolution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
 
          bool tourUpdated = _addedNodesCount > 0;
@@ -293,9 +294,9 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                .MaxBy(solution => solution.Cost);
 
             var hciTourDistance = bestSolution.SolutionGraph.GetTotalDistance();
-            var solverTourDistance = Solver.BestSolution.SolutionGraph.GetTotalDistance();
+            var previousTourDistance = StartingSolution.SolutionGraph.GetTotalDistance();
 
-            UpdateSolver(bestSolution, hciTourDistance, solverTourDistance,
+            UpdateSolver(bestSolution, hciTourDistance, previousTourDistance,
                MessageCode.HybridCustomInsertionFinalSolution, ConsoleColor.Yellow);
 
             // Remove only Tmax constraint from ConstraintsToRelax collection.
