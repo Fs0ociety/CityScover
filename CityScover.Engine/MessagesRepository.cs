@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/01/2019
+// File update: 14/01/2019
 //
 
 using System.Collections.Generic;
@@ -47,8 +47,8 @@ namespace CityScover.Engine
             [MessageCode.HybridCustomInsertionStopWithSolution] = "HCI STOP condition occurred with solution ID: {0} and COST: {1}",
             [MessageCode.HybridCustomInsertionTourUpdated] = "HCU algorithm has finished with the tour UPDATED!",
             [MessageCode.HybridCustomInsertionTourNotUpdated] = "HCU algorithm has finished with the tour NOT UPDATED!",
-            [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
-                                                               "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
+            [MessageCode.HybridCustomInsertionFinalSolution] = "HCI has found a new best solution! Previous best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                               "Old previous best solution ID: {3}, COST: {4} and tour distance of {5:0.##} kilometers.",
 
             [MessageCode.HybridCustomUpdateStart] = "Hybrid Custom Update improvement algorithm starts...",
             [MessageCode.HybridCustomUpdateTourUpdated] = "Point of interest \"{0}\" replaced with point of interest \"{1}\".",
@@ -57,18 +57,18 @@ namespace CityScover.Engine
             [MessageCode.HybridCustomUpdateStopWithSolution] = "HCU STOP condition occurred with solution {0} with total cost --> {1}",
             [MessageCode.HybridCustomUpdateStopWithoutSolution] = "HCU STOP condition occurred immediately. Tour NOT updated! Exiting...",
             [MessageCode.HybridCustomUpdateFailed] = "HCU failed to update the tour. Exiting...",
-            [MessageCode.HybridCustomUpdateBestFinalTour] = "HCU has found a solution with BEST cost! Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
-                                                            "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
+            [MessageCode.HybridCustomUpdateBestFinalTour] = "HCU has found a solution with BEST cost! Previous best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                            "Old previous best solution ID: {3}, COST: {4} and tour distance of {5:0.##} kilometers.",
 
-            [MessageCode.HybridCustomUpdateWorseFinalTour] = "HCU has found a solution with WORSE cost! Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
-                                                             "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
+            [MessageCode.HybridCustomUpdateWorseFinalTour] = "HCU has found a solution with WORSE cost! Previous best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                             "Old previous best solution ID: {3}, COST: {4} and tour distance of {5:0.##} kilometers.",
 
             [MessageCode.HybridCustomUpdateSolutionNotUpdated] = "HCU has found a solution with WORSE tour distance! Solution ID: {0}, COST: {1}, Tour distance: {2:0.##} kilometers.\n" +
-                                                                 "Solver's best solution not updated.",
+                                                                 "Previous tour distance: {3:0.##} kilometers. Previous best solution unchanged.",
 
-            [MessageCode.HybridCustomUpdateCostUnchanged] = "HCU has found a solution with cost EQUALS TO previous Solver's best solution.\n" +
-                                                            "Solver's best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
-                                                            "Solver's previous best solution ID: {3} with COST: {4} and tour distance of {5:0.##} kilometers.",
+            [MessageCode.HybridCustomUpdateCostUnchanged] = "HCU has found a solution with cost EQUALS TO previous best solution.\n" +
+                                                            "Previous best solution updated with ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.\n" +
+                                                            "Old previous best solution ID: {3}, COST: {4} and tour distance of {5:0.##} kilometers.",
 
             [MessageCode.LinKernighanStartSolution] = "Lin Kernighan starting with current Local Search Best Solution ID: {0} and COST: {1}.",
             [MessageCode.LinKernighanHStepIncreased] = "Lin Kernighan Step {0} of {1}.",

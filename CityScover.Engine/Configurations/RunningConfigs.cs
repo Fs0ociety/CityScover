@@ -516,7 +516,7 @@ namespace CityScover.Engine.Configurations
          Configuration c6Test = new Configuration()
          {
             CurrentProblem = ProblemFamily.TeamOrienteering,
-            TourCategory = TourCategoryType.HistoricalAndCultural,
+            TourCategory = TourCategoryType.Sport,
             PointsFilename = @"cityscover-points-60.xml",
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
