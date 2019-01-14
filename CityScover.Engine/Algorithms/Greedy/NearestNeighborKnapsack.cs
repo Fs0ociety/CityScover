@@ -6,11 +6,10 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 27/11/2018
+// File update: 14/01/2019
 //
 
 using CityScover.Engine.Workers;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -45,10 +44,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          var adjPoiIds = CityMapClone.GetAdjacentNodes(interestPoint.Entity.Id);
 
          var tempNodes = new Collection<(int NodeKey, double Ratio)>();
-         adjPoiIds.ToList().ForEach(AddWeightedNode);
-
-         // First local function: AddWeightedNode
-         void AddWeightedNode(int adjPoiId)
+         adjPoiIds.ToList().ForEach(adjPoiId =>
          {
             var node = CityMapClone[adjPoiId];
             if (node.IsVisited)
@@ -56,17 +52,15 @@ namespace CityScover.Engine.Algorithms.Greedy
                return;
             }
 
-            int deltaScore = Math.Abs(node.Entity.Score.Value - interestPoint.Entity.Score.Value);
             RouteWorker edge = CityMapClone.GetEdge(interestPoint.Entity.Id, adjPoiId);
             if (edge is null)
             {
                return;
             }
-            
-            //var value = node.Entity.Score.Value / edge.Weight.Invoke();
-            var value = deltaScore / edge.Weight.Invoke();
+
+            var value = node.Entity.Score.Value / edge.Weight.Invoke();
             tempNodes.Add((adjPoiId, value));
-         }
+         });
 
          var tempNodesSorted = from node in tempNodes
                                orderby node.Ratio descending
