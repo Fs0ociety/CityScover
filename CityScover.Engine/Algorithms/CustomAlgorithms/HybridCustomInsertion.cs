@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 13/01/2019
+// File update: 15/01/2019
 //
 
 using CityScover.Commons;
@@ -57,7 +57,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
       private protected void UpdateSolver(ToSolution newSolution, double newTourDistance, double previousTourDistance, 
          MessageCode messageCode, ConsoleColor color)
       {
-         var (previousSolutionId, previousSolutionCost) = (Solver.BestSolution.Id, Solver.BestSolution.Cost);
+         var (previousSolutionId, previousSolutionCost) = (StartingSolution.Id, StartingSolution.Cost);
          Solver.BestSolution = newSolution;
 
          Console.ForegroundColor = color;

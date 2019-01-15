@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/01/2019
+// File update: 15/01/2019
 //
 
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace CityScover.Engine
             [MessageCode.GreedyNotFoundValidSolutions] = "{0} has not found valid solutions. EXECUTION SUMMARY not available.",
             [MessageCode.GreedyStop] = "Greedy algorithm finished successfully.",
 
-            [MessageCode.LocalSearchStartSolution] = "Local Search starting with solution {0} with cost: {1}",
+            [MessageCode.LocalSearchStartSolution] = "Local Search starting with solution ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.",
             [MessageCode.LocalSearchResumeSolution] = "Resume Local Search with solution {0} with total cost {1}.",
             [MessageCode.LocalSearchNewNeighborhood] = "Generating new neighborhood {0}.",
             [MessageCode.LocalSearchNewNeighborhoodMove] = "Adding new solution {0} to neighborhood {1}.",
@@ -37,7 +37,8 @@ namespace CityScover.Engine
             [MessageCode.LocalSearchNeighborhoodBest] = "The best move for this neighborhood is \"{0}\" with cost --> {1}.",
             [MessageCode.LocalSearchNeighborhoodBestUnderThreshold] = "The best neighborhood move {0} of cost {1} isn't so good. Not considered an improvement.",
             [MessageCode.LocalSearchBestFound] = "Best solution found with COST: {0}. Previous solution COST: {1}.",
-            [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution than current best hasn't found. Current best solution --> ID: {0}, COST: {1}.",
+            [MessageCode.LocalSearchInvariateSolution] = "For this neighborhood a better solution than current best hasn't found.\n" +
+                                                         "Local Search current best solution --> ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.",
             [MessageCode.LocalSearchImprovementsPerformed] = "Local Search has performed a total of {0} improvements.",
             [MessageCode.LocalSearchStop] = "Local Search has not found a better solution and it stops with current solution ID: {0} and COST: {1}",
 
@@ -80,7 +81,7 @@ namespace CityScover.Engine
             [MessageCode.LinKernighanInvariateSolution] = "A better solution than current best (ID: {0}, COST: {1}), hasn't found. Terminating...",
             [MessageCode.LinKernighanStop] = "Lin Kernighan algorithm finished successfully.",
 
-            [MessageCode.TabuSearchStart] = "Tabu Search starts with solution {0} with cost: {1}",
+            [MessageCode.TabuSearchStart] = "Tabu Search starts with solution ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.",
             [MessageCode.TabuSearchBestFound] = "Tabu Search has found a new best solution with COST: {0}. Previous solution COST: {1}.",
             [MessageCode.TabuSearchMoveLocked] = "Move -> First edge: {0} - Second edge: {1} added in Tabu List. Move locked.",
             [MessageCode.TabuSearchMovesLocked] = "Tabu List status -> First edge: {0} - Second edge: {1} Expiration: {2}, Tenure: {3}",

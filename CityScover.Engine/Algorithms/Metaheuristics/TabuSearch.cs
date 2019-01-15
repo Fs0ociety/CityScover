@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/01/2019
+// File update: 15/01/2019
 //
 
 using CityScover.Commons;
@@ -75,7 +75,8 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
 
          if (algorithm is LocalSearchTemplate ls)
          {
-            algorithm.Parameters = flow.AlgorithmParameters;
+            //algorithm.Parameters = flow.AlgorithmParameters;
+            ls.Parameters = flow.AlgorithmParameters;
             ls.CurrentBestSolution = _currentSolution;
             _innerAlgorithm = ls;
          }
@@ -179,7 +180,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          {
             algorithm.Provider = Provider;
 
-            var solutionToImprove = (_tabuBestSolution.Cost < Solver.BestSolution.Cost)
+            var solutionToImprove = _tabuBestSolution.Cost < Solver.BestSolution.Cost
                ? Solver.BestSolution
                : _tabuBestSolution;
 
@@ -264,7 +265,9 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          if (Solver.IsMonitoringEnabled)
          {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            SendMessage(MessageCode.TabuSearchStart, _currentSolution.Id, _currentSolution.Cost);
+            SendMessage(MessageCode.TabuSearchStart, 
+               _currentSolution.Id, _currentSolution.Cost, 
+               _currentSolution.SolutionGraph.GetTotalDistance() * 0.001);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
       }

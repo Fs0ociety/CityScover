@@ -742,7 +742,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(testHCI1);
+         Configurations.Add(c6Test);
       }
       #endregion
 

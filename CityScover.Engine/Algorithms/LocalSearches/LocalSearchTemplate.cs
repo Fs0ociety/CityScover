@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 14/01/2019
+// File update: 15/01/2019
 //
 
 using CityScover.Commons;
@@ -175,7 +175,9 @@ namespace CityScover.Engine.Algorithms.LocalSearches
             CurrentBestSolution = Solver.BestSolution;
          }
          _solutionsHistory.Add(CurrentBestSolution);
-         SendMessage(MessageCode.LocalSearchStartSolution, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+         SendMessage(MessageCode.LocalSearchStartSolution, 
+            CurrentBestSolution.Id, CurrentBestSolution.Cost, 
+            CurrentBestSolution.SolutionGraph.GetTotalDistance() * 0.001);
          ImprovementsCount = default;
          _previousSolutionCost = default;
          _shouldRunImprovement = default;
@@ -189,7 +191,8 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          var currentNeighborhood = _neighborhoodFacade.GenerateNeighborhood(CurrentBestSolution);
          foreach (var neighborSolution in currentNeighborhood)
          {
-            SendMessage(MessageCode.LocalSearchNewNeighborhoodMove, neighborSolution.Id, CurrentStep);
+            SendMessage(MessageCode.LocalSearchNewNeighborhoodMove, 
+               neighborSolution.Id, CurrentStep);
             SendMessage(neighborSolution.Description);
             Solver.EnqueueSolution(neighborSolution);
             await Task.Delay(Utils.ValidationDelay).ConfigureAwait(false);
@@ -265,7 +268,8 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
                Console.ForegroundColor = ConsoleColor.Yellow;
                SendMessage(MessageCode.LocalSearchInvariateSolution, 
-                  CurrentBestSolution.Id, CurrentBestSolution.Cost);
+                  CurrentBestSolution.Id, CurrentBestSolution.Cost, 
+                  CurrentBestSolution.SolutionGraph.GetTotalDistance() * 0.001);
                Console.ForegroundColor = ConsoleColor.Gray;
             }
          }
@@ -280,7 +284,8 @@ namespace CityScover.Engine.Algorithms.LocalSearches
 
          Console.ForegroundColor = ConsoleColor.Yellow;
          SendMessage(MessageCode.LocalSearchImprovementsPerformed, ImprovementsCount);
-         SendMessage(MessageCode.LocalSearchStop, CurrentBestSolution.Id, CurrentBestSolution.Cost);
+         SendMessage(MessageCode.LocalSearchStop, 
+            CurrentBestSolution.Id, CurrentBestSolution.Cost);
          Console.ForegroundColor = ConsoleColor.Gray;
          SendMessage(ToSolution.SolutionCollectionToString(_solutionsHistory));
       }
