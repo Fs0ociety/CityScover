@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 15/01/2019
+// File update: 16/01/2019
 //
 
 using CityScover.Commons;
@@ -218,11 +218,22 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             _noImprovementsCount++;
             _shouldRunImprovement = _noImprovementsCount == _maxDeadlockIterations;
 
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            SendMessage(MessageCode.TabuSearchBestNotFound);
+            Console.ForegroundColor = ConsoleColor.Gray;
+
             return false;
          }
 
+         var (previousTabuBestId, previousTabuBestCost) = (_tabuBestSolution.Id, _tabuBestSolution.Cost);
          _tabuBestSolution = neighborhoodSolution;
          _innerAlgorithm.CurrentBestSolution = neighborhoodSolution;
+
+         Console.ForegroundColor = ConsoleColor.Magenta;
+         SendMessage(MessageCode.TabuSearchBestFound, 
+            _tabuBestSolution.Id, _tabuBestSolution.Cost, 
+            previousTabuBestId, previousTabuBestCost);
+         Console.ForegroundColor = ConsoleColor.Gray;
 
          return true;
       }

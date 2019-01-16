@@ -82,7 +82,8 @@ namespace CityScover.Engine
             [MessageCode.LinKernighanStop] = "Lin Kernighan algorithm finished successfully.",
 
             [MessageCode.TabuSearchStart] = "Tabu Search starts with solution ID: {0}, COST: {1} and tour distance of {2:0.##} kilometers.",
-            [MessageCode.TabuSearchBestFound] = "Tabu Search has found a new best solution with COST: {0}. Previous solution COST: {1}.",
+            [MessageCode.TabuSearchBestFound] = "Aspiration Criteria has found a new best solution with ID: {0}, COST: {1}. Previous solution ID: {2}, COST: {3}.",
+            [MessageCode.TabuSearchBestNotFound] = "Aspiration Criteria failed to update tabu best solution.",
             [MessageCode.TabuSearchMoveLocked] = "Move -> First edge: {0} - Second edge: {1} added in Tabu List. Move locked.",
             [MessageCode.TabuSearchMovesLocked] = "Tabu List status -> First edge: {0} - Second edge: {1} Expiration: {2}, Tenure: {3}",
             [MessageCode.TabuSearchMoveUnlocked] = "Reverse move unlocked -> First edge: {0} - Second edge: {1} removed from Tabu List. Expiration {2}",
@@ -175,6 +176,8 @@ namespace CityScover.Engine
       TabuSearchMovesLocked,
       TabuSearchMoveUnlocked,
       TabuSearchImprovementsPerformed,
+      TabuSearchAspCriteriaSolutionUpdated,
+      TabuSearchBestNotFound,
       TabuSearchStop,
       ALCompletionSummary,
       EXREPSolutionReceived,

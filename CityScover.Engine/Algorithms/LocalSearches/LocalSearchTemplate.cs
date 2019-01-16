@@ -80,7 +80,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          {
             algorithm.Provider = Provider;
 
-            var solutionToImprove = (CurrentBestSolution.Cost < Solver.BestSolution.Cost)
+            var solutionToImprove = CurrentBestSolution.Cost < Solver.BestSolution.Cost
                ? Solver.BestSolution
                : CurrentBestSolution;
 
