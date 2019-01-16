@@ -381,7 +381,7 @@ namespace CityScover.Engine.Configurations
             StartingPointId = 1,
             WalkingSpeed = 3.0 / 3.6,  // in m/s.
             ArrivalTime = DateTime.Now.Date.AddHours(9),
-            TourDuration = new TimeSpan(10, 0, 0),
+            TourDuration = new TimeSpan(6, 0, 0),
             AlgorithmMonitoring = true,
             Stages =
             {
@@ -417,20 +417,19 @@ namespace CityScover.Engine.Configurations
                         {
                            ChildrenFlows =
                            {
-                              new StageFlow(AlgorithmType.HybridCustomInsertion)
-                              {
-                                 AlgorithmParameters =
-                                 {
-                                    [ParameterCodes.HciTimeThresholdToTmax] = new TimeSpan(1, 0, 0),
-                                    [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 30, 0),
-                                    [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
-                                 }
-                              },
                               new StageFlow(AlgorithmType.LinKernighan)
                               {
                                  AlgorithmParameters =
                                  {
-                                    [ParameterCodes.MaxIterations] = 20
+                                    [ParameterCodes.MaxIterations] = 10
+                                 }
+                              },
+                              new StageFlow(AlgorithmType.HybridCustomUpdate)
+                              {
+                                 AlgorithmParameters =
+                                 {
+                                    [ParameterCodes.HcuTimeWalkThreshold] = new TimeSpan(0, 30, 0),
+                                    [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.8
                                  }
                               }
                            },
@@ -444,10 +443,11 @@ namespace CityScover.Engine.Configurations
                      },
                      AlgorithmParameters =
                      {
-                        [ParameterCodes.MaxIterations] = 30,
-                        [ParameterCodes.TabuDeadlockIterations] = 18,
+                        [ParameterCodes.CanDoImprovements] = true,
+                        [ParameterCodes.MaxIterations] = 10,
+                        [ParameterCodes.TabuDeadlockIterations] = 5,
                         [ParameterCodes.TabuTenureFactor] = 4,
-                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.3
+                        [ParameterCodes.ObjectiveFunctionScoreWeight] = 0.5
                      }
                   }
                }
@@ -742,7 +742,7 @@ namespace CityScover.Engine.Configurations
          };
          #endregion
 
-         Configurations.Add(c6Test);
+         Configurations.Add(c2Test);
       }
       #endregion
 

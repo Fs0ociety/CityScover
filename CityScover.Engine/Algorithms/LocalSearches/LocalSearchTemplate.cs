@@ -162,7 +162,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          base.OnInitializing();
          _solutionsHistory = new Collection<ToSolution>();
          Solver.PreviousStageSolutionCost = Solver.BestSolution.Cost;
-         _canDoImprovements = Parameters[ParameterCodes.CanDoImprovements];
+         _canDoImprovements = Parameters.ContainsKey(ParameterCodes.CanDoImprovements);
 
          if (_canDoImprovements)
          {
