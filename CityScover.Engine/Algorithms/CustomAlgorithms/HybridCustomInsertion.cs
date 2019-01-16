@@ -166,7 +166,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
       private bool IsTimeThresholdToTmaxSatisfied(ToSolution solution)
       {
-         var endPoint = solution.SolutionGraph.GetEndPoint();
+         var endPoint = solution.Tour.GetEndPoint();
          bool isSatisfied = endPoint.TotalTime <= _tMaxThresholdTime;
          return isSatisfied;
       }
@@ -206,7 +206,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
             StartingSolution = Solver.BestSolution;
          }
          Solver.PreviousStageSolutionCost = StartingSolution.Cost;
-         Tour = StartingSolution.SolutionGraph.DeepCopy();
+         Tour = StartingSolution.Tour.DeepCopy();
          StartPoi = Tour.GetStartPoint() ?? throw new NullReferenceException(nameof(StartPoi));
          EndPoi = Tour.GetEndPoint() ?? throw new NullReferenceException(nameof(EndPoi));
          SolutionsHistory = new Collection<ToSolution>();
@@ -225,7 +225,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          _currentSolution = new ToSolution()
          {
-            SolutionGraph = Tour.DeepCopy()
+            Tour = Tour.DeepCopy()
          };
 
          Solver.EnqueueSolution(_currentSolution);
@@ -293,8 +293,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
                .Where(solution => solution.IsValid)
                .MaxBy(solution => solution.Cost);
 
-            var hciTourDistance = bestSolution.SolutionGraph.GetTotalDistance();
-            var previousTourDistance = StartingSolution.SolutionGraph.GetTotalDistance();
+            var hciTourDistance = bestSolution.Tour.GetTotalDistance();
+            var previousTourDistance = StartingSolution.Tour.GetTotalDistance();
 
             UpdateSolver(bestSolution, hciTourDistance, previousTourDistance,
                MessageCode.HybridCustomInsertionFinalSolution, ConsoleColor.Yellow);

@@ -61,7 +61,7 @@ namespace CityScover.Engine
       private int CalculateCost(ToSolution solution)
       {
          // Calcolo del termine del gradimento.
-         int scoreTerm = solution.SolutionGraph.Nodes.Sum(node => node.Entity.Score.Value);
+         int scoreTerm = solution.Tour.Nodes.Sum(node => node.Entity.Score.Value);
 
          // Il peso che determina l'importanza dei termini dell'equazione.
          double lambda = Solver.Instance.CurrentObjectiveFunctionWeight;
@@ -69,9 +69,9 @@ namespace CityScover.Engine
          // Calcolo del termine che da peso alla distanza tra il nodo corrente e quello precedente.
          // In particolare, vengono privilegati i nodi molto vicini con un peso molto alto
          // che darà quindi un maggior gradimento.
-         double distanceTerm = solution.SolutionGraph.Nodes.Sum(node =>
+         double distanceTerm = solution.Tour.Nodes.Sum(node =>
          {
-            RouteWorker edge = solution.SolutionGraph.GetEdges(node.Entity.Id).FirstOrDefault();
+            RouteWorker edge = solution.Tour.GetEdges(node.Entity.Id).FirstOrDefault();
             if (edge is null)
             {
                return 0;
@@ -131,7 +131,7 @@ namespace CityScover.Engine
       private bool IsTimeWindowsConstraintSatisfied(ToSolution solution)
       {
          bool satisfied = true;
-         CityMapGraph solutionGraph = solution.SolutionGraph;
+         CityMapGraph solutionGraph = solution.Tour;
          using (var processingNodes = solutionGraph.TourPoints.GetEnumerator())
          {
             while (satisfied && processingNodes.MoveNext())

@@ -177,7 +177,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
 
          // Prendo giù il RouteWorker corrispondente all'arco che ho cancellato 
          // dalla soluzione di partenza.
-         RouteWorker removedEdge = startSolution.SolutionGraph.GetEdge(removedEdgePointFromId, removedEdgePointToId);
+         RouteWorker removedEdge = startSolution.Tour.GetEdge(removedEdgePointFromId, removedEdgePointToId);
          if (removedEdge is null)
          {
             return string.Empty;
@@ -216,7 +216,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
          Console.ForegroundColor = ConsoleColor.Gray;
 
          ToSolution startStepSolution = _solutionsHistory.Last();
-         IEnumerable<InterestPointWorker> solutionNodes = startStepSolution.SolutionGraph.Nodes;
+         IEnumerable<InterestPointWorker> solutionNodes = startStepSolution.Tour.Nodes;
          
          ICollection<ToSolution> stepSolutions = new Collection<ToSolution>();
          for (int j = 0, i = j + 1; j < solutionNodes.Count(); j++, i++)
@@ -229,7 +229,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             // Rimuovo l'arco (j,i).
             InterestPointWorker jNode = solutionNodes.ElementAt(j);
             InterestPointWorker iNode = solutionNodes.ElementAt(i);
-            CityMapGraph workingGraph = startStepSolution.SolutionGraph.DeepCopy();
+            CityMapGraph workingGraph = startStepSolution.Tour.DeepCopy();
             workingGraph.RemoveEdge(jNode.Entity.Id, iNode.Entity.Id);
 
             InterestPointWorker sNode = GetClosestSNeighbor(workingGraph, jNode.Entity.Id, iNode.Entity.Id);
@@ -254,7 +254,7 @@ namespace CityScover.Engine.Algorithms.VariableDepthSearch
             Tuple<int, int> newSolutionMove = Tuple.Create(jNode.Entity.Id, iNode.Entity.Id);            
             ToSolution newSolution = new ToSolution()
             {
-               SolutionGraph = newSolutionGraph,
+               Tour = newSolutionGraph,
                Move = newSolutionMove
             };
             newSolution.Description = GetMoveDescription(startStepSolution, newSolution);

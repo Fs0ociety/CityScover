@@ -177,7 +177,7 @@ namespace CityScover.Engine
 
          Console.WriteLine(MessagesRepository.GetMessage(
             MessageCode.SolverEndConfiguration, BestSolution.Id, BestSolution.Cost, 
-            BestSolution.SolutionGraph.GetTotalDistance() * 0.001));
+            BestSolution.Tour.GetTotalDistance() * 0.001));
       }
 
       private async Task ResetSolverState()

@@ -69,7 +69,7 @@ namespace CityScover.Engine.Algorithms.Greedy
          
          var newSolution = new ToSolution()
          {
-            SolutionGraph = Tour.DeepCopy()
+            Tour = Tour.DeepCopy()
          };
 
          SendMessage(MessageCode.GreedyNodeAdded, candidatePoi.Entity.Name, newSolution.Id);

@@ -177,7 +177,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
          _solutionsHistory.Add(CurrentBestSolution);
          SendMessage(MessageCode.LocalSearchStartSolution, 
             CurrentBestSolution.Id, CurrentBestSolution.Cost, 
-            CurrentBestSolution.SolutionGraph.GetTotalDistance() * 0.001);
+            CurrentBestSolution.Tour.GetTotalDistance() * 0.001);
          ImprovementsCount = default;
          _previousSolutionCost = default;
          _shouldRunImprovement = default;
@@ -269,7 +269,7 @@ namespace CityScover.Engine.Algorithms.LocalSearches
                Console.ForegroundColor = ConsoleColor.Yellow;
                SendMessage(MessageCode.LocalSearchInvariateSolution, 
                   CurrentBestSolution.Id, CurrentBestSolution.Cost, 
-                  CurrentBestSolution.SolutionGraph.GetTotalDistance() * 0.001);
+                  CurrentBestSolution.Tour.GetTotalDistance() * 0.001);
                Console.ForegroundColor = ConsoleColor.Gray;
             }
          }

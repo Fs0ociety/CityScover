@@ -198,7 +198,7 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
 
          CurrentSolution = new ToSolution()
          {
-            SolutionGraph = Tour.DeepCopy()
+            Tour = Tour.DeepCopy()
          };
 
          SendMessage(MessageCode.HybridCustomUpdateTourUpdated, nodeToRemove.Entity.Name, candidateNode.Entity.Name);
@@ -256,8 +256,8 @@ namespace CityScover.Engine.Algorithms.CustomAlgorithms
          }
 
          CurrentSolution = validSolutions.MaxBy(solution => solution.Cost);
-         var hcuTourDistance = CurrentSolution.SolutionGraph.GetTotalDistance();
-         var previousTourDistance = StartingSolution.SolutionGraph.GetTotalDistance();
+         var hcuTourDistance = CurrentSolution.Tour.GetTotalDistance();
+         var previousTourDistance = StartingSolution.Tour.GetTotalDistance();
 
          bool canUpdate = hcuTourDistance < previousTourDistance || 
                           hcuTourDistance.IsApproximatelyEqualTo(previousTourDistance);

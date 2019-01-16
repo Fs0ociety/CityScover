@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 09/12/2018
+// File update: 16/01/2019
 //
 
 using CityScover.Engine.Workers;
@@ -20,10 +20,7 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
    internal class TwoOptNeighborhood : Neighborhood<ToSolution>
    {
       #region Constructors
-      internal TwoOptNeighborhood()
-      {
-         Type = AlgorithmType.TwoOpt;
-      }
+      internal TwoOptNeighborhood() => Type = AlgorithmType.TwoOpt;
       #endregion
 
       #region Private methods
@@ -38,11 +35,15 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
          // Genero gli archi dopo aver creato tutti i nodi.
          for (int i = 0; i < newNodeSequence.Count() - 1; i++)
          {
-            newSolutionGraph.AddRouteFromGraph(Solver.Instance.CityMapGraph, newNodeSequence.ElementAt(i).Entity.Id, newNodeSequence.ElementAt(i + 1).Entity.Id);
+            newSolutionGraph.AddRouteFromGraph(Solver.Instance.CityMapGraph, 
+               newNodeSequence.ElementAt(i).Entity.Id, 
+               newNodeSequence.ElementAt(i + 1).Entity.Id);
          }
 
          // Devo fare in modo che venga costruito un ciclo, perciò aggiungo l'arco che collega l'ultimo nodo creato al primo.
-         newSolutionGraph.AddRouteFromGraph(Solver.Instance.CityMapGraph, newNodeSequence.ElementAt(newNodeSequence.Count() - 1).Entity.Id, newNodeSequence.ElementAt(0).Entity.Id);
+         newSolutionGraph.AddRouteFromGraph(Solver.Instance.CityMapGraph, 
+            newNodeSequence.ElementAt(newNodeSequence.Count() - 1).Entity.Id, 
+            newNodeSequence.ElementAt(0).Entity.Id);
          return newSolutionGraph;
       }
 
@@ -75,8 +76,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       
       private Tuple<int, int> GetMove(in ToSolution solution, int iNodeId, int kNodeId)
       {
-         RouteWorker firstEdge = solution.SolutionGraph.Edges.Where(edge => edge.Entity.PointTo.Id == iNodeId).FirstOrDefault();
-         RouteWorker secondEdge = solution.SolutionGraph.Edges.Where(edge => edge.Entity.PointFrom.Id == kNodeId).FirstOrDefault();
+         RouteWorker firstEdge = solution.Tour.Edges.Where(edge => edge.Entity.PointTo.Id == iNodeId).FirstOrDefault();
+         RouteWorker secondEdge = solution.Tour.Edges.Where(edge => edge.Entity.PointFrom.Id == kNodeId).FirstOrDefault();
          if (firstEdge == null || secondEdge == null)
          {
             return null;
@@ -91,8 +92,8 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
 
          // Prendo giù i RouteWorker corrispondenti agli archi iniziali (quelli che ho tolto) 
          // dalla soluzione di partenza.
-         RouteWorker firstEdge = startSolution.SolutionGraph.Edges.FirstOrDefault(edge => edge.Entity.Id == firstEdgeId);
-         RouteWorker secondEdge = startSolution.SolutionGraph.Edges.FirstOrDefault(edge => edge.Entity.Id == secondEdgeId);
+         RouteWorker firstEdge = startSolution.Tour.Edges.FirstOrDefault(edge => edge.Entity.Id == firstEdgeId);
+         RouteWorker secondEdge = startSolution.Tour.Edges.FirstOrDefault(edge => edge.Entity.Id == secondEdgeId);
 
          return MessagesRepository.GetMessage(
             MessageCode.LocalSearchNewNeighborhoodMoveDetails,
@@ -107,28 +108,33 @@ namespace CityScover.Engine.Algorithms.Neighborhoods
       #region Overrides
       internal override IEnumerable<ToSolution> GeneratingLogic(in ToSolution solution)
       {
-         IEnumerable<InterestPointWorker> solutionNodes = solution.SolutionGraph.Nodes;
+         IEnumerable<InterestPointWorker> solutionNodes = solution.Tour.Nodes;
          ICollection<ToSolution> neighborhood = new Collection<ToSolution>();
+
          for (int i = 0; i < solutionNodes.Count() - 1; i++)
          {
             for (int k = i + 1; k < solutionNodes.Count(); k++)
             {
                IEnumerable<InterestPointWorker> newNodeSequence = GenerateSequence(solutionNodes, i, k);
                CityMapGraph newSolutionGraph = BuildSolutionGraph(newNodeSequence);
-               Tuple<int, int> move = GetMove(solution, solutionNodes.ElementAt(i).Entity.Id, solutionNodes.ElementAt(k).Entity.Id);
+               Tuple<int, int> move = GetMove(solution, 
+                  solutionNodes.ElementAt(i).Entity.Id, 
+                  solutionNodes.ElementAt(k).Entity.Id);
+
                if (move is null)
                {
                   continue;
                }
                ToSolution newSolution = new ToSolution()
                {
-                  SolutionGraph = newSolutionGraph,
+                  Tour = newSolutionGraph,
                   Move = move                  
                };
                newSolution.Description = GetMoveDescription(solution, newSolution);
                neighborhood.Add(newSolution);
             }
          }
+
          return neighborhood;
       }
       #endregion

@@ -266,7 +266,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             SendMessage(MessageCode.TabuSearchStart, 
                _currentSolution.Id, _currentSolution.Cost, 
-               _currentSolution.SolutionGraph.GetTotalDistance() * 0.001);
+               _currentSolution.Tour.GetTotalDistance() * 0.001);
             Console.ForegroundColor = ConsoleColor.Gray;
          }
       }
@@ -280,7 +280,7 @@ namespace CityScover.Engine.Algorithms.Metaheuristics
          ToSolution neighborhoodBestSolution = new ToSolution()
          {
             Id = localSearchBestSolution.Id,
-            SolutionGraph = localSearchBestSolution.SolutionGraph.DeepCopy(),
+            Tour = localSearchBestSolution.Tour.DeepCopy(),
             Move = Tuple.Create(localSearchBestSolution.Move.Item1, localSearchBestSolution.Move.Item2),
             Cost = localSearchBestSolution.Cost,
             Penalty = localSearchBestSolution.Penalty,

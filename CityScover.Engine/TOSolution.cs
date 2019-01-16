@@ -6,7 +6,7 @@
 // Andrea Ritondale
 // Andrea Mingardo
 // 
-// File update: 12/01/2019
+// File update: 16/01/2019
 //
 
 using CityScover.Engine.Workers;
@@ -21,7 +21,7 @@ namespace CityScover.Engine
    {
       #region Private fields
       private static int _sequenceId;
-      private CityMapGraph _solutionGraph;
+      private CityMapGraph _tour;
       #endregion
 
       #region Constructors
@@ -60,28 +60,28 @@ namespace CityScover.Engine
       internal IDictionary<string, bool> ProblemConstraints { get; } = new Dictionary<string, bool>();
 
       /// <summary>
-      /// Property used to assign a significative description for this solution.
+      /// Property used to assign a significative description of an instance of ToSolution class.
       /// </summary>
       internal string Description { get; set; }
 
       /// <summary>
-      /// Property used to assign the algorithm move which has made this solution.
+      /// Property used to assign the algorithm's move which has produced an instance of ToSolution class.
       /// </summary>
       internal Tuple<int, int> Move { get; set; }
 
       /// <summary>
       /// This is the internal structure formed by nodes and edges of Solution.
       /// </summary>
-      internal CityMapGraph SolutionGraph {
-         get => _solutionGraph;
+      internal CityMapGraph Tour {
+         get => _tour;
          set
          {
-            _solutionGraph = value;
-            if (_solutionGraph != null)
+            _tour = value;
+            if (_tour != null)
             {
-               _solutionGraph.CalculateTimes();
+               _tour.CalculateTimes();
                TimeSpent = CalculateTotalTime();
-               _solutionGraph.TimeSpent = TimeSpent;
+               _tour.TimeSpent = TimeSpent;
             }
          }
       }
@@ -111,8 +111,8 @@ namespace CityScover.Engine
       private DateTime CalculateTotalTime()
       {
          var solver = Solver.Instance;
-         InterestPointWorker startPoi = _solutionGraph.GetStartPoint();
-         InterestPointWorker endPoi = _solutionGraph.GetEndPoint();
+         InterestPointWorker startPoi = _tour.GetStartPoint();
+         InterestPointWorker endPoi = _tour.GetEndPoint();
          DateTime endPoiTotalTime = endPoi.TotalTime;
 
          var returnEdge = solver.CityMapGraph.GetEdge(endPoi.Entity.Id, startPoi.Entity.Id);
@@ -142,14 +142,14 @@ namespace CityScover.Engine
 
          solutions.ToList().ForEach(solution =>
          {
-            message += $"\t{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.SolutionGraph.PrintGraph()}\n";
+            message += $"\t{MessagesRepository.GetMessage(MessageCode.TOSolutionCollectionId, solution.Id)} {solution.Tour.PrintGraph()}\n";
          });
          var bestSolution = solutions.Where(solution => solution.IsValid).MaxBy(solution => solution.Cost);
-         message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.SolutionGraph.PrintGraph())}";
+         message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionFinalTour, bestSolution.Id, bestSolution.Tour.PrintGraph())}";
 
-         var tourDuration = bestSolution.SolutionGraph.GetEndPoint().TotalTime - solver.WorkingConfiguration.ArrivalTime;
+         var tourDuration = bestSolution.Tour.GetEndPoint().TotalTime - solver.WorkingConfiguration.ArrivalTime;
          message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalTimeAndValidity, bestSolution.Cost, tourDuration.Hours, tourDuration.Minutes, bestSolution.IsValid)}";
-         message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalDistance, bestSolution.SolutionGraph.GetTotalDistance() * 0.001)}";
+         message += $"\n\t{MessagesRepository.GetMessage(MessageCode.TOSolutionTotalDistance, bestSolution.Tour.GetTotalDistance() * 0.001)}";
          return message;
       }
 
